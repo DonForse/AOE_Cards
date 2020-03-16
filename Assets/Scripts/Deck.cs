@@ -13,6 +13,12 @@ public class Deck
         cards.Select(c => UnitCards.Remove(c));
         return cards.ToList();
     }
+    public IList<EventCardData> TakeEventCards(int amount)
+    {
+        var cards = EventCards.Take(amount);
+        cards.Select(c => EventCards.Remove(c));
+        return cards.ToList();
+    }
 
     public void Shuffle()
     {

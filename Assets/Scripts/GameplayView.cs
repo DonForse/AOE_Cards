@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayView : MonoBehaviour
+public class GameplayView : MonoBehaviour, IGameplayView
 {
     private GameplayPresenter _presenter;
     // Start is called before the first frame update
@@ -10,10 +10,33 @@ public class GameplayView : MonoBehaviour
     {
         
     }
-
-    // Update is called once per frame
-    void Update()
+    public void ShowRoundEventCard(EventCardData eventCard)
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void ShowHand()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ShowUnitCard()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ShowEventCard()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ShowPlayerEventsPlayed()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ShowError()
+    {
+        throw new System.NotImplementedException();
     }
 }

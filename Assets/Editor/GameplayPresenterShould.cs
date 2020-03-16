@@ -13,12 +13,21 @@ namespace Tests
         private GetDeck _getDeck;
         private IList<IPlayer> _players;
         private ICardProvider _cardProvider;
+        private IGameplayView _view;
         private const string PlayerOneId = "0";
 
         [SetUp]
         public void Setup()
         {
             GivenPlayersAddedToTheGame(3);
+            GivenCardProvider();
+            _view = Substitute.For<IGameplayView>();
+            _getDeck = new GetDeck(_cardProvider);
+            _presenter = new GameplayPresenter(_view,_getDeck, _players);
+        }
+
+        private void GivenCardProvider()
+        {
             _cardProvider = Substitute.For<ICardProvider>();
             _cardProvider.GetUnitCards().Returns(new List<UnitCardData>
             {
@@ -26,7 +35,7 @@ namespace Tests
                 ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>()
+                ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
@@ -38,8 +47,22 @@ namespace Tests
                 ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
             });
-            _getDeck = new GetDeck(_cardProvider);
-            _presenter = new GameplayPresenter(_getDeck, _players);
+            _cardProvider.GetEventCards().Returns(new List<EventCardData>
+            {
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<EventCardData>(),
+            });
         }
 
         private void GivenPlayersAddedToTheGame(int amount)
@@ -55,23 +78,26 @@ namespace Tests
         }
 
         [Test]
-        public void GiveUnitCardsToPlayersOnRoundSetup()
+        public void GiveUnitCardsToPlayersOnGameSetup()
         {
-            WhenRoundSetup();
+            WhenGameSetup();
             WhenGetPlayerHand(PlayerOneId);
             ThenUnitCardsInPlayerHandsAreEqualTo(5);
         }
         [Test]
-        public void GiveEventCardsToPlayersOnRoundSetup()
+        public void GiveEventCardsToPlayersOnGameSetup()
         {
-            WhenRoundSetup();
+            WhenGameSetup();
             WhenGetPlayerHand(PlayerOneId);
             ThenEventCardsInPlayerHandsAreEqualTo(5);
         }
-
         private void WhenGetPlayerHand(string playerId)
         {
             _cardsInHand = _presenter.GetHand(playerId);
+        }
+        private void WhenGameSetup()
+        {
+            _presenter.GameSetup();
         }
         private void WhenRoundSetup()
         {
@@ -86,21 +112,12 @@ namespace Tests
             Assert.AreEqual(numberOfCards, _cardsInHand.EventCards.Count);
         }
 
-
-
-        //[Test]
-        //public void GiveEventsCardsToPlayersOnRoundSetup() { }
-
-
-        //[Test]
-        //public void RemoveCardFromDeckWhenCardIsPlayed() {
-
-        //}
-
-        //[Test]
-        //public void PresentEventCardWhenRoundStarts() {
-
-        //}
+        [Test]
+        public void PresentEventCardWhenRoundStarts() {
+            WhenGameSetup();
+            WhenRoundSetup();
+            _view.Received(1).ShowRoundEventCard(Arg.Any<EventCardData>());
+        }
         //// A Test behaves as an ordinary method
         //[Test]
         //public void SetCardWhenCardIsPlayed()
