@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using GamePlay;
+using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Tests
+namespace Editor
 {
-    public class GameplayPresenterShould
+    public class GamePlayPresenterShould
     {
         private Hand _cardsInHand;
-        private GameplayPresenter _presenter;
+        private GamePlayPresenter _presenter;
         private GetDeck _getDeck;
-        private IList<IPlayer> _players;
         private ICardProvider _cardProvider;
         private IGameplayView _view;
         private IMatchService _matchService;
@@ -21,12 +21,11 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            GivenPlayersAddedToTheGame(3);
             GivenCardProvider();
             GivenGameplayView();
             GivenMatchService();
             GivenGameProvider();
-            _presenter = new GameplayPresenter(_view, _matchService, _getDeck, _players);
+            _presenter = new GamePlayPresenter(_view, _matchService, _getDeck);
             WhenGameSetup();
         }
 
@@ -134,18 +133,6 @@ namespace Tests
                 ScriptableObject.CreateInstance<EventCardData>(),
             });
         }
-
-        private void GivenPlayersAddedToTheGame(int amount)
-        {
-            _players = new List<IPlayer>();
-            for (int i = 0; i < amount; i++)
-            {
-                var player = Substitute.For<IPlayer>();
-                player.GetId().Returns(i.ToString());
-                _players.Add(player);
-            }
-        }
-
         private void WhenUnitCardIsPlayed()
         {
             _presenter.PlayUnitCard(null);
@@ -173,12 +160,12 @@ namespace Tests
 
         private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards)
         {
-            Assert.AreEqual(numberOfCards, _cardsInHand.UnitCards.Count);
+            Assert.AreEqual(numberOfCards, _cardsInHand.GetUnitCards().Count);
         }
 
         private void ThenEventCardsInPlayerHandsAreEqualTo(int numberOfCards)
         {
-            Assert.AreEqual(numberOfCards, _cardsInHand.EventCards.Count);
+            Assert.AreEqual(numberOfCards, _cardsInHand.GetEventCards().Count);
         }
 
         private void ThenPlayEventCardIsCalledInService()
