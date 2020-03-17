@@ -14,16 +14,86 @@ namespace Tests
         private IList<IPlayer> _players;
         private ICardProvider _cardProvider;
         private IGameplayView _view;
-        private const string PlayerOneId = "0";
+        private IMatchService _matchService;
+
+        private const int CardsInHand = 5;
 
         [SetUp]
         public void Setup()
         {
             GivenPlayersAddedToTheGame(3);
             GivenCardProvider();
-            _view = Substitute.For<IGameplayView>();
+            GivenGameplayView();
+            GivenMatchService();
+            GivenGameProvider();
+            _presenter = new GameplayPresenter(_view, _matchService, _getDeck, _players);
+            WhenGameSetup();
+        }
+
+        [Test]
+        public void GiveUnitCardsToPlayersOnGameSetup()
+        {
+            WhenGetPlayerHand();
+            ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand);
+        }
+
+        [Test]
+        public void GiveEventCardsToPlayersOnGameSetup()
+        {
+            WhenGetPlayerHand();
+            ThenEventCardsInPlayerHandsAreEqualTo(CardsInHand);
+        }
+
+        [Test]
+        public void PresentEventCardWhenRoundStarts()
+        {
+            WhenRoundSetup();
+            _view.Received(1).ShowRoundEventCard(Arg.Any<EventCardData>());
+        }
+
+        [Test]
+        public void RemoveEventCardFromHandWhenEventCardIsPlayed()
+        {
+            WhenEventCardIsPlayed();
+            WhenGetPlayerHand();
+            ThenEventCardIsRemovedFromHand();
+        }
+
+        [Test]
+        public void PlayEventCardWhenCardIsPlayed()
+        {
+            WhenEventCardIsPlayed();
+            ThenPlayEventCardIsCalledInService();
+        }
+
+        [Test]
+        public void RemoveUnitCardFromHandWhenEventCardIsPlayed()
+        {
+            WhenUnitCardIsPlayed();
+            WhenGetPlayerHand();
+            ThenUnitCardIsRemovedFromHand();
+        }
+
+        [Test]
+        public void PlayUnitCardWhenCardIsPlayed()
+        {
+            WhenUnitCardIsPlayed();
+            ThenPlayUnitCardIsCalledInService();
+        }
+
+        private void GivenGameProvider()
+        {
             _getDeck = new GetDeck(_cardProvider);
-            _presenter = new GameplayPresenter(_view,_getDeck, _players);
+        }
+
+        private void GivenMatchService()
+        {
+            _matchService = Substitute.For<IMatchService>();
+        }
+
+        private void GivenGameplayView()
+        {
+            _view = Substitute.For<IGameplayView>();
         }
 
         private void GivenCardProvider()
@@ -70,64 +140,65 @@ namespace Tests
             _players = new List<IPlayer>();
             for (int i = 0; i < amount; i++)
             {
-
-                var _player = Substitute.For<IPlayer>();
-                _player.GetId().Returns(i.ToString());
-                _players.Add(_player);
+                var player = Substitute.For<IPlayer>();
+                player.GetId().Returns(i.ToString());
+                _players.Add(player);
             }
         }
 
-        [Test]
-        public void GiveUnitCardsToPlayersOnGameSetup()
+        private void WhenUnitCardIsPlayed()
         {
-            WhenGameSetup();
-            WhenGetPlayerHand(PlayerOneId);
-            ThenUnitCardsInPlayerHandsAreEqualTo(5);
+            _presenter.PlayUnitCard(null);
         }
-        [Test]
-        public void GiveEventCardsToPlayersOnGameSetup()
+
+        private void WhenEventCardIsPlayed()
         {
-            WhenGameSetup();
-            WhenGetPlayerHand(PlayerOneId);
-            ThenEventCardsInPlayerHandsAreEqualTo(5);
+            _presenter.PlayEventCard(null);
         }
-        private void WhenGetPlayerHand(string playerId)
+
+        private void WhenGetPlayerHand()
         {
-            _cardsInHand = _presenter.GetHand(playerId);
+            _cardsInHand = _presenter.GetHand();
         }
+
         private void WhenGameSetup()
         {
             _presenter.GameSetup();
         }
+
         private void WhenRoundSetup()
         {
             _presenter.RoundSetup();
         }
+
         private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards)
         {
             Assert.AreEqual(numberOfCards, _cardsInHand.UnitCards.Count);
         }
+
         private void ThenEventCardsInPlayerHandsAreEqualTo(int numberOfCards)
         {
             Assert.AreEqual(numberOfCards, _cardsInHand.EventCards.Count);
         }
 
-        [Test]
-        public void PresentEventCardWhenRoundStarts() {
-            WhenGameSetup();
-            WhenRoundSetup();
-            _view.Received(1).ShowRoundEventCard(Arg.Any<EventCardData>());
+        private void ThenPlayEventCardIsCalledInService()
+        {
+            _matchService.Received(1).PlayEventCard(null);
         }
-        //// A Test behaves as an ordinary method
-        //[Test]
-        //public void SetCardWhenCardIsPlayed()
-        //{
-        //    // Use the Assert class to test conditions
-        //}
 
-        //[Test]
-        //public void DecideWinnerWhenUnitCardsArePlayed() {
+        private void ThenPlayUnitCardIsCalledInService()
+        {
+            _matchService.Received(1).PlayUnitCard(null);
+        }
 
-        //}
+        private void ThenUnitCardIsRemovedFromHand()
+        {
+            ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
+        }
+
+        private void ThenEventCardIsRemovedFromHand()
+        {
+            ThenEventCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
+        }
     }
 }

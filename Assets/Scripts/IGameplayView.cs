@@ -6,4 +6,6 @@ public interface IGameplayView
     void ShowEventCard();
     void ShowPlayerEventsPlayed();
     void ShowError();
+    void EventCardSentPlay();
+    void UnitCardSentPlay();
 }

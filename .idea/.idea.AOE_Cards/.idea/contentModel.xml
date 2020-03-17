@@ -19,6 +19,7 @@
           <e p="GetDeck.cs" t="Include" />
           <e p="Hand.cs" t="Include" />
           <e p="IGameplayView.cs" t="Include" />
+          <e p="IMatchService.cs" t="Include" />
           <e p="infrastructure" t="Include">
             <e p="ICardProvider.cs" t="Include" />
             <e p="InMemoryCardProvider.cs" t="Include" />

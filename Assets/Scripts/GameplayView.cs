@@ -39,4 +39,14 @@ public class GameplayView : MonoBehaviour, IGameplayView
     {
         throw new System.NotImplementedException();
     }
+
+    public void EventCardSentPlay()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void UnitCardSentPlay()
+    {
+        throw new System.NotImplementedException();
+    }
 }
