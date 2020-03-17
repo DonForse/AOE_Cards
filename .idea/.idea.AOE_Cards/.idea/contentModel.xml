@@ -12,23 +12,27 @@
           <e p="GameplayPresenterShould.cs" t="Include" />
         </e>
         <e p="Scripts" t="Include">
-          <e p="Deck.cs" t="Include" />
-          <e p="EventCardData.cs" t="Include" />
-          <e p="GameplayPresenter.cs" t="Include" />
-          <e p="GameplayView.cs" t="Include" />
-          <e p="GetDeck.cs" t="Include" />
-          <e p="Hand.cs" t="Include" />
-          <e p="IGameplayView.cs" t="Include" />
-          <e p="IMatchService.cs" t="Include" />
+          <e p="Data" t="Include">
+            <e p="EventCardData.cs" t="Include" />
+            <e p="UnitCardData.cs" t="Include" />
+          </e>
+          <e p="Gameplay" t="Include">
+            <e p="GameplayPresenter.cs" t="Include" />
+            <e p="GameplayView.cs" t="Include" />
+            <e p="Hand.cs" t="Include" />
+            <e p="IGameplayView.cs" t="Include" />
+          </e>
           <e p="infrastructure" t="Include">
+            <e p="Deck.cs" t="Include" />
+            <e p="GetDeck.cs" t="Include" />
             <e p="ICardProvider.cs" t="Include" />
+            <e p="IMatchService.cs" t="Include" />
             <e p="InMemoryCardProvider.cs" t="Include" />
           </e>
           <e p="Player" t="Include">
             <e p="IPlayer.cs" t="Include" />
             <e p="Player.cs" t="Include" />
           </e>
-          <e p="UnitCardData.cs" t="Include" />
           <e p="UnitCardView.cs" t="Include" />
         </e>
         <e p="TextMesh Pro" t="Include">

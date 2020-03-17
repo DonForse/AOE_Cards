@@ -31,14 +31,14 @@ namespace Tests
         }
 
         [Test]
-        public void GiveUnitCardsToPlayersOnGameSetup()
+        public void GiveUnitCardsToPlayerOnGameSetup()
         {
             WhenGetPlayerHand();
             ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand);
         }
 
         [Test]
-        public void GiveEventCardsToPlayersOnGameSetup()
+        public void GiveEventCardsToPlayerOnGameSetup()
         {
             WhenGetPlayerHand();
             ThenEventCardsInPlayerHandsAreEqualTo(CardsInHand);
