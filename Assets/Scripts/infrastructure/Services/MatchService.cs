@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -7,25 +11,48 @@ namespace Infrastructure.Services
 {
     public class MatchService : IMatchService
     {
-        private static readonly HttpClient Client = new HttpClient();
+        HttpWebRequest webRequest;
+        
         private const string BaseUrl = "";
         private string StartMatchUrl => BaseUrl + "/games/users/{0}/matches";
 
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
-        public async Task<MatchStatus> StartMatch()
+        public void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete)
         {
             var values = new Dictionary<string, string>
             {
                 {"thing1", "hello"},
                 {"thing2", "world"}
             };
-
             var content = new FormUrlEncodedContent(values);
-            var response = await Client.PostAsync(StartMatchUrl, content);
-            var responseString = await response.Content.ReadAsStringAsync();
+            var url =string.Format(StartMatchUrl, playerId);
+            webRequest = WebRequest.Create(url) as HttpWebRequest;
+            
+            webRequest.BeginGetResponse(new AsyncCallback(FinishWebRequest), onStartMatchComplete);
+        }
+        void FinishWebRequest(IAsyncResult result)
+        {
+            var webResponse = webRequest.EndGetResponse(result);
+            string responseString;
+            using (Stream stream = webResponse.GetResponseStream())
+            {
+                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    responseString = reader.ReadToEnd();
+                }
+            }
 
-            return DtoToMatchStatus(responseString);
+            if (result.AsyncState == null)
+                return;
+            
+            var callback = (Action<MatchStatus>) result.AsyncState;
+            callback(DtoToMatchStatus(responseString));
+        }
+
+        private void OnGetResponse(Task<string> obj)
+        {
+            throw new NotImplementedException();
         }
 
         private MatchStatus DtoToMatchStatus(string responseString)

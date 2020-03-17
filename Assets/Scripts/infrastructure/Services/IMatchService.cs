@@ -1,10 +1,11 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
     public interface IMatchService
     {
-        Task<MatchStatus> StartMatch();
+        void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete);
         void PlayEventCard(string cardName);
         void PlayUnitCard(string cardName);
     }

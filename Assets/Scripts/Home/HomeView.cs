@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Home
 {
-    public class HomeView : MonoBehaviour
+    public class HomeView : MonoBehaviour, IHomeView
     {
         [SerializeField]
         private readonly Button _playButton;
@@ -12,18 +12,18 @@ namespace Home
         // Start is called before the first frame update
         void Start()
         {
-            _presenter = new HomePresenter();
-            _playButton.onClick.AddListener(StartMatch);
+            _presenter = new HomePresenter(ServicesProvider.Instance.GetMatchService());
+            _playButton.onClick.AddListener(PlayMatch);
         }
 
-        private void StartMatch()
+        private void PlayMatch()
         {
-            _presenter.StartMatch();
+            _presenter.StartSearchingMatch();
             //navigator.
 
         }
 
-        void OnMatchFound()
+        public void OnMatchFound()
         {
             this.gameObject.SetActive(false);
         }

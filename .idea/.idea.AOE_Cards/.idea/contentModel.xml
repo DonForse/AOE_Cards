@@ -10,6 +10,7 @@
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
           <e p="GamePresenterShould.cs" t="Include" />
+          <e p="HomePresenterShould.cs" t="Include" />
         </e>
         <e p="Scripts" t="Include">
           <e p="Data" t="Include">
@@ -25,6 +26,7 @@
           <e p="Home" t="Include">
             <e p="HomePresenter.cs" t="Include" />
             <e p="HomeView.cs" t="Include" />
+            <e p="IHomeView.cs" t="Include" />
           </e>
           <e p="infrastructure" t="Include">
             <e p="Deck.cs" t="Include" />
