@@ -7,9 +7,8 @@ namespace Infrastructure.Services
 {
     public class MatchService : IMatchService
     {
-        private static readonly HttpClient _client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient();
         private const string BaseUrl = "";
-
         private string StartMatchUrl => BaseUrl + "/games/users/{0}/matches";
 
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
@@ -23,7 +22,7 @@ namespace Infrastructure.Services
             };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await _client.PostAsync(StartMatchUrl, content);
+            var response = await Client.PostAsync(StartMatchUrl, content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             return DtoToMatchStatus(responseString);

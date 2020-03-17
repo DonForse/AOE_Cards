@@ -9,18 +9,22 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
-          <e p="GameplayPresenterShould.cs" t="Include" />
+          <e p="GamePresenterShould.cs" t="Include" />
         </e>
         <e p="Scripts" t="Include">
           <e p="Data" t="Include">
             <e p="EventCardData.cs" t="Include" />
             <e p="UnitCardData.cs" t="Include" />
           </e>
-          <e p="Gameplay" t="Include">
-            <e p="GameplayPresenter.cs" t="Include" />
-            <e p="GameplayView.cs" t="Include" />
+          <e p="Game" t="Include">
+            <e p="GamePresenter.cs" t="Include" />
+            <e p="GameView.cs" t="Include" />
             <e p="Hand.cs" t="Include" />
-            <e p="IGameplayView.cs" t="Include" />
+            <e p="IGameView.cs" t="Include" />
+          </e>
+          <e p="Home" t="Include">
+            <e p="HomePresenter.cs" t="Include" />
+            <e p="HomeView.cs" t="Include" />
           </e>
           <e p="infrastructure" t="Include">
             <e p="Deck.cs" t="Include" />

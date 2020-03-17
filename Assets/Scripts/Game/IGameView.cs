@@ -1,4 +1,4 @@
-public interface IGameplayView
+public interface IGameView
 {
     void ShowRoundEventCard(EventCardData eventCard);
     void ShowHand();

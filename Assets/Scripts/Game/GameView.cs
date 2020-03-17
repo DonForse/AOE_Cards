@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-namespace GamePlay
+namespace Game
 {
-    public class GamePlayView : MonoBehaviour, IGameplayView
+    public class GameView : MonoBehaviour, IGameView
     {
-        private GamePlayPresenter _presenter;
+        private GamePresenter _presenter;
         // Start is called before the first frame update
         void Start()
         {
-            _presenter = new GamePlayPresenter(this, ServicesProvider.Instance.GetMatchService(),new GetDeck(new InMemoryDeckProvider()) );
+            _presenter = new GamePresenter(this, ServicesProvider.Instance.GetMatchService(),new GetDeck(new InMemoryDeckProvider()) );
         }
         public void ShowRoundEventCard(EventCardData eventCard)
         {

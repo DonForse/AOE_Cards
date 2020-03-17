@@ -1,17 +1,17 @@
 ﻿using System.Linq;
 using Infrastructure.Services;
 
-namespace GamePlay
+namespace Game
 {
-    public class GamePlayPresenter
+    public class GamePresenter
     {
         private readonly GetDeck _getDeck;
         private Deck _deck;
         private Hand _hand;
-        private readonly IGameplayView _view;
+        private readonly IGameView _view;
         private readonly IMatchService _matchService;
 
-        public GamePlayPresenter(IGameplayView view, IMatchService matchService ,GetDeck getDeck)
+        public GamePresenter(IGameView view, IMatchService matchService ,GetDeck getDeck)
         {
             _view = view;
             _getDeck = getDeck;

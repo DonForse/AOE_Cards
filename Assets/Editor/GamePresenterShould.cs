@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using GamePlay;
+using Game;
 using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace Editor
 {
-    public class GamePlayPresenterShould
+    public class GamePresenterShould
     {
         private Hand _cardsInHand;
-        private GamePlayPresenter _presenter;
+        private GamePresenter _presenter;
         private GetDeck _getDeck;
         private ICardProvider _cardProvider;
-        private IGameplayView _view;
+        private IGameView _view;
         private IMatchService _matchService;
 
         private const int CardsInHand = 5;
@@ -25,7 +25,7 @@ namespace Editor
             GivenGameplayView();
             GivenMatchService();
             GivenGameProvider();
-            _presenter = new GamePlayPresenter(_view, _matchService, _getDeck);
+            _presenter = new GamePresenter(_view, _matchService, _getDeck);
             WhenGameSetup();
         }
 
@@ -92,7 +92,7 @@ namespace Editor
 
         private void GivenGameplayView()
         {
-            _view = Substitute.For<IGameplayView>();
+            _view = Substitute.For<IGameView>();
         }
 
         private void GivenCardProvider()
