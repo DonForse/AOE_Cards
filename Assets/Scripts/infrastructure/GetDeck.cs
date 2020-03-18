@@ -12,7 +12,7 @@ public class GetDeck
     public Deck Execute() {
         return new Deck()
         {
-            EventCards = _provider.GetEventCards(),
+            EventCards = _provider.GetUpgradeCards(),
             UnitCards = _provider.GetUnitCards()
         };
     }

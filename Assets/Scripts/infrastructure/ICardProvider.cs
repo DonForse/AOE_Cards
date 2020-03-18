@@ -3,5 +3,5 @@
 public interface ICardProvider
 {
     IList<UnitCardData> GetUnitCards();
-    IList<EventCardData> GetEventCards();
+    IList<UpgradeCardData> GetUpgradeCards();
 }

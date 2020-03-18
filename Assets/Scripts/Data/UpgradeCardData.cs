@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="Event Card",menuName ="Cards/Event")]
-public class EventCardData : ScriptableObject
+[CreateAssetMenu(fileName ="Upgrade Card",menuName ="Cards/Upgrade")]
+public class UpgradeCardData : ScriptableObject
 {
     public string cardName;
     public string archetype;

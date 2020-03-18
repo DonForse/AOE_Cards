@@ -1,11 +1,11 @@
 public interface IGameView
 {
-    void ShowRoundEventCard(EventCardData eventCard);
+    void ShowRoundUpgradeCard(UpgradeCardData upgradeCard);
     void ShowHand();
     void ShowUnitCard();
-    void ShowEventCard();
-    void ShowPlayerEventsPlayed();
+    void ShowRoundCard();
+    void ShowUpgradeCardsPlayedByPlayer(string player);
     void ShowError();
-    void EventCardSentPlay();
+    void UpgradeCardSentPlay();
     void UnitCardSentPlay();
 }

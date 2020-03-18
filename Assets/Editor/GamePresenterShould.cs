@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game;
 using Infrastructure.Services;
 using NSubstitute;
@@ -11,7 +12,7 @@ namespace Editor
     {
         private Hand _cardsInHand;
         private GamePresenter _presenter;
-        private GetDeck _getDeck;
+        private MatchStatus _matchStatus;
         private ICardProvider _cardProvider;
         private IGameView _view;
         private IMatchService _matchService;
@@ -24,8 +25,7 @@ namespace Editor
             GivenCardProvider();
             GivenGameplayView();
             GivenMatchService();
-            GivenGameProvider();
-            _presenter = new GamePresenter(_view, _matchService, _getDeck);
+            _presenter = new GamePresenter(_view, _matchService);
             WhenGameSetup();
         }
 
@@ -37,36 +37,36 @@ namespace Editor
         }
 
         [Test]
-        public void GiveEventCardsToPlayerOnGameSetup()
+        public void GiveUpgradeCardsToPlayerOnGameSetup()
         {
             WhenGetPlayerHand();
-            ThenEventCardsInPlayerHandsAreEqualTo(CardsInHand);
+            ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand);
         }
 
         [Test]
-        public void PresentEventCardWhenRoundStarts()
+        public void PresentUpgradeCardWhenRoundStarts()
         {
             WhenRoundSetup();
-            _view.Received(1).ShowRoundEventCard(Arg.Any<EventCardData>());
+            _view.Received(1).ShowRoundUpgradeCard(Arg.Any<UpgradeCardData>());
         }
 
         [Test]
-        public void RemoveEventCardFromHandWhenEventCardIsPlayed()
+        public void RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed()
         {
-            WhenEventCardIsPlayed();
+            WhenUpgradeCardIsPlayed();
             WhenGetPlayerHand();
-            ThenEventCardIsRemovedFromHand();
+            ThenUpgradeCardIsRemovedFromHand();
         }
 
         [Test]
-        public void PlayEventCardWhenCardIsPlayed()
+        public void PlayUpgradeCardWhenCardIsPlayed()
         {
-            WhenEventCardIsPlayed();
-            ThenPlayEventCardIsCalledInService();
+            WhenUpgradeCardIsPlayed();
+            ThenPlayUpgradeCardIsCalledInService();
         }
 
         [Test]
-        public void RemoveUnitCardFromHandWhenEventCardIsPlayed()
+        public void RemoveUnitCardFromHandWhenUnitCardIsPlayed()
         {
             WhenUnitCardIsPlayed();
             WhenGetPlayerHand();
@@ -78,11 +78,6 @@ namespace Editor
         {
             WhenUnitCardIsPlayed();
             ThenPlayUnitCardIsCalledInService();
-        }
-
-        private void GivenGameProvider()
-        {
-            _getDeck = new GetDeck(_cardProvider);
         }
 
         private void GivenMatchService()
@@ -116,31 +111,32 @@ namespace Editor
                 ScriptableObject.CreateInstance<UnitCardData>(),
                 ScriptableObject.CreateInstance<UnitCardData>(),
             });
-            _cardProvider.GetEventCards().Returns(new List<EventCardData>
+            _cardProvider.GetUpgradeCards().Returns(new List<UpgradeCardData>
             {
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
-                ScriptableObject.CreateInstance<EventCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
+                ScriptableObject.CreateInstance<UpgradeCardData>(),
             });
         }
+
         private void WhenUnitCardIsPlayed()
         {
             _presenter.PlayUnitCard(null);
         }
 
-        private void WhenEventCardIsPlayed()
+        private void WhenUpgradeCardIsPlayed()
         {
-            _presenter.PlayEventCard(null);
+            _presenter.PlayUpgradeCard(null);
         }
 
         private void WhenGetPlayerHand()
@@ -150,12 +146,17 @@ namespace Editor
 
         private void WhenGameSetup()
         {
-            _presenter.GameSetup();
+            _matchStatus = new MatchStatus()
+            {
+                hand = new Hand(_cardProvider.GetUnitCards().Take(5).ToList(),
+                    _cardProvider.GetUpgradeCards().Take(5).ToList())
+            };
+            _presenter.GameSetup(_matchStatus);
         }
 
         private void WhenRoundSetup()
         {
-            _presenter.RoundSetup();
+            _presenter.RoundSetup(ScriptableObject.CreateInstance<UpgradeCardData>());
         }
 
         private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards)
@@ -163,14 +164,14 @@ namespace Editor
             Assert.AreEqual(numberOfCards, _cardsInHand.GetUnitCards().Count);
         }
 
-        private void ThenEventCardsInPlayerHandsAreEqualTo(int numberOfCards)
+        private void ThenUpgradeCardsInPlayerHandsAreEqualTo(int numberOfCards)
         {
-            Assert.AreEqual(numberOfCards, _cardsInHand.GetEventCards().Count);
+            Assert.AreEqual(numberOfCards, _cardsInHand.GetUpgradeCards().Count);
         }
 
-        private void ThenPlayEventCardIsCalledInService()
+        private void ThenPlayUpgradeCardIsCalledInService()
         {
-            _matchService.Received(1).PlayEventCard(null);
+            _matchService.Received(1).PlayUpgradeCard(null);
         }
 
         private void ThenPlayUnitCardIsCalledInService()
@@ -183,9 +184,9 @@ namespace Editor
             ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
         }
 
-        private void ThenEventCardIsRemovedFromHand()
+        private void ThenUpgradeCardIsRemovedFromHand()
         {
-            ThenEventCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
+            ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
         }
     }
 }

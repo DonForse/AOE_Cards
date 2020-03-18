@@ -1,23 +1,30 @@
 ﻿using System;
+using Home;
+using Infrastructure.Services;
 using UnityEngine;
 
 namespace Game
 {
-    public class GameView : MonoBehaviour, IGameView
+    public class GameView : MonoBehaviour, IGameView, IView
     {
         private GamePresenter _presenter;
 
         private void Awake()
         {
-            _presenter = new GamePresenter(this, ServicesProvider.Instance.GetMatchService(),new GetDeck(new InMemoryDeckProvider()) );
+            _presenter = new GamePresenter(this, ServicesProvider.Instance.GetMatchService());
         }
 
         // Start is called before the first frame update
         void Start()
         {
-           _presenter.GameSetup();
         }
-        public void ShowRoundEventCard(EventCardData eventCard)
+
+        public void SetGame(MatchStatus matchStatus)
+        {
+            _presenter.GameSetup(matchStatus);
+        }
+
+        public void ShowRoundUpgradeCard(UpgradeCardData upgradeCard)
         {
             throw new System.NotImplementedException();
         }
@@ -32,12 +39,12 @@ namespace Game
             throw new System.NotImplementedException();
         }
 
-        public void ShowEventCard()
+        public void ShowRoundCard()
         {
             throw new System.NotImplementedException();
         }
 
-        public void ShowPlayerEventsPlayed()
+        public void ShowUpgradeCardsPlayedByPlayer(string player)
         {
             throw new System.NotImplementedException();
         }
@@ -47,7 +54,7 @@ namespace Game
             throw new System.NotImplementedException();
         }
 
-        public void EventCardSentPlay()
+        public void UpgradeCardSentPlay()
         {
             throw new System.NotImplementedException();
         }
@@ -55,6 +62,16 @@ namespace Game
         public void UnitCardSentPlay()
         {
             throw new System.NotImplementedException();
+        }
+
+        public void OnOpening()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnClosing()
+        {
+            throw new NotImplementedException();
         }
     }
 }

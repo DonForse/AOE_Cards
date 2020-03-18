@@ -6,21 +6,21 @@ namespace Game
     public class Hand
     {
         private readonly IList<UnitCardData> _unitCards;
-        private readonly IList<EventCardData> _eventCards;
+        private readonly IList<UpgradeCardData> _upgradeCards;
 
-        public Hand(IList<UnitCardData> unitCards, IList<EventCardData> eventCards)
+        public Hand(IList<UnitCardData> unitCards, IList<UpgradeCardData> upgradeCards)
         {
             _unitCards = unitCards;
-            _eventCards = eventCards;
+            _upgradeCards = upgradeCards;
         }
 
         public IList<UnitCardData> GetUnitCards()
         {
             return _unitCards.ToList();
         }
-        public IList<EventCardData> GetEventCards()
+        public IList<UpgradeCardData> GetUpgradeCards()
         {
-            return _eventCards.ToList();
+            return _upgradeCards.ToList();
         }
 
         public UnitCardData TakeUnitCard(string cardName)
@@ -30,10 +30,10 @@ namespace Game
             return card;
         }
 
-        public EventCardData TakeEventCard(string cardName)
+        public UpgradeCardData TakeUpgradeCard(string cardName)
         {
-            var card = _eventCards.FirstOrDefault(c => c.cardName == cardName);
-            _eventCards.Remove(card);
+            var card = _upgradeCards.FirstOrDefault(c => c.cardName == cardName);
+            _upgradeCards.Remove(card);
             return card;
         }
     }

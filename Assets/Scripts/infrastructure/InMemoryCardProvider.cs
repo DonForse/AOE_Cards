@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InMemoryDeckProvider : ICardProvider
 {
-    public IList<EventCardData> GetEventCards()
+    public IList<UpgradeCardData> GetUpgradeCards()
     {
         throw new System.NotImplementedException();
     }

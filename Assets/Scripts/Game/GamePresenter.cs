@@ -5,16 +5,14 @@ namespace Game
 {
     public class GamePresenter
     {
-        private readonly GetDeck _getDeck;
         private Deck _deck;
         private Hand _hand;
         private readonly IGameView _view;
         private readonly IMatchService _matchService;
 
-        public GamePresenter(IGameView view, IMatchService matchService ,GetDeck getDeck)
+        public GamePresenter(IGameView view, IMatchService matchService)
         {
             _view = view;
-            _getDeck = getDeck;
             _matchService = matchService;
         }
 
@@ -23,26 +21,21 @@ namespace Game
             return _hand;
         }
 
-        public void GameSetup()
+        public void GameSetup(MatchStatus matchStatus)
         {
-            _deck = _getDeck.Execute();
-            _deck.Shuffle();
-            _hand = new Hand(_deck.TakeUnitCards(5), _deck.TakeEventCards(5));
-
+            _hand = matchStatus.hand; // new Hand(_deck.TakeUnitCards(5), _deck.TakeEventCards(5));
         }
 
-        public void RoundSetup()
+        public void RoundSetup(UpgradeCardData upgradeCardData)
         {
-            var card = _deck.TakeEventCards(1).FirstOrDefault();
-        
-            _view.ShowRoundEventCard(card);
+            _view.ShowRoundUpgradeCard(upgradeCardData);
         }
 
-        public void PlayEventCard(string cardName)
+        public void PlayUpgradeCard(string cardName)
         {
-            var card = _hand.TakeEventCard(cardName);
-            _matchService.PlayEventCard(card.cardName);
-            _view.EventCardSentPlay();
+            var card = _hand.TakeUpgradeCard(cardName);
+            _matchService.PlayUpgradeCard(card.cardName);
+            _view.UpgradeCardSentPlay();
         }
 
         public void PlayUnitCard(string cardName)
@@ -50,7 +43,6 @@ namespace Game
             var card = _hand.TakeUnitCard(cardName);
             _matchService.PlayUnitCard(card.cardName);
             _view.UnitCardSentPlay();
-
         }
     }
 }

@@ -14,8 +14,8 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Data" t="Include">
-            <e p="EventCardData.cs" t="Include" />
             <e p="UnitCardData.cs" t="Include" />
+            <e p="UpgradeCardData.cs" t="Include" />
           </e>
           <e p="Game" t="Include">
             <e p="GamePresenter.cs" t="Include" />
@@ -27,6 +27,8 @@
             <e p="HomePresenter.cs" t="Include" />
             <e p="HomeView.cs" t="Include" />
             <e p="IHomeView.cs" t="Include" />
+            <e p="IView.cs" t="Include" />
+            <e p="Navigator.cs" t="Include" />
           </e>
           <e p="infrastructure" t="Include">
             <e p="Deck.cs" t="Include" />

@@ -26,10 +26,11 @@ namespace Infrastructure.Services
                 {"thing2", "world"}
             };
             var content = new FormUrlEncodedContent(values);
-            var url =string.Format(StartMatchUrl, playerId);
+            var url = "http://www.google.com";
+            //var url =string.Format(StartMatchUrl, playerId);
             webRequest = WebRequest.Create(url) as HttpWebRequest;
             
-            webRequest.BeginGetResponse(new AsyncCallback(FinishWebRequest), onStartMatchComplete);
+            webRequest.BeginGetResponse(FinishWebRequest, onStartMatchComplete);
         }
         void FinishWebRequest(IAsyncResult result)
         {
@@ -57,10 +58,11 @@ namespace Infrastructure.Services
 
         private MatchStatus DtoToMatchStatus(string responseString)
         {
+            return new MatchStatus();
             return JsonUtility.FromJson<MatchStatus>(responseString);
         }
 
-        public void PlayEventCard(string cardName)
+        public void PlayUpgradeCard(string cardName)
         {
             throw new System.NotImplementedException();
         }

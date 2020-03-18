@@ -5,7 +5,7 @@ using System.Linq;
 public class Deck
 {
     public IList<UnitCardData> UnitCards;
-    public IList<EventCardData> EventCards;
+    public IList<UpgradeCardData> EventCards;
 
     public IList<UnitCardData> TakeUnitCards(int amount)
     {
@@ -13,7 +13,7 @@ public class Deck
         cards.Select(c => UnitCards.Remove(c));
         return cards.ToList();
     }
-    public IList<EventCardData> TakeEventCards(int amount)
+    public IList<UpgradeCardData> TakeUpgradeCards(int amount)
     {
         var cards = EventCards.Take(amount);
         cards.Select(c => EventCards.Remove(c));

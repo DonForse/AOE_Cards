@@ -15,15 +15,15 @@ namespace Home
             _matchService = matchService;
         }
 
-        public async Task StartSearchingMatch()
+        public void StartSearchingMatch()
         {
            _matchService.StartMatch(PlayerPrefs.GetString("id"), OnMatchStatusComplete);
-           _view .OnStartLookingForMatch();
+           _view.OnStartLookingForMatch();
         }
 
-        private void OnMatchStatusComplete(MatchStatus obj)
+        private void OnMatchStatusComplete(MatchStatus matchStatus)
         {
-            _view.OnMatchFound();
+            _view.OnMatchFound(matchStatus);
         }
     }
 }
