@@ -6,7 +6,7 @@ namespace Infrastructure.Services
 {
     public interface IMatchService
     {
-        IEnumerator StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete);
+        void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete);
         void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsPlayed);
         void PlayUnitCard(string cardName, Action<RoundResult> onRoundFinished);
     }

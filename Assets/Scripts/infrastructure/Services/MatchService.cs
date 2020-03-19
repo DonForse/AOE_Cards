@@ -19,14 +19,19 @@ namespace Infrastructure.Services
 
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
-        public IEnumerator StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete)
+        public void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete)
+        {
+            string url = playerId;
+            StartCoroutine(Get("www.google.com", onStartMatchComplete));
+        }
+
+        private IEnumerator Get(string url, Action<MatchStatus> onStartMatchComplete)
         {
             bool isComplete;
             string responseString;
             using (var www = UnityWebRequest.Get("www.google.com"))
             {
                 yield return www.SendWebRequest();
-
                 isComplete = !www.isNetworkError && www.isDone;
                 responseString = isComplete ? www.downloadHandler.text : www.error;
                 if (isComplete)
@@ -40,8 +45,8 @@ namespace Infrastructure.Services
                 onStartMatchComplete(DtoToMatchStatus(JsonUtility.FromJson<MatchStatusDto>(responseString)));
             else
             {
-                yield return new WaitForSeconds(3);
-                StartCoroutine(StartMatch(playerId, onStartMatchComplete));
+                yield return new WaitForSeconds(3f);
+                StartCoroutine(Get(url, onStartMatchComplete));
             }
         }
 
@@ -49,6 +54,7 @@ namespace Infrastructure.Services
         {
             var dto = new MatchStatusDto()
             {
+                id = "guid",
                 board = new BoardDto()
                 {
                     Rounds = new List<RoundDto>()
@@ -104,6 +110,7 @@ namespace Infrastructure.Services
             };
 
             var ms = new MatchStatus();
+            ms.id = dto.id;
             ms.board = new Board
             {
                 Rounds = dto.board.Rounds.Select(r => new Round
@@ -136,6 +143,7 @@ namespace Infrastructure.Services
 
     public class MatchStatusDto
     {
+        public string id;
         public int round;
         public HandDto hand;
         public BoardDto board;

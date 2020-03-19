@@ -6,6 +6,7 @@ namespace Infrastructure.Services
 {
     public class MatchStatus
     {
+        public string id;
         public int round;
         public Hand hand;
         public Board board;
