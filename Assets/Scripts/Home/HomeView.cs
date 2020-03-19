@@ -9,6 +9,7 @@ namespace Home
 {
     public class HomeView : MonoBehaviour, IView, IHomeView
     {
+        [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
         [SerializeField] private Button _playButton;
         [SerializeField] private GameObject _matchMakingContainer;
@@ -20,7 +21,7 @@ namespace Home
         
         public void OnOpening()
         {
-            _presenter = new HomePresenter(this, ServicesProvider.Instance.GetMatchService());
+            _presenter = new HomePresenter(this, _servicesProvider.GetMatchService());
             _playButton.onClick.AddListener(PlayMatch);
             this.gameObject.SetActive(true);
         }

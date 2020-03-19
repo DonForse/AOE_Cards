@@ -1,14 +1,22 @@
 using System;
 using Infrastructure.Services;
+using UnityEngine;
 
-public class ServicesProvider
+public class ServicesProvider : MonoBehaviour
 {
     private ServicesProvider() { }
-    public static readonly ServicesProvider Instance = new ServicesProvider();
-    private readonly Lazy<IMatchService> _matchService = new Lazy<IMatchService>(() => new MatchService());
+    public GameObject matchServiceGo;
+
+    private IMatchService _matchService;
 
     public IMatchService GetMatchService()
     {
-        return _matchService.Value;
+        if (_matchService != null)
+            return _matchService;
+        var ms = GameObject.Find("MatchService");
+        if (ms == null)
+            ms = Instantiate<GameObject>(matchServiceGo);
+        _matchService = ms.GetComponent<MatchService>();
+        return _matchService;
     }
 }

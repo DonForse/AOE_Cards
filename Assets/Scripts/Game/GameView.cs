@@ -8,12 +8,13 @@ namespace Game
 {
     public class GameView : MonoBehaviour, IGameView, IView
     {
+        [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private GameObject CardGO;
         private GamePresenter _presenter;
 
         public void OnOpening()
         {
-            _presenter = new GamePresenter(this, ServicesProvider.Instance.GetMatchService());
+            _presenter = new GamePresenter(this, _servicesProvider.GetMatchService());
             this.gameObject.SetActive(true);
         }
 
