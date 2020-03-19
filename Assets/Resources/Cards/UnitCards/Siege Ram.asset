@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a449997bf2957b74bb2d188218121bed, type: 3}
-  m_Name: Knight 1
+  m_Name: Siege Ram
   m_EditorClassIdentifier: 
-  cardName: Paladin
-  archetype: Cavarly
-  effect: 
+  cardName: Siege Ram
+  archetype: Siege
+  effect: Always wins vs Archer
   effectPower: 0
-  power: 24
+  power: 0
   artwork: {fileID: 0}
