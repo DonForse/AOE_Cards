@@ -15,7 +15,11 @@ public class ServicesProvider : MonoBehaviour
             return _matchService;
         var ms = GameObject.Find("MatchService");
         if (ms == null)
+        {
             ms = Instantiate<GameObject>(matchServiceGo);
+            ms.name = "MatchService";
+        }
+            
         _matchService = ms.GetComponent<MatchService>();
         return _matchService;
     }

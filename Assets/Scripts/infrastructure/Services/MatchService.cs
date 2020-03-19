@@ -36,13 +36,17 @@ namespace Infrastructure.Services
                 responseString = isComplete ? www.downloadHandler.text : www.error;
                 if (isComplete)
                 {
-                    if (responseString.Contains("matchfound:")) //hardcodeo berrta.
-                        isComplete = true;
+                    if (!responseString.Contains("matchfound:")) //hardcodeo berrta.
+                        isComplete = false;
                 }
             }
 
             if (isComplete)
-                onStartMatchComplete(DtoToMatchStatus(JsonUtility.FromJson<MatchStatusDto>(responseString)));
+            {
+                //var dto = JsonUtility.FromJson<MatchStatusDto>(responseString)
+                //onStartMatchComplete(DtoToMatchStatus(dto));
+                onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
+            }
             else
             {
                 yield return new WaitForSeconds(3f);
