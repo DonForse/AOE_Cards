@@ -39,6 +39,7 @@
               <e p="IMatchService.cs" t="Include" />
               <e p="MatchService.cs" t="Include" />
               <e p="MatchStatus.cs" t="Include" />
+              <e p="RoundResult.cs" t="Include" />
             </e>
           </e>
           <e p="Player" t="Include">

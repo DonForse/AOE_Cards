@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game;
 using Infrastructure.Services;
@@ -171,12 +172,12 @@ namespace Editor
 
         private void ThenPlayUpgradeCardIsCalledInService()
         {
-            _matchService.Received(1).PlayUpgradeCard(null);
+            _matchService.Received(1).PlayUpgradeCard(null,Arg.Any<Action<Round>>());
         }
 
         private void ThenPlayUnitCardIsCalledInService()
         {
-            _matchService.Received(1).PlayUnitCard(null);
+            _matchService.Received(1).PlayUnitCard(null, Arg.Any<Action<RoundResult>>());
         }
 
         private void ThenUnitCardIsRemovedFromHand()

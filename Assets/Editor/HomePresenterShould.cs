@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Home;
+using ICSharpCode.NRefactory.Visitors;
 using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,7 +13,6 @@ namespace Editor
         private HomePresenter _presenter;
         private IHomeView _view;
         private IMatchService _matchService;
-        private readonly Action<MatchStatus> _action = status => { };
 
         private const int CardsInHand = 5;
 
@@ -34,6 +34,7 @@ namespace Editor
         [Test]
         public void InformViewWhenMatchServiceFoundGame()
         {
+            //will fail until I can call the callback.
             WhenStartNewMatch();
             var ms = WhenMatchFound();
             ThenInformViewMatchFound(ms);
@@ -41,16 +42,11 @@ namespace Editor
 
         private MatchStatus WhenMatchFound()
         {
-            //_presenter.When(x=>x.StartSearchingMatch()).Do(_ =>_action(new MatchStatus()));
+            // _matchService.When(x=>x.StartMatch("",Arg.Any<Action<MatchStatus>>()))
+            //     .Do();
             //fake pero algo asi
             return new MatchStatus();
         }
-
-        private void ThenInformViewMatchFound(MatchStatus matchStatus)
-        {
-            _view.Received(1).OnMatchFound(matchStatus);
-        }
-
 
         private void WhenStartNewMatch()
         {
@@ -59,9 +55,13 @@ namespace Editor
 
         private void ThenMatchServiceIsCalled()
         {
-            _matchService.Received(1).StartMatch(string.Empty, _action);
+            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<MatchStatus>>());
         }
 
+        private void ThenInformViewMatchFound(MatchStatus matchStatus)
+        {
+            _view.Received(1).OnMatchFound(Arg.Any<MatchStatus>());
+        }
 
         private void GivenMatchService()
         {

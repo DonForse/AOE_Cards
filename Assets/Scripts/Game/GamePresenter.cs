@@ -27,7 +27,7 @@ namespace Game
 
         public void GameSetup(MatchStatus matchStatus)
         {
-            _hand = matchStatus.hand; // new Hand(_deck.TakeUnitCards(5), _deck.TakeEventCards(5));
+            _hand = matchStatus.hand;
             _view.InitializeHand(_hand);
 
             _view.ShowPlayerHand(_hand);
@@ -41,7 +41,7 @@ namespace Game
         public void PlayUpgradeCard(string cardName)
         {
             var card = _hand.TakeUpgradeCard(cardName);
-            _matchService.PlayUpgradeCard(card.cardName);
+            _matchService.PlayUpgradeCard(card.cardName, OnUpgradeCardsPlayed);
             _view.UpgradeCardSentPlay();
         }
 
@@ -52,6 +52,11 @@ namespace Game
             _view.UnitCardSentPlay();
         }
 
+        private void OnUpgradeCardsPlayed(Round round)
+        {
+            //_view.Up;
+        }
+        
         private void OnRoundFinished(RoundResult roundResult)
         {
             _view.CardReveal(roundResult);

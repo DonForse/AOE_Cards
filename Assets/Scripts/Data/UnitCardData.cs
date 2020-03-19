@@ -8,6 +8,7 @@ public class UnitCardData : ScriptableObject
     public string cardName;
     public string archetype;
     public string effect;
+    public int effectPower;
     public int power;
     public Sprite artwork;
 
