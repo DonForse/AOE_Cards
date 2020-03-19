@@ -1,66 +1,124 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Game;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Infrastructure.Services
 {
-    public class MatchService : IMatchService
+    public class MatchService : MonoBehaviour, IMatchService
     {
-        HttpWebRequest webRequest;
-        
         private const string BaseUrl = "";
         private string StartMatchUrl => BaseUrl + "/games/users/{0}/matches";
 
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
-        public void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete)
+        public IEnumerator StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete)
         {
-            var values = new Dictionary<string, string>
-            {
-                {"thing1", "hello"},
-                {"thing2", "world"}
-            };
-            var content = new FormUrlEncodedContent(values);
-
-            var url = "http://www.google.com";
-            //var url =string.Format(StartMatchUrl, playerId);
-            webRequest = WebRequest.Create(url) as HttpWebRequest;
-            
-            webRequest.BeginGetResponse(FinishWebRequest, onStartMatchComplete);
-        }
-        void FinishWebRequest(IAsyncResult result)
-        {
-            var webResponse = webRequest.EndGetResponse(result);
+            bool isComplete;
             string responseString;
-            using (Stream stream = webResponse.GetResponseStream())
+            using (var www = UnityWebRequest.Get("www.google.com"))
             {
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                yield return www.SendWebRequest();
+
+                isComplete = !www.isNetworkError && www.isDone;
+                responseString = isComplete ? www.downloadHandler.text : www.error;
+                if (isComplete)
                 {
-                    responseString = reader.ReadToEnd();
+                    if (responseString.Contains("matchfound:")) //hardcodeo berrta.
+                        isComplete = true;
                 }
             }
 
-            if (result.AsyncState == null)
-                return;
-            
-            var callback = (Action<MatchStatus>) result.AsyncState;
-            callback(DtoToMatchStatus(responseString));
+            if (isComplete)
+                onStartMatchComplete(DtoToMatchStatus(JsonUtility.FromJson<MatchStatusDto>(responseString)));
+            else
+            {
+                yield return new WaitForSeconds(3);
+                StartCoroutine(StartMatch(playerId, onStartMatchComplete));
+            }
         }
 
-        private void OnGetResponse(Task<string> obj)
+        private MatchStatus DtoToMatchStatus(MatchStatusDto response)
         {
-            throw new NotImplementedException();
-        }
+            var dto = new MatchStatusDto()
+            {
+                board = new BoardDto()
+                {
+                    Rounds = new List<RoundDto>()
+                    {
+                        new RoundDto()
+                        {
+                            CardsPlayed = new List<PlayerCardDto>()
+                            {
+                                new PlayerCardDto
+                                {
+                                    Player = "1",
+                                    //UnitCard = "Villager",
+                                    //UpgradeCard = "Supremacy"}
+                                },
+                                new PlayerCardDto
+                                {
+                                    Player = "2",
+                                    //UnitCard = "Villager",
+                                    //UpgradeCard = "Supremacy"}
+                                },
+                                new PlayerCardDto
+                                {
+                                    Player = "3",
+                                    //UnitCard = "Villager",
+                                    //UpgradeCard = "Supremacy"}
+                                },
+                            }
+                        }
+                    },
+                },
+                hand = new HandDto
+                {
+                    Units = new List<string>
+                    {
+                        "Paladin",
+                        "Scout",
+                        "Hussar",
+                        "Skirmisher",
+                        "Halbardier",
+                        "Champion",
+                        "Archer",
+                    },
+                    Upgrades = new List<string>
+                    {
+                        "Berbers Boots",
+                        "Incas Villagers",
+                        "Feitoria",
+                        "Supremacy",
+                        "Warland Wars"
+                    }
+                },
+                round = 0
+            };
 
-        private MatchStatus DtoToMatchStatus(string responseString)
-        {
-            return new MatchStatus();
-            return JsonUtility.FromJson<MatchStatus>(responseString);
+            var ms = new MatchStatus();
+            ms.board = new Board
+            {
+                Rounds = dto.board.Rounds.Select(r => new Round
+                {
+                    WinnerPlayer = r.WinnerPlayer,
+                    UpgradeCardRound = new UpgradeCardData(),
+                    CardsPlayed = new List<PlayerCard>()
+                }).ToList()
+            };
+            ms.hand = new Hand(dto.hand.Units.Select(
+                cardName => new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cardName)).ToList(),
+                dto.hand.Upgrades.Select(cardName =>
+                    new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cardName)).ToList());
+            ms.round = dto.round;
+            return ms;
         }
 
         public void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsFinished)
@@ -74,6 +132,38 @@ namespace Infrastructure.Services
             //TODO: Change to round status Id repost.
             throw new System.NotImplementedException();
         }
+    }
+
+    public class MatchStatusDto
+    {
+        public int round;
+        public HandDto hand;
+        public BoardDto board;
+    }
+
+    public class BoardDto
+    {
+        public IList<RoundDto> Rounds;
+    }
+
+    public class RoundDto
+    {
+        public IList<PlayerCardDto> CardsPlayed;
+        public string WinnerPlayer;
+        public string UpgradeCardRound;
+    }
+
+    public class PlayerCardDto
+    {
+        public string Player;
+        public string UpgradeCard;
+        public string UnitCard;
+    }
+
+    public class HandDto
+    {
+        public IList<string> Units;
+        public IList<string> Upgrades;
     }
 }
 

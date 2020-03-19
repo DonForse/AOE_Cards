@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InMemoryDeckProvider : ICardProvider
+public class InMemoryCardProvider : ICardProvider
 {
     public IList<UpgradeCardData> GetUpgradeCards()
     {

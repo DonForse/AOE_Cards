@@ -21,7 +21,8 @@ namespace Home
 
         public void OpenGameView(MatchStatus ms)
         {
-            currentActiveView.OnClosing();
+            if(currentActiveView != null)
+                currentActiveView.OnClosing();
             gameView.OnOpening();
             gameView.SetGame(ms);
 
@@ -30,7 +31,8 @@ namespace Home
 
         public void OpenHomeView()
         {            
-            currentActiveView.OnClosing();
+            if(currentActiveView != null)
+                currentActiveView.OnClosing();
             homeView.OnOpening();
             currentActiveView = homeView;
         }

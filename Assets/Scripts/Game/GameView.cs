@@ -14,11 +14,12 @@ namespace Game
         public void OnOpening()
         {
             _presenter = new GamePresenter(this, ServicesProvider.Instance.GetMatchService());
+            this.gameObject.SetActive(true);
         }
 
         public void OnClosing()
         {
-            
+            this.gameObject.SetActive(false);
         }
 
         public void SetGame(MatchStatus matchStatus)
