@@ -26,6 +26,7 @@ namespace Infrastructure.Services
                 {"thing2", "world"}
             };
             var content = new FormUrlEncodedContent(values);
+
             var url = "http://www.google.com";
             //var url =string.Format(StartMatchUrl, playerId);
             webRequest = WebRequest.Create(url) as HttpWebRequest;
@@ -62,13 +63,15 @@ namespace Infrastructure.Services
             return JsonUtility.FromJson<MatchStatus>(responseString);
         }
 
-        public void PlayUpgradeCard(string cardName)
+        public void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsFinished)
         {
+            //TODO: Change to round status Id repost.
             throw new System.NotImplementedException();
         }
 
-        public void PlayUnitCard(string cardName)
+        public void PlayUnitCard(string cardName, Action<RoundResult> onRoundComplete)
         {
+            //TODO: Change to round status Id repost.
             throw new System.NotImplementedException();
         }
     }

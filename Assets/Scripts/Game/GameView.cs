@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Home;
 using Infrastructure.Services;
 using UnityEngine;
@@ -7,16 +8,17 @@ namespace Game
 {
     public class GameView : MonoBehaviour, IGameView, IView
     {
+        [SerializeField] private GameObject CardGO;
         private GamePresenter _presenter;
 
-        private void Awake()
+        public void OnOpening()
         {
             _presenter = new GamePresenter(this, ServicesProvider.Instance.GetMatchService());
         }
 
-        // Start is called before the first frame update
-        void Start()
+        public void OnClosing()
         {
+            
         }
 
         public void SetGame(MatchStatus matchStatus)
@@ -26,22 +28,40 @@ namespace Game
 
         public void ShowRoundUpgradeCard(UpgradeCardData upgradeCard)
         {
-            throw new System.NotImplementedException();
+            //animation stuff.  
         }
 
-        public void ShowHand()
+        public void InitializeHand(Hand hand)
         {
-            throw new System.NotImplementedException();
+            //create instances of cards and inactive them.
+        }
+
+        public void ShowPlayerHand(Hand hand)
+        {
+            ShowPlayerUnitsCard(hand.GetUnitCards());
+            ShowPlayerUpgradeCards(hand.GetUpgradeCards());
+        }
+
+        private void ShowPlayerUpgradeCards(IList<UpgradeCardData> list)
+        {
+            //set active and do animation
+            //maybe add reroll chances
+        }
+
+        private void ShowPlayerUnitsCard(IList<UnitCardData> cards)
+        {
+            //set active and do animation
+            //maybe add reroll chances
         }
 
         public void ShowUnitCard()
         {
-            throw new System.NotImplementedException();
+            //animation of making the card bigger when hover
         }
 
         public void ShowRoundCard()
         {
-            throw new System.NotImplementedException();
+            //animation of making the card bigger when hover
         }
 
         public void ShowUpgradeCardsPlayedByPlayer(string player)
@@ -64,12 +84,7 @@ namespace Game
             throw new System.NotImplementedException();
         }
 
-        public void OnOpening()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnClosing()
+        public void CardReveal(RoundResult roundResult)
         {
             throw new NotImplementedException();
         }

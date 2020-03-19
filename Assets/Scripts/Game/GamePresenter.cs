@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Infrastructure.Services;
 
 namespace Game
@@ -9,11 +11,13 @@ namespace Game
         private Hand _hand;
         private readonly IGameView _view;
         private readonly IMatchService _matchService;
+        private readonly IList<RoundResult> _match;
 
         public GamePresenter(IGameView view, IMatchService matchService)
         {
             _view = view;
             _matchService = matchService;
+            _match = new List<RoundResult>();
         }
 
         public Hand GetHand()
@@ -24,6 +28,9 @@ namespace Game
         public void GameSetup(MatchStatus matchStatus)
         {
             _hand = matchStatus.hand; // new Hand(_deck.TakeUnitCards(5), _deck.TakeEventCards(5));
+            _view.InitializeHand(_hand);
+
+            _view.ShowPlayerHand(_hand);
         }
 
         public void RoundSetup(UpgradeCardData upgradeCardData)
@@ -41,8 +48,13 @@ namespace Game
         public void PlayUnitCard(string cardName)
         {
             var card = _hand.TakeUnitCard(cardName);
-            _matchService.PlayUnitCard(card.cardName);
+            _matchService.PlayUnitCard(card.cardName, OnRoundFinished);
             _view.UnitCardSentPlay();
+        }
+
+        private void OnRoundFinished(RoundResult roundResult)
+        {
+            _view.CardReveal(roundResult);
         }
     }
 }
