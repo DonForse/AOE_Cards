@@ -36,8 +36,8 @@ namespace Infrastructure.Services
                 responseString = isComplete ? www.downloadHandler.text : www.error;
                 if (isComplete)
                 {
-                    if (!responseString.Contains("matchfound:")) //hardcodeo berrta.
-                        isComplete = false;
+                    // if (!responseString.Contains("matchfound:")) //hardcodeo berrta.
+                    //     isComplete = false;
                 }
             }
 
@@ -107,7 +107,7 @@ namespace Infrastructure.Services
                         "Incas Villagers",
                         "Feitoria",
                         "Supremacy",
-                        "Warland Wars"
+                        "Garland Wars"
                     }
                 },
                 round = 0
@@ -120,7 +120,7 @@ namespace Infrastructure.Services
                 Rounds = dto.board.Rounds.Select(r => new Round
                 {
                     WinnerPlayer = r.WinnerPlayer,
-                    UpgradeCardRound = new UpgradeCardData(),
+                    UpgradeCardRound = ScriptableObject.CreateInstance<UpgradeCardData>(),
                     CardsPlayed = new List<PlayerCard>()
                 }).ToList()
             };

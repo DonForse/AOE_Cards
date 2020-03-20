@@ -8,13 +8,16 @@ namespace Game
 {
     public class GameView : MonoBehaviour, IGameView, IView
     {
-        [SerializeField] private ServicesProvider _servicesProvider;
-        [SerializeField] private GameObject CardGO;
+        [SerializeField] private ServicesProvider servicesProvider;
+        [SerializeField] private GameObject unitCardsContainer;
+        [SerializeField] private GameObject upgradeCardsContainer;
+        [SerializeField] private GameObject unitCardGo;
+        [SerializeField] private GameObject upgradeCardGo;
         private GamePresenter _presenter;
 
         public void OnOpening()
         {
-            _presenter = new GamePresenter(this, _servicesProvider.GetMatchService());
+            _presenter = new GamePresenter(this, servicesProvider.GetMatchService());
             this.gameObject.SetActive(true);
         }
 
@@ -35,7 +38,18 @@ namespace Game
 
         public void InitializeHand(Hand hand)
         {
-            //create instances of cards and inactive them.
+            foreach (var card in hand.GetUnitCards())
+            {
+                var go = Instantiate(unitCardGo, unitCardsContainer.transform);
+                var unitCard = go.GetComponent<UnitCardView>();
+                unitCard.SetCard(card);
+            }
+            foreach (var card in hand.GetUpgradeCards())
+            {
+                var go = GameObject.Instantiate(upgradeCardGo, upgradeCardsContainer.transform);
+                var upgradeCard = go.GetComponent<UpgradeCardView>();
+                upgradeCard.SetCard(card);
+            }
         }
 
         public void ShowPlayerHand(Hand hand)

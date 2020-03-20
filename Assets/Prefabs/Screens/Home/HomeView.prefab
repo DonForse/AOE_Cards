@@ -1122,10 +1122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02bedf9e89124f8e9ba00171045b029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _servicesProvider: {fileID: 7374400079544880135, guid: f3830043c7d514c809ae40914cc34643,
-    type: 3}
-  _navigator: {fileID: 5645063363577814721, guid: 7f3df4c7f0f4946d9b85691bedd19f38,
-    type: 3}
+  _servicesProvider: {fileID: 0}
+  _navigator: {fileID: 0}
   _playButton: {fileID: 625043314327325045}
   _matchMakingContainer: {fileID: 625043314464654612}
   _matchFoundContainer: {fileID: 8369753232239579860}

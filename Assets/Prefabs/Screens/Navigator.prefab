@@ -43,6 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fe8dfd8b2a945a6a86c8f2cca47a96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  homeView: {fileID: 625043315051558682, guid: 4eae1a55b2d9e494fa86198c917da49c, type: 3}
-  gameView: {fileID: 4497082453807987681, guid: b361c47069101402b9b055011e82c6d6,
-    type: 3}
+  homeView: {fileID: 0}
+  gameView: {fileID: 0}
