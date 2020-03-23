@@ -29,7 +29,6 @@ namespace Game
         {
             _hand = matchStatus.hand;
             _view.InitializeHand(_hand);
-
             _view.ShowPlayerHand(_hand);
         }
 
@@ -55,6 +54,7 @@ namespace Game
         private void OnUpgradeCardsPlayed(Round round)
         {
             //_view.Up;
+            _view.ShowUpgradeCardsPlayedRound(round);
         }
         
         private void OnRoundFinished(RoundResult roundResult)

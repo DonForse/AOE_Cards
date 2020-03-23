@@ -13,4 +13,5 @@ public interface IGameView
     void UnitCardSentPlay();
     void CardReveal(RoundResult roundResult);
     void InitializeHand(Hand hand);
+    void ShowUpgradeCardsPlayedRound(Round round);
 }

@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Game;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -134,14 +130,52 @@ namespace Infrastructure.Services
 
         public void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsFinished)
         {
-            //TODO: Change to round status Id repost.
-            throw new System.NotImplementedException();
+            var round = new Round
+            {
+                WinnerPlayer = "a",
+                CardsPlayed = new List<PlayerCard> {
+                    new PlayerCard {
+                        Player = "a",
+                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars" }
+
+                    },
+                    new PlayerCard {
+                        Player = "b",
+                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars"}
+                    }
+                }, 
+                UpgradeCardRound = new UpgradeCardData {
+                    cardName = "Supremacy"
+                }
+            };
+            onUpgradeCardsFinished(round);
         }
 
         public void PlayUnitCard(string cardName, Action<RoundResult> onRoundComplete)
         {
             //TODO: Change to round status Id repost.
-            throw new System.NotImplementedException();
+            var roundResult = new RoundResult() {
+                newRoundCard = new UpgradeCardData { cardName = "Supremacy" },
+                previousRound = new Round {
+                    WinnerPlayer = "a",
+                    CardsPlayed = new List<PlayerCard> {
+                    new PlayerCard {
+                        Player = "a",
+                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars" }
+
+                    },
+                    new PlayerCard {
+                        Player = "b",
+                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars"}
+                    }
+                },
+                    UpgradeCardRound = new UpgradeCardData
+                    {
+                        cardName = "Supremacy"
+                    }
+                }
+            };
+            onRoundComplete(roundResult);
         }
     }
 

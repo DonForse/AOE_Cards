@@ -17,11 +17,11 @@ public class UpgradeCardView : MonoBehaviour
         effect.text = card.effect;
         artwork = card.artwork;
 
-        foreach (var archetype in card.GetArchetypes())
-        {
-            //load resource
-            //add prefab to archetypeSection
-        }
+        //foreach (var archetype in card.GetArchetypes())
+        //{
+        //    //load resource
+        //    //add prefab to archetypeSection
+        //}
     }
 
 }
