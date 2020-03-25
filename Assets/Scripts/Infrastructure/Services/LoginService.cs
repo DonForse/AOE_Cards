@@ -47,7 +47,7 @@ namespace Infrastructure.Services
 
             if (isDone)
             {
-                onLoginComplete(responseString);
+                onLoginComplete(UserResponseDto.Parse(responseString));
             }
             else if (isError)
             {
