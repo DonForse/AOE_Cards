@@ -11,12 +11,21 @@ namespace Home
     {
         public HomeView homeView;
         public GameView gameView;
+        public LoginView loginView;
 
         private IView currentActiveView;
 
         private void Start()
         {
-            OpenHomeView();
+            OpenLoginView();
+        }
+
+        public void OpenLoginView()
+        {
+            if (currentActiveView != null)
+                currentActiveView.OnClosing();
+            loginView.OnOpening();
+            currentActiveView = loginView;
         }
 
         public void OpenGameView(MatchStatus ms)
