@@ -1,49 +1,48 @@
 ﻿using Home;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginView : MonoBehaviour, IView, ILoginView
+namespace Login
 {
-    [SerializeField] private Button loginButton;
-    [SerializeField] private Button registerButton;
-    [SerializeField] private TextMeshProUGUI username;
-    [SerializeField] private ServicesProvider _servicesProvider;
-    [SerializeField] private Navigator _navigator;
-    private LoginPresenter _presenter;
-    public void OnOpening()
+    public class LoginView : MonoBehaviour, IView, ILoginView
     {
-        _presenter = new LoginPresenter(this, _servicesProvider.GetLoginService());
-        loginButton.onClick.AddListener(Login);
-        registerButton.onClick.AddListener(Register);
-        this.gameObject.SetActive(true);
-    }
+        [SerializeField] private Button loginButton;
+        [SerializeField] private Button registerButton;
+        [SerializeField] private TextMeshProUGUI username;
+        [SerializeField] private ServicesProvider servicesProvider;
+        [SerializeField] private Navigator navigator;
+        private LoginPresenter _presenter;
+        public void OnOpening()
+        {
+            _presenter = new LoginPresenter(this, servicesProvider.GetLoginService());
+            loginButton.onClick.AddListener(Login);
+            registerButton.onClick.AddListener(Register);
+            this.gameObject.SetActive(true);
+        }
         
-    private void Login()
-    {
-        _presenter.Login(username.text, "a");
-    }
+        private void Login()
+        {
+            _presenter.Login(username.text, "a");
+        }
 
-    private void Register()
-    {
-        _presenter.Register(username.text, "a");
-    }
+        private void Register()
+        {
+            _presenter.Register(username.text, "a");
+        }
 
-    public void OnLoginComplete() {
-        _navigator.OpenHomeView();
+        public void OnLoginComplete() {
+            navigator.OpenHomeView();
+        }
+    
+        public void OnLoginFail(string message) {
+            //show message.
+        }
 
-    }
-    public void OnClosing()
-    {
-        loginButton.onClick.RemoveAllListeners();
-        this.gameObject.SetActive(false);
-    }
-
-    public void OnLoginCompleteLogin()
-    {
-        _navigator.OpenHomeView();
+        public void OnClosing()
+        {
+            loginButton.onClick.RemoveAllListeners();
+            this.gameObject.SetActive(false);
+        }
     }
 }

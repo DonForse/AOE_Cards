@@ -15,26 +15,34 @@ namespace Infrastructure.Services
 
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
-        public void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete)
+        public void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete, Action<string> onError)
         {
             string url = playerId;
-            StartCoroutine(Get("www.google.com", onStartMatchComplete));
+            StartCoroutine(Get(url, onStartMatchComplete, onError));
         }
 
-        private IEnumerator Get(string url, Action<MatchStatus> onStartMatchComplete)
+        private IEnumerator Get(string url, Action<MatchStatus> onStartMatchComplete, Action<string> onError)
         {
             bool isComplete;
+            bool isError;
             string responseString;
-            using (var www = UnityWebRequest.Get("www.google.com"))
+            using (var webRequest = UnityWebRequest.Get(url))
             {
-                yield return www.SendWebRequest();
-                isComplete = !www.isNetworkError && www.isDone;
-                responseString = isComplete ? www.downloadHandler.text : www.error;
+                yield return webRequest.SendWebRequest();
+                isError = webRequest.isNetworkError;
+                isComplete = webRequest.isDone;
+                responseString = isError ? webRequest.error :
+                    isComplete ? webRequest.downloadHandler.text : string.Empty;
                 if (isComplete)
                 {
                     // if (!responseString.Contains("matchfound:")) //hardcodeo berrta.
                     //     isComplete = false;
                 }
+            }
+
+            if (isError)
+            {
+                onError(responseString);
             }
 
             if (isComplete)
@@ -46,7 +54,7 @@ namespace Infrastructure.Services
             else
             {
                 yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(url, onStartMatchComplete));
+                StartCoroutine(Get(url, onStartMatchComplete, onError));
             }
         }
 
@@ -121,54 +129,63 @@ namespace Infrastructure.Services
                 }).ToList()
             };
             ms.hand = new Hand(dto.hand.Units.Select(
-                cardName => new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cardName)).ToList(),
+                        cardName => new InMemoryCardProvider().GetUnitCards()
+                            .FirstOrDefault(f => f.cardName == cardName))
+                    .ToList(),
                 dto.hand.Upgrades.Select(cardName =>
                     new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cardName)).ToList());
             ms.round = dto.round;
             return ms;
         }
 
-        public void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsFinished)
+        public void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsFinished, Action<string> onError)
         {
             var round = new Round
             {
                 WinnerPlayer = "a",
-                CardsPlayed = new List<PlayerCard> {
-                    new PlayerCard {
+                CardsPlayed = new List<PlayerCard>
+                {
+                    new PlayerCard
+                    {
                         Player = "a",
-                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars" }
-
+                        UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
                     },
-                    new PlayerCard {
+                    new PlayerCard
+                    {
                         Player = "b",
-                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars"}
+                        UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
                     }
-                }, 
-                UpgradeCardRound = new UpgradeCardData {
+                },
+                UpgradeCardRound = new UpgradeCardData
+                {
                     cardName = "Supremacy"
                 }
             };
             onUpgradeCardsFinished(round);
         }
 
-        public void PlayUnitCard(string cardName, Action<RoundResult> onRoundComplete)
+        public void PlayUnitCard(string cardName, Action<RoundResult> onRoundComplete, Action<string> onError)
         {
             //TODO: Change to round status Id repost.
-            var roundResult = new RoundResult() {
-                newRoundCard = new UpgradeCardData { cardName = "Supremacy" },
-                previousRound = new Round {
+            var roundResult = new RoundResult()
+            {
+                newRoundCard = new UpgradeCardData {cardName = "Supremacy"},
+                previousRound = new Round
+                {
                     WinnerPlayer = "a",
-                    CardsPlayed = new List<PlayerCard> {
-                    new PlayerCard {
-                        Player = "a",
-                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars" }
-
+                    CardsPlayed = new List<PlayerCard>
+                    {
+                        new PlayerCard
+                        {
+                            Player = "a",
+                            UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
+                        },
+                        new PlayerCard
+                        {
+                            Player = "b",
+                            UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
+                        }
                     },
-                    new PlayerCard {
-                        Player = "b",
-                        UpgradeCardData = new UpgradeCardData{cardName = "Garland Wars"}
-                    }
-                },
                     UpgradeCardRound = new UpgradeCardData
                     {
                         cardName = "Supremacy"

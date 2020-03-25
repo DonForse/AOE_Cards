@@ -6,5 +6,6 @@ namespace Home
     {
         void OnMatchFound(MatchStatus matchStatus);
         void OnStartLookingForMatch();
+        void OnError(string message);
     }
 }

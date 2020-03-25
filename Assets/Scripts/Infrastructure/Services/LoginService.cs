@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Game;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,16 +12,16 @@ namespace Infrastructure.Services
         private string ApiUrl => BaseUrl + "/api/user/";
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
-        public void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete)
+        public void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
             string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password });
-            StartCoroutine(Post(data, onRegisterComplete));
+            StartCoroutine(Post(data, onRegisterComplete, onRegisterFailed));
         }
 
-        public void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete)
+        public void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
             var url = string.Format("{0}?username={1}&password={2}", ApiUrl, playerName, password);
-            StartCoroutine(Get(url, onLoginComplete));
+            StartCoroutine(Get(url, onLoginComplete, onLoginFailed));
         }
         public class UserDto
         {
@@ -32,17 +29,17 @@ namespace Infrastructure.Services
             public string password;
         }
 
-        private IEnumerator Get(string url, Action<UserResponseDto> onLoginComplete)
+        private IEnumerator Get(string url, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
             bool isDone;
             bool isError;
             string responseString;
-            using (var www = UnityWebRequest.Get(url))
+            using (var webRequest = UnityWebRequest.Get(url))
             {
-                yield return www.SendWebRequest();
-                isDone = www.isDone;
-                isError = www.isError;
-                responseString = isDone ? www.downloadHandler.text : www.error;
+                yield return webRequest.SendWebRequest();
+                isDone = webRequest.isDone;
+                isError = webRequest.isError;
+                responseString = isError ? webRequest.error : isDone ? webRequest.downloadHandler.text : string.Empty;
             }
 
             if (isDone)
@@ -51,16 +48,16 @@ namespace Infrastructure.Services
             }
             else if (isError)
             {
-                throw new ApplicationException("");
+                onLoginFailed(responseString);
             }
             else
             {
                 yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(url, onLoginComplete));
+                StartCoroutine(Get(url, onLoginComplete, onLoginFailed));
             }
         }
 
-        private IEnumerator Post(string data, Action<UserResponseDto> onRegisterComplete)
+        private IEnumerator Post(string data, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
             bool isDone;
             bool isError;
@@ -76,23 +73,21 @@ namespace Infrastructure.Services
                 yield return webRequest.SendWebRequest();
                 isDone = webRequest.isDone;
                 isError = webRequest.isNetworkError;
-                responseString = isDone ? webRequest.downloadHandler.text : webRequest.error;
+                responseString = isError ? webRequest.error : isDone ? webRequest.downloadHandler.text : string.Empty;
             }
 
             if (isDone)
             {
-                //var dto = JsonUtility.FromJson<MatchStatusDto>(responseString)
-                //onStartMatchComplete(DtoToMatchStatus(dto));
                 onRegisterComplete(UserResponseDto.Parse(responseString));
             }
             else if (isError)
             {
-                throw new ApplicationException("");
+                onRegisterFailed(responseString);
             }
             else
             {
                 yield return new WaitForSeconds(3f);
-                StartCoroutine(Post(data, onRegisterComplete));
+                StartCoroutine(Post(data, onRegisterComplete, onRegisterFailed));
             }
         }
     }

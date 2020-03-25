@@ -36,16 +36,25 @@
             <e p="ICardProvider.cs" t="Include" />
             <e p="InMemoryCardProvider.cs" t="Include" />
             <e p="Services" t="Include">
+              <e p="ILoginService.cs" t="Include" />
               <e p="IMatchService.cs" t="Include" />
+              <e p="LoginService.cs" t="Include" />
               <e p="MatchService.cs" t="Include" />
               <e p="MatchStatus.cs" t="Include" />
               <e p="RoundResult.cs" t="Include" />
+              <e p="UserResponseDto.cs" t="Include" />
             </e>
+          </e>
+          <e p="Login" t="Include">
+            <e p="ILoginView.cs" t="Include" />
+            <e p="LoginPresenter.cs" t="Include" />
+            <e p="LoginView.cs" t="Include" />
           </e>
           <e p="Player" t="Include">
             <e p="IPlayer.cs" t="Include" />
             <e p="Player.cs" t="Include" />
           </e>
+          <e p="PlayerPrefsHelper.cs" t="Include" />
           <e p="ServicesProvider.cs" t="Include" />
           <e p="UnitCardView.cs" t="Include" />
           <e p="UpgradeCardView.cs" t="Include" />

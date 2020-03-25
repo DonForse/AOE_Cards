@@ -1,8 +1,10 @@
-﻿using Infrastructure.Services;
-using System;
+﻿using System;
 
-public interface ILoginService
+namespace Infrastructure.Services
 {
-    void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete);
-    void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete);
+    public interface ILoginService
+    {
+        void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete,Action<string> onRegisterFailed);
+        void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete,Action<string> onLoginFailed);
+    }
 }

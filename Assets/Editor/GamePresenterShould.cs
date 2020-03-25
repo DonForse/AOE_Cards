@@ -172,12 +172,12 @@ namespace Editor
 
         private void ThenPlayUpgradeCardIsCalledInService()
         {
-            _matchService.Received(1).PlayUpgradeCard(null,Arg.Any<Action<Round>>());
+            _matchService.Received(1).PlayUpgradeCard(null,Arg.Any<Action<Round>>(),Arg.Any<Action<string>>());
         }
 
         private void ThenPlayUnitCardIsCalledInService()
         {
-            _matchService.Received(1).PlayUnitCard(null, Arg.Any<Action<RoundResult>>());
+            _matchService.Received(1).PlayUnitCard(null, Arg.Any<Action<RoundResult>>(),Arg.Any<Action<string>>());
         }
 
         private void ThenUnitCardIsRemovedFromHand()

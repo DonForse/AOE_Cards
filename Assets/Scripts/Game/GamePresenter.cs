@@ -40,15 +40,20 @@ namespace Game
         public void PlayUpgradeCard(string cardName)
         {
             var card = _hand.TakeUpgradeCard(cardName);
-            _matchService.PlayUpgradeCard(card.cardName, OnUpgradeCardsPlayed);
+            _matchService.PlayUpgradeCard(card.cardName, OnUpgradeCardsPlayed, OnError);
             _view.UpgradeCardSentPlay();
         }
 
         public void PlayUnitCard(string cardName)
         {
             var card = _hand.TakeUnitCard(cardName);
-            _matchService.PlayUnitCard(card.cardName, OnRoundFinished);
+            _matchService.PlayUnitCard(card.cardName, OnRoundFinished, OnError);
             _view.UnitCardSentPlay();
+        }
+        
+        private void OnError(string obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnUpgradeCardsPlayed(Round round)

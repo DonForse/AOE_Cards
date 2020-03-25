@@ -1,4 +1,8 @@
-﻿internal interface ILoginView
+﻿namespace Login
 {
-    void OnLoginCompleteLogin();
+    internal interface ILoginView
+    {
+        void OnLoginComplete();
+        void OnLoginFail(string message);
+    }
 }

@@ -70,5 +70,10 @@ namespace Home
         {
             StartTimer();
         }
+
+        public void OnError(string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

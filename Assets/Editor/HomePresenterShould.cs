@@ -55,7 +55,7 @@ namespace Editor
 
         private void ThenMatchServiceIsCalled()
         {
-            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<MatchStatus>>());
+            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<MatchStatus>>(),Arg.Any<Action<string>>());
         }
 
         private void ThenInformViewMatchFound(MatchStatus matchStatus)
