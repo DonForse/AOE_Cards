@@ -1,6 +1,7 @@
 ﻿using System;
 using Infrastructure.Services;
 using UnityEngine;
+using static Infrastructure.Services.LoginService;
 
 internal class LoginPresenter
 {
@@ -13,18 +14,21 @@ internal class LoginPresenter
         _loginService = loginService;
     }
 
-    public void Login(string text)
+    public void Login(string username, string password)
     {
-        _loginService.Login(text, "a", OnLoginComplete);
+        _loginService.Login(username, password, OnLoginComplete);
         
     }
 
-    public void OnLoginComplete(string response) {
+    public void Register(string username, string password)
+    {
+        _loginService.Register(username, password, OnLoginComplete);
+    }
+
+    public void OnLoginComplete(UserResponseDto response) {
+        PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.id);
+        PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
         _view.OnLoginCompleteLogin();
     }
 
-    internal void Register(string text)
-    {
-        _loginService.Register(text, "a", OnLoginComplete);
-    }
 }

@@ -21,15 +21,15 @@ public class LoginView : MonoBehaviour, IView, ILoginView
         registerButton.onClick.AddListener(Register);
         this.gameObject.SetActive(true);
     }
-
+        
     private void Login()
     {
-        _presenter.Login(username.text);
+        _presenter.Login(username.text, "a");
     }
 
     private void Register()
     {
-        _presenter.Register(username.text);
+        _presenter.Register(username.text, "a");
     }
 
     public void OnLoginComplete() {
@@ -44,6 +44,6 @@ public class LoginView : MonoBehaviour, IView, ILoginView
 
     public void OnLoginCompleteLogin()
     {
-        throw new NotImplementedException();
+        _navigator.OpenHomeView();
     }
 }

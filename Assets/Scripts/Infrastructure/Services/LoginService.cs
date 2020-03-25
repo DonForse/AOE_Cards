@@ -15,13 +15,13 @@ namespace Infrastructure.Services
         private string ApiUrl => BaseUrl + "/api/user/";
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
-        public void Register(string playerName, string password, Action<string> onRegisterComplete)
+        public void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete)
         {
             string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password });
             StartCoroutine(Post(data, onRegisterComplete));
         }
 
-        public void Login(string playerName, string password, Action<string> onLoginComplete)
+        public void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete)
         {
             var url = string.Format("{0}?username={1}&password={2}", ApiUrl, playerName, password);
             StartCoroutine(Get(url, onLoginComplete));
@@ -32,7 +32,7 @@ namespace Infrastructure.Services
             public string password;
         }
 
-        private IEnumerator Get(string url, Action<string> onLoginComplete)
+        private IEnumerator Get(string url, Action<UserResponseDto> onLoginComplete)
         {
             bool isDone;
             bool isError;
@@ -60,7 +60,7 @@ namespace Infrastructure.Services
             }
         }
 
-        private IEnumerator Post(string data, Action<string> onRegisterComplete)
+        private IEnumerator Post(string data, Action<UserResponseDto> onRegisterComplete)
         {
             bool isDone;
             bool isError;
@@ -83,7 +83,7 @@ namespace Infrastructure.Services
             {
                 //var dto = JsonUtility.FromJson<MatchStatusDto>(responseString)
                 //onStartMatchComplete(DtoToMatchStatus(dto));
-                onRegisterComplete(responseString);
+                onRegisterComplete(UserResponseDto.Parse(responseString));
             }
             else if (isError)
             {

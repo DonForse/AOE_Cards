@@ -17,7 +17,7 @@ namespace Home
 
         public void StartSearchingMatch()
         {
-           _matchService.StartMatch(PlayerPrefs.GetString("id"), OnMatchStatusComplete);
+           _matchService.StartMatch(PlayerPrefs.GetString(PlayerPrefsHelper.UserId), OnMatchStatusComplete);
            _view.OnStartLookingForMatch();
         }
 
