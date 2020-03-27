@@ -10,6 +10,7 @@ namespace Login
         [SerializeField] private Button loginButton;
         [SerializeField] private Button registerButton;
         [SerializeField] private TextMeshProUGUI username;
+        [SerializeField] private TextMeshProUGUI errorMessage;
         [SerializeField] private ServicesProvider servicesProvider;
         [SerializeField] private Navigator navigator;
         private LoginPresenter _presenter;
@@ -35,8 +36,11 @@ namespace Login
             navigator.OpenHomeView();
         }
     
-        public void OnLoginFail(string message) {
-            //show message.
+        public void OnLoginFail(string message)
+        {
+            errorMessage.text = message;
+            errorMessage.gameObject.SetActive(true);
+
         }
 
         public void OnClosing()

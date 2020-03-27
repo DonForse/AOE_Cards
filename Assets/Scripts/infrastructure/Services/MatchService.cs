@@ -44,8 +44,7 @@ namespace Infrastructure.Services
             {
                 onError(responseString);
             }
-
-            if (isComplete)
+            else if (isComplete)
             {
                 //var dto = JsonUtility.FromJson<MatchStatusDto>(responseString)
                 //onStartMatchComplete(DtoToMatchStatus(dto));

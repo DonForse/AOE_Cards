@@ -8,7 +8,7 @@ namespace Infrastructure.Services
 {
     public class LoginService : MonoBehaviour, ILoginService
     {
-        private const string BaseUrl = "https://localhost:44324/";
+        private const string BaseUrl = "https://192.168.0.7:44324/";
         private string ApiUrl => BaseUrl + "/api/user/";
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
@@ -42,7 +42,7 @@ namespace Infrastructure.Services
                 responseString = isError ? webRequest.error : isDone ? webRequest.downloadHandler.text : string.Empty;
             }
 
-            if (isDone)
+            if (!isError && isDone)
             {
                 onLoginComplete(UserResponseDto.Parse(responseString));
             }
@@ -76,7 +76,7 @@ namespace Infrastructure.Services
                 responseString = isError ? webRequest.error : isDone ? webRequest.downloadHandler.text : string.Empty;
             }
 
-            if (isDone)
+            if (!isError && isDone)
             {
                 onRegisterComplete(UserResponseDto.Parse(responseString));
             }
