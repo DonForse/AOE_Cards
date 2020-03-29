@@ -2,69 +2,79 @@
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Services;
+using UnityEngine;
 
 namespace Game
 {
     public class GamePresenter
     {
-        private Deck _deck;
-        private Hand _hand;
+        private Match _match;
+        private int currentRound;
         private readonly IGameView _view;
-        private readonly IMatchService _matchService;
-        private readonly IList<RoundResult> _match;
+        private readonly IPlayService _playService;
 
-        public GamePresenter(IGameView view, IMatchService matchService)
+        public GamePresenter(IGameView view, IPlayService playService)
         {
             _view = view;
-            _matchService = matchService;
-            _match = new List<RoundResult>();
+            _playService = playService;
         }
 
         public Hand GetHand()
         {
-            return _hand;
+            return _match.hand;
         }
 
-        public void GameSetup(MatchStatus matchStatus)
+        public void GameSetup(Match match)
         {
-            _hand = matchStatus.hand;
-            _view.InitializeHand(_hand);
-            _view.ShowPlayerHand(_hand);
+            _match = match;
+            currentRound = _match.board.Rounds.Count() -1;
+            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.id);
+
+            _view.InitializeHand(_match.hand);
+            _view.InitializeRound(_match.board.Rounds.Last());
         }
 
-        public void RoundSetup(UpgradeCardData upgradeCardData)
+        public void StartNewRound()
         {
-            _view.ShowRoundUpgradeCard(upgradeCardData);
+            currentRound++;
+            GetRound(currentRound);
         }
 
         public void PlayUpgradeCard(string cardName)
         {
-            var card = _hand.TakeUpgradeCard(cardName);
-            _matchService.PlayUpgradeCard(card.cardName, OnUpgradeCardsPlayed, OnError);
-            _view.UpgradeCardSentPlay();
+            var card = _match.hand.TakeUpgradeCard(cardName);
+            _playService.PlayUpgradeCard(card.cardName, OnUpgradeCardPostComplete, OnError);
         }
 
         public void PlayUnitCard(string cardName)
         {
-            var card = _hand.TakeUnitCard(cardName);
-            _matchService.PlayUnitCard(card.cardName, OnRoundFinished, OnError);
-            _view.UnitCardSentPlay();
+            var card = _match.hand.TakeUnitCard(cardName);
+            _playService.PlayUnitCard(card.cardName, OnUnitCardPostComplete, OnError);
         }
-        
+
+        public void GetRound(int roundNumber)
+        {
+            _playService.GetRound(roundNumber, OnGetRoundComplete, OnError);
+        }
+
+        private void OnGetRoundComplete(Round round)
+        {
+            _view.OnGetRoundInfo(round);
+        }
+
         private void OnError(string obj)
         {
             throw new NotImplementedException();
         }
 
-        private void OnUpgradeCardsPlayed(Round round)
+        private void OnUnitCardPostComplete()
         {
-            //_view.Up;
-            _view.ShowUpgradeCardsPlayedRound(round);
+            _view.UnitCardSentPlay();
         }
-        
-        private void OnRoundFinished(RoundResult roundResult)
+
+        private void OnUpgradeCardPostComplete()
         {
-            _view.CardReveal(roundResult);
+            _view.UpgradeCardSentPlay();
         }
     }
 }

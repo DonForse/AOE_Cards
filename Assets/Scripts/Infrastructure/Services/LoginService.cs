@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,7 +9,7 @@ namespace Infrastructure.Services
 {
     public class LoginService : MonoBehaviour, ILoginService
     {
-        private const string BaseUrl = "https://192.168.0.7:44324/";
+        private const string BaseUrl = "https://localhost:44324/";
         private string ApiUrl => BaseUrl + "/api/user/";
         private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
 
@@ -38,8 +39,12 @@ namespace Infrastructure.Services
             {
                 yield return webRequest.SendWebRequest();
                 isDone = webRequest.isDone;
-                isError = webRequest.isError;
-                responseString = isError ? webRequest.error : isDone ? webRequest.downloadHandler.text : string.Empty;
+                isError = webRequest.isNetworkError;
+                responseString = isError ?
+                    webRequest.error
+                    : isDone ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
+                    : string.Empty;
+                Debug.Log(responseString);
             }
 
             if (!isError && isDone)
@@ -73,7 +78,11 @@ namespace Infrastructure.Services
                 yield return webRequest.SendWebRequest();
                 isDone = webRequest.isDone;
                 isError = webRequest.isNetworkError;
-                responseString = isError ? webRequest.error : isDone ? webRequest.downloadHandler.text : string.Empty;
+                responseString = isError ?
+                    webRequest.error 
+                    : isDone ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
+                    : string.Empty;
+                Debug.Log(responseString);
             }
 
             if (!isError && isDone)

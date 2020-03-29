@@ -58,7 +58,7 @@ namespace Home
             timerRunning = false;
         }
 
-        public void OnMatchFound(MatchStatus matchStatus)
+        public void OnMatchFound(Match matchStatus)
         {
             StopTimer();
             // _matchMakingContainer.SetActive(false);

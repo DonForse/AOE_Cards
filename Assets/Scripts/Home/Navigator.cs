@@ -29,7 +29,7 @@ namespace Home
             currentActiveView = loginView;
         }
 
-        public void OpenGameView(MatchStatus ms)
+        public void OpenGameView(Match ms)
         {
             if(currentActiveView != null)
                 currentActiveView.OnClosing();

@@ -13,10 +13,10 @@ namespace Editor
     {
         private Hand _cardsInHand;
         private GamePresenter _presenter;
-        private MatchStatus _matchStatus;
+        private Match _matchStatus;
         private ICardProvider _cardProvider;
         private IGameView _view;
-        private IMatchService _matchService;
+        private IPlayService _playService;
 
         private const int CardsInHand = 5;
 
@@ -25,8 +25,8 @@ namespace Editor
         {
             GivenCardProvider();
             GivenGameplayView();
-            GivenMatchService();
-            _presenter = new GamePresenter(_view, _matchService);
+            GivenPlayService();
+            _presenter = new GamePresenter(_view, _playService);
             WhenGameSetup();
         }
 
@@ -48,7 +48,7 @@ namespace Editor
         public void PresentUpgradeCardWhenRoundStarts()
         {
             WhenRoundSetup();
-            _view.Received(1).ShowRoundUpgradeCard(Arg.Any<UpgradeCardData>());
+            _view.Received(1).OnGetRoundInfo(Arg.Any<Round>());
         }
 
         [Test]
@@ -81,9 +81,9 @@ namespace Editor
             ThenPlayUnitCardIsCalledInService();
         }
 
-        private void GivenMatchService()
+        private void GivenPlayService()
         {
-            _matchService = Substitute.For<IMatchService>();
+            _playService = Substitute.For<IPlayService>();
         }
 
         private void GivenGameplayView()
@@ -147,7 +147,7 @@ namespace Editor
 
         private void WhenGameSetup()
         {
-            _matchStatus = new MatchStatus()
+            _matchStatus = new Match()
             {
                 hand = new Hand(_cardProvider.GetUnitCards().Take(5).ToList(),
                     _cardProvider.GetUpgradeCards().Take(5).ToList())
@@ -157,7 +157,7 @@ namespace Editor
 
         private void WhenRoundSetup()
         {
-            _presenter.RoundSetup(ScriptableObject.CreateInstance<UpgradeCardData>());
+            _presenter.StartNewRound();
         }
 
         private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards)
@@ -172,12 +172,12 @@ namespace Editor
 
         private void ThenPlayUpgradeCardIsCalledInService()
         {
-            _matchService.Received(1).PlayUpgradeCard(null,Arg.Any<Action<Round>>(),Arg.Any<Action<string>>());
+            _playService.Received(1).PlayUpgradeCard(null,Arg.Any<Action>(),Arg.Any<Action<string>>());
         }
 
         private void ThenPlayUnitCardIsCalledInService()
         {
-            _matchService.Received(1).PlayUnitCard(null, Arg.Any<Action<RoundResult>>(),Arg.Any<Action<string>>());
+            _playService.Received(1).PlayUnitCard(null, Arg.Any<Action>(),Arg.Any<Action<string>>());
         }
 
         private void ThenUnitCardIsRemovedFromHand()

@@ -16,8 +16,7 @@ namespace Login
 
         public void Login(string username, string password)
         {
-            _loginService.Login(username, password, OnLoginComplete,OnLoginFailed);
-        
+            _loginService.Login(username, password, OnLoginComplete,OnLoginFailed);  
         }
 
         public void Register(string username, string password)
@@ -36,7 +35,7 @@ namespace Login
         }
 
         private void OnLoginComplete(UserResponseDto response) {
-            PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.id);
+            PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
             _view.OnLoginComplete();
         }

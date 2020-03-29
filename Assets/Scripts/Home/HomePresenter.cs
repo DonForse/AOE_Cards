@@ -26,7 +26,7 @@ namespace Home
             _view.OnError(message);
         }
 
-        private void OnMatchStatusComplete(MatchStatus matchStatus)
+        private void OnMatchStatusComplete(Match matchStatus)
         {
             _view.OnMatchFound(matchStatus);
         }

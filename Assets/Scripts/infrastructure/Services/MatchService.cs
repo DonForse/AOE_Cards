@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Game;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -10,18 +11,16 @@ namespace Infrastructure.Services
 {
     public class MatchService : MonoBehaviour, IMatchService
     {
-        private const string BaseUrl = "";
-        private string StartMatchUrl => BaseUrl + "/games/users/{0}/matches";
+        private const string BaseUrl = "https://localhost:44324/";
+        private string StartMatchUrl => BaseUrl + "/api/match?userid={0}";
 
-        private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
-
-        public void StartMatch(string playerId, Action<MatchStatus> onStartMatchComplete, Action<string> onError)
+        public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<string> onError)
         {
-            string url = playerId;
+            string url = string.Format(StartMatchUrl, playerId);
             StartCoroutine(Get(url, onStartMatchComplete, onError));
         }
 
-        private IEnumerator Get(string url, Action<MatchStatus> onStartMatchComplete, Action<string> onError)
+        private IEnumerator Get(string url, Action<Match> onStartMatchComplete, Action<string> onError)
         {
             bool isComplete;
             bool isError;
@@ -31,13 +30,11 @@ namespace Infrastructure.Services
                 yield return webRequest.SendWebRequest();
                 isError = webRequest.isNetworkError;
                 isComplete = webRequest.isDone;
-                responseString = isError ? webRequest.error :
-                    isComplete ? webRequest.downloadHandler.text : string.Empty;
-                if (isComplete)
-                {
-                    // if (!responseString.Contains("matchfound:")) //hardcodeo berrta.
-                    //     isComplete = false;
-                }
+                responseString = isError ?
+                                   webRequest.error
+                                   : isComplete ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
+                                   : string.Empty;
+                Debug.Log(responseString);
             }
 
             if (isError)
@@ -45,10 +42,17 @@ namespace Infrastructure.Services
                 onError(responseString);
             }
             else if (isComplete)
-            {
-                //var dto = JsonUtility.FromJson<MatchStatusDto>(responseString)
-                //onStartMatchComplete(DtoToMatchStatus(dto));
-                onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
+            {                
+                var dto = JsonUtility.FromJson<MatchDto>(responseString);
+                if (dto.board == null)
+                {
+                    yield return new WaitForSeconds(3f);
+                    StartCoroutine(Get(url, onStartMatchComplete, onError));
+                }
+                else {
+                    onStartMatchComplete(DtoToMatchStatus(dto));
+                }
+                
             }
             else
             {
@@ -57,195 +61,30 @@ namespace Infrastructure.Services
             }
         }
 
-        private MatchStatus DtoToMatchStatus(MatchStatusDto response)
+        private Match DtoToMatchStatus(MatchDto dto)
         {
-            var dto = new MatchStatusDto()
-            {
-                id = "guid",
-                board = new BoardDto()
-                {
-                    Rounds = new List<RoundDto>()
-                    {
-                        new RoundDto()
-                        {
-                            CardsPlayed = new List<PlayerCardDto>()
-                            {
-                                new PlayerCardDto
-                                {
-                                    Player = "1",
-                                    //UnitCard = "Villager",
-                                    //UpgradeCard = "Supremacy"}
-                                },
-                                new PlayerCardDto
-                                {
-                                    Player = "2",
-                                    //UnitCard = "Villager",
-                                    //UpgradeCard = "Supremacy"}
-                                },
-                                new PlayerCardDto
-                                {
-                                    Player = "3",
-                                    //UnitCard = "Villager",
-                                    //UpgradeCard = "Supremacy"}
-                                },
-                            }
-                        }
-                    },
-                },
-                hand = new HandDto
-                {
-                    Units = new List<string>
-                    {
-                        "Paladin",
-                        "Scout",
-                        "Hussar",
-                        "Skirmisher",
-                        "Halbardier",
-                        "Champion",
-                        "Archer",
-                    },
-                    Upgrades = new List<string>
-                    {
-                        "Berbers Boots",
-                        "Incas Villagers",
-                        "Feitoria",
-                        "Supremacy",
-                        "Garland Wars"
-                    }
-                },
-                round = 0
-            };
-
-            var ms = new MatchStatus();
-            ms.id = dto.id;
+            var ms = new Match();
+            ms.id = dto.matchId;
             ms.board = new Board
             {
-                Rounds = dto.board.Rounds.Select(r => new Round
-                {
-                    WinnerPlayer = r.WinnerPlayer,
-                    UpgradeCardRound = ScriptableObject.CreateInstance<UpgradeCardData>(),
-                    CardsPlayed = new List<PlayerCard>()
-                }).ToList()
+                Rounds = dto.board.rounds.Select(r =>
+                    new Round
+                    {
+                        WinnerPlayer = r.winnerplayer,
+                        UpgradeCardRound = !string.IsNullOrWhiteSpace(r.upgradecardround) ? new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == r.upgradecardround) : null,
+                        CardsPlayed = r.cardsplayed?.Select(cp =>
+                            new PlayerCard
+                            {
+                                Player = cp.player,
+                                UnitCardData = !string.IsNullOrWhiteSpace(cp.unitcard) ? new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cp.unitcard) : null,
+                                UpgradeCardData = !string.IsNullOrWhiteSpace(cp.upgradecard) ? new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cp.upgradecard) : null
+                            }).ToList()
+                    }).ToList()
             };
-            ms.hand = new Hand(dto.hand.Units.Select(
-                        cardName => new InMemoryCardProvider().GetUnitCards()
-                            .FirstOrDefault(f => f.cardName == cardName))
-                    .ToList(),
-                dto.hand.Upgrades.Select(cardName =>
-                    new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cardName)).ToList());
-            ms.round = dto.round;
+            ms.hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cardName)).ToList(),
+                        dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cardName)).ToList());
+            ms.users = dto.users;
             return ms;
         }
-
-        public void PlayUpgradeCard(string cardName, Action<Round> onUpgradeCardsFinished, Action<string> onError)
-        {
-            var round = new Round
-            {
-                WinnerPlayer = "a",
-                CardsPlayed = new List<PlayerCard>
-                {
-                    new PlayerCard
-                    {
-                        Player = "a",
-                        UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
-                    },
-                    new PlayerCard
-                    {
-                        Player = "b",
-                        UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
-                    }
-                },
-                UpgradeCardRound = new UpgradeCardData
-                {
-                    cardName = "Supremacy"
-                }
-            };
-            onUpgradeCardsFinished(round);
-        }
-
-        public void PlayUnitCard(string cardName, Action<RoundResult> onRoundComplete, Action<string> onError)
-        {
-            //TODO: Change to round status Id repost.
-            var roundResult = new RoundResult()
-            {
-                newRoundCard = new UpgradeCardData {cardName = "Supremacy"},
-                previousRound = new Round
-                {
-                    WinnerPlayer = "a",
-                    CardsPlayed = new List<PlayerCard>
-                    {
-                        new PlayerCard
-                        {
-                            Player = "a",
-                            UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
-                        },
-                        new PlayerCard
-                        {
-                            Player = "b",
-                            UpgradeCardData = new UpgradeCardData {cardName = "Garland Wars"}
-                        }
-                    },
-                    UpgradeCardRound = new UpgradeCardData
-                    {
-                        cardName = "Supremacy"
-                    }
-                }
-            };
-            onRoundComplete(roundResult);
-        }
-    }
-
-    public class MatchStatusDto
-    {
-        public string id;
-        public int round;
-        public HandDto hand;
-        public BoardDto board;
-    }
-
-    public class BoardDto
-    {
-        public IList<RoundDto> Rounds;
-    }
-
-    public class RoundDto
-    {
-        public IList<PlayerCardDto> CardsPlayed;
-        public string WinnerPlayer;
-        public string UpgradeCardRound;
-    }
-
-    public class PlayerCardDto
-    {
-        public string Player;
-        public string UpgradeCard;
-        public string UnitCard;
-    }
-
-    public class HandDto
-    {
-        public IList<string> Units;
-        public IList<string> Upgrades;
     }
 }
-
-/* HTTP WEB REQUEST IF C# Version Errors.
- * var request = (HttpWebRequest)WebRequest.Create("http://www.example.com/recepticle.aspx");
-
-var postData = "thing1=" + Uri.EscapeDataString("hello");
-postData += "&thing2=" + Uri.EscapeDataString("world");
-var data = Encoding.ASCII.GetBytes(postData);
-
-request.Method = "POST";
-request.ContentType = "application/x-www-form-urlencoded";
-request.ContentLength = data.Length;
-
-using (var stream = request.GetRequestStream())
-{
-stream.Write(data, 0, data.Length);
-}
-
-var response = (HttpWebResponse)request.GetResponse();
-
-var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
- */

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1c8c9e05cef1a94c9301b0b180666e3, type: 3}
   m_Name: Persian_TC
   m_EditorClassIdentifier: 
-  cardName: Persians Town Centers
+  cardName: Persian Town Center
   archetype: Villager
   effect: Duplicates Villager Power (calculated last)
   artwork: {fileID: 0}

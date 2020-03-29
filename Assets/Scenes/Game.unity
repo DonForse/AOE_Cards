@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.28502667, g: 0.37139323, b: 0.49600998, a: 1}
+  m_IndirectSpecularColor: {r: 0.28502697, g: 0.37139347, b: 0.49601266, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2613,6 +2613,12 @@ PrefabInstance:
       propertyPath: loginServiceGo
       value: 
       objectReference: {fileID: 5441966739592361152, guid: f2ca4cfe81174a6499705026a3eb6507,
+        type: 3}
+    - target: {fileID: 7374400079544880135, guid: f3830043c7d514c809ae40914cc34643,
+        type: 3}
+      propertyPath: playServiceGo
+      value: 
+      objectReference: {fileID: 5441966739592361152, guid: ea7e53450e3c20c4592cea6617aa8709,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3830043c7d514c809ae40914cc34643, type: 3}

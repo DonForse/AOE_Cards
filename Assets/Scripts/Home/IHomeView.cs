@@ -4,7 +4,7 @@ namespace Home
 {
     public interface IHomeView
     {
-        void OnMatchFound(MatchStatus matchStatus);
+        void OnMatchFound(Match matchStatus);
         void OnStartLookingForMatch();
         void OnError(string message);
     }

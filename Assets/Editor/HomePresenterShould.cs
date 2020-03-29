@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using Home;
 using ICSharpCode.NRefactory.Visitors;
 using Infrastructure.Services;
@@ -40,12 +39,12 @@ namespace Editor
             ThenInformViewMatchFound(ms);
         }
 
-        private MatchStatus WhenMatchFound()
+        private Match WhenMatchFound()
         {
             // _matchService.When(x=>x.StartMatch("",Arg.Any<Action<MatchStatus>>()))
             //     .Do();
             //fake pero algo asi
-            return new MatchStatus();
+            return new Infrastructure.Services.Match();
         }
 
         private void WhenStartNewMatch()
@@ -55,12 +54,12 @@ namespace Editor
 
         private void ThenMatchServiceIsCalled()
         {
-            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<MatchStatus>>(),Arg.Any<Action<string>>());
+            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<Infrastructure.Services.Match>>(), Arg.Any<Action<string>>());
         }
 
-        private void ThenInformViewMatchFound(MatchStatus matchStatus)
+        private void ThenInformViewMatchFound(Infrastructure.Services.Match matchStatus)
         {
-            _view.Received(1).OnMatchFound(Arg.Any<MatchStatus>());
+            _view.Received(1).OnMatchFound(Arg.Any<Infrastructure.Services.Match>());
         }
 
         private void GivenMatchService()
