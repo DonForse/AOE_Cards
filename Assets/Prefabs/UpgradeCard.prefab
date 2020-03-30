@@ -596,6 +596,7 @@ GameObject:
   - component: {fileID: 7660645200975920527}
   - component: {fileID: 4944160581890559954}
   - component: {fileID: -4401070966157813596}
+  - component: {fileID: 7451833773519365812}
   m_Layer: 5
   m_Name: UpgradeCard
   m_TagString: Untagged
@@ -639,7 +640,8 @@ MonoBehaviour:
   cardName: {fileID: 3880896916766200567}
   effect: {fileID: 7660645199542104631}
   artwork: {fileID: 0}
-  ArchetypeSection: {fileID: 6439964270973397223}
+  archetypeSection: {fileID: 0}
+  animator: {fileID: 7451833773519365812}
 --- !u!114 &-4401070966157813596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,7 +651,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7660645200975920526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -683,6 +685,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &7451833773519365812
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660645200975920526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e496ebd4550d849a29683b23761cba32, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8654517298023802817
 GameObject:
   m_ObjectHideFlags: 0

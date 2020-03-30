@@ -8,7 +8,9 @@ public class UpgradeCardView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;
     [SerializeField] private Sprite artwork;
-    [SerializeField] private GameObject ArchetypeSection;
+    [SerializeField] private GameObject archetypeSection;
+    [SerializeField] private Animator animator;
+    private static readonly int Hover = Animator.StringToHash("hover");
 
     public void SetCard(UpgradeCardData card)
     {
@@ -23,5 +25,13 @@ public class UpgradeCardView : MonoBehaviour
         //    //add prefab to archetypeSection
         //}
     }
+    private void OnMouseOver()
+    {
+        animator.SetBool(Hover,true);
+    }
 
+    private void OnMouseExit()
+    {
+        animator.SetBool(Hover,false);
+    }
 }

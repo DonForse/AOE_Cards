@@ -898,6 +898,7 @@ GameObject:
   - component: {fileID: 7660645200975920527}
   - component: {fileID: -4135660628681113253}
   - component: {fileID: 400106834145541457}
+  - component: {fileID: 4774816617454995768}
   m_Layer: 5
   m_Name: UnitCard
   m_TagString: Untagged
@@ -944,7 +945,8 @@ MonoBehaviour:
   effect: {fileID: 7660645199542104631}
   power: {fileID: 7660645199969866362}
   artwork: {fileID: 0}
-  ArchetypeSection: {fileID: 6439964270973397223}
+  archetypeSection: {fileID: 0}
+  animator: {fileID: 4774816617454995768}
 --- !u!114 &400106834145541457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -988,6 +990,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &4774816617454995768
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660645200975920526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e496ebd4550d849a29683b23761cba32, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7660645201105337808
 GameObject:
   m_ObjectHideFlags: 0

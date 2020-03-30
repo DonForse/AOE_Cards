@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,7 +10,9 @@ public class UnitCardView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI effect;
     [SerializeField] private TextMeshProUGUI power;
     [SerializeField] private Sprite artwork;
-    [SerializeField] private GameObject ArchetypeSection;
+    [SerializeField] private GameObject archetypeSection;
+    [SerializeField] private Animator animator;
+    private static readonly int Hover = Animator.StringToHash("hover");
 
     public void SetCard(UnitCardData card)
     {
@@ -26,4 +29,13 @@ public class UnitCardView : MonoBehaviour
         }
     }
 
+    private void OnMouseOver()
+    {
+        animator.SetBool(Hover,true);
+    }
+
+    private void OnMouseExit()
+    {
+        animator.SetBool(Hover,false);
+    }
 }
