@@ -20,8 +20,7 @@ namespace Game
         [SerializeField] private GameObject roundCardContainer;
         [SerializeField] private GameObject upgradeCardShowDownContainer;
         [SerializeField] private GameObject unitCardShowDownContainer;
-        [SerializeField] private Button buttonHandUnits;
-        [SerializeField] private Button buttonHandUpgrades;
+        [SerializeField] private Button buttonToggleHandCards;
 
         private MatchState matchState;
         private GamePresenter _presenter;
@@ -29,13 +28,15 @@ namespace Game
         private UnitCardView _unitCardPlayed;
         private UpgradeCardView _upgradeCardPlayed;
 
+        private bool showingUpgrades;
+
         public void OnOpening()
         {
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService());
-            buttonHandUnits.onClick.AddListener(ShowHandUnits);
-            buttonHandUpgrades.onClick.AddListener(ShowHandUpgrades);
+            buttonToggleHandCards.onClick.AddListener(ToggleHandCards);
             this.gameObject.SetActive(true);
         }
+
         public void SetGame(Match matchStatus)
         {
             _presenter.GameSetup(matchStatus);
@@ -49,10 +50,18 @@ namespace Game
             this.gameObject.SetActive(false);
         }
 
+        private void ToggleHandCards()
+        {
+            if(showingUpgrades)
+                ShowHandUnits();
+            else 
+                ShowHandUpgrades();
+        }
+        
         private void ShowHandUnits()
         {
-            buttonHandUnits.interactable = false;
-            buttonHandUpgrades.interactable = true;
+            showingUpgrades = false;
+            //TODO: change image
             //animations (control toggle from animation?)
             upgradeCardsContainer.SetActive(false);
             unitCardsContainer.SetActive(true);
@@ -66,8 +75,8 @@ namespace Game
 
         private void ShowHandUpgrades()
         {
-            buttonHandUpgrades.interactable = false;
-            buttonHandUnits.interactable = true;
+            showingUpgrades = true;
+            //TODO: change image
             //animations (control toggle from animation?)
             upgradeCardsContainer.SetActive(true);
             unitCardsContainer.SetActive(false);
