@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Heavy Cavalry Archer
   m_EditorClassIdentifier: 
   cardName: Heavy Cavalry Archer
-  archetype: Archer|Cavarly|Cavarly Archer
+  archetype: Archer|Cavalry|Cavalry Archer
   effect: 
   effectPower: 0
   power: 22

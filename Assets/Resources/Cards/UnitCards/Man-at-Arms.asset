@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a449997bf2957b74bb2d188218121bed, type: 3}
-  m_Name: ManAtArms
+  m_Name: Man-at-Arms
   m_EditorClassIdentifier: 
   cardName: Man-at-Arms
   archetype: Soldier|Militia

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hussar
   m_EditorClassIdentifier: 
   cardName: Hussar
-  archetype: Cavarly|Counter Unit
+  archetype: Cavalry|Counter Unit
   effect: +6 vs Archer
   effectPower: 6
   power: 15

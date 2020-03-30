@@ -40,6 +40,8 @@ namespace Game
         {
             _presenter.GameSetup(matchStatus);
             matchState = MatchState.InitializeGame;
+
+            InvokeRepeating("GetRound", 3f, 3f);
         }
 
         public void OnClosing()
@@ -54,6 +56,12 @@ namespace Game
             //animations (control toggle from animation?)
             upgradeCardsContainer.SetActive(false);
             unitCardsContainer.SetActive(true);
+
+            foreach (var unitButton in unitCardsContainer.GetComponentsInChildren<Button>())
+                unitButton.interactable = true;
+
+            foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
+                upgradeButton.interactable = false;
         }
 
         private void ShowHandUpgrades()
@@ -63,6 +71,12 @@ namespace Game
             //animations (control toggle from animation?)
             upgradeCardsContainer.SetActive(true);
             unitCardsContainer.SetActive(false);
+
+            foreach (var unitButton in unitCardsContainer.GetComponentsInChildren<Button>())
+                unitButton.interactable = false;
+
+            foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
+                upgradeButton.interactable = true;
         }
 
         public void InitializeRound(Round round)
@@ -106,9 +120,9 @@ namespace Game
             throw new System.NotImplementedException();
         }
 
-        public void ShowError()
+        public void ShowError(string message)
         {
-            throw new System.NotImplementedException();
+            Debug.LogError(message);
         }
 
         public void UpgradeCardSentPlay()
@@ -117,8 +131,14 @@ namespace Game
             //animation stuff
             _upgradeCardPlayed.transform.SetParent(upgradeCardShowDownContainer.transform);
             Canvas.ForceUpdateCanvases();
+        }
 
-            _presenter.GetRound(0);
+        public void GetRound()
+        {
+            //TODO: BE SUPER CAREFUL TO CHECK ASYNCHRONOUS PROBLEMS.
+            if (!(matchState == MatchState.WaitUpgrade || matchState == MatchState.WaitUnit))
+                return;
+            _presenter.GetRound();
         }
 
         public void OnGetRoundInfo(Round round)
@@ -130,6 +150,7 @@ namespace Game
             if (matchState == MatchState.WaitUpgrade)
             {
                 ShowUpgradeCardsPlayedRound(round);
+                ShowHandUnits();
                 return;
             }
             if (matchState == MatchState.WaitUnit)
@@ -152,6 +173,8 @@ namespace Game
             var cards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
             foreach (var card in cards)
             {
+                if (card.UpgradeCardData == null)
+                    continue;
                 var go = GameObject.Instantiate(upgradeCardGo, upgradeCardsContainer.transform);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
                 upgradeCard.SetCard(card.UpgradeCardData);
@@ -165,6 +188,8 @@ namespace Game
             var cards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
             foreach (var card in cards)
             {
+                if (card.UnitCardData == null)
+                    continue;
                 var go = GameObject.Instantiate(unitCardGo, unitCardsContainer.transform);
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card.UnitCardData);

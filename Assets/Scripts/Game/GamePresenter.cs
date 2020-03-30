@@ -37,7 +37,7 @@ namespace Game
         public void StartNewRound()
         {
             currentRound++;
-            GetRound(currentRound);
+            GetRound();
         }
 
         public void PlayUpgradeCard(string cardName)
@@ -52,9 +52,9 @@ namespace Game
             _playService.PlayUnitCard(card.cardName, OnUnitCardPostComplete, OnError);
         }
 
-        public void GetRound(int roundNumber)
+        public void GetRound()
         {
-            _playService.GetRound(roundNumber, OnGetRoundComplete, OnError);
+            _playService.GetRound(currentRound, OnGetRoundComplete, OnError);
         }
 
         private void OnGetRoundComplete(Round round)
@@ -62,9 +62,9 @@ namespace Game
             _view.OnGetRoundInfo(round);
         }
 
-        private void OnError(string obj)
+        private void OnError(string message)
         {
-            throw new NotImplementedException();
+            _view.ShowError(message);
         }
 
         private void OnUnitCardPostComplete()

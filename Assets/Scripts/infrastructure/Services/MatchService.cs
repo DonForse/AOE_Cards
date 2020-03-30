@@ -28,7 +28,7 @@ namespace Infrastructure.Services
             using (var webRequest = UnityWebRequest.Get(url))
             {
                 yield return webRequest.SendWebRequest();
-                isError = webRequest.isNetworkError;
+                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
                 isComplete = webRequest.isDone;
                 responseString = isError ?
                                    webRequest.error
@@ -44,7 +44,7 @@ namespace Infrastructure.Services
             else if (isComplete)
             {                
                 var dto = JsonUtility.FromJson<MatchDto>(responseString);
-                if (dto.board == null)
+                if (dto.matchId == null)
                 {
                     yield return new WaitForSeconds(3f);
                     StartCoroutine(Get(url, onStartMatchComplete, onError));
@@ -71,18 +71,18 @@ namespace Infrastructure.Services
                     new Round
                     {
                         WinnerPlayer = r.winnerplayer,
-                        UpgradeCardRound = !string.IsNullOrWhiteSpace(r.upgradecardround) ? new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == r.upgradecardround) : null,
+                        UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(r.upgradecardround),
                         CardsPlayed = r.cardsplayed?.Select(cp =>
                             new PlayerCard
                             {
                                 Player = cp.player,
-                                UnitCardData = !string.IsNullOrWhiteSpace(cp.unitcard) ? new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cp.unitcard) : null,
-                                UpgradeCardData = !string.IsNullOrWhiteSpace(cp.upgradecard) ? new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cp.upgradecard) : null
+                                UnitCardData = new InMemoryCardProvider().GetUnitCard(cp.unitcard),
+                                UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard)
                             }).ToList()
                     }).ToList()
             };
-            ms.hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cardName)).ToList(),
-                        dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cardName)).ToList());
+            ms.hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).ToList(),
+                        dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).ToList());
             ms.users = dto.users;
             return ms;
         }

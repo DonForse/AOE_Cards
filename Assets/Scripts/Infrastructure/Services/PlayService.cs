@@ -18,7 +18,7 @@ namespace Infrastructure.Services
         public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<string> onError)
         {
             var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber);
-            Get(url, onGetRoundComplete, onError);
+            StartCoroutine(Get(url, onGetRoundComplete, onError));
         }
 
         public void PlayUpgradeCard(string cardName, Action onUpgradeCardsFinished, Action<string> onError)
@@ -41,7 +41,7 @@ namespace Infrastructure.Services
             using (var webRequest = UnityWebRequest.Get(url))
             {
                 yield return webRequest.SendWebRequest();
-                isError = webRequest.isNetworkError;
+                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
                 isComplete = webRequest.isDone;
                 responseString = isError ?
                                    webRequest.error
@@ -72,13 +72,13 @@ namespace Infrastructure.Services
             return new Round
             {
                 WinnerPlayer = dto.winnerplayer,
-                UpgradeCardRound = !string.IsNullOrWhiteSpace(dto.upgradecardround) ? new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == dto.upgradecardround) : null,
+                UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(dto.upgradecardround),
                 CardsPlayed = dto.cardsplayed.Select(cp =>
                     new PlayerCard
                     {
                         Player = cp.player,
-                        UnitCardData = !string.IsNullOrWhiteSpace(cp.unitcard) ? new InMemoryCardProvider().GetUnitCards().FirstOrDefault(f => f.cardName == cp.unitcard) : null,
-                        UpgradeCardData = !string.IsNullOrWhiteSpace(cp.upgradecard) ? new InMemoryCardProvider().GetUpgradeCards().FirstOrDefault(f => f.cardName == cp.upgradecard) : null
+                        UnitCardData = new InMemoryCardProvider().GetUnitCard(cp.unitcard),
+                        UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard)
                     }).ToList()
             };
         }
@@ -100,8 +100,7 @@ namespace Infrastructure.Services
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 yield return webRequest.SendWebRequest();
                 isDone = webRequest.isDone;
-                isError = webRequest.isNetworkError;
-
+                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
                 responseString = isError ? webRequest.error : "";
             }
 

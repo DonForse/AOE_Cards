@@ -4,7 +4,7 @@ using Infrastructure.Services;
 public interface IGameView
 {
     void ShowUpgradeCardsPlayedByPlayer(string player);
-    void ShowError();
+    void ShowError(string message);
     void UpgradeCardSentPlay();
     void UnitCardSentPlay();
     void OnGetRoundInfo(Round round);

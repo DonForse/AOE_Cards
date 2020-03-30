@@ -39,7 +39,7 @@ namespace Infrastructure.Services
             {
                 yield return webRequest.SendWebRequest();
                 isDone = webRequest.isDone;
-                isError = webRequest.isNetworkError;
+                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
                 responseString = isError ?
                     webRequest.error
                     : isDone ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
@@ -77,7 +77,7 @@ namespace Infrastructure.Services
                 webRequest.SetRequestHeader("Content-Type", "text/json");
                 yield return webRequest.SendWebRequest();
                 isDone = webRequest.isDone;
-                isError = webRequest.isNetworkError;
+                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
                 responseString = isError ?
                     webRequest.error 
                     : isDone ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)

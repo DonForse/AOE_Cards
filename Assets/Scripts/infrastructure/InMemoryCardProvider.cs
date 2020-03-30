@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,5 +23,24 @@ public class InMemoryCardProvider : ICardProvider
             _unitCards = Resources.LoadAll<UnitCardData>("Cards/UnitCards");
 
         return _unitCards.ToList();
+    }
+
+    public UnitCardData GetUnitCard(string unitcard)
+    {
+        if (string.IsNullOrWhiteSpace(unitcard))
+            return null;
+        var card = GetUnitCards().FirstOrDefault(f => f.cardName == unitcard);
+        if (card == null)
+            Debug.LogError(unitcard);
+        return card;
+    }
+    public UpgradeCardData GetUpgradeCard(string upgradeCard)
+    {
+        if (string.IsNullOrWhiteSpace(upgradeCard))
+            return null;
+        var card = GetUpgradeCards().FirstOrDefault(f => f.cardName == upgradeCard);
+        if (card == null)
+            Debug.LogError(upgradeCard);
+        return card;
     }
 }

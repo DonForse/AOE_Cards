@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Camel Rider
   m_EditorClassIdentifier: 
   cardName: Camel Rider
-  archetype: Cavarly|Camel
+  archetype: Cavalry|Camel
   effect: 
   effectPower: 0
   power: 14
