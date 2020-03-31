@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-public class UpgradeCardView : MonoBehaviour
+using UnityEngine.EventSystems;
+
+public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public string CardName { get; private set; }
     [SerializeField] private TextMeshProUGUI cardName;
@@ -25,13 +25,13 @@ public class UpgradeCardView : MonoBehaviour
         //    //add prefab to archetypeSection
         //}
     }
-    private void OnMouseOver()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        animator.SetBool(Hover,true);
+        animator.SetBool(Hover, true);
     }
 
-    private void OnMouseExit()
+    public void OnPointerExit(PointerEventData eventData)
     {
-        animator.SetBool(Hover,false);
+        animator.SetBool(Hover, false);
     }
 }

@@ -14,13 +14,11 @@ namespace Game
         [SerializeField] private ServicesProvider servicesProvider;
         [SerializeField] private GameObject unitCardGo;
         [SerializeField] private GameObject upgradeCardGo;
-
-        [SerializeField] private GameObject unitCardsContainer;
-        [SerializeField] private GameObject upgradeCardsContainer;
-        [SerializeField] private GameObject roundCardContainer;
-        [SerializeField] private GameObject upgradeCardShowDownContainer;
-        [SerializeField] private GameObject unitCardShowDownContainer;
-        [SerializeField] private Button buttonToggleHandCards;
+        [SerializeField] private GameObject _showDrawnHandContainer;
+        [SerializeField] private UpgradesView _upgradesView;
+        [SerializeField] private GameInfoView _gameInfoView;
+        [SerializeField] private HandView _handView;
+        [SerializeField] private ShowdownView _showdownView;
 
         private MatchState matchState;
         private GamePresenter _presenter;
@@ -28,12 +26,11 @@ namespace Game
         private UnitCardView _unitCardPlayed;
         private UpgradeCardView _upgradeCardPlayed;
 
-        private bool showingUpgrades;
+
 
         public void OnOpening()
         {
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService());
-            buttonToggleHandCards.onClick.AddListener(ToggleHandCards);
             this.gameObject.SetActive(true);
         }
 
@@ -50,43 +47,6 @@ namespace Game
             this.gameObject.SetActive(false);
         }
 
-        private void ToggleHandCards()
-        {
-            if(showingUpgrades)
-                ShowHandUnits();
-            else 
-                ShowHandUpgrades();
-        }
-        
-        private void ShowHandUnits()
-        {
-            showingUpgrades = false;
-            //TODO: change image
-            //animations (control toggle from animation?)
-            upgradeCardsContainer.SetActive(false);
-            unitCardsContainer.SetActive(true);
-
-            foreach (var unitButton in unitCardsContainer.GetComponentsInChildren<Button>())
-                unitButton.interactable = true;
-
-            foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
-                upgradeButton.interactable = false;
-        }
-
-        private void ShowHandUpgrades()
-        {
-            showingUpgrades = true;
-            //TODO: change image
-            //animations (control toggle from animation?)
-            upgradeCardsContainer.SetActive(true);
-            unitCardsContainer.SetActive(false);
-
-            foreach (var unitButton in unitCardsContainer.GetComponentsInChildren<Button>())
-                unitButton.interactable = false;
-
-            foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
-                upgradeButton.interactable = true;
-        }
 
         public void InitializeRound(Round round)
         {
@@ -96,7 +56,7 @@ namespace Game
             matchState = MatchState.RoundUpgradeReveal;
             ShowRoundUpgradeCard(round.UpgradeCardRound);
 
-            ShowHandUpgrades();
+            _handView.ShowHandUpgrades();
             matchState = MatchState.SelectUpgrade;
         }
 
@@ -104,24 +64,55 @@ namespace Game
         {
             //unitCards = new List<UnitCardView>();
             //upgradeCards = new List<UpgradeCardView>();
+            var units = new List<GameObject>();
             foreach (var card in hand.GetUnitCards())
             {
-                var go = Instantiate(unitCardGo, unitCardsContainer.transform);
+                var go = Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
                 var button = go.GetComponent<Button>();
                 button.onClick.AddListener(() => PlayUnitCard(unitCard));
                 unitCard.SetCard(card);
+                //_handView.SetUnitCard(go);
+                units.Add(go);
                 //unitCards.Add(unitCard);
             }
+            var upgrades = new List<GameObject>();
             foreach (var card in hand.GetUpgradeCards())
             {
-                var go = GameObject.Instantiate(upgradeCardGo, upgradeCardsContainer.transform);
+                var go = GameObject.Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
                 var button = go.GetComponent<Button>();
                 button.onClick.AddListener(() => PlayUpgradeCard(upgradeCard));
                 upgradeCard.SetCard(card);
-                //upgradeCards.Add(upgradeCard);
+                //_handView.SetUpgradeCard(go);
+                upgrades.Add(go);
             }
+            StartCoroutine(ShowDrawnCards(units, upgrades));
+        }
+
+        private IEnumerator ShowDrawnCards(IList<GameObject> units, IList<GameObject> upgrades)
+        {
+            //IList<GameObject> units = _handView.GetUnitCards();
+            //IList<GameObject> upgrades = _handView.GetUpgradeCards();
+            foreach (var unit in units) {
+                unit.transform.SetParent(_showDrawnHandContainer.transform);
+            }
+            foreach (var upgrade in upgrades)
+            {
+                upgrade.transform.SetParent(_showDrawnHandContainer.transform);
+            }
+            _showDrawnHandContainer.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            _showDrawnHandContainer.SetActive(false);
+            foreach (var unit in units)
+            {
+                _handView.SetUnitCard(unit);
+            }
+            foreach (var upgrade in upgrades)
+            {
+                _handView.SetUpgradeCard(upgrade);
+            }
+            
         }
 
         public void ShowUpgradeCardsPlayedByPlayer(string player)
@@ -137,9 +128,7 @@ namespace Game
         public void UpgradeCardSentPlay()
         {
             matchState = MatchState.WaitUpgrade;
-            //animation stuff
-            _upgradeCardPlayed.transform.SetParent(upgradeCardShowDownContainer.transform);
-            Canvas.ForceUpdateCanvases();
+            _showdownView.PlayUpgradeCard(_upgradeCardPlayed, PlayerType.Player);
         }
 
         public void GetRound()
@@ -159,7 +148,7 @@ namespace Game
             if (matchState == MatchState.WaitUpgrade)
             {
                 ShowUpgradeCardsPlayedRound(round);
-                ShowHandUnits();
+                _handView.ShowHandUnits();
                 return;
             }
             if (matchState == MatchState.WaitUnit)
@@ -172,22 +161,21 @@ namespace Game
         public void UnitCardSentPlay()
         {
             matchState = MatchState.WaitUnit;
-            //animation stuff
-            _unitCardPlayed.transform.SetParent(unitCardShowDownContainer.transform);
-            Canvas.ForceUpdateCanvases();
+            _showdownView.PlayUnitCard(_unitCardPlayed, PlayerType.Player);
         }
 
         private void ShowUpgradeCardsPlayedRound(Round round)
         {
-            var cards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
-            foreach (var card in cards)
+            var rivalCards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
+            foreach (var card in rivalCards)
             {
                 if (card.UpgradeCardData == null)
                     continue;
-                var go = GameObject.Instantiate(upgradeCardGo, upgradeCardsContainer.transform);
+                var go = GameObject.Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
                 upgradeCard.SetCard(card.UpgradeCardData);
-                go.transform.SetParent(upgradeCardShowDownContainer.transform);
+
+                _showdownView.PlayUpgradeCard(upgradeCard, PlayerType.Rival);
             }
             matchState = MatchState.SelectUnit;
         }
@@ -199,18 +187,19 @@ namespace Game
             {
                 if (card.UnitCardData == null)
                     continue;
-                var go = GameObject.Instantiate(unitCardGo, unitCardsContainer.transform);
+                var go = GameObject.Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card.UnitCardData);
-                go.transform.SetParent(unitCardShowDownContainer.transform);
+
+                _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
             }
             matchState = MatchState.RoundResultReveal;
-            //do some animation
             StartCoroutine(StartNewRound());
         }
 
         private IEnumerator StartNewRound()
         {
+            //do some animation stuff
             yield return new WaitForSeconds(2f);
 
             _presenter.StartNewRound();
@@ -220,11 +209,6 @@ namespace Game
         {
             _unitCardPlayed = null;
             _upgradeCardPlayed = null;
-            foreach (var unitButton in unitCardsContainer.GetComponentsInChildren<Button>())
-                unitButton.interactable = false;
-
-            foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
-                upgradeButton.interactable = true;
         }
 
         private void CardReveal(Round roundResult)
@@ -236,9 +220,10 @@ namespace Game
 
         private void ShowRoundUpgradeCard(UpgradeCardData upgradeCardData)
         {
-            var go = GameObject.Instantiate(upgradeCardGo, roundCardContainer.transform);
+            var go = GameObject.Instantiate(upgradeCardGo);
             var upgradeCard = go.GetComponent<UpgradeCardView>();
             upgradeCard.SetCard(upgradeCardData);
+            _upgradesView.SetRoundUpgradeCard(go);
             //animation stuff.  
         }
 
