@@ -115,11 +115,6 @@ namespace Game
             
         }
 
-        public void ShowUpgradeCardsPlayedByPlayer(string player)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void ShowError(string message)
         {
             Debug.LogError(message);

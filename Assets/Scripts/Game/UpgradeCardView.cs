@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public string CardName { get; private set; }
+    public Sprite Image => artwork;
+
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;
     [SerializeField] private Sprite artwork;
