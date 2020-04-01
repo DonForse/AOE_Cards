@@ -18,7 +18,7 @@ namespace Game
             var icon = Instantiate(upgradeIconGo, roundCardContainer.transform);
             var iconView = icon.GetComponent<UpgradeIconView>();
             var upgradeView = go.GetComponent<UpgradeCardView>();
-            iconView.SetImage(upgradeView.Image);
+            iconView.SetUpgrade(upgradeView);
             go.SetActive(false);
             go.transform.SetParent(icon.transform);
         }
@@ -29,7 +29,7 @@ namespace Game
             var icon = Instantiate(upgradeIconGo, container.transform);
             var iconView = icon.GetComponent<UpgradeIconView>();
             var upgradeView = go.GetComponent<UpgradeCardView>();
-            iconView.SetImage(upgradeView.Image);
+            iconView.SetUpgrade(upgradeView);
             go.SetActive(false);
             go.transform.SetParent(icon.transform);
         }

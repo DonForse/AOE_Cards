@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Infrastructure.Services;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -15,6 +17,12 @@ public class GameInfoView : MonoBehaviour
     private IList<PlayerType> roundWinners = new List<PlayerType>();
     // Start is called before the first frame update
 
+    public void SetGame(Match match) {
+        SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
+        SetPlayerName(match.users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
+        SetRoundNumber(match.board.Rounds.Count());
+    }
+
     public void SetPlayerName(string name, PlayerType playerType)
     {
         var playerTxt = playerType == PlayerType.Player ? playerNameTxt : rivalNameTxt;
@@ -30,11 +38,16 @@ public class GameInfoView : MonoBehaviour
     {
         var container = playerType == PlayerType.Player ? roundWinsPlayer : roundWinsRival;
         var countWinner = roundWinners.Count(r => r == playerType);
-        if (countWinner > 3)
+        if (countWinner > 4)
             return;
         var images = container.GetComponentsInChildren<Image>();
-        images[countWinner + 1].color = Color.green;
+        images[countWinner].color = Color.green;
         roundWinners.Add(playerType);
 
+    }
+
+    internal void SetPlayerName(object p)
+    {
+        throw new NotImplementedException();
     }
 }

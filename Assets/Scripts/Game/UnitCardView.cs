@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UnitCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UnitCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ICardView
 {
     public string CardName { get; private set; }
     [SerializeField] private TextMeshProUGUI cardName;

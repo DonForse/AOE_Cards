@@ -1,14 +1,30 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game
 {
-    public class UpgradeIconView : MonoBehaviour
+    public class UpgradeIconView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField] Image image;
-        public void SetImage(Sprite upgradeViewImage)
+        [SerializeField] private Image image;
+        [SerializeField] private GameObject hoverContainer;
+        [SerializeField] private TextMeshProUGUI effect;
+
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            image.sprite = upgradeViewImage;
+            hoverContainer.SetActive(true);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            hoverContainer.SetActive(false);
+        }
+
+        public void SetUpgrade(UpgradeCardView upgradeView)
+        {
+            image.sprite = upgradeView.Image;
+            effect.text = upgradeView.Effect;
         }
     }
 }

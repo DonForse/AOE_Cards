@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ICardView
 {
     public string CardName { get; private set; }
     public Sprite Image => artwork;
+    public string Effect  => effect.text;
 
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;

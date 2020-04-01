@@ -26,6 +26,7 @@ namespace Game
         private UnitCardView _unitCardPlayed;
         private UpgradeCardView _upgradeCardPlayed;
 
+        private int playersCount = 0;
 
 
         public void OnOpening()
@@ -34,10 +35,13 @@ namespace Game
             this.gameObject.SetActive(true);
         }
 
-        public void SetGame(Match matchStatus)
+        public void SetGame(Match match)
         {
-            _presenter.GameSetup(matchStatus);
             matchState = MatchState.InitializeGame;
+
+            _presenter.GameSetup(match);
+            playersCount = match.users.Count();
+            _gameInfoView.SetGame(match);
 
             InvokeRepeating("GetRound", 3f, 3f);
         }
@@ -94,14 +98,14 @@ namespace Game
         {
             //IList<GameObject> units = _handView.GetUnitCards();
             //IList<GameObject> upgrades = _handView.GetUpgradeCards();
-            foreach (var unit in units) {
+            foreach (var unit in units)
+            {
                 unit.transform.SetParent(_showDrawnHandContainer.transform);
             }
             foreach (var upgrade in upgrades)
             {
                 upgrade.transform.SetParent(_showDrawnHandContainer.transform);
             }
-            _showDrawnHandContainer.SetActive(true);
             yield return new WaitForSeconds(2f);
             _showDrawnHandContainer.SetActive(false);
             foreach (var unit in units)
@@ -112,7 +116,9 @@ namespace Game
             {
                 _handView.SetUpgradeCard(upgrade);
             }
-            
+            LayoutRebuilder.MarkLayoutForRebuild(_handView.GetComponent<RectTransform>());
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_handView.GetComponent<RectTransform>());
+            Canvas.ForceUpdateCanvases();
         }
 
         public void ShowError(string message)
@@ -161,11 +167,14 @@ namespace Game
 
         private void ShowUpgradeCardsPlayedRound(Round round)
         {
+            if (round.CardsPlayed.Count(c=>c.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)) < playersCount -1 )
+                return;
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
+            
             foreach (var card in rivalCards)
             {
                 if (card.UpgradeCardData == null)
-                    continue;
+                    return;
                 var go = GameObject.Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
                 upgradeCard.SetCard(card.UpgradeCardData);
@@ -177,11 +186,13 @@ namespace Game
 
         private void ShowUnitCardsPlayedRound(Round round)
         {
+            if (round.CardsPlayed.Count(c => c.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)) < playersCount - 1)
+                return;
             var cards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
             foreach (var card in cards)
             {
-                if (card.UnitCardData == null)
-                    continue;
+                if (card.UnitCardData == null) //some player didnt play yet
+                    return;
                 var go = GameObject.Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card.UnitCardData);
@@ -189,14 +200,17 @@ namespace Game
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
             }
             matchState = MatchState.RoundResultReveal;
-            StartCoroutine(StartNewRound());
+            StartCoroutine(StartNewRound(round));
         }
 
-        private IEnumerator StartNewRound()
+        private IEnumerator StartNewRound(Round round)
         {
             //do some animation stuff
             yield return new WaitForSeconds(2f);
 
+            _showdownView.Clear(_upgradesView);
+            var pt = round.WinnerPlayer == PlayerPrefs.GetString(PlayerPrefsHelper.UserName) ? PlayerType.Player : PlayerType.Rival;
+            _gameInfoView.WinRound(pt);
             _presenter.StartNewRound();
         }
 
