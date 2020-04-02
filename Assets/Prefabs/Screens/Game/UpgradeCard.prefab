@@ -597,6 +597,7 @@ GameObject:
   - component: {fileID: 4944160581890559954}
   - component: {fileID: -4401070966157813596}
   - component: {fileID: 7451833773519365812}
+  - component: {fileID: 8289857097591884593}
   m_Layer: 5
   m_Name: UpgradeCard
   m_TagString: Untagged
@@ -704,6 +705,25 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1818360610 &8289857097591884593
+ScaleConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660645200975920526}
+  m_Enabled: 1
+  m_Weight: 1
+  m_ScaleAtRest: {x: 1, y: 1, z: 1}
+  m_ScaleOffset: {x: 1, y: 1, z: 1}
+  m_AffectScalingX: 1
+  m_AffectScalingY: 1
+  m_AffectScalingZ: 1
+  m_IsContraintActive: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &8654517298023802817
 GameObject:
   m_ObjectHideFlags: 0

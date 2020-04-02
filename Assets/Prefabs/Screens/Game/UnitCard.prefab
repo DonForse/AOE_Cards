@@ -899,6 +899,7 @@ GameObject:
   - component: {fileID: -4135660628681113253}
   - component: {fileID: 400106834145541457}
   - component: {fileID: 4774816617454995768}
+  - component: {fileID: 2544945945502819732}
   m_Layer: 5
   m_Name: UnitCard
   m_TagString: Untagged
@@ -1009,6 +1010,25 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1818360610 &2544945945502819732
+ScaleConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660645200975920526}
+  m_Enabled: 1
+  m_Weight: 1
+  m_ScaleAtRest: {x: 1, y: 1, z: 1}
+  m_ScaleOffset: {x: 1, y: 1, z: 1}
+  m_AffectScalingX: 1
+  m_AffectScalingY: 1
+  m_AffectScalingZ: 1
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &7660645201105337808
 GameObject:
   m_ObjectHideFlags: 0

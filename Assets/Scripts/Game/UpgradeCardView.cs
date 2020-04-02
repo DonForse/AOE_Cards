@@ -30,11 +30,11 @@ public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExit
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        animator.SetBool(Hover, true);
+        //animator.SetBool(Hover, true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        animator.SetBool(Hover, false);
+        //animator.SetBool(Hover, false);
     }
 }
