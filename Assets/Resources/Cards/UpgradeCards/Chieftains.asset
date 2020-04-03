@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Chieftains
   m_EditorClassIdentifier: 
   cardName: Chieftains
-  archetype: Soldier
+  archetypes: soldier
   effect: Soldiers + 8 vs Cavarly
   artwork: {fileID: 0}

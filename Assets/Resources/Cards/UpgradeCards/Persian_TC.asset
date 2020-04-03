@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Persian_TC
   m_EditorClassIdentifier: 
   cardName: Persian Town Center
-  archetype: Villager
+  archetypes: villager
   effect: Duplicates Villager Power (calculated last)
   artwork: {fileID: 0}

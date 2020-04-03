@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Forced Levy
   m_EditorClassIdentifier: 
   cardName: Forced Levy
-  archetype: Soldier
+  archetypes: soldier
   effect: Soldiers + 4
   artwork: {fileID: 0}

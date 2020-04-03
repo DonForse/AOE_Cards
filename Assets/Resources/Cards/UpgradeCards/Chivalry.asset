@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Chivalry
   m_EditorClassIdentifier: 
   cardName: Chivalry
-  archetype: Cavarly
+  archetypes: cavalry
   effect: Cavarly+4
   artwork: {fileID: 0}

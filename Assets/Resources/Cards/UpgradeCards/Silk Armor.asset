@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Silk Armor
   m_EditorClassIdentifier: 
   cardName: Silk Armor
-  archetype: 'Cavarly Archer|Counter Unit '
+  archetypes: cavalryarcher|counterunit
   effect: 'Cavarly Archers and Scouts +4 '
   artwork: {fileID: 0}

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Recurve Bow
   m_EditorClassIdentifier: 
   cardName: Recurve Bow
-  archetype: Cavarly Archer
+  archetypes: cavalryarcher
   effect: Cavarly Archer +4
   artwork: {fileID: 0}

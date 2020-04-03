@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Marauders
   m_EditorClassIdentifier: 
   cardName: Marauders
-  archetype: Cavarly
+  archetypes: cavalry
   effect: Cavarly +4 vs Archers
   artwork: {fileID: 0}

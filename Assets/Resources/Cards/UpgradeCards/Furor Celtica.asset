@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Furor Celtica
   m_EditorClassIdentifier: 
   cardName: Furor Celtica
-  archetype: Siege Unit
+  archetypes: siegeunit
   effect: Siege Units returns to hand after combat
   artwork: {fileID: 0}

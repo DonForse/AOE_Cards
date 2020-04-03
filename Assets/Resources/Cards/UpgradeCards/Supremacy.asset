@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Supremacy
   m_EditorClassIdentifier: 
   cardName: Supremacy
-  archetype: Villager
+  archetypes: villager
   effect: Villagers + 8
   artwork: {fileID: 0}

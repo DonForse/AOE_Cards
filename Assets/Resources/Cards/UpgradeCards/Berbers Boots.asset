@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Berbers Boots
   m_EditorClassIdentifier: 
   cardName: Berbers Boots
-  archetype: Villager
+  archetypes: villager
   effect: Villagers + 5
   artwork: {fileID: 0}

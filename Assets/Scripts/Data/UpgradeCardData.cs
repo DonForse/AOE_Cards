@@ -6,11 +6,7 @@ using UnityEngine;
 public class UpgradeCardData : ScriptableObject
 {
     public string cardName;
-    public string archetype;
+    public string archetypes;
     public string effect;
     public Sprite artwork;
-
-    public IList<string> GetArchetypes() {
-        return archetype.Split('|');
-    }
 }

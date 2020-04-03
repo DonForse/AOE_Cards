@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Tusk Swords
   m_EditorClassIdentifier: 
   cardName: Tusk Swords
-  archetype: Elephant
+  archetypes: elephant
   effect: Elephants +6
   artwork: {fileID: 0}

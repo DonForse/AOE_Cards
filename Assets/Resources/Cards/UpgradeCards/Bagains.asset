@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Bagains
   m_EditorClassIdentifier: 
   cardName: Bagains
-  archetype: Soldier
+  archetypes: soldier
   effect: Soldiers + 4
   artwork: {fileID: 0}

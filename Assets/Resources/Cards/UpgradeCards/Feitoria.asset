@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Feitoria
   m_EditorClassIdentifier: 
   cardName: Feitoria
-  archetype: Villager
+  archetypes: villager
   effect: Villagers + 4
   artwork: {fileID: 0}

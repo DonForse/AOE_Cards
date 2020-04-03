@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Mangudai
   m_EditorClassIdentifier: 
   cardName: Mangudai
-  archetype: Cavarly Archer
+  archetypes: cavalryarcher
   effect: Cavarly Archers+8
   artwork: {fileID: 0}

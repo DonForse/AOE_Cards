@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Garland Wars
   m_EditorClassIdentifier: 
   cardName: Garland Wars
-  archetype: Soldier
+  archetypes: soldier
   effect: Soldiers + 8
   artwork: {fileID: 0}

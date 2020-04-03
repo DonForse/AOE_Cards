@@ -82,7 +82,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2356161827469369795}
-  - component: {fileID: 8399888528540577017}
+  - component: {fileID: 2865568343575485207}
+  - component: {fileID: 3748526253349219989}
   m_Layer: 5
   m_Name: ArchetypeSection
   m_TagString: Untagged
@@ -104,12 +105,12 @@ RectTransform:
   m_Father: {fileID: 7660645200975920527}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: -0.1, y: 0.6}
+  m_AnchorMax: {x: 0.1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 200}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &8399888528540577017
+--- !u!114 &2865568343575485207
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,7 +119,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6439964270973397223}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -127,13 +128,27 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 30, y: 30}
+  m_Spacing: {x: 0, y: 2}
+  m_Constraint: 0
+  m_ConstraintCount: 2
+--- !u!114 &3748526253349219989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6439964270973397223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28c9d7f5597178e4eb683105c9b497e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardArchetypeIconGo: {fileID: 1639346774609825419, guid: 724453735ba384c43b2ffea2d70350d1,
+    type: 3}
+  pathToIcons: Cards/ArchetypesIcons
 --- !u!1 &7660645199135320251
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +656,7 @@ MonoBehaviour:
   cardName: {fileID: 3880896916766200567}
   effect: {fileID: 7660645199542104631}
   artwork: {fileID: 0}
-  archetypeSection: {fileID: 0}
+  archetypeSection: {fileID: 3748526253349219989}
   animator: {fileID: 7451833773519365812}
 --- !u!114 &-4401070966157813596
 MonoBehaviour:

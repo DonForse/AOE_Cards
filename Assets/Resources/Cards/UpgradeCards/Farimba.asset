@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Farimba
   m_EditorClassIdentifier: 
   cardName: Farimba
-  archetype: Cavarly
+  archetypes: cavalry
   effect: Cavarly +4
   artwork: {fileID: 0}

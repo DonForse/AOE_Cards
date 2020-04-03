@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Rocketry
   m_EditorClassIdentifier: 
   cardName: Rocketry
-  archetype: Archer
+  archetypes: archer
   effect: Archers +4 vs Soldier
   artwork: {fileID: 0}

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Ethiopians Archers
   m_EditorClassIdentifier: 
   cardName: Ethiopians Archers
-  archetype: Archer
+  archetypes: archer
   effect: Archers +6
   artwork: {fileID: 0}

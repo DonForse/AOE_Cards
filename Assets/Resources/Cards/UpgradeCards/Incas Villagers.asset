@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Incas Villagers
   m_EditorClassIdentifier: 
   cardName: Incas Villagers
-  archetype: Villager
+  archetypes: villager
   effect: Villagers + 6
   artwork: {fileID: 0}

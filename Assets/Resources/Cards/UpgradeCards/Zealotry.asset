@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Zealotry
   m_EditorClassIdentifier: 
   cardName: Zealotry
-  archetype: Camel
+  archetypes: camel
   effect: Camels +4
   artwork: {fileID: 0}

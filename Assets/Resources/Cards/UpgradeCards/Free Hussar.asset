@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Free Hussar
   m_EditorClassIdentifier: 
   cardName: Free Hussar
-  archetype: Cavarly
+  archetypes: cavalry
   effect: Cavarly +4
   artwork: {fileID: 0}

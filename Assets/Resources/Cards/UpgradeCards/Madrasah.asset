@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Madrasah
   m_EditorClassIdentifier: 
   cardName: Madrasah
-  archetype: Monk
+  archetypes: monk
   effect: Monk returns to hand after combat
   artwork: {fileID: 0}

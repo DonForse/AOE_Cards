@@ -11,7 +11,7 @@ public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExit
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;
     [SerializeField] private Sprite artwork;
-    [SerializeField] private GameObject archetypeSection;
+    [SerializeField] private CardArchetypeView archetypeSection;
     [SerializeField] private Animator animator;
     private static readonly int Hover = Animator.StringToHash("hover");
 
@@ -22,11 +22,7 @@ public class UpgradeCardView : MonoBehaviour, IPointerEnterHandler, IPointerExit
         effect.text = card.effect;
         artwork = card.artwork;
 
-        //foreach (var archetype in card.GetArchetypes())
-        //{
-        //    //load resource
-        //    //add prefab to archetypeSection
-        //}
+        archetypeSection.SetCard(card.archetypes);
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

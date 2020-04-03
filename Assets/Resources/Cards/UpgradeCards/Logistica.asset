@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Logistica
   m_EditorClassIdentifier: 
   cardName: Logistica
-  archetype: Cavarly
+  archetypes: cavalry
   effect: Cavarly +4 vs Soldier
   artwork: {fileID: 0}

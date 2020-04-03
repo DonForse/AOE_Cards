@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Pavise
   m_EditorClassIdentifier: 
   cardName: Pavise
-  archetype: Archer
+  archetypes: archer
   effect: Archers +6
   artwork: {fileID: 0}

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Howdah
   m_EditorClassIdentifier: 
   cardName: Howdah
-  archetype: Elephant
+  archetypes: elephant
   effect: 'Elephants +4 '
   artwork: {fileID: 0}

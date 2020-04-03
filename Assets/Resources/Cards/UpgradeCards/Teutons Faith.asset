@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Teutons Faith
   m_EditorClassIdentifier: 
   cardName: Teutons Faith
-  archetype: Cavarly
+  archetypes: cavalry
   effect: 'Cavarly no longer loses vs monks '
   artwork: {fileID: 0}

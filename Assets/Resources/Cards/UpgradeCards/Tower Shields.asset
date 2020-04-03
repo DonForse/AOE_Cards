@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Tower Shields
   m_EditorClassIdentifier: 
   cardName: Tower Shields
-  archetype: Counter Units
+  archetypes: counterunit
   effect: Counter Units +2
   artwork: {fileID: 0}

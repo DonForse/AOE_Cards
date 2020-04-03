@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Perfusion
   m_EditorClassIdentifier: 
   cardName: Perfusion
-  archetype: Soldier
+  archetypes: soldier
   effect: Soldiers + 4
   artwork: {fileID: 0}

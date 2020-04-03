@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Obsidian Arrows
   m_EditorClassIdentifier: 
   cardName: Obsidian Arrows
-  archetype: Archer
+  archetypes: archer
   effect: Archers +6
   artwork: {fileID: 0}

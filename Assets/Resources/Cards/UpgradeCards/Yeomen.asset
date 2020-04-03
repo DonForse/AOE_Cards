@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Yeomen
   m_EditorClassIdentifier: 
   cardName: Yeomen
-  archetype: Archer
+  archetypes: archer
   effect: Archers +6
   artwork: {fileID: 0}

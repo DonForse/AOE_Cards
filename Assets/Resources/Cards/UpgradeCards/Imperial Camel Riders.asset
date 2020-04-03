@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Imperial Camel Riders
   m_EditorClassIdentifier: 
   cardName: Imperial Camel Riders
-  archetype: Camel
+  archetypes: camel
   effect: Camels +6
   artwork: {fileID: 0}

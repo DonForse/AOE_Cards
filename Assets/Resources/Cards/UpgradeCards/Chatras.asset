@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Chatras
   m_EditorClassIdentifier: 
   cardName: Chatras
-  archetype: Elephant
+  archetypes: elephant
   effect: Elephants +6
   artwork: {fileID: 0}
