@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Eagle Scout
   m_EditorClassIdentifier: 
   cardName: Eagle Scout
-  archetype: 'Soldier|Eagle Warrior '
+  archetype: Soldier|Eagle
   effect: 
   effectPower: 0
   power: 7

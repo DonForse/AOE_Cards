@@ -43,6 +43,7 @@ public class GameInfoView : MonoBehaviour
         var images = container.GetComponentsInChildren<Image>();
         images[countWinner].color = Color.green;
         roundWinners.Add(playerType);
+        SetRoundNumber(countWinner + 1);
 
     }
 

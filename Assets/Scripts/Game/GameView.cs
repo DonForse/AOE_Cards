@@ -73,9 +73,7 @@ namespace Game
             {
                 var go = Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
-                var button = go.GetComponent<Button>();
-                button.onClick.AddListener(() => PlayUnitCard(unitCard));
-                unitCard.SetCard(card);
+                unitCard.SetCard(card, PlayUnitCard, _showdownView.GetComponent<RectTransform>(), true);
                 //_handView.SetUnitCard(go);
                 units.Add(go);
                 //unitCards.Add(unitCard);
@@ -85,9 +83,7 @@ namespace Game
             {
                 var go = GameObject.Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
-                var button = go.GetComponent<Button>();
-                button.onClick.AddListener(() => PlayUpgradeCard(upgradeCard));
-                upgradeCard.SetCard(card);
+                upgradeCard.SetCard(card, PlayUpgradeCard, _showdownView.GetComponent<RectTransform>(), true);
                 //_handView.SetUpgradeCard(go);
                 upgrades.Add(go);
             }
@@ -167,17 +163,17 @@ namespace Game
 
         private void ShowUpgradeCardsPlayedRound(Round round)
         {
-            if (round.CardsPlayed.Count(c=>c.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)) < playersCount -1 )
+            if (round.CardsPlayed.Count(c => c.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)) < playersCount - 1)
                 return;
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
-            
+
             foreach (var card in rivalCards)
             {
                 if (card.UpgradeCardData == null)
                     return;
                 var go = GameObject.Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
-                upgradeCard.SetCard(card.UpgradeCardData);
+                upgradeCard.SetCard(card.UpgradeCardData, null, null, false);
 
                 _showdownView.PlayUpgradeCard(upgradeCard, PlayerType.Rival);
             }
@@ -195,7 +191,7 @@ namespace Game
                     return;
                 var go = GameObject.Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
-                unitCard.SetCard(card.UnitCardData);
+                unitCard.SetCard(card.UnitCardData, (_) => { }, null, false);
 
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
             }
@@ -231,13 +227,14 @@ namespace Game
         {
             var go = GameObject.Instantiate(upgradeCardGo);
             var upgradeCard = go.GetComponent<UpgradeCardView>();
-            upgradeCard.SetCard(upgradeCardData);
+            upgradeCard.SetCard(upgradeCardData, null, null, false);
             _upgradesView.SetRoundUpgradeCard(go);
             //animation stuff.  
         }
 
-        private void PlayUnitCard(UnitCardView unitCard)
+        private void PlayUnitCard(Draggable draggable)
         {
+            var unitCard = draggable.GetComponent<UnitCardView>();
             if (_unitCardPlayed != null)
                 return;
             _unitCardPlayed = unitCard;
@@ -245,8 +242,9 @@ namespace Game
 
         }
 
-        private void PlayUpgradeCard(UpgradeCardView upgradeCard)
+        private void PlayUpgradeCard(Draggable draggable)
         {
+            var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             if (_upgradeCardPlayed != null)
                 return;
             _upgradeCardPlayed = upgradeCard;

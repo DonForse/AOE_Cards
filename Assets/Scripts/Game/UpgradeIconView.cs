@@ -23,7 +23,7 @@ namespace Game
 
         public void SetUpgrade(UpgradeCardView upgradeView)
         {
-            image.sprite = upgradeView.Image;
+            image.sprite = upgradeView.GetArchetypeImage();
             effect.text = upgradeView.Effect;
         }
     }

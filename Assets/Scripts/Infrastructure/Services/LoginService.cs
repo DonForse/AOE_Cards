@@ -69,7 +69,6 @@ namespace Infrastructure.Services
             string responseString;
             using (var webRequest = UnityWebRequest.Post(ApiUrl, data))
             {
-                webRequest.chunkedTransfer = false;
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();

@@ -44,7 +44,7 @@ namespace Infrastructure.Services
             else if (isComplete)
             {                
                 var dto = JsonUtility.FromJson<MatchDto>(responseString);
-                if (dto.matchId == null)
+                if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);
                     StartCoroutine(Get(url, onStartMatchComplete, onError));

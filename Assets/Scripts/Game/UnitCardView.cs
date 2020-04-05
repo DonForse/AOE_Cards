@@ -1,8 +1,9 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UnitCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ICardView
+public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
 {
     public string CardName { get; private set; }
     [SerializeField] private TextMeshProUGUI cardName;
@@ -13,13 +14,22 @@ public class UnitCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private Animator animator;
     private static readonly int Hover = Animator.StringToHash("hover");
 
-    public void SetCard(UnitCardData card)
+    public void SetCard(UnitCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable)
     {
         CardName = card.cardName;
         cardName.text = card.cardName;
         effect.text = card.effect;
         power.text = card.power.ToString();
         artwork = card.artwork;
+
+
+        if (draggable)
+        {
+            var draggableComponent = GetComponent<Draggable>();
+            draggableComponent
+                .WithCallback(onPlayCallback)
+                .WithDropArea(dropAreaPlay);
+        }
 
         archetypeSection.SetCard(card.archetype);
     }

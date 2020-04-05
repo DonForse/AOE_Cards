@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class CardArchetypeView : MonoBehaviour
 {
     [SerializeField] GameObject CardArchetypeIconGo;
     [SerializeField] string pathToIcons;
+    public Sprite sprite;
 
     public void SetCard(string archetypesSerialized)
     {
@@ -17,8 +19,10 @@ public class CardArchetypeView : MonoBehaviour
     {
         foreach (var archetype in archetypes) {
             var go = Instantiate(CardArchetypeIconGo, this.transform);
-            var image = go.GetComponentInChildren<Image>();
-            image.sprite = GetSprite(archetype);
+            sprite = GetSprite(archetype);
+            var image = go.GetComponentsInChildren<Image>().LastOrDefault();
+            if (image != null)
+                image.sprite = sprite;
         }
     }
 
@@ -34,6 +38,9 @@ public class CardArchetypeView : MonoBehaviour
         foreach (var arc in archetypesData)
             switch (arc.ToLower())
             {
+                case "soldier":
+                    archetypes.Add(Archetype.Soldier);
+                    break;
                 case "militia":
                     archetypes.Add(Archetype.Militia);
                     break;
