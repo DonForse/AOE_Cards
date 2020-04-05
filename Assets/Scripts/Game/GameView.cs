@@ -234,6 +234,8 @@ namespace Game
 
         private void PlayUnitCard(Draggable draggable)
         {
+            if (matchState != MatchState.SelectUnit)
+                return;
             var unitCard = draggable.GetComponent<UnitCardView>();
             if (_unitCardPlayed != null)
                 return;
@@ -244,6 +246,8 @@ namespace Game
 
         private void PlayUpgradeCard(Draggable draggable)
         {
+            if (matchState != MatchState.SelectUpgrade)
+                return;
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             if (_upgradeCardPlayed != null)
                 return;

@@ -286,7 +286,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 210, y: 300}
+  m_CellSize: {x: 190, y: 300}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 7
@@ -1862,7 +1862,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 210, y: 300}
+  m_CellSize: {x: 190, y: 300}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 7
@@ -2420,7 +2420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b814e49e5adde57468fd7e1fefa6293c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upgradeIconGo: {fileID: 1639346774609825419, guid: 724453735ba384c43b2ffea2d70350d1,
+  upgradeIconGo: {fileID: 7146950125591851540, guid: 041e9653289e56b48be2d17617ebda4a,
     type: 3}
   playerUpgradesContainer: {fileID: 609111480406203200}
   rivalUpgradesContainer: {fileID: 3833624665764424687}

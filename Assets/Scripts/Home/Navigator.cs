@@ -13,6 +13,7 @@ namespace Home
         public HomeView homeView;
         public GameView gameView;
         public LoginView loginView;
+        public ResultView resultView;
 
         private IView currentActiveView;
 
@@ -45,6 +46,15 @@ namespace Home
                 currentActiveView.OnClosing();
             homeView.OnOpening();
             currentActiveView = homeView;
+        }
+
+        public void OpenResultView(bool win) {
+            if (currentActiveView != null)
+                currentActiveView.OnClosing();
+            resultView.OnOpening();
+            resultView.SetResult(win);
+
+            currentActiveView = resultView;
         }
     }
 }

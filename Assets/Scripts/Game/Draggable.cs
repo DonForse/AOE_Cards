@@ -40,8 +40,8 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if (ViewsHelper.IsOverlapped(_dropAreaPlay, this.transform.position))
             _onPlayCallback(this);
-        else
-            ViewsHelper.RefreshView(GetComponent<RectTransform>());
+
+        ViewsHelper.RefreshView(GetComponent<RectTransform>());
     }
 
 
