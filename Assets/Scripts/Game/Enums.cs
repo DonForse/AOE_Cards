@@ -17,3 +17,7 @@ public enum Archetype {
     Siege,
     Monk
 }
+
+public enum MatchResult {
+    Win,Lose,Tie,NotFinished
+}

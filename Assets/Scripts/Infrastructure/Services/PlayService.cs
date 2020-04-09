@@ -71,7 +71,8 @@ namespace Infrastructure.Services
         {
             return new Round
             {
-                WinnerPlayer = dto.winnerplayer,
+                RoundNumber = dto.roundnumber,
+                WinnerPlayers = dto.winnerplayer,
                 UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(dto.upgradecardround),
                 CardsPlayed = dto.cardsplayed.Select(cp =>
                     new PlayerCard

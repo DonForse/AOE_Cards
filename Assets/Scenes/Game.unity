@@ -2263,6 +2263,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 34.79874
       objectReference: {fileID: 0}
+    - target: {fileID: 3850909397754365657, guid: b361c47069101402b9b055011e82c6d6,
+        type: 3}
+      propertyPath: m_ConstraintCount
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3926231421161208558, guid: b361c47069101402b9b055011e82c6d6,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -2358,6 +2363,11 @@ PrefabInstance:
       propertyPath: servicesProvider
       value: 
       objectReference: {fileID: 1160600281}
+    - target: {fileID: 4497082453807987681, guid: b361c47069101402b9b055011e82c6d6,
+        type: 3}
+      propertyPath: _navigator
+      value: 
+      objectReference: {fileID: 298151886}
     - target: {fileID: 5895121542119111618, guid: b361c47069101402b9b055011e82c6d6,
         type: 3}
       propertyPath: m_AnchorMin.y

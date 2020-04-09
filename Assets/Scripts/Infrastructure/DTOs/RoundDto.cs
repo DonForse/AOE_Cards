@@ -6,8 +6,9 @@ namespace Infrastructure.Services
     [Serializable]
     public class RoundDto
     {
+        public int roundnumber;
         public PlayerCardDto[] cardsplayed;
-        public string winnerplayer;
+        public string[] winnerplayer;
         public string upgradecardround;
     }
 }

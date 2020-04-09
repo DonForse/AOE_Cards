@@ -4,8 +4,9 @@ namespace Infrastructure.Services
 {
     public class Round
     {
+        public int RoundNumber;
         public IList<PlayerCard> CardsPlayed;
-        public string WinnerPlayer;
+        public IList<string> WinnerPlayers;
         public UpgradeCardData UpgradeCardRound;
     }
 }

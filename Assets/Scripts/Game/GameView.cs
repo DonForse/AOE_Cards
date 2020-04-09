@@ -11,6 +11,7 @@ namespace Game
 {
     public class GameView : MonoBehaviour, IGameView, IView
     {
+        [SerializeField] private Navigator _navigator;
         [SerializeField] private ServicesProvider servicesProvider;
         [SerializeField] private GameObject unitCardGo;
         [SerializeField] private GameObject upgradeCardGo;
@@ -74,9 +75,7 @@ namespace Game
                 var go = Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card, PlayUnitCard, _showdownView.GetComponent<RectTransform>(), true);
-                //_handView.SetUnitCard(go);
                 units.Add(go);
-                //unitCards.Add(unitCard);
             }
             var upgrades = new List<GameObject>();
             foreach (var card in hand.GetUpgradeCards())
@@ -84,7 +83,6 @@ namespace Game
                 var go = GameObject.Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
                 upgradeCard.SetCard(card, PlayUpgradeCard, _showdownView.GetComponent<RectTransform>(), true);
-                //_handView.SetUpgradeCard(go);
                 upgrades.Add(go);
             }
             StartCoroutine(ShowDrawnCards(units, upgrades));
@@ -92,8 +90,6 @@ namespace Game
 
         private IEnumerator ShowDrawnCards(IList<GameObject> units, IList<GameObject> upgrades)
         {
-            //IList<GameObject> units = _handView.GetUnitCards();
-            //IList<GameObject> upgrades = _handView.GetUpgradeCards();
             foreach (var unit in units)
             {
                 unit.transform.SetParent(_showDrawnHandContainer.transform);
@@ -102,8 +98,8 @@ namespace Game
             {
                 upgrade.transform.SetParent(_showDrawnHandContainer.transform);
             }
-            yield return new WaitForSeconds(2f);
-            _showDrawnHandContainer.SetActive(false);
+            _showDrawnHandContainer.SetActive(true);
+            yield return new WaitForSeconds(3f);
             foreach (var unit in units)
             {
                 _handView.SetUnitCard(unit);
@@ -112,6 +108,7 @@ namespace Game
             {
                 _handView.SetUpgradeCard(upgrade);
             }
+            _showDrawnHandContainer.SetActive(false);
             LayoutRebuilder.MarkLayoutForRebuild(_handView.GetComponent<RectTransform>());
             LayoutRebuilder.ForceRebuildLayoutImmediate(_handView.GetComponent<RectTransform>());
             Canvas.ForceUpdateCanvases();
@@ -119,6 +116,7 @@ namespace Game
 
         public void ShowError(string message)
         {
+            _presenter.GetRound();
             Debug.LogError(message);
         }
 
@@ -205,8 +203,13 @@ namespace Game
             yield return new WaitForSeconds(2f);
 
             _showdownView.Clear(_upgradesView);
-            var pt = round.WinnerPlayer == PlayerPrefs.GetString(PlayerPrefsHelper.UserName) ? PlayerType.Player : PlayerType.Rival;
-            _gameInfoView.WinRound(pt);
+
+            _gameInfoView.WinRound(round.WinnerPlayers);
+
+            yield return new WaitForSeconds(2f);
+            if (_presenter.IsMatchOver()) {
+                _navigator.OpenResultView(_gameInfoView.GetWinnerPlayer());
+            }
             _presenter.StartNewRound();
         }
 

@@ -48,7 +48,7 @@ namespace Home
             currentActiveView = homeView;
         }
 
-        public void OpenResultView(bool win) {
+        public void OpenResultView(MatchResult win) {
             if (currentActiveView != null)
                 currentActiveView.OnClosing();
             resultView.OnOpening();

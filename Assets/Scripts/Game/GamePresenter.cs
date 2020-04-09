@@ -59,6 +59,11 @@ namespace Game
 
         private void OnGetRoundComplete(Round round)
         {
+            if (round.WinnerPlayers.Count > 0)
+            {
+                if (!_match.board.Rounds.Any(r => r.RoundNumber == round.RoundNumber))
+                    _match.board.Rounds.Add(round);
+            }
             _view.OnGetRoundInfo(round);
         }
 
@@ -75,6 +80,11 @@ namespace Game
         private void OnUpgradeCardPostComplete()
         {
             _view.UpgradeCardSentPlay();
+        }
+
+        internal bool IsMatchOver()
+        {
+            return _match.board.Rounds.GroupBy(r => r.WinnerPlayers).Any(group => group.Count() >= 4);
         }
     }
 }
