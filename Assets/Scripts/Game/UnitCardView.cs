@@ -48,7 +48,7 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
 
     IEnumerator SimpleLerp(int newPower)
     {
-        float animationTime = 5;  // time frame
+        float animationTime = 2;  // time frame
         float n = 0;  // lerped value
         for (float f = 0; f <= animationTime; f += Time.deltaTime)
         {
