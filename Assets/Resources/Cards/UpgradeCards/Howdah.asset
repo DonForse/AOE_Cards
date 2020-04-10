@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Howdah
   archetypes: elephant
   effect: 'Elephants +4 '
+  powerEffect: 4
   artwork: {fileID: 0}

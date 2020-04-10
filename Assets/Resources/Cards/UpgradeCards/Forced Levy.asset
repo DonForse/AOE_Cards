@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Forced Levy
   archetypes: soldier
   effect: Soldiers + 4
+  powerEffect: 4
   artwork: {fileID: 0}

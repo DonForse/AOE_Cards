@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Druzhina
   archetypes: soldier
   effect: Soldiers + 8 vs Soldier
+  powerEffect: 8
   artwork: {fileID: 0}

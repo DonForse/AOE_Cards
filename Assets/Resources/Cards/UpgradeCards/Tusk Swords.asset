@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Tusk Swords
   archetypes: elephant
   effect: Elephants +6
+  powerEffect: 6
   artwork: {fileID: 0}

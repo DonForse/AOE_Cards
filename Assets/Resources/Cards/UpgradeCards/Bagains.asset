@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Bagains
   archetypes: soldier
   effect: Soldiers + 4
+  powerEffect: 4
   artwork: {fileID: 0}

@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Berbers Boots
   archetypes: villager
   effect: Villagers + 5
+  powerEffect: 5
   artwork: {fileID: 0}

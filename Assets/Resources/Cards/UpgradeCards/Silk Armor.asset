@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Silk Armor
   archetypes: cavalryarcher|counterunit
   effect: 'Cavarly Archers and Scouts +4 '
+  powerEffect: 4
   artwork: {fileID: 0}

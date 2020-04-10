@@ -11,6 +11,7 @@ namespace Game
         [SerializeField] private GameObject hoverContainer;
         [SerializeField] private TextMeshProUGUI effect;
         [SerializeField] private TextMeshProUGUI cardName;
+        [SerializeField] private TextMeshProUGUI power;
 
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -27,6 +28,8 @@ namespace Game
             image.sprite = upgradeView.GetArchetypeImage();
             effect.text = upgradeView.Effect;
             cardName.text = upgradeView.CardName;
+            if (upgradeView.PowerEffect > 0)
+                power.text = upgradeView.PowerEffect.ToString();
         }
     }
 }

@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Chatras
   archetypes: elephant
   effect: Elephants +6
+  powerEffect: 6
   artwork: {fileID: 0}

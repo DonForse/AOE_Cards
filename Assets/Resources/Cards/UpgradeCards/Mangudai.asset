@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Mangudai
   archetypes: cavalryarcher
   effect: Cavarly Archers+8
+  powerEffect: 8
   artwork: {fileID: 0}

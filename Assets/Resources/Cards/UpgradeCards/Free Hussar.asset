@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Free Hussar
   archetypes: cavalry
   effect: Cavarly +4
+  powerEffect: 4
   artwork: {fileID: 0}

@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Yeomen
   archetypes: archer
   effect: Archers +6
+  powerEffect: 6
   artwork: {fileID: 0}

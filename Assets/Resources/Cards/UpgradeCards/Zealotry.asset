@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Zealotry
   archetypes: camel
   effect: Camels +4
+  powerEffect: 4
   artwork: {fileID: 0}

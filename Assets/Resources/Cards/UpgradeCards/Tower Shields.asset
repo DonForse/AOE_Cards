@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Tower Shields
   archetypes: counterunit
   effect: Counter Units +2
+  powerEffect: 2
   artwork: {fileID: 0}

@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Incas Villagers
   archetypes: villager
   effect: Villagers + 6
+  powerEffect: 6
   artwork: {fileID: 0}

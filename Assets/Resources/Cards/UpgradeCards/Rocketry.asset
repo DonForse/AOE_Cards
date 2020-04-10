@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Rocketry
   archetypes: archer
   effect: Archers +4 vs Soldier
+  powerEffect: 4
   artwork: {fileID: 0}

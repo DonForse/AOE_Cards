@@ -10,6 +10,7 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
     public string CardName { get; private set; }
     public Sprite Image => artwork;
     public string Effect => effect.text;
+    public int PowerEffect;
 
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;
@@ -36,6 +37,7 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
         cardName.text = card.cardName;
         effect.text = card.effect;
         artwork = card.artwork;
+        PowerEffect = card.powerEffect;
         
         if (draggable)
         {

@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Recurve Bow
   archetypes: cavalryarcher
   effect: Cavarly Archer +4
+  powerEffect: 4
   artwork: {fileID: 0}

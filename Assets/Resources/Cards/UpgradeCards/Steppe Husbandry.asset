@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Steppe Husbandry
   archetypes: cavalryarcher
   effect: Cavarly Archers + 6
+  powerEffect: 6
   artwork: {fileID: 0}

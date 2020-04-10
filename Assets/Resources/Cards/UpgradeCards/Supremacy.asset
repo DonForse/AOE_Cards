@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Supremacy
   archetypes: villager
   effect: Villagers + 8
+  powerEffect: 8
   artwork: {fileID: 0}

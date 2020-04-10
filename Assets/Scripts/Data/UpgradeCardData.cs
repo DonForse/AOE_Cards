@@ -8,5 +8,6 @@ public class UpgradeCardData : ScriptableObject
     public string cardName;
     public string archetypes;
     public string effect;
+    public int powerEffect;
     public Sprite artwork;
 }

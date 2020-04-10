@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Marauders
   archetypes: cavalry
   effect: Cavarly +4 vs Archers
+  powerEffect: 4
   artwork: {fileID: 0}

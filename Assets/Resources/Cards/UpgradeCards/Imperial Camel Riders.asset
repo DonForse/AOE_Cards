@@ -15,4 +15,5 @@ MonoBehaviour:
   cardName: Imperial Camel Riders
   archetypes: camel
   effect: Camels +6
+  powerEffect: 6
   artwork: {fileID: 0}
