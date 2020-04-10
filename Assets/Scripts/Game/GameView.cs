@@ -193,6 +193,9 @@ namespace Game
 
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
             }
+            foreach (var card in _showdownView.GetUnitsCardsPlayed()) {
+                card.IncreasePowerAnimation(_upgradesView, 100);
+            }
             matchState = MatchState.RoundResultReveal;
             StartCoroutine(StartNewRound(round));
         }

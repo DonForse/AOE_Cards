@@ -57,4 +57,12 @@ public class ShowdownView : MonoBehaviour
             GameObject.Destroy(unit.gameObject);
         }
     }
+
+    internal IEnumerable<UnitCardView> GetUnitsCardsPlayed()
+    {
+        var result = new List<UnitCardView>();
+        result.AddRange(playerFieldContainer.GetComponentsInChildren<UnitCardView>());
+        result.AddRange(rivalFieldContainer.GetComponentsInChildren<UnitCardView>());
+        return result;
+    }
 }
