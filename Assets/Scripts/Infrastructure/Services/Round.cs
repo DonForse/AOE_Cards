@@ -8,5 +8,6 @@ namespace Infrastructure.Services
         public IList<PlayerCard> CardsPlayed;
         public IList<string> WinnerPlayers;
         public UpgradeCardData UpgradeCardRound;
+        public bool Finished;
     }
 }

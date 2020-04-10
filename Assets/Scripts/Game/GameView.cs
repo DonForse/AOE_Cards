@@ -116,7 +116,7 @@ namespace Game
 
         public void ShowError(string message)
         {
-            _presenter.GetRound();
+            //_presenter.GetRound();
             Debug.LogError(message);
         }
 
@@ -146,7 +146,7 @@ namespace Game
                 _handView.ShowHandUnits();
                 return;
             }
-            if (matchState == MatchState.WaitUnit)
+            if (round.Finished && matchState == MatchState.WaitUnit)
             {
                 ShowUnitCardsPlayedRound(round);
                 return;
@@ -207,10 +207,15 @@ namespace Game
             _gameInfoView.WinRound(round.WinnerPlayers);
 
             yield return new WaitForSeconds(2f);
-            if (_presenter.IsMatchOver()) {
+            if (_presenter.IsMatchOver())
+            {
+                matchState = MatchState.EndGame;
                 _navigator.OpenResultView(_gameInfoView.GetWinnerPlayer());
             }
-            _presenter.StartNewRound();
+            else
+            {
+                _presenter.StartNewRound();
+            }
         }
 
         private void ClearGameObjectData()

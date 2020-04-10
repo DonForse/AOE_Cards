@@ -70,6 +70,7 @@ namespace Infrastructure.Services
                 Rounds = dto.board.rounds.Select(r =>
                     new Round
                     {
+                        Finished = r.finished,
                         WinnerPlayers = r.winnerplayer,
                         UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(r.upgradecardround),
                         CardsPlayed = r.cardsplayed?.Select(cp =>

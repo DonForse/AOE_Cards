@@ -6,6 +6,7 @@ namespace Infrastructure.Services
     [Serializable]
     public class RoundDto
     {
+        public bool finished;
         public int roundnumber;
         public PlayerCardDto[] cardsplayed;
         public string[] winnerplayer;

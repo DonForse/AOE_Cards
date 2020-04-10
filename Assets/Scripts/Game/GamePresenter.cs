@@ -84,7 +84,7 @@ namespace Game
 
         internal bool IsMatchOver()
         {
-            return _match.board.Rounds.GroupBy(r => r.WinnerPlayers).Any(group => group.Count() >= 4);
+            return _match.board.Rounds.SelectMany(r => r.WinnerPlayers).GroupBy(wp=>wp).Any(group=>group.Count() >= 4);
         }
     }
 }

@@ -71,6 +71,7 @@ namespace Infrastructure.Services
         {
             return new Round
             {
+                Finished = dto.finished,
                 RoundNumber = dto.roundnumber,
                 WinnerPlayers = dto.winnerplayer,
                 UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(dto.upgradecardround),
@@ -93,7 +94,6 @@ namespace Infrastructure.Services
             Debug.Log(playCardUrl);
             using (var webRequest = UnityWebRequest.Post(playCardUrl, data))
             {
-                webRequest.chunkedTransfer = false;
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
