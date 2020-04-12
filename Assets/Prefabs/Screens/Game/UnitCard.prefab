@@ -553,7 +553,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e61d412baed404fbf831576f89532884, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -961,7 +961,8 @@ MonoBehaviour:
   cardName: {fileID: 3880896916766200567}
   effect: {fileID: 7660645199542104631}
   power: {fileID: 7660645199969866362}
-  artwork: {fileID: 0}
+  artwork: {fileID: 7660645199745985636}
+  background: {fileID: 7660645199368305667}
   archetypeSection: {fileID: 7107671172011540300}
   animator: {fileID: 4774816617454995768}
 --- !u!114 &8932986118642382426

@@ -17,4 +17,5 @@ MonoBehaviour:
   effect: 
   effectPower: 0
   power: 25
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: ce2d0d49c2e08984cba0f67929f2c386, type: 3}
+  background: {fileID: 0}

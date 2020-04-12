@@ -17,4 +17,5 @@ MonoBehaviour:
   effect: Always wins vs Archer
   effectPower: 0
   power: 0
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 80a11ea9160ca5a4da6d2a07a801c9ff, type: 3}
+  background: {fileID: 0}

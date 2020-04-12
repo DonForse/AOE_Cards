@@ -8,13 +8,14 @@ using static UnityEngine.Rendering.DebugUI;
 public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
 {
     public string CardName { get; private set; }
-    public Sprite Image => artwork;
+    public Sprite Image => artwork.sprite;
     public string Effect => effect.text;
     public int PowerEffect;
 
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;
-    [SerializeField] private Sprite artwork;
+    [SerializeField] private Image artwork;
+    [SerializeField] private Image background;
     [SerializeField] private CardArchetypeView archetypeSection;
     [SerializeField] private Animator animator;
     private static readonly int Hover = Animator.StringToHash("hover");
@@ -36,7 +37,8 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
         CardName = card.cardName;
         cardName.text = card.cardName;
         effect.text = card.effect;
-        artwork = card.artwork;
+        artwork.sprite = card.artwork;
+        artwork.preserveAspect = true;
         PowerEffect = card.powerEffect;
         
         if (draggable)

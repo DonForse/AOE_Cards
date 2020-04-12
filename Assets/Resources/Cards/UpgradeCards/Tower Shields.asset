@@ -16,4 +16,4 @@ MonoBehaviour:
   archetypes: counterunit
   effect: Counter Units +2
   powerEffect: 2
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 7f885378b3b8b9747944ff898a697c7d, type: 3}

@@ -17,4 +17,5 @@ MonoBehaviour:
   effect: +5 vs Archer
   effectPower: 5
   power: 10
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 5d060ef5aa42f3b4cb69efcb3f5cf0bd, type: 3}
+  background: {fileID: 0}

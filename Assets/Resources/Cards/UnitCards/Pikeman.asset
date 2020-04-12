@@ -17,4 +17,5 @@ MonoBehaviour:
   effect: +5 vs Cavalry
   effectPower: 5
   power: 10
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: cada758ccefb8984ab6b4cde6e3582a7, type: 3}
+  background: {fileID: 0}

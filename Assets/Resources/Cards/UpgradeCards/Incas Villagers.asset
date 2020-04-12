@@ -16,4 +16,4 @@ MonoBehaviour:
   archetypes: villager
   effect: Villagers + 6
   powerEffect: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 282c2f389280d7944a22d782a234398d, type: 3}

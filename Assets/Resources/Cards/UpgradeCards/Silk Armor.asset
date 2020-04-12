@@ -16,4 +16,4 @@ MonoBehaviour:
   archetypes: cavalryarcher|counterunit
   effect: 'Cavarly Archers and Scouts +4 '
   powerEffect: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 9baa1166de6d3ad41b6825e57114f3b4, type: 3}

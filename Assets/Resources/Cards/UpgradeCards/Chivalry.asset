@@ -16,4 +16,4 @@ MonoBehaviour:
   archetypes: cavalry
   effect: Cavarly+4
   powerEffect: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: de004dc584abfd741b02f6688007c159, type: 3}

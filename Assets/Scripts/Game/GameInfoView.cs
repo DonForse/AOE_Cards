@@ -16,7 +16,8 @@ public class GameInfoView : MonoBehaviour
     private int currentRound;
     private IList<PlayerType> roundWinners = new List<PlayerType>();
 
-    public void SetGame(Match match) {
+    public void SetGame(Match match)
+    {
         SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
         SetPlayerName(match.users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
         SetRoundNumber(match.board.Rounds.Count());
@@ -51,11 +52,6 @@ public class GameInfoView : MonoBehaviour
 
     }
 
-    internal void SetPlayerName(object p)
-    {
-        throw new NotImplementedException();
-    }
-
     internal MatchResult GetWinnerPlayer()
     {
         var winnersGroups = roundWinners.GroupBy(r => r).Where(group => group.Count() >= 4);
@@ -65,5 +61,21 @@ public class GameInfoView : MonoBehaviour
         if (winnersGroups.Count() > 1)
             return MatchResult.Tie;
         return winnersGroups.First().Key == PlayerType.Player ? MatchResult.Win : MatchResult.Lose;
+    }
+
+    internal void Clear()
+    {
+        SetPlayerName(string.Empty, PlayerType.Player);
+        SetPlayerName(string.Empty, PlayerType.Rival);
+        foreach (var imageCounter in roundWinsPlayer.GetComponentsInChildren<Image>())
+        {
+            imageCounter.color = Color.white;
+        }
+
+        foreach (var imageCounter in roundWinsRival.GetComponentsInChildren<Image>())
+        {
+            imageCounter.color = Color.white;
+        }
+        SetRoundNumber(0);
     }
 }

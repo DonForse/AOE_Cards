@@ -17,4 +17,5 @@ MonoBehaviour:
   effect: Always wins vs Soldier
   effectPower: 0
   power: 0
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 8a3086ea9fea28d41bb608b1fa805f0c, type: 3}
+  background: {fileID: 0}

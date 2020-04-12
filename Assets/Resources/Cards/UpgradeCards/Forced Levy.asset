@@ -16,4 +16,4 @@ MonoBehaviour:
   archetypes: soldier
   effect: Soldiers + 4
   powerEffect: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 52acc2514c8e02f4aba6d04c7f57c649, type: 3}

@@ -205,20 +205,36 @@ namespace Game
             //do some animation stuff
             yield return new WaitForSeconds(2f);
 
-            _showdownView.Clear(_upgradesView);
+            _showdownView.MoveCards(_upgradesView);
 
             _gameInfoView.WinRound(round.WinnerPlayers);
 
             yield return new WaitForSeconds(2f);
             if (_presenter.IsMatchOver())
             {
-                matchState = MatchState.EndGame;
-                _navigator.OpenResultView(_gameInfoView.GetWinnerPlayer());
+                EndGame();
             }
             else
             {
                 _presenter.StartNewRound();
             }
+        }
+
+        private void EndGame()
+        {
+            matchState = MatchState.EndGame;
+            ClearView();
+            _navigator.OpenResultView(_gameInfoView.GetWinnerPlayer());
+        }
+
+        private void ClearView()
+        {
+            ClearGameObjectData();
+            _handView.Clear();
+            //_showDrawnHandContainer.Clear();
+            _gameInfoView.Clear();
+            _showdownView.Clear();
+            _upgradesView.Clear();
         }
 
         private void ClearGameObjectData()

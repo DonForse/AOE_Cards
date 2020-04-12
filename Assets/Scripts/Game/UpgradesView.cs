@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game
 {
@@ -32,6 +33,16 @@ namespace Game
             iconView.SetUpgrade(upgradeView);
             go.SetActive(false);
             go.transform.SetParent(icon.transform);
+        }
+
+        internal void Clear()
+        {
+            foreach (var upgradeIcon in playerUpgradesContainer.GetComponentsInChildren<UpgradeIconView>())
+                Destroy(upgradeIcon.gameObject);
+            foreach (var upgradeIcon in rivalUpgradesContainer.GetComponentsInChildren<UpgradeIconView>())
+                Destroy(upgradeIcon.gameObject);
+            foreach (var upgradeIcon in roundCardContainer.GetComponentsInChildren<UpgradeIconView>())
+                Destroy(upgradeIcon.gameObject);
         }
     }
 }

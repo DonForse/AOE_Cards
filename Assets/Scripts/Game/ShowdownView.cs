@@ -35,7 +35,7 @@ public class ShowdownView : MonoBehaviour
         Canvas.ForceUpdateCanvases();
     }
 
-    internal void Clear(UpgradesView upgradesView)
+    internal void MoveCards(UpgradesView upgradesView)
     {
         var upgrades = playerFieldContainer.GetComponentsInChildren<UpgradeCardView>();
         foreach (var upgrade in upgrades) {
@@ -64,5 +64,19 @@ public class ShowdownView : MonoBehaviour
         result.AddRange(playerFieldContainer.GetComponentsInChildren<UnitCardView>());
         result.AddRange(rivalFieldContainer.GetComponentsInChildren<UnitCardView>());
         return result;
+    }
+
+    internal void Clear()
+    {
+        var units = playerFieldContainer.GetComponentsInChildren<UnitCardView>();
+        foreach (var unit in units)
+        {
+            GameObject.Destroy(unit.gameObject);
+        }
+        var rivalUnits = rivalFieldContainer.GetComponentsInChildren<UnitCardView>();
+        foreach (var unit in rivalUnits)
+        {
+            GameObject.Destroy(unit.gameObject);
+        }
     }
 }

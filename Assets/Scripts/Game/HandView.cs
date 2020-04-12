@@ -70,6 +70,17 @@ public class HandView : MonoBehaviour
 
     internal IList<GameObject> GetUpgradeCards()
     {
-        return upgradeCardsContainer.GetComponentsInChildren<UnitCardView>().Select(t => t.gameObject).ToList();
+        return upgradeCardsContainer.GetComponentsInChildren<UpgradeCardView>().Select(t => t.gameObject).ToList();
+    }
+
+    internal void Clear()
+    {
+        foreach (var card in GetUnitCards()) {
+            Destroy(card.gameObject);
+        }
+        foreach (var card in GetUpgradeCards())
+        {
+            Destroy(card.gameObject);
+        }
     }
 }

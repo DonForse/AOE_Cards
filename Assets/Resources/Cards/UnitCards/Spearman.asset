@@ -17,4 +17,5 @@ MonoBehaviour:
   effect: +4 vs Cavarly
   effectPower: 4
   power: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: c696c95f68a79b048a4e7409c873ff04, type: 3}
+  background: {fileID: 0}

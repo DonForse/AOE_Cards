@@ -4,6 +4,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
 {
@@ -12,7 +13,8 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI effect;
     [SerializeField] private TextMeshProUGUI power;
-    [SerializeField] private Sprite artwork;
+    [SerializeField] private Image artwork;
+    [SerializeField] private Image background;
     [SerializeField] private CardArchetypeView archetypeSection;
     [SerializeField] private Animator animator;
     private static readonly int Hover = Animator.StringToHash("hover");
@@ -26,7 +28,9 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
         effect.text = card.effect;
         basePower = card.power;
         power.text = card.power.ToString();
-        artwork = card.artwork;
+        artwork.sprite = card.artwork;
+        artwork.preserveAspect = true;
+        //background.sprite = card.background;
 
 
         if (draggable)
@@ -43,16 +47,15 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
     public void IncreasePowerAnimation(UpgradesView upgrades, int newPower)
     {
         animator.SetTrigger(PoweringUp);
-        StartCoroutine(SimpleLerp(newPower));
+        StartCoroutine(IncreasePowerInTime(newPower, 2f));
     }
 
-    IEnumerator SimpleLerp(int newPower)
+    IEnumerator IncreasePowerInTime(int newPower, float duration)
     {
-        float animationTime = 2;  // time frame
         float n = 0;  // lerped value
-        for (float f = 0; f <= animationTime; f += Time.deltaTime)
+        for (float f = 0; f <= duration; f += Time.deltaTime)
         {
-            var updatePower = Mathf.Lerp(basePower, newPower, f / animationTime);
+            var updatePower = Mathf.Lerp(basePower, newPower, f / duration);
             power.text = ((int)updatePower).ToString();
             yield return null;
         }

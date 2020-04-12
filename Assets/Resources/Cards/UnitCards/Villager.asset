@@ -15,5 +15,7 @@ MonoBehaviour:
   cardName: Villager
   archetype: Villager
   effect: Can always be played
+  effectPower: 0
   power: 1
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: cecad92a5eb14ac45b9ac83e8264e2c3, type: 3}
+  background: {fileID: 0}

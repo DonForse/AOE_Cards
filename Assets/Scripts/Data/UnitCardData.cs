@@ -11,6 +11,7 @@ public class UnitCardData : ScriptableObject
     public int effectPower;
     public int power;
     public Sprite artwork;
+    public Sprite background;
 
     public IList<string> GetArchetypes() {
         return archetype.Split('|');
