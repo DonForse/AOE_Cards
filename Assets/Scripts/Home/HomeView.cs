@@ -21,6 +21,7 @@ namespace Home
         
         public void OnOpening()
         {
+            _matchFoundContainer.SetActive(false);
             _presenter = new HomePresenter(this, _servicesProvider.GetMatchService());
             _playButton.onClick.AddListener(PlayMatch);
             this.gameObject.SetActive(true);
@@ -55,7 +56,9 @@ namespace Home
 
         private void StopTimer()
         {
+            _matchMakingContainer.SetActive(false);
             timerRunning = false;
+
         }
 
         public void OnMatchFound(Match matchStatus)

@@ -19,8 +19,8 @@ public class GameInfoView : MonoBehaviour
     public void SetGame(Match match)
     {
         SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
-        SetPlayerName(match.users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
-        SetRoundNumber(match.board.Rounds.Count());
+        SetPlayerName(match.Users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
+        SetRoundNumber(match.Board.Rounds.Count());
     }
 
     public void SetPlayerName(string name, PlayerType playerType)

@@ -21,17 +21,17 @@ namespace Game
 
         public Hand GetHand()
         {
-            return _match.hand;
+            return _match.Hand;
         }
 
         public void GameSetup(Match match)
         {
             _match = match;
-            currentRound = _match.board.Rounds.Count() -1;
-            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.id);
+            currentRound = _match.Board.Rounds.Count() -1;
+            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
 
-            _view.InitializeHand(_match.hand);
-            _view.InitializeRound(_match.board.Rounds.Last());
+            _view.InitializeHand(_match.Hand);
+            _view.InitializeRound(_match.Board.Rounds.Last());
         }
 
         public void StartNewRound()
@@ -42,13 +42,13 @@ namespace Game
 
         public void PlayUpgradeCard(string cardName)
         {
-            var card = _match.hand.TakeUpgradeCard(cardName);
+            var card = _match.Hand.TakeUpgradeCard(cardName);
             _playService.PlayUpgradeCard(card.cardName, OnUpgradeCardPostComplete, OnError);
         }
 
         public void PlayUnitCard(string cardName)
         {
-            var card = _match.hand.TakeUnitCard(cardName);
+            var card = _match.Hand.TakeUnitCard(cardName);
             _playService.PlayUnitCard(card.cardName, OnUnitCardPostComplete, OnError);
         }
 
@@ -61,8 +61,8 @@ namespace Game
         {
             if (round.WinnerPlayers.Count > 0)
             {
-                if (!_match.board.Rounds.Any(r => r.RoundNumber == round.RoundNumber))
-                    _match.board.Rounds.Add(round);
+                if (!_match.Board.Rounds.Any(r => r.RoundNumber == round.RoundNumber))
+                    _match.Board.Rounds.Add(round);
             }
             _view.OnGetRoundInfo(round);
         }
@@ -84,7 +84,7 @@ namespace Game
 
         internal bool IsMatchOver()
         {
-            return _match.board.Rounds.SelectMany(r => r.WinnerPlayers).GroupBy(wp=>wp).Any(group=>group.Count() >= 4);
+            return _match.Board.Rounds.SelectMany(r => r.WinnerPlayers).GroupBy(wp=>wp).Any(group=>group.Count() >= 4);
         }
     }
 }

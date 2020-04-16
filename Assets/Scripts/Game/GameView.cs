@@ -41,9 +41,35 @@ namespace Game
             matchState = MatchState.InitializeGame;
 
             _presenter.GameSetup(match);
-            playersCount = match.users.Count();
+            playersCount = match.Users.Count();
             _gameInfoView.SetGame(match);
+            var currentRound = match.Board.Rounds.Last();
+            foreach (var playerCard in currentRound.CardsPlayed) {
+                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == playerCard.Player ? PlayerType.Player : PlayerType.Rival;
+                if (playerCard.UpgradeCardData!= null)
+                {
+                    var go = Instantiate(upgradeCardGo);
+                    var upgradeCard = go.GetComponent<UpgradeCardView>();
+                    upgradeCard.SetCard(playerCard.UpgradeCardData, _ => { }, null, false);
 
+                    _showdownView.PlayUpgradeCard(upgradeCard, playerType);
+
+                    if (playerCard.UnitCardData == null)
+                        matchState = MatchState.WaitUpgrade;
+                }
+                if (playerCard.UnitCardData != null)
+                {
+                    var go = Instantiate(unitCardGo);
+                    var unitCard = go.GetComponent<UnitCardView>();
+                    unitCard.SetCard(playerCard.UnitCardData, _ => { }, null, false);
+
+                    _showdownView.PlayUnitCard(unitCard, playerType);
+                    matchState = MatchState.WaitUnit;
+                }
+
+            };
+            if (currentRound.UpgradeCardRound != null)
+                ShowRoundUpgradeCard(currentRound.UpgradeCardRound);
             InvokeRepeating("GetRound", 3f, 3f);
         }
 
@@ -157,6 +183,13 @@ namespace Game
         {
             matchState = MatchState.WaitUnit;
             _showdownView.PlayUnitCard(_unitCardPlayed, PlayerType.Player);
+            if (_unitCardPlayed.CardName == "Villager")
+            {
+                var go = Instantiate<GameObject>(unitCardGo);
+                var view = go.GetComponent<UnitCardView>();
+                view.SetCard(new InMemoryCardProvider().GetUnitCard("Villager"), PlayUnitCard, _showdownView.GetComponent<RectTransform>(), true);
+                _handView.SetUnitCard(go);
+            }
         }
 
         private void ShowUpgradeCardsPlayedRound(Round round)
@@ -190,12 +223,17 @@ namespace Game
                 var go = GameObject.Instantiate(unitCardGo);
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card.UnitCardData, (_) => { }, null, false);
-
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
             }
-            foreach (var card in _showdownView.GetUnitsCardsPlayed()) {
-                card.IncreasePowerAnimation(_upgradesView, 100);
+            foreach (var cardView in _showdownView.GetUnitsCardsPlayed())
+            {
+                foreach (var card in round.CardsPlayed)
+                {
+                    if (cardView.CardName == card.UnitCardData.cardName)
+                        cardView.IncreasePowerAnimation(_upgradesView, card.UnitCardPower);
+                }
             }
+
             matchState = MatchState.RoundResultReveal;
             StartCoroutine(StartNewRound(round));
         }
@@ -235,6 +273,7 @@ namespace Game
             _gameInfoView.Clear();
             _showdownView.Clear();
             _upgradesView.Clear();
+            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
         }
 
         private void ClearGameObjectData()

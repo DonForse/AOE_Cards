@@ -9,9 +9,9 @@ namespace Infrastructure.Services
 {
     public class LoginService : MonoBehaviour, ILoginService
     {
-        private const string BaseUrl = "https://localhost:44324/";
-        private string ApiUrl => BaseUrl + "/api/user/";
-        private string PlayTurnUrl => BaseUrl + "/games/users/{0}/matches/{1}/play/{2}";
+        
+        private string ApiUrl => Configuration.UrlBase + "/api/user/";
+        private string PlayTurnUrl => Configuration.UrlBase + "/games/users/{0}/matches/{1}/play/{2}";
 
         public void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
@@ -32,6 +32,7 @@ namespace Infrastructure.Services
 
         private IEnumerator Get(string url, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
+            Debug.Log("Get: " + url);
             bool isDone;
             bool isError;
             string responseString;
@@ -67,6 +68,7 @@ namespace Infrastructure.Services
             bool isDone;
             bool isError;
             string responseString;
+            Debug.Log("Post: " + ApiUrl);
             using (var webRequest = UnityWebRequest.Post(ApiUrl, data))
             {
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);

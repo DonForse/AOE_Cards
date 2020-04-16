@@ -149,7 +149,7 @@ namespace Editor
         {
             _matchStatus = new Match()
             {
-                hand = new Hand(_cardProvider.GetUnitCards().Take(5).ToList(),
+                Hand = new Hand(_cardProvider.GetUnitCards().Take(5).ToList(),
                     _cardProvider.GetUpgradeCards().Take(5).ToList())
             };
             _presenter.GameSetup(_matchStatus);

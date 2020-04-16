@@ -4,9 +4,9 @@ namespace Infrastructure.Services
 {
     public class Match
     {
-        public string id;
-        public Hand hand;
-        public Board board;
-        public string[] users;
+        public string Id;
+        public Hand Hand;
+        public Board Board;
+        public string[] Users;
     }
 }

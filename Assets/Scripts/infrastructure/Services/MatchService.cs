@@ -11,8 +11,7 @@ namespace Infrastructure.Services
 {
     public class MatchService : MonoBehaviour, IMatchService
     {
-        private const string BaseUrl = "https://localhost:44324/";
-        private string StartMatchUrl => BaseUrl + "/api/match?userid={0}";
+        private string StartMatchUrl => Configuration.UrlBase + "/api/match?userid={0}";
 
         public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<string> onError)
         {
@@ -64,8 +63,8 @@ namespace Infrastructure.Services
         private Match DtoToMatchStatus(MatchDto dto)
         {
             var ms = new Match();
-            ms.id = dto.matchId;
-            ms.board = new Board
+            ms.Id = dto.matchId;
+            ms.Board = new Board
             {
                 Rounds = dto.board.rounds.Select(r =>
                     new Round
@@ -82,9 +81,9 @@ namespace Infrastructure.Services
                             }).ToList()
                     }).ToList()
             };
-            ms.hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).ToList(),
+            ms.Hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).ToList(),
                         dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).ToList());
-            ms.users = dto.users;
+            ms.Users = dto.users;
             return ms;
         }
     }

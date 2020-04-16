@@ -5,5 +5,7 @@ namespace Infrastructure.Services
         public string Player;
         public UpgradeCardData UpgradeCardData;
         public UnitCardData UnitCardData;
+
+        public int UnitCardPower { get; internal set; }
     }
 }

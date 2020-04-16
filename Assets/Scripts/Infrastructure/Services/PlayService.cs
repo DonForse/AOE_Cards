@@ -11,13 +11,12 @@ namespace Infrastructure.Services
 {
     public class PlayService : MonoBehaviour, IPlayService
     {
-        private const string BaseUrl = "https://localhost:44324/";
-        private string GetRoundUrl => BaseUrl + "/api/play?matchid={0}&roundNumber={1}";
-        private string PlayCardUrl => BaseUrl + "/api/play?matchid={0}&playerid={1}";
+        private string GetRoundUrl => Configuration.UrlBase + "/api/play?matchid={0}&roundNumber={1}&userId={2}";
+        private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}&playerid={1}";
 
         public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<string> onError)
         {
-            var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber);
+            var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber, PlayerPrefs.GetString(PlayerPrefsHelper.UserId));
             StartCoroutine(Get(url, onGetRoundComplete, onError));
         }
 
@@ -80,7 +79,8 @@ namespace Infrastructure.Services
                     {
                         Player = cp.player,
                         UnitCardData = new InMemoryCardProvider().GetUnitCard(cp.unitcard),
-                        UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard)
+                        UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard),
+                        UnitCardPower = cp.unitcardpower
                     }).ToList()
             };
         }
