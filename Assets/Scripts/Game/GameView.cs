@@ -35,6 +35,10 @@ namespace Game
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService());
             this.gameObject.SetActive(true);
         }
+        public void OnClosing()
+        {
+            this.gameObject.SetActive(false);
+        }
 
         public void SetGame(Match match)
         {
@@ -43,41 +47,93 @@ namespace Game
             _presenter.GameSetup(match);
             playersCount = match.Users.Count();
             _gameInfoView.SetGame(match);
-            var currentRound = match.Board.Rounds.Last();
-            foreach (var playerCard in currentRound.CardsPlayed) {
-                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == playerCard.Player ? PlayerType.Player : PlayerType.Rival;
-                if (playerCard.UpgradeCardData!= null)
-                {
-                    var go = Instantiate(upgradeCardGo);
-                    var upgradeCard = go.GetComponent<UpgradeCardView>();
-                    upgradeCard.SetCard(playerCard.UpgradeCardData, _ => { }, null, false);
-
-                    _showdownView.PlayUpgradeCard(upgradeCard, playerType);
-
-                    if (playerCard.UnitCardData == null)
-                        matchState = MatchState.WaitUpgrade;
-                }
-                if (playerCard.UnitCardData != null)
-                {
-                    var go = Instantiate(unitCardGo);
-                    var unitCard = go.GetComponent<UnitCardView>();
-                    unitCard.SetCard(playerCard.UnitCardData, _ => { }, null, false);
-
-                    _showdownView.PlayUnitCard(unitCard, playerType);
-                    matchState = MatchState.WaitUnit;
-                }
-
-            };
-            if (currentRound.UpgradeCardRound != null)
-                ShowRoundUpgradeCard(currentRound.UpgradeCardRound);
+            SetRounds(match);
             InvokeRepeating("GetRound", 3f, 3f);
         }
 
-        public void OnClosing()
+        private void SetRounds(Match match)
         {
-            this.gameObject.SetActive(false);
+            //SetAlreadyPlayedTurns();
+            var currentRound = match.Board.Rounds.Last();
+            var previousRounds = match.Board.Rounds.Where(r => r != currentRound);
+            var ownCards = currentRound.CardsPlayed.FirstOrDefault(c => c.Player == PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
+            if (ownCards == null)
+                UnexpectedError();
+
+            if (currentRound.UpgradeCardRound != null)
+                ShowRoundUpgradeCard(currentRound.UpgradeCardRound);
+
+            if (ownCards.UpgradeCardData == null)
+            {
+                matchState = MatchState.SelectUpgrade;
+                return;
+            }
+            foreach (var playerCard in currentRound.CardsPlayed)
+            {
+                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == playerCard.Player ? PlayerType.Player : PlayerType.Rival;
+                SetRoundUpgradeData(playerCard, playerType);
+            }
+
+            if (matchState == MatchState.WaitUpgrade)
+                return;
+
+            foreach (var playerCard in currentRound.CardsPlayed)
+            {
+                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == playerCard.Player ? PlayerType.Player : PlayerType.Rival; 
+                SetRoundUnitData(playerCard, playerType);
+            }
         }
 
+        private void SetRoundUnitData(PlayerCard playerCard, PlayerType playerType)
+        {
+            if (playerType == PlayerType.Player && playerCard == null)
+            {
+                matchState = MatchState.SelectUnit;
+                return;
+            }
+            if (playerType == PlayerType.Rival && playerCard == null)
+            {
+                matchState = MatchState.WaitUnit;
+                return;
+            }
+            if (playerCard.UnitCardData != null)
+            {
+                var go = Instantiate(unitCardGo);
+                var unitCard = go.GetComponent<UnitCardView>();
+                unitCard.SetCard(playerCard.UnitCardData, _ => { }, null, false);
+
+                _showdownView.PlayUnitCard(unitCard, playerType);
+            }
+        }
+
+        private void SetRoundUpgradeData(PlayerCard playerCard, PlayerType playerType)
+        {
+            if (playerType == PlayerType.Rival && playerCard.UpgradeCardData == null)
+            {
+                matchState = MatchState.WaitUpgrade;
+            }
+            if (playerCard.UpgradeCardData != null)
+            {
+                var go = Instantiate(upgradeCardGo);
+                var upgradeCard = go.GetComponent<UpgradeCardView>();
+                upgradeCard.SetCard(playerCard.UpgradeCardData, _ => { }, null, false);
+
+                _showdownView.PlayUpgradeCard(upgradeCard, playerType);
+            }
+        }
+
+        private void UnexpectedError()
+        {
+            throw new NotImplementedException("Unexpected");
+        }
+
+        public void InitializeGame(Match match) {
+
+            InstantiateHandCards(match.Hand);
+            InitializeRound(match.Board.Rounds.Last());
+            if (match.Board.Rounds.Count == 1 && match.Board.Rounds.First().CardsPlayed.All(uc=>uc.UpgradeCardData == null))
+                StartCoroutine(ShowDrawnCards());
+        }
 
         public void InitializeRound(Round round)
         {
@@ -91,31 +147,41 @@ namespace Game
             matchState = MatchState.SelectUpgrade;
         }
 
-        public void InitializeHand(Hand hand)
+        public void InstantiateHandCards(Hand hand)
         {
-            //unitCards = new List<UnitCardView>();
-            //upgradeCards = new List<UpgradeCardView>();
-            var units = new List<GameObject>();
-            foreach (var card in hand.GetUnitCards())
+            var unitHandCards = _handView.GetUnitCards();
+            foreach (var card in hand.GetUnitCards().GroupBy(card=>card.cardName))
             {
-                var go = Instantiate(unitCardGo);
-                var unitCard = go.GetComponent<UnitCardView>();
-                unitCard.SetCard(card, PlayUnitCard, _showdownView.GetComponent<RectTransform>(), true);
-                units.Add(go);
+                var missingCards = card.Count() - unitHandCards.Count(cuc => cuc.name == card.Key);
+                while (missingCards > 0)
+                {
+                    var go = Instantiate(unitCardGo);
+                    var unitCard = go.GetComponent<UnitCardView>();
+                    unitCard.SetCard(card.First(), PlayUnitCard, _showdownView.GetComponent<RectTransform>(), true);
+                    _handView.SetUnitCard(go);
+                    missingCards--;
+                }
             }
-            var upgrades = new List<GameObject>();
-            foreach (var card in hand.GetUpgradeCards())
+
+            var upgradeHandCards = _handView.GetUpgradeCards();
+            foreach (var card in hand.GetUpgradeCards().GroupBy(card => card.cardName))
             {
-                var go = GameObject.Instantiate(upgradeCardGo);
-                var upgradeCard = go.GetComponent<UpgradeCardView>();
-                upgradeCard.SetCard(card, PlayUpgradeCard, _showdownView.GetComponent<RectTransform>(), true);
-                upgrades.Add(go);
+                var missingCards =  card.Count() - upgradeHandCards.Count(cuc => cuc.name == card.Key);
+                while (missingCards > 0)
+                {
+                    var go = GameObject.Instantiate(upgradeCardGo);
+                    var upgradeCard = go.GetComponent<UpgradeCardView>();
+                    upgradeCard.SetCard(card.First(), PlayUpgradeCard, _showdownView.GetComponent<RectTransform>(), true);
+                    _handView.SetUpgradeCard(go);
+                    missingCards--;
+                }
             }
-            StartCoroutine(ShowDrawnCards(units, upgrades));
         }
 
-        private IEnumerator ShowDrawnCards(IList<GameObject> units, IList<GameObject> upgrades)
+        private IEnumerator ShowDrawnCards()
         {
+            var units = _handView.GetUnitCards();
+            var upgrades= _handView.GetUpgradeCards();
             foreach (var unit in units)
             {
                 unit.transform.SetParent(_showDrawnHandContainer.transform);
@@ -179,17 +245,11 @@ namespace Game
             }
         }
 
-        public void UnitCardSentPlay()
+        public void UnitCardSentPlay(Hand hand)
         {
             matchState = MatchState.WaitUnit;
             _showdownView.PlayUnitCard(_unitCardPlayed, PlayerType.Player);
-            if (_unitCardPlayed.CardName == "Villager")
-            {
-                var go = Instantiate<GameObject>(unitCardGo);
-                var view = go.GetComponent<UnitCardView>();
-                view.SetCard(new InMemoryCardProvider().GetUnitCard("Villager"), PlayUnitCard, _showdownView.GetComponent<RectTransform>(), true);
-                _handView.SetUnitCard(go);
-            }
+            InstantiateHandCards(hand);
         }
 
         private void ShowUpgradeCardsPlayedRound(Round round)
@@ -215,6 +275,7 @@ namespace Game
         {
             if (round.CardsPlayed.Count(c => c.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)) < playersCount - 1)
                 return;
+            matchState = MatchState.RoundResultReveal;
             var cards = round.CardsPlayed.Where(cp => cp.Player != PlayerPrefs.GetString(PlayerPrefsHelper.UserName));
             foreach (var card in cards)
             {
@@ -230,26 +291,25 @@ namespace Game
                 foreach (var card in round.CardsPlayed)
                 {
                     if (cardView.CardName == card.UnitCardData.cardName)
-                        cardView.IncreasePowerAnimation(_upgradesView, card.UnitCardPower);
+                        cardView.IncreasePowerAnimation(_upgradesView, card.UnitCardPower, 1f);
                 }
             }
 
-            matchState = MatchState.RoundResultReveal;
             StartCoroutine(StartNewRound(round));
         }
 
         private IEnumerator StartNewRound(Round round)
         {
             //do some animation stuff
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(3f);
 
             _showdownView.MoveCards(_upgradesView);
 
             _gameInfoView.WinRound(round.WinnerPlayers);
 
-            yield return new WaitForSeconds(2f);
             if (_presenter.IsMatchOver())
             {
+                //yield return new WaitForSeconds(2f);
                 EndGame();
             }
             else
@@ -261,8 +321,9 @@ namespace Game
         private void EndGame()
         {
             matchState = MatchState.EndGame;
+            var result = _gameInfoView.GetWinnerPlayer();
             ClearView();
-            _navigator.OpenResultView(_gameInfoView.GetWinnerPlayer());
+            _navigator.OpenResultView(result);
         }
 
         private void ClearView()
@@ -307,7 +368,6 @@ namespace Game
                 return;
             _unitCardPlayed = unitCard;
             _presenter.PlayUnitCard(unitCard.CardName);
-
         }
 
         private void PlayUpgradeCard(Draggable draggable)

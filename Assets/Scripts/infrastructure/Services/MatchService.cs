@@ -81,8 +81,8 @@ namespace Infrastructure.Services
                             }).ToList()
                     }).ToList()
             };
-            ms.Hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).ToList(),
-                        dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).ToList());
+            ms.Hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).OrderBy(c=>c.cardName.ToLower() == "villager" ? int.MaxValue : c.power).ToList(),
+                        dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).OrderBy(c => c.archetypes.FirstOrDefault()).ToList());
             ms.Users = dto.users;
             return ms;
         }

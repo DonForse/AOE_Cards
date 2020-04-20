@@ -11,8 +11,7 @@ public class GameInfoView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI roundTxt;
     [SerializeField] private TextMeshProUGUI playerNameTxt;
     [SerializeField] private TextMeshProUGUI rivalNameTxt;
-    [SerializeField] private GameObject roundWinsPlayer;
-    [SerializeField] private GameObject roundWinsRival;
+    [SerializeField] private GameObject roundWins;
     private int currentRound;
     private IList<PlayerType> roundWinners = new List<PlayerType>();
 
@@ -37,19 +36,32 @@ public class GameInfoView : MonoBehaviour
 
     public void WinRound(IList<string> winnerPlayers)
     {
-        foreach (var winnerPlayer in winnerPlayers)
-        {
-            var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == winnerPlayer ? PlayerType.Player : PlayerType.Rival;
-            var container = playerType == PlayerType.Player ? roundWinsPlayer : roundWinsRival;
-            var countWinner = roundWinners.Count(r => r == playerType);
-            if (countWinner > 4)
-                return;
-            var images = container.GetComponentsInChildren<Image>();
-            images[countWinner].color = Color.green;
-            roundWinners.Add(playerType);
-        }
-        SetRoundNumber(currentRound + 1);
+        if (winnerPlayers.Count == 0)
+            return;
 
+        var images = roundWins.GetComponentsInChildren<Image>();
+        if (winnerPlayers.Count > 1)
+        {
+            foreach (var winnerPlayer in winnerPlayers)
+            {
+                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == winnerPlayer ? PlayerType.Player : PlayerType.Rival;
+                var countWinner = roundWinners.Count(r => r == playerType);
+                if (countWinner > 4)
+                    return;
+                roundWinners.Add(playerType);
+            }
+            images[currentRound - 1].color = Color.yellow;
+            SetRoundNumber(currentRound + 1);
+            return;
+        }
+        var winner = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == winnerPlayers[0] ? PlayerType.Player : PlayerType.Rival;
+        if (roundWinners.Count(r => r == winner) > 4)
+            return;
+        roundWinners.Add(winner);
+
+        var color = winner == PlayerType.Player ? Color.blue : Color.red;
+        images[currentRound - 1].color = color;
+        SetRoundNumber(currentRound + 1);
     }
 
     internal MatchResult GetWinnerPlayer()
@@ -65,14 +77,10 @@ public class GameInfoView : MonoBehaviour
 
     internal void Clear()
     {
+        roundWinners.Clear();
         SetPlayerName(string.Empty, PlayerType.Player);
         SetPlayerName(string.Empty, PlayerType.Rival);
-        foreach (var imageCounter in roundWinsPlayer.GetComponentsInChildren<Image>())
-        {
-            imageCounter.color = Color.white;
-        }
-
-        foreach (var imageCounter in roundWinsRival.GetComponentsInChildren<Image>())
+        foreach (var imageCounter in roundWins.GetComponentsInChildren<Image>())
         {
             imageCounter.color = Color.white;
         }

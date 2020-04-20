@@ -23,6 +23,7 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
 
     public void SetCard(UnitCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable)
     {
+        this.name = card.cardName;
         CardName = card.cardName;
         cardName.text = card.cardName;
         effect.text = card.effect;
@@ -44,10 +45,10 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
         archetypeSection.SetCard(card.archetype);
     }
 
-    public void IncreasePowerAnimation(UpgradesView upgrades, int newPower)
+    public void IncreasePowerAnimation(UpgradesView upgrades, int newPower, float animationDuration)
     {
         animator.SetTrigger(PoweringUp);
-        StartCoroutine(IncreasePowerInTime(newPower, 2f));
+        StartCoroutine(IncreasePowerInTime(newPower, animationDuration));
     }
 
     IEnumerator IncreasePowerInTime(int newPower, float duration)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Infrastructure.Services;
 using UnityEngine;
 
@@ -30,8 +28,7 @@ namespace Game
             currentRound = _match.Board.Rounds.Count() -1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
 
-            _view.InitializeHand(_match.Hand);
-            _view.InitializeRound(_match.Board.Rounds.Last());
+            _view.InitializeGame(_match);
         }
 
         public void StartNewRound()
@@ -72,13 +69,15 @@ namespace Game
             _view.ShowError(message);
         }
 
-        private void OnUnitCardPostComplete()
+        private void OnUnitCardPostComplete(Hand hand)
         {
-            _view.UnitCardSentPlay();
+            _match.Hand = hand; 
+            _view.UnitCardSentPlay(hand);
         }
 
-        private void OnUpgradeCardPostComplete()
+        private void OnUpgradeCardPostComplete(Hand hand)
         {
+            _match.Hand = hand;
             _view.UpgradeCardSentPlay();
         }
 

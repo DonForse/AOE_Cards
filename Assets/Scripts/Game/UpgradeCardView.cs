@@ -34,6 +34,7 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
 
     public void SetCard(UpgradeCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable)
     {
+        this.name = card.cardName;
         CardName = card.cardName;
         cardName.text = card.cardName;
         effect.text = card.effect;

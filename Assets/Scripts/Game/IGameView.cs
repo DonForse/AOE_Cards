@@ -1,4 +1,5 @@
 using Infrastructure.Services;
+using System.Collections;
 
 namespace Game
 {
@@ -6,9 +7,8 @@ namespace Game
     {
         void ShowError(string message);
         void UpgradeCardSentPlay();
-        void UnitCardSentPlay();
+        void UnitCardSentPlay(Hand hand);
         void OnGetRoundInfo(Round round);
-        void InitializeHand(Hand hand);
-        void InitializeRound(Round round);
+        void InitializeGame(Match match);
     }
 }
