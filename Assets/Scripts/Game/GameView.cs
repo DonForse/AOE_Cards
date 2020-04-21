@@ -235,7 +235,6 @@ namespace Game
             if (matchState == MatchState.WaitUpgrade)
             {
                 ShowUpgradeCardsPlayedRound(round);
-                _handView.ShowHandUnits();
                 return;
             }
             if (round.Finished && matchState == MatchState.WaitUnit)
@@ -269,6 +268,7 @@ namespace Game
                 _showdownView.PlayUpgradeCard(upgradeCard, PlayerType.Rival);
             }
             matchState = MatchState.SelectUnit;
+            _handView.ShowHandUnits();
         }
 
         private void ShowUnitCardsPlayedRound(Round round)
