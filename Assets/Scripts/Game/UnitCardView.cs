@@ -62,13 +62,24 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
         }
     }
 
+    public void ShowCardBack() {
+        animator.SetTrigger("backcard");
+    }
+
+    public void ShowFrontCard()
+    {
+        animator.SetTrigger("frontcard");
+    }
+
+
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //animator.SetBool(Hover, true);
+        animator.SetTrigger("startglow");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //animator.SetBool(Hover, false);
+        animator.SetTrigger("stopglow");
     }
 }
