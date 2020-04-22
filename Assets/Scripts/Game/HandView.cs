@@ -21,9 +21,11 @@ public class HandView : MonoBehaviour
     public void SetUnitCard(GameObject card)
     {
         card.transform.SetParent(unitCardsContainer.transform);
+        card.transform.position = (unitCardsContainer.transform.position);
     }
     public void SetUpgradeCard(GameObject card) {
         card.transform.SetParent(upgradeCardsContainer.transform);
+        card.transform.position = (upgradeCardsContainer.transform.position);
     }
 
     private void ToggleHandCards()

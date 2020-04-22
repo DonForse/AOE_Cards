@@ -28,8 +28,9 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (!dragging)
             return;
-
-        transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        var screenPoint = Input.mousePosition;
+        screenPoint.z = 10.0f; //distance of the plane from the camera
+        transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
     }
 
     public void OnPointerUp(PointerEventData eventData)
