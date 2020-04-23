@@ -51,20 +51,29 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
         }
         
         archetypeSection.SetCard(card.archetypes);
-        Debug.Log("c: " + card.name + ".pos0: " + this.transform.position);
     }
     public Sprite GetArchetypeImage()
     {
         return archetypeSection.sprite;
     }
 
+    public void ShowCardBack()
+    {
+        animator.SetTrigger("backcard");
+    }
+
+    public void ShowFrontCard()
+    {
+        animator.SetTrigger("frontcard");
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //animator.SetBool(Hover, true);
+        animator.SetTrigger("startglow");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //animator.SetBool(Hover, false);
+        animator.SetTrigger("stopglow");
     }
 }

@@ -71,8 +71,6 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
         animator.SetTrigger("frontcard");
     }
 
-
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         animator.SetTrigger("startglow");

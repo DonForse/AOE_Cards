@@ -185,10 +185,12 @@ namespace Game
             foreach (var unit in units)
             {
                 unit.transform.SetParent(_showDrawnHandContainer.transform);
+                unit.transform.position = _showDrawnHandContainer.transform.position;
             }
             foreach (var upgrade in upgrades)
             {
                 upgrade.transform.SetParent(_showDrawnHandContainer.transform);
+                upgrade.transform.position = _showDrawnHandContainer.transform.position;
             }
             _showDrawnHandContainer.SetActive(true);
             yield return new WaitForSeconds(3f);
