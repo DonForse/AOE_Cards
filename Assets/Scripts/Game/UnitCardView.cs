@@ -21,7 +21,7 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
     private static readonly int PoweringUp = Animator.StringToHash("PoweringUp");
     private int basePower;
 
-    public void SetCard(UnitCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable)
+    public void SetCard(UnitCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable, Action<bool> OnDrag)
     {
         this.name = card.cardName;
         CardName = card.cardName;
@@ -39,6 +39,7 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
             var draggableComponent = GetComponent<Draggable>();
             draggableComponent
                 .WithCallback(onPlayCallback)
+                .WithDragAction(OnDrag)
                 .WithDropArea(dropAreaPlay);
         }
 

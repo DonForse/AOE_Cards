@@ -32,7 +32,7 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
         transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
     }
 
-    public void SetCard(UpgradeCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable)
+    public void SetCard(UpgradeCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable, Action<bool> OnDrag)
     {
         this.name = card.cardName;
         CardName = card.cardName;
@@ -47,6 +47,7 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
             var draggableComponent = GetComponent<Draggable>();
             draggableComponent
                 .WithCallback(onPlayCallback)
+                .WithDragAction(OnDrag)
                 .WithDropArea(dropAreaPlay);
         }
         

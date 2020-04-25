@@ -11,5 +11,6 @@ namespace Infrastructure.Services
         public PlayerCardDto[] cardsplayed;
         public string[] winnerplayer;
         public string upgradecardround;
+        public bool rivalready;
     }
 }

@@ -10,6 +10,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private RectTransform _dropAreaPlay;
     private Action<Draggable> _onPlayCallback;
     private bool dragging = false;
+    private Action<bool> _onDrag;
 
     public Draggable WithDropArea(RectTransform dropAreaPlay)
     {
@@ -23,6 +24,11 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         return this;
     }
 
+    public Draggable WithDragAction(Action<bool> onDrag)
+    {
+        _onDrag = onDrag;
+        return this;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -42,6 +48,8 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (ViewsHelper.IsOverlapped(_dropAreaPlay, this.transform.position))
             _onPlayCallback(this);
 
+        if (_onDrag != null)
+            _onDrag(false);
         ViewsHelper.RefreshView(GetComponent<RectTransform>());
     }
 
@@ -49,5 +57,9 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         dragging = true;
+        if (_onDrag != null)
+            _onDrag(true);
     }
+
+    
 }

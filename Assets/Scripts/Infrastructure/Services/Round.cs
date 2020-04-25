@@ -9,5 +9,6 @@ namespace Infrastructure.Services
         public IList<string> WinnerPlayers;
         public UpgradeCardData UpgradeCardRound;
         public bool Finished;
+        public bool RivalReady;
     }
 }

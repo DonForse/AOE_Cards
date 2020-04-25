@@ -80,8 +80,9 @@ namespace Infrastructure.Services
                         Player = cp.player,
                         UnitCardData = new InMemoryCardProvider().GetUnitCard(cp.unitcard),
                         UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard),
-                        UnitCardPower = cp.unitcardpower
-                    }).ToList()
+                        UnitCardPower = cp.unitcardpower,
+                    }).ToList(),
+                RivalReady = dto.rivalready
             };
         }
 

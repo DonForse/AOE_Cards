@@ -78,7 +78,8 @@ public class HandView : MonoBehaviour
 
     internal void Clear()
     {
-        foreach (var card in GetUnitCards()) {
+        foreach (var card in GetUnitCards())
+        {
             Destroy(card.gameObject);
         }
         foreach (var card in GetUpgradeCards())

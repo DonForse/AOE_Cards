@@ -3,29 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ShowdownView : MonoBehaviour
 {
     [SerializeField] private GameObject playerFieldContainer;
     [SerializeField] private GameObject rivalFieldContainer;
+    private GameObject _upgradeWait;
+    private GameObject _unitWait;
 
     internal void PlayUpgradeCard(UpgradeCardView upgradeCardPlayed, PlayerType playerType)
     {
         //animation stuff
+        ClearUpgradeWaitCard();
         var showDownContainer = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
         upgradeCardPlayed.transform.SetParent(showDownContainer.transform);
 
         RefreshView(showDownContainer);
     }
 
+    private void ClearUpgradeWaitCard()
+    {
+        if (_upgradeWait != null)
+            Destroy(_upgradeWait);
+        _upgradeWait = null;
+    }
+
     internal void PlayUnitCard(UnitCardView unitCardPlayed, PlayerType playerType)
     {
         //animation stuff
+        ClearUnitWaitCard();
         var container = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
         unitCardPlayed.transform.SetParent(container.transform);
 
         RefreshView(container);
+    }
+
+    private void ClearUnitWaitCard()
+    {
+        if (_unitWait != null)
+            Destroy(_unitWait);
+        _unitWait = null;
     }
 
     private static void RefreshView(GameObject container)
@@ -78,5 +97,27 @@ public class ShowdownView : MonoBehaviour
         {
             GameObject.Destroy(unit.gameObject);
         }
+    }
+
+    internal void CardDrag(bool dragging)
+    {
+        if (dragging)
+            GetComponent<Image>().color = Color.blue;
+        if (!dragging)
+            GetComponent<Image>().color = Color.black;
+    }
+
+    internal void ShowRivalWaitUnit(GameObject card)
+    {
+        card.transform.SetParent(rivalFieldContainer.transform);
+        card.transform.position = (rivalFieldContainer.transform.position);
+        _unitWait = card;
+    }
+
+    internal void ShowRivalWaitUpgrade(GameObject card)
+    {
+        card.transform.SetParent(rivalFieldContainer.transform);
+        card.transform.position = (rivalFieldContainer.transform.position);
+        _upgradeWait = card;
     }
 }
