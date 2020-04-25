@@ -107,15 +107,25 @@ public class ShowdownView : MonoBehaviour
             GetComponent<Image>().color = Color.black;
     }
 
-    internal void ShowRivalWaitUnit(GameObject card)
+    internal void ShowRivalWaitUnit(GameObject go)
     {
+        if (_unitWait != null)
+            return;
+        var card = GameObject.Instantiate(go);
+        var unit = card.GetComponent<UnitCardView>();
+        unit.ShowCardBack();
         card.transform.SetParent(rivalFieldContainer.transform);
         card.transform.position = (rivalFieldContainer.transform.position);
         _unitWait = card;
     }
 
-    internal void ShowRivalWaitUpgrade(GameObject card)
+    internal void ShowRivalWaitUpgrade(GameObject go)
     {
+        if (_upgradeWait != null)
+            return;
+        var card = GameObject.Instantiate(go);
+        var upgrade = card.GetComponent<UpgradeCardView>();
+        upgrade.ShowCardBack();
         card.transform.SetParent(rivalFieldContainer.transform);
         card.transform.position = (rivalFieldContainer.transform.position);
         _upgradeWait = card;

@@ -18,6 +18,7 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
     [SerializeField] private Image background;
     [SerializeField] private CardArchetypeView archetypeSection;
     [SerializeField] private Animator animator;
+    [SerializeField] private GameObject cardback;
     private static readonly int Hover = Animator.StringToHash("hover");
 
     private bool dragging = false;
@@ -60,12 +61,14 @@ public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, I
 
     public void ShowCardBack()
     {
-        animator.SetTrigger("backcard");
+        //animator.SetTrigger("backcard");
+        cardback.SetActive(true);
     }
 
     public void ShowFrontCard()
     {
-        animator.SetTrigger("frontcard");
+        //animator.SetTrigger("frontcard");
+        cardback.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

@@ -223,8 +223,8 @@ namespace Game
         public void GetRound()
         {
             //TODO: BE SUPER CAREFUL TO CHECK ASYNCHRONOUS PROBLEMS.
-            if (!(matchState == MatchState.WaitUpgrade || matchState == MatchState.WaitUnit))
-                return;
+            //if (!(matchState == MatchState.WaitUpgrade || matchState == MatchState.WaitUnit))
+            //    return;
             _presenter.GetRound();
         }
 
@@ -259,8 +259,7 @@ namespace Game
         {
             if (round.RivalReady)
             {
-                var go = GameObject.Instantiate(upgradeCardGo);
-                _showdownView.ShowRivalWaitUpgrade(go);
+                _showdownView.ShowRivalWaitUpgrade(upgradeCardGo);
             }
         }
 
@@ -269,7 +268,7 @@ namespace Game
         {
             if (round.RivalReady)
             {
-                var go = GameObject.Instantiate(unitCardGo);
+ 
                 _showdownView.ShowRivalWaitUnit(unitCardGo);
             }
         }

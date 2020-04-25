@@ -17,6 +17,8 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
     [SerializeField] private Image background;
     [SerializeField] private CardArchetypeView archetypeSection;
     [SerializeField] private Animator animator;
+    [SerializeField] private GameObject cardback;
+
     private static readonly int Hover = Animator.StringToHash("hover");
     private static readonly int PoweringUp = Animator.StringToHash("PoweringUp");
     private int basePower;
@@ -64,12 +66,14 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
     }
 
     public void ShowCardBack() {
-        animator.SetTrigger("backcard");
+        //animator.SetTrigger("backcard");
+        cardback.SetActive(true);
     }
 
     public void ShowFrontCard()
     {
-        animator.SetTrigger("frontcard");
+        //animator.SetTrigger("frontcard");
+        cardback.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
