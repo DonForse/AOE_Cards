@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7829948568860701415}
   m_Layer: 5
-  m_Name: roundCounterItem
+  m_Name: RoundCounterItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,12 +94,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9056604, g: 0.7125801, b: 0.51690996, a: 1}
+  m_Color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1d881f1372d19407ba4c0ef58dca5a79, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 53674038b0f080b4383cf5778eef8215, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

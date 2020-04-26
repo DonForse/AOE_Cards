@@ -14,6 +14,7 @@ namespace Home
         public GameView gameView;
         public LoginView loginView;
         public ResultView resultView;
+        public TutorialView tutorialView;
 
         private IView currentActiveView;
 
@@ -55,6 +56,14 @@ namespace Home
             resultView.SetResult(win);
 
             currentActiveView = resultView;
+        }
+
+        public void OpenTutorialView()
+        {
+            if (currentActiveView != null)
+                currentActiveView.OnClosing();
+            tutorialView.OnOpening();
+            currentActiveView = tutorialView;
         }
     }
 }

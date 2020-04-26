@@ -12,6 +12,12 @@ public class GameInfoView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerNameTxt;
     [SerializeField] private TextMeshProUGUI rivalNameTxt;
     [SerializeField] private GameObject roundWins;
+
+    [SerializeField] private Color _neutralColorCounter;
+    [SerializeField] private Color _winColorCounter;
+    [SerializeField] private Color _loseColorCounter;
+    [SerializeField] private Color _tieColorCounter;
+
     private int currentRound;
     private IList<PlayerType> roundWinners = new List<PlayerType>();
 
@@ -50,7 +56,7 @@ public class GameInfoView : MonoBehaviour
                     return;
                 roundWinners.Add(playerType);
             }
-            images[currentRound - 1].color = Color.yellow;
+            images[currentRound - 1].color = _tieColorCounter;
             SetRoundNumber(currentRound + 1);
             return;
         }
@@ -59,7 +65,7 @@ public class GameInfoView : MonoBehaviour
             return;
         roundWinners.Add(winner);
 
-        var color = winner == PlayerType.Player ? Color.blue : Color.red;
+        var color = winner == PlayerType.Player ? _winColorCounter: _loseColorCounter;
         images[currentRound - 1].color = color;
         SetRoundNumber(currentRound + 1);
     }
@@ -82,7 +88,7 @@ public class GameInfoView : MonoBehaviour
         SetPlayerName(string.Empty, PlayerType.Rival);
         foreach (var imageCounter in roundWins.GetComponentsInChildren<Image>())
         {
-            imageCounter.color = Color.white;
+            imageCounter.color = _neutralColorCounter;
         }
         SetRoundNumber(0);
     }

@@ -12,6 +12,8 @@ namespace Home
         [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
         [SerializeField] private Button _playButton;
+        [SerializeField] private Button _rulesButton;
+        [SerializeField] private Button _exitButton;
         [SerializeField] private GameObject _matchMakingContainer;
         [SerializeField] private GameObject _matchFoundContainer;
         [SerializeField] private TextMeshProUGUI _matchMakingTimerLabel;
@@ -24,11 +26,14 @@ namespace Home
             _matchFoundContainer.SetActive(false);
             _presenter = new HomePresenter(this, _servicesProvider.GetMatchService());
             _playButton.onClick.AddListener(PlayMatch);
+            _rulesButton.onClick.AddListener(OpenRules);
+            _exitButton.onClick.AddListener(Application.Quit);
             this.gameObject.SetActive(true);
         }
 
         public void OnClosing()
         {
+            _rulesButton.onClick.RemoveAllListeners();
             _playButton.onClick.RemoveAllListeners();
             this.gameObject.SetActive(false);
         }
@@ -41,6 +46,10 @@ namespace Home
             _matchMakingTimerLabel.text = TimeSpan.FromSeconds(Time.time - timerStartTime).ToString(@"mm\:ss");
         }
 
+        private void OpenRules()
+        {
+            _navigator.OpenTutorialView();
+        }
         private void PlayMatch()
         {
             _presenter.StartSearchingMatch();

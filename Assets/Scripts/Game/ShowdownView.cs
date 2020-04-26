@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ public class ShowdownView : MonoBehaviour
 {
     [SerializeField] private GameObject playerFieldContainer;
     [SerializeField] private GameObject rivalFieldContainer;
+    [SerializeField] private TextMeshProUGUI _dropHereText;
     private GameObject _upgradeWait;
     private GameObject _unitWait;
 
@@ -102,9 +104,9 @@ public class ShowdownView : MonoBehaviour
     internal void CardDrag(bool dragging)
     {
         if (dragging)
-            GetComponent<Image>().color = Color.blue;
+            _dropHereText.gameObject.SetActive(true);
         if (!dragging)
-            GetComponent<Image>().color = Color.black;
+            _dropHereText.gameObject.SetActive(false);
     }
 
     internal void ShowRivalWaitUnit(GameObject go)
