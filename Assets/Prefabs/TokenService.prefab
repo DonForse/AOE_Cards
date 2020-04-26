@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7374400079544880134
+--- !u!1 &5441968209128293698
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7374400079544880132}
-  - component: {fileID: 7374400079544880135}
+  - component: {fileID: 5441968209128293708}
+  - component: {fileID: 5441968209128293709}
   m_Layer: 0
-  m_Name: ServicesProvider
+  m_Name: TokenService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7374400079544880132
+--- !u!4 &5441968209128293708
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7374400079544880134}
+  m_GameObject: {fileID: 5441968209128293698}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 498, y: 280, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7374400079544880135
+--- !u!114 &5441968209128293709
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7374400079544880134}
+  m_GameObject: {fileID: 5441968209128293698}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e50a3cc6020642b0ab94efb5fce3a92f, type: 3}
+  m_Script: {fileID: 11500000, guid: c26246d6026fb1e49b143854fe9d44c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchServiceGo: {fileID: 5441966739592361152, guid: e3ef823145edb40c182f4a2d85b5094e,
-    type: 3}
-  loginServiceGo: {fileID: 5441966739592361152, guid: f2ca4cfe81174a6499705026a3eb6507,
-    type: 3}
-  playServiceGo: {fileID: 5441966739592361152, guid: ea7e53450e3c20c4592cea6617aa8709,
-    type: 3}
-  tokenServiceGo: {fileID: 5441968209128293698, guid: e74e225946ef7634cbdbdc50bb594247,
-    type: 3}

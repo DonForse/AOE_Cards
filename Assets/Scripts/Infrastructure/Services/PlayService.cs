@@ -9,53 +9,48 @@ using UnityEngine.Networking;
 
 namespace Infrastructure.Services
 {
-    public class PlayService : MonoBehaviour, IPlayService
+    public partial class PlayService : MonoBehaviour, IPlayService
     {
         private string GetRoundUrl => Configuration.UrlBase + "/api/play?matchid={0}&roundNumber={1}&userId={2}";
         private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}&playerid={1}";
 
-        public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<string> onError)
+        public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<long, string> onError)
         {
             var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber, PlayerPrefs.GetString(PlayerPrefsHelper.UserId));
             StartCoroutine(Get(url, onGetRoundComplete, onError));
         }
 
-        public void PlayUpgradeCard(string cardName, Action<Hand> onUpgradeCardsFinished, Action<string> onError)
+        public void PlayUpgradeCard(string cardName, Action<Hand> onUpgradeCardsFinished, Action<long, string> onError)
         {
             string data = JsonUtility.ToJson(new CardPostDto { cardname = cardName, type = "upgrade" });
             StartCoroutine(PlayCard(data, onUpgradeCardsFinished, onError));
         }
 
-        public void PlayUnitCard(string cardName, Action<Hand> onUnitCardFinished, Action<string> onError)
+        public void PlayUnitCard(string cardName, Action<Hand> onUnitCardFinished, Action<long, string> onError)
         {
             string data = JsonUtility.ToJson(new CardPostDto { cardname = cardName, type = "unit" });
             StartCoroutine(PlayCard(data, onUnitCardFinished, onError));
         }
 
-        private IEnumerator Get(string url, Action<Round> onStartMatchComplete, Action<string> onError)
+        private IEnumerator Get(string url, Action<Round> onStartMatchComplete, Action<long, string> onError)
         {
-            bool isComplete;
-            bool isError;
-            string responseString;
+            ResponseInfo response;
             using (var webRequest = UnityWebRequest.Get(url))
             {
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
-                isComplete = webRequest.isDone;
-                responseString = isError ?
-                                   webRequest.error
-                                   : isComplete ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
-                                   : string.Empty;
-                Debug.Log(responseString);
+
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
             }
 
-            if (isError)
+            if (response.isError)
             {
-                onError(responseString);
+                onError(response.code, response.response);
             }
-            else if (isComplete)
+            else if (response.isComplete)
             {
-                var dto = JsonUtility.FromJson<RoundDto>(responseString);
+                var dto = JsonUtility.FromJson<RoundDto>(response.response);
                 onStartMatchComplete(DtoToRound(dto));
                 //onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
             }
@@ -86,12 +81,11 @@ namespace Infrastructure.Services
             };
         }
 
-        private IEnumerator PlayCard(string data, Action<Hand> onPostComplete, Action<string> onPostFailed)
+        private IEnumerator PlayCard(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
         {
-            bool isComplete;
-            bool isError;
-            string responseString;
+            ResponseInfo response;
             var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), PlayerPrefs.GetString(PlayerPrefsHelper.UserId));
+
             Debug.Log(playCardUrl);
             using (var webRequest = UnityWebRequest.Post(playCardUrl, data))
             {
@@ -100,23 +94,19 @@ namespace Infrastructure.Services
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
                 webRequest.SetRequestHeader("Content-Type", "application/json");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                isComplete = webRequest.isDone;
-                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
-                responseString = isError ?
-                                  webRequest.error
-                                  : isComplete ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
-                                  : string.Empty;
-                Debug.Log(responseString);
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
             }
 
-             if (isError)
+             if (response.isError)
             {
-                onPostFailed(responseString);
+                onPostFailed(response.code, response.response);
             }
-            else if (isComplete)
+            else if (response.isComplete)
             {
-                var dto = JsonUtility.FromJson<HandDto>(responseString);
+                var dto = JsonUtility.FromJson<HandDto>(response.response);
                 onPostComplete(DtoToHand(dto));
 
             }

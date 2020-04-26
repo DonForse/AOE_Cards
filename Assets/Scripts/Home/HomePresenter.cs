@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Infrastructure.Services;
 using UnityEngine;
@@ -7,12 +8,14 @@ namespace Home
     public class HomePresenter
     {
         private readonly IMatchService _matchService;
+        private readonly ITokenService _tokenService;
         private readonly IHomeView _view;
 
-        public HomePresenter(IHomeView view, IMatchService matchService)
+        public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService)
         {
             _view = view;
             _matchService = matchService;
+            _tokenService = tokenService;
         }
 
         public void StartSearchingMatch()
@@ -21,9 +24,29 @@ namespace Home
            _view.OnStartLookingForMatch();
         }
 
-        private void OnError(string message)
+        private void OnError(long responseCode, string message)
         {
+            if (responseCode == 401)
+            {
+                _tokenService.RefreshToken(onRefreshTokenComplete, onRefreshTokenError);
+                return;
+            }
             _view.OnError(message);
+        }
+
+        private void onRefreshTokenError(string error)
+        {
+            GameManager.SessionExpired();
+        }
+
+        private void onRefreshTokenComplete(UserResponseDto response)
+        {
+            PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
+            PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
+            PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
+
+            StartSearchingMatch();
         }
 
         private void OnMatchStatusComplete(Match matchStatus)

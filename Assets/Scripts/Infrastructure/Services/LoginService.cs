@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Infrastructure.Services
 {
-    public class LoginService : MonoBehaviour, ILoginService
+    public partial class LoginService : MonoBehaviour, ILoginService
     {
         
         private string ApiUrl => Configuration.UrlBase + "/api/user/";
@@ -16,58 +15,49 @@ namespace Infrastructure.Services
         public void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
             string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password });
-            StartCoroutine(Post(data, onRegisterComplete, onRegisterFailed));
+            StartCoroutine(Put(data, onRegisterComplete, onRegisterFailed));
         }
 
         public void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
-            var url = string.Format("{0}?username={1}&password={2}", ApiUrl, playerName, password);
-            StartCoroutine(Get(url, onLoginComplete, onLoginFailed));
-        }
-        public class UserDto
-        {
-            public string username;
-            public string password;
+            string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password });
+            StartCoroutine(Post(data, onLoginComplete, onLoginFailed));
         }
 
-        private IEnumerator Get(string url, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
+        private IEnumerator Put(string data, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
-            Debug.Log("Get: " + url);
-            bool isDone;
-            bool isError;
-            string responseString;
-            using (var webRequest = UnityWebRequest.Get(url))
+            ResponseInfo response;
+            Debug.Log("Put: " + ApiUrl);
+            using (var webRequest = UnityWebRequest.Put(ApiUrl, data))
             {
+                byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
+                webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+                webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                webRequest.method = UnityWebRequest.kHttpVerbPUT;
+                webRequest.SetRequestHeader("Content-Type", "text/json");
                 yield return webRequest.SendWebRequest();
-                isDone = webRequest.isDone;
-                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
-                responseString = isError ?
-                    webRequest.error
-                    : isDone ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
-                    : string.Empty;
-                Debug.Log(responseString);
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
             }
 
-            if (!isError && isDone)
+            if (!response.isError && response.isComplete)
             {
-                onLoginComplete(UserResponseDto.Parse(responseString));
+                onLoginComplete(UserResponseDto.Parse(response.response));
             }
-            else if (isError)
+            else if (response.isError)
             {
-                onLoginFailed(responseString);
+                onLoginFailed(response.response);
             }
             else
             {
                 yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(url, onLoginComplete, onLoginFailed));
+                StartCoroutine(Put(data, onLoginComplete, onLoginFailed));
             }
         }
 
         private IEnumerator Post(string data, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
-            bool isDone;
-            bool isError;
-            string responseString;
+            ResponseInfo response;
             Debug.Log("Post: " + ApiUrl);
             using (var webRequest = UnityWebRequest.Post(ApiUrl, data))
             {
@@ -77,22 +67,17 @@ namespace Infrastructure.Services
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
                 webRequest.SetRequestHeader("Content-Type", "text/json");
                 yield return webRequest.SendWebRequest();
-                isDone = webRequest.isDone;
-                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
-                responseString = isError ?
-                    webRequest.error 
-                    : isDone ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
-                    : string.Empty;
-                Debug.Log(responseString);
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
             }
 
-            if (!isError && isDone)
+            if (!response.isError && response.isComplete)
             {
-                onRegisterComplete(UserResponseDto.Parse(responseString));
+                onRegisterComplete(UserResponseDto.Parse(response.response));
             }
-            else if (isError)
+            else if (response.isError)
             {
-                onRegisterFailed(responseString);
+                onRegisterFailed(response.response);
             }
             else
             {

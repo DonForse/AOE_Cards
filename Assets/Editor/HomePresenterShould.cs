@@ -12,6 +12,7 @@ namespace Editor
         private HomePresenter _presenter;
         private IHomeView _view;
         private IMatchService _matchService;
+        private ITokenService _tokenService;
 
         private const int CardsInHand = 5;
 
@@ -20,7 +21,7 @@ namespace Editor
         {
             _view = Substitute.For<IHomeView>();
             GivenMatchService();
-            _presenter = new HomePresenter(_view, _matchService);
+            _presenter = new HomePresenter(_view, _matchService, _tokenService);
         }
 
         [Test]
@@ -54,7 +55,7 @@ namespace Editor
 
         private void ThenMatchServiceIsCalled()
         {
-            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<Infrastructure.Services.Match>>(), Arg.Any<Action<string>>());
+            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<Infrastructure.Services.Match>>(), Arg.Any<Action<long, string>>());
         }
 
         private void ThenInformViewMatchFound(Infrastructure.Services.Match matchStatus)
@@ -65,6 +66,10 @@ namespace Editor
         private void GivenMatchService()
         {
             _matchService = Substitute.For<IMatchService>();
+        }
+
+        private void GivenTokenService() {
+            _tokenService = Substitute.For<ITokenService>();
         }
     }
 }

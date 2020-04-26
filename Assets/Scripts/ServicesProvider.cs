@@ -8,10 +8,12 @@ public class ServicesProvider : MonoBehaviour
     public GameObject matchServiceGo;
     public GameObject loginServiceGo;
     public GameObject playServiceGo;
+    public GameObject tokenServiceGo;
 
     private IMatchService _matchService;
     private ILoginService _loginService;
     private IPlayService _playService;
+    private ITokenService _tokenService;
 
     public IMatchService GetMatchService()
     {
@@ -43,6 +45,21 @@ public class ServicesProvider : MonoBehaviour
         return _loginService;
     
 }
+
+    internal ITokenService GetTokenService()
+    {
+        if (_tokenService != null)
+            return _tokenService;
+        var ls = GameObject.Find("TokenService");
+        if (ls == null)
+        {
+            ls = Instantiate<GameObject>(tokenServiceGo);
+            ls.name = "TokenService";
+        }
+
+        _tokenService = ls.GetComponent<ITokenService>();
+        return _tokenService;
+    }
 
     internal IPlayService GetPlayService()
     {

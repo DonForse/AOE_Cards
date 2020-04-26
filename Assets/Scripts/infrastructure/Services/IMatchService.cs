@@ -6,6 +6,6 @@ namespace Infrastructure.Services
 {
     public interface IMatchService
     {
-        void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<string> onError);
+        void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long,string> onError);
     }
 }

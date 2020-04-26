@@ -7,8 +7,8 @@ namespace Infrastructure.Services
 {
     public interface IPlayService
     {
-        void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<string> onError);
-        void PlayUnitCard(string cardName, Action<Hand> onUnitCardFinished, Action<string> onError);
-        void PlayUpgradeCard(string cardName, Action<Hand> onUnitCardFinished, Action<string> onError);
+        void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<long, string> onError);
+        void PlayUnitCard(string cardName, Action<Hand> onUnitCardFinished, Action<long, string> onError);
+        void PlayUpgradeCard(string cardName, Action<Hand> onUnitCardFinished, Action<long, string> onError);
     }
 }

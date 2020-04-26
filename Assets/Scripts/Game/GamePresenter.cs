@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Infrastructure.Services;
 using UnityEngine;
 
@@ -10,11 +11,13 @@ namespace Game
         private int currentRound;
         private readonly IGameView _view;
         private readonly IPlayService _playService;
+        private readonly ITokenService _tokenService;
 
-        public GamePresenter(IGameView view, IPlayService playService)
+        public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService)
         {
             _view = view;
             _playService = playService;
+            _tokenService = tokenService;
         }
 
         public Hand GetHand()
@@ -64,9 +67,27 @@ namespace Game
             _view.OnGetRoundInfo(round);
         }
 
-        private void OnError(string message)
+        private void OnError(long responseCode, string message)
         {
+            if (responseCode == 401)
+            {
+                _tokenService.RefreshToken(OnRefreshTokenComplete, OnRefreshTokenError);
+                return;
+            }
             _view.ShowError(message);
+        }
+
+        private void OnRefreshTokenError(string error)
+        {
+            GameManager.SessionExpired();
+        }
+
+        private void OnRefreshTokenComplete(UserResponseDto response)
+        {
+            PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
+            PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
+            PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
         }
 
         private void OnUnitCardPostComplete(Hand hand)

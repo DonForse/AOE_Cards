@@ -32,7 +32,7 @@ namespace Game
 
         public void OnOpening()
         {
-            _presenter = new GamePresenter(this, servicesProvider.GetPlayService());
+            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
             this.gameObject.SetActive(true);
         }
         public void OnClosing()

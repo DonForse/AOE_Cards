@@ -24,7 +24,7 @@ namespace Home
         public void OnOpening()
         {
             _matchFoundContainer.SetActive(false);
-            _presenter = new HomePresenter(this, _servicesProvider.GetMatchService());
+            _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
             _playButton.onClick.AddListener(PlayMatch);
             _rulesButton.onClick.AddListener(OpenRules);
             _exitButton.onClick.AddListener(Application.Quit);

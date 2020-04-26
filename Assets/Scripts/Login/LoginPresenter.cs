@@ -34,11 +34,13 @@ namespace Login
             _view.OnLoginFail(errorMessage);
         }
 
-        private void OnLoginComplete(UserResponseDto response) {
+        private void OnLoginComplete(UserResponseDto response)
+        {
             PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
+            PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
             _view.OnLoginComplete();
         }
-
     }
 }

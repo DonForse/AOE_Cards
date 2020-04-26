@@ -13,36 +13,30 @@ namespace Infrastructure.Services
     {
         private string StartMatchUrl => Configuration.UrlBase + "/api/match?userid={0}";
 
-        public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<string> onError)
+        public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             string url = string.Format(StartMatchUrl, playerId);
             StartCoroutine(Get(url, onStartMatchComplete, onError));
         }
 
-        private IEnumerator Get(string url, Action<Match> onStartMatchComplete, Action<string> onError)
+        private IEnumerator Get(string url, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
-            bool isComplete;
-            bool isError;
-            string responseString;
+            ResponseInfo response;
             using (var webRequest = UnityWebRequest.Get(url))
             {
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                isError = webRequest.responseCode >= 400 || webRequest.isNetworkError;
-                isComplete = webRequest.isDone;
-                responseString = isError ?
-                                   webRequest.error
-                                   : isComplete ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
-                                   : string.Empty;
-                Debug.Log(responseString);
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
             }
 
-            if (isError)
+            if (response.isError)
             {
-                onError(responseString);
+                onError(response.code, response.response);
             }
-            else if (isComplete)
+            else if (response.isComplete)
             {                
-                var dto = JsonUtility.FromJson<MatchDto>(responseString);
+                var dto = JsonUtility.FromJson<MatchDto>(response.response);
                 if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);
@@ -50,8 +44,7 @@ namespace Infrastructure.Services
                 }
                 else {
                     onStartMatchComplete(DtoToMatchStatus(dto));
-                }
-                
+                }   
             }
             else
             {

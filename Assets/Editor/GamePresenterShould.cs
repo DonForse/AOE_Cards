@@ -17,6 +17,7 @@ namespace Editor
         private ICardProvider _cardProvider;
         private IGameView _view;
         private IPlayService _playService;
+        private ITokenService _tokenService;
 
         private const int CardsInHand = 5;
 
@@ -26,7 +27,8 @@ namespace Editor
             GivenCardProvider();
             GivenGameplayView();
             GivenPlayService();
-            _presenter = new GamePresenter(_view, _playService);
+            GivenTokenService();
+            _presenter = new GamePresenter(_view, _playService, _tokenService);
             WhenGameSetup();
         }
 
@@ -89,6 +91,12 @@ namespace Editor
         private void GivenGameplayView()
         {
             _view = Substitute.For<IGameView>();
+        }
+
+
+        private void GivenTokenService()
+        {
+            _tokenService = Substitute.For<ITokenService>();
         }
 
         private void GivenCardProvider()
@@ -172,12 +180,12 @@ namespace Editor
 
         private void ThenPlayUpgradeCardIsCalledInService()
         {
-            _playService.Received(1).PlayUpgradeCard(null,Arg.Any<Action<Hand>>(),Arg.Any<Action<string>>());
+            _playService.Received(1).PlayUpgradeCard(null,Arg.Any<Action<Hand>>(),Arg.Any<Action<long, string>>());
         }
 
         private void ThenPlayUnitCardIsCalledInService()
         {
-            _playService.Received(1).PlayUnitCard(null, Arg.Any<Action<Hand>>(),Arg.Any<Action<string>>());
+            _playService.Received(1).PlayUnitCard(null, Arg.Any<Action<Hand>>(),Arg.Any<Action<long, string>>());
         }
 
         private void ThenUnitCardIsRemovedFromHand()

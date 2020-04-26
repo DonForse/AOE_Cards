@@ -8,6 +8,7 @@ namespace Infrastructure.Services
         public string username;
         public string guid;
         public string accessToken;
+        public string refreshToken;
 
         public static UserResponseDto Parse(string responseString)
         {
