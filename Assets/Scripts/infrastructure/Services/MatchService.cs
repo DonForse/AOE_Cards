@@ -11,18 +11,17 @@ namespace Infrastructure.Services
 {
     public class MatchService : MonoBehaviour, IMatchService
     {
-        private string StartMatchUrl => Configuration.UrlBase + "/api/match?userid={0}";
+        private string StartMatchUrl => Configuration.UrlBase + "/api/match";
 
         public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
-            string url = string.Format(StartMatchUrl, playerId);
-            StartCoroutine(Get(url, onStartMatchComplete, onError));
+            StartCoroutine(Get(onStartMatchComplete, onError));
         }
 
-        private IEnumerator Get(string url, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        private IEnumerator Get(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             ResponseInfo response;
-            using (var webRequest = UnityWebRequest.Get(url))
+            using (var webRequest = UnityWebRequest.Get(StartMatchUrl))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
@@ -40,7 +39,7 @@ namespace Infrastructure.Services
                 if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);
-                    StartCoroutine(Get(url, onStartMatchComplete, onError));
+                    StartCoroutine(Get(onStartMatchComplete, onError));
                 }
                 else {
                     onStartMatchComplete(DtoToMatchStatus(dto));
@@ -49,7 +48,7 @@ namespace Infrastructure.Services
             else
             {
                 yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(url, onStartMatchComplete, onError));
+                StartCoroutine(Get(onStartMatchComplete, onError));
             }
         }
 

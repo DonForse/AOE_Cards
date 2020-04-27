@@ -11,6 +11,9 @@ public class HandView : MonoBehaviour
     [SerializeField] private Button buttonToggleHandCards;
     [SerializeField] private GameObject unitCardsContainer;
     [SerializeField] private GameObject upgradeCardsContainer;
+    [SerializeField] private Image btnToggleImage;
+    [SerializeField] private Sprite imgUpgradesIcon;
+    [SerializeField] private Sprite imgUnitIcon;
     private bool showingUpgrades;
     // Start is called before the first frame update
     void Start()
@@ -49,6 +52,8 @@ public class HandView : MonoBehaviour
 
         foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
             upgradeButton.interactable = false;
+
+        btnToggleImage.sprite = imgUpgradesIcon;
     }
 
     public void ShowHandUpgrades()
@@ -64,6 +69,8 @@ public class HandView : MonoBehaviour
 
         foreach (var upgradeButton in upgradeCardsContainer.GetComponentsInChildren<Button>())
             upgradeButton.interactable = true;
+
+        btnToggleImage.sprite = imgUnitIcon;
     }
 
     internal IList<GameObject> GetUnitCards()

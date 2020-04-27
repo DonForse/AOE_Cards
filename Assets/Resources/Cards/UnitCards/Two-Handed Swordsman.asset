@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Two-Handed Swordsman
   m_EditorClassIdentifier: 
   cardName: Two-Handed Swordsman
-  archetype: Soldier|Militia
+  archetype: Infantry|Militia
   effect: 
   effectPower: 0
   power: 16

@@ -19,10 +19,10 @@ public class ShowdownView : MonoBehaviour
     {
         //animation stuff
         ClearUpgradeWaitCard();
-        var showDownContainer = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
-        upgradeCardPlayed.transform.SetParent(showDownContainer.transform);
-
-        RefreshView(showDownContainer);
+        var container = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
+        upgradeCardPlayed.transform.SetParent(container.transform);
+        upgradeCardPlayed.transform.position = (container.transform.position);
+        RefreshView(container);
     }
 
     private void ClearUpgradeWaitCard()
@@ -37,8 +37,9 @@ public class ShowdownView : MonoBehaviour
         //animation stuff
         ClearUnitWaitCard();
         var container = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
-        unitCardPlayed.transform.SetParent(container.transform);
 
+        unitCardPlayed.transform.SetParent(container.transform);
+        unitCardPlayed.transform.position = (container.transform.position);
         RefreshView(container);
     }
 

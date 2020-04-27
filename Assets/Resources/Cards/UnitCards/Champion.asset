@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Champion
   m_EditorClassIdentifier: 
   cardName: Champion
-  archetype: Soldier|Militia
+  archetype: Infantry|Militia
   effect: 
   effectPower: 0
   power: 20

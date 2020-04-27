@@ -11,12 +11,12 @@ namespace Infrastructure.Services
 {
     public partial class PlayService : MonoBehaviour, IPlayService
     {
-        private string GetRoundUrl => Configuration.UrlBase + "/api/play?matchid={0}&roundNumber={1}&userId={2}";
-        private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}&playerid={1}";
+        private string GetRoundUrl => Configuration.UrlBase + "/api/play?matchid={0}&roundNumber={1}";
+        private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}";
 
         public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<long, string> onError)
         {
-            var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber, PlayerPrefs.GetString(PlayerPrefsHelper.UserId));
+            var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber);
             StartCoroutine(Get(url, onGetRoundComplete, onError));
         }
 
@@ -84,7 +84,7 @@ namespace Infrastructure.Services
         private IEnumerator PlayCard(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
         {
             ResponseInfo response;
-            var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), PlayerPrefs.GetString(PlayerPrefsHelper.UserId));
+            var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
 
             Debug.Log(playCardUrl);
             using (var webRequest = UnityWebRequest.Post(playCardUrl, data))

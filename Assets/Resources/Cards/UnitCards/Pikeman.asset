@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pikeman
   m_EditorClassIdentifier: 
   cardName: Pikeman
-  archetype: 'Soldier|CounterUnit '
+  archetype: 'Infantry|CounterUnit '
   effect: +5 vs Cavalry
   effectPower: 5
   power: 10

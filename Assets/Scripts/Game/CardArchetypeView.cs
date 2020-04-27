@@ -38,8 +38,8 @@ public class CardArchetypeView : MonoBehaviour
         foreach (var arc in archetypesData)
             switch (arc.ToLower())
             {
-                case "soldier":
-                    archetypes.Add(Archetype.Soldier);
+                case "infantry":
+                    archetypes.Add(Archetype.Infantry);
                     break;
                 case "militia":
                     archetypes.Add(Archetype.Militia);

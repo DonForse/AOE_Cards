@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Heavy Scorpion
   archetype: Siege
-  effect: Always wins vs Soldier
+  effect: Always wins vs Infantry
   effectPower: 0
   power: 0
   artwork: {fileID: 21300000, guid: 8a3086ea9fea28d41bb608b1fa805f0c, type: 3}

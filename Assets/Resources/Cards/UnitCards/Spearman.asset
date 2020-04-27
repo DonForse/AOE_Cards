@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Spearman
   m_EditorClassIdentifier: 
   cardName: Spearman
-  archetype: 'Soldier|CounterUnit '
+  archetype: 'Infantry|CounterUnit '
   effect: +4 vs Cavarly
   effectPower: 4
   power: 5

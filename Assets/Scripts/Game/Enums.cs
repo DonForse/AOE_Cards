@@ -12,7 +12,7 @@ public enum Archetype {
     Archer,
     CavalryArcher,
     Militia,
-    Soldier,
+    Infantry,
     CounterUnit,
     Siege,
     Monk

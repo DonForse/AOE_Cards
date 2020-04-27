@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1c8c9e05cef1a94c9301b0b180666e3, type: 3}
-  m_Name: Japanese Soldiers
+  m_Name: Japanese Warriors
   m_EditorClassIdentifier: 
-  cardName: Japanese Soldiers
-  archetypes: soldier
-  effect: Soldiers + 4
+  cardName: Japanese Warriors
+  archetypes: infantry
+  effect: Infantry + 4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: 88c88c356f5e5d44b88ffed7fa22884b, type: 3}
