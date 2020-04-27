@@ -22,6 +22,7 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
     private static readonly int Hover = Animator.StringToHash("hover");
     private static readonly int PoweringUp = Animator.StringToHash("PoweringUp");
     private int basePower;
+    private bool isPlayable = false;
 
     public void SetCard(UnitCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable, Action<bool> OnDrag)
     {
@@ -78,7 +79,8 @@ public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPoi
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        animator.SetTrigger("startglow");
+        if (isPlayable)
+            animator.SetTrigger("startglow");
     }
 
     public void OnPointerExit(PointerEventData eventData)
