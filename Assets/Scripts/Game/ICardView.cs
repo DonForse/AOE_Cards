@@ -1,5 +1,8 @@
-﻿internal interface ICardView
+﻿namespace Game
 {
-    void ShowFrontCard();
-    void ShowCardBack();
+    internal interface ICardView
+    {
+        void ShowFrontCard();
+        void ShowCardBack();
+    }
 }

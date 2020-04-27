@@ -1,23 +1,40 @@
-﻿public enum PlayerType
+﻿namespace Game
 {
-Player,Rival
-}
+    public enum PlayerType
+    {
+        Player,Rival
+    }
 
-public enum Archetype {
-    Villager,
-    Eagle,
-    Camel,
-    Elephant,
-    Cavalry,
-    Archer,
-    CavalryArcher,
-    Militia,
-    Infantry,
-    CounterUnit,
-    Siege,
-    Monk
-}
+    public enum Archetype {
+        Villager,
+        Eagle,
+        Camel,
+        Elephant,
+        Cavalry,
+        Archer,
+        CavalryArcher,
+        Militia,
+        Infantry,
+        CounterUnit,
+        Siege,
+        Monk
+    }
 
-public enum MatchResult {
-    Win,Lose,Tie,NotFinished
+    public enum MatchResult {
+        Win,Lose,Tie,NotFinished
+    }
+    
+    public enum MatchState
+    {
+        InitializeGame,
+        StartRound,
+        RoundUpgradeReveal,
+        SelectUpgrade,
+        WaitUpgrade,
+        UpgradeReveal,
+        SelectUnit,
+        WaitUnit,
+        RoundResultReveal,
+        EndGame,
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Home;
+﻿using Game;
+using Home;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
