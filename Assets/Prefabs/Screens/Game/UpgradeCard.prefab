@@ -1235,7 +1235,7 @@ ScaleConstraint:
   m_AffectScalingX: 1
   m_AffectScalingY: 1
   m_AffectScalingZ: 1
-  m_IsContraintActive: 1
+  m_IsContraintActive: 0
   m_IsLocked: 1
   m_Sources:
   - sourceTransform: {fileID: 0}
