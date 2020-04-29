@@ -327,14 +327,27 @@ namespace Game
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card.UnitCardData, (_) => { }, null, false, null);
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
+                unitCard.ShowCardBack();
             }
+            StartCoroutine(RoundPresentation(round));
+        }
+
+        private IEnumerator RoundPresentation(Round round)
+        {
             foreach (var cardView in _showdownView.GetUnitsCardsPlayed())
             {
                 foreach (var card in round.CardsPlayed)
                 {
                     if (cardView.CardName == card.UnitCardData.cardName)
+                        cardView.ShowFrontCard();
+                }
+                yield return new WaitForSeconds(1f);
+                foreach (var card in round.CardsPlayed)
+                {
+                    if (cardView.CardName == card.UnitCardData.cardName)
                         cardView.IncreasePowerAnimation(_upgradesView, card.UnitCardPower, 1f);
                 }
+                yield return new WaitForSeconds(2f);
             }
 
             StartCoroutine(StartNewRound(round));
@@ -342,8 +355,8 @@ namespace Game
 
         private IEnumerator StartNewRound(Round round)
         {
-            //do some animation stuff
-            yield return new WaitForSeconds(3f);
+            // //do some animation stuff
+            yield return new WaitForSeconds(1f);
 
             _showdownView.MoveCards(_upgradesView);
 
@@ -351,7 +364,7 @@ namespace Game
 
             if (_presenter.IsMatchOver())
             {
-                //yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(2f);
                 EndGame();
             }
             else

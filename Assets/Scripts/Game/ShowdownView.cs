@@ -33,12 +33,37 @@ namespace Game
         internal void PlayUnitCard(UnitCardView unitCardPlayed, PlayerType playerType)
         {
             //animation stuff
-            ClearUnitWaitCard();
             var container = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
-
+            if (playerType == PlayerType.Rival && _unitWait != null)
+                ClearUnitWaitCard();
             unitCardPlayed.transform.SetParent(container.transform);
             unitCardPlayed.transform.position = (container.transform.position);
+       
             RefreshView(container);
+        }
+        
+        internal void ShowRivalWaitUnit(GameObject go)
+        {
+            if (_unitWait != null)
+                return;
+            var card = GameObject.Instantiate(go);
+            var unit = card.GetComponent<UnitCardView>();
+            unit.ShowCardBack();
+            card.transform.SetParent(rivalFieldContainer.transform);
+            card.transform.position = (rivalFieldContainer.transform.position);
+            _unitWait = card;
+        }
+
+        internal void ShowRivalWaitUpgrade(GameObject go)
+        {
+            if (_upgradeWait != null)
+                return;
+            var card = GameObject.Instantiate(go);
+            var upgrade = card.GetComponent<UpgradeCardView>();
+            upgrade.ShowCardBack();
+            card.transform.SetParent(rivalFieldContainer.transform);
+            card.transform.position = (rivalFieldContainer.transform.position);
+            _upgradeWait = card;
         }
 
         private void ClearUnitWaitCard()
@@ -107,29 +132,6 @@ namespace Game
             if (!dragging)
                 _dropHereText.gameObject.SetActive(false);
         }
-
-        internal void ShowRivalWaitUnit(GameObject go)
-        {
-            if (_unitWait != null)
-                return;
-            var card = GameObject.Instantiate(go);
-            var unit = card.GetComponent<UnitCardView>();
-            unit.ShowCardBack();
-            card.transform.SetParent(rivalFieldContainer.transform);
-            card.transform.position = (rivalFieldContainer.transform.position);
-            _unitWait = card;
-        }
-
-        internal void ShowRivalWaitUpgrade(GameObject go)
-        {
-            if (_upgradeWait != null)
-                return;
-            var card = GameObject.Instantiate(go);
-            var upgrade = card.GetComponent<UpgradeCardView>();
-            upgrade.ShowCardBack();
-            card.transform.SetParent(rivalFieldContainer.transform);
-            card.transform.position = (rivalFieldContainer.transform.position);
-            _upgradeWait = card;
-        }
+        
     }
 }
