@@ -3,6 +3,7 @@ using System.Collections;
 using Common;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -25,7 +26,7 @@ namespace Game
         private static readonly int PoweringUp = Animator.StringToHash("PoweringUp");
         private int basePower;
         private bool isPlayable = false;
-        private static readonly int RevealCard = Animator.StringToHash("RevealCard");
+        private static readonly int RevealCard = Animator.StringToHash("revealcard");
         private static readonly int Startglow = Animator.StringToHash("startglow");
         private static readonly int Stopglow = Animator.StringToHash("stopglow");
 
@@ -78,8 +79,23 @@ namespace Game
 
         public void ShowFrontCard()
         {
-            animator.SetTrigger(RevealCard);
+            StartCoroutine(FlipAnimation(1f));
             // cardback.SetActive(false);
+        }
+        private IEnumerator FlipAnimation(float duration)
+        {
+            float n = 0;  // lerped value
+            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
+            {
+                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 0, f / duration), transform.localScale.y, transform.localScale.z);
+                yield return null;
+            }
+            cardback.SetActive(false);
+            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
+            {
+                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
+                yield return null;
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)

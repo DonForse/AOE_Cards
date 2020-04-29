@@ -84,7 +84,7 @@ namespace Game
 
             foreach (var playerCard in currentRound.CardsPlayed)
             {
-                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == playerCard.Player ? PlayerType.Player : PlayerType.Rival; 
+                var playerType = PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == playerCard.Player ? PlayerType.Player : PlayerType.Rival;
                 SetRoundUnitData(playerCard, playerType);
             }
         }
@@ -121,7 +121,7 @@ namespace Game
             {
                 var go = Instantiate(upgradeCardGo);
                 var upgradeCard = go.GetComponent<UpgradeCardView>();
-                upgradeCard.SetCard(playerCard.UpgradeCardData, _ => { }, null, false, null );
+                upgradeCard.SetCard(playerCard.UpgradeCardData, _ => { }, null, false, null);
 
                 _showdownView.PlayUpgradeCard(upgradeCard, playerType);
             }
@@ -132,13 +132,14 @@ namespace Game
             throw new NotImplementedException("Unexpected");
         }
 
-        public void InitializeGame(Match match) {
+        public void InitializeGame(Match match)
+        {
 
             InstantiateHandCards(match.Hand);
             InitializeRound(match.Board.Rounds.Last());
             ChangeMatchState(MatchState.InitializeGame);
             _timerView.gameObject.SetActive(true);
-            if (match.Board.Rounds.Count == 1 && match.Board.Rounds.First().CardsPlayed.All(uc=>uc.UpgradeCardData == null))
+            if (match.Board.Rounds.Count == 1 && match.Board.Rounds.First().CardsPlayed.All(uc => uc.UpgradeCardData == null))
                 StartCoroutine(ShowDrawnCards());
         }
 
@@ -157,7 +158,7 @@ namespace Game
         public void InstantiateHandCards(Hand hand)
         {
             var unitHandCards = _handView.GetUnitCards();
-            foreach (var card in hand.GetUnitCards().GroupBy(card=>card.cardName))
+            foreach (var card in hand.GetUnitCards().GroupBy(card => card.cardName))
             {
                 var missingCards = card.Count() - unitHandCards.Count(cuc => cuc.name == card.Key);
                 while (missingCards > 0)
@@ -173,12 +174,12 @@ namespace Game
             var upgradeHandCards = _handView.GetUpgradeCards();
             foreach (var card in hand.GetUpgradeCards().GroupBy(card => card.cardName))
             {
-                var missingCards =  card.Count() - upgradeHandCards.Count(cuc => cuc.name == card.Key);
+                var missingCards = card.Count() - upgradeHandCards.Count(cuc => cuc.name == card.Key);
                 while (missingCards > 0)
                 {
                     var go = GameObject.Instantiate(upgradeCardGo);
                     var upgradeCard = go.GetComponent<UpgradeCardView>();
-                    upgradeCard.SetCard(card.First(), PlayUpgradeCard, _showdownView.GetComponent<RectTransform>(), true, dragging => { _showdownView.CardDrag(dragging); } );
+                    upgradeCard.SetCard(card.First(), PlayUpgradeCard, _showdownView.GetComponent<RectTransform>(), true, dragging => { _showdownView.CardDrag(dragging); });
                     _handView.SetUpgradeCard(go);
                     missingCards--;
                 }
@@ -187,17 +188,19 @@ namespace Game
 
         private IEnumerator ShowDrawnCards()
         {
-            _timerView.gameObject.SetActive(false); 
+            _timerView.gameObject.SetActive(false);
             var units = _handView.GetUnitCards();
-            var upgrades= _handView.GetUpgradeCards();
+            var upgrades = _handView.GetUpgradeCards();
             foreach (var unit in units)
             {
                 unit.transform.SetParent(_showDrawnHandContainer.transform);
+                unit.transform.localScale = Vector3.one;
                 unit.transform.position = _showDrawnHandContainer.transform.position;
             }
             foreach (var upgrade in upgrades)
             {
                 upgrade.transform.SetParent(_showDrawnHandContainer.transform);
+                upgrade.transform.localScale = Vector3.one;
                 upgrade.transform.position = _showDrawnHandContainer.transform.position;
             }
             _showDrawnHandContainer.SetActive(true);
@@ -209,6 +212,7 @@ namespace Game
             foreach (var upgrade in upgrades)
             {
                 _handView.SetUpgradeCard(upgrade);
+
             }
             _showDrawnHandContainer.SetActive(false);
             LayoutRebuilder.MarkLayoutForRebuild(_handView.GetComponent<RectTransform>());
@@ -281,7 +285,7 @@ namespace Game
         {
             if (round.RivalReady)
             {
- 
+
                 _showdownView.ShowRivalWaitUnit(unitCardGo);
             }
         }
@@ -309,8 +313,11 @@ namespace Game
 
                 _showdownView.PlayUpgradeCard(upgradeCard, PlayerType.Rival);
             }
-            ChangeMatchState(MatchState.SelectUnit);
-            _handView.ShowHandUnits();
+            StartCoroutine(_showdownView.RevealCards(()=> {
+                ChangeMatchState(MatchState.SelectUnit);
+                _handView.ShowHandUnits();
+            }));
+
         }
 
         private void ShowUnitCardsPlayedRound(Round round)
@@ -327,29 +334,18 @@ namespace Game
                 var unitCard = go.GetComponent<UnitCardView>();
                 unitCard.SetCard(card.UnitCardData, (_) => { }, null, false, null);
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
-                unitCard.ShowCardBack();
             }
-            StartCoroutine(RoundPresentation(round));
+            StartCoroutine(_showdownView.RevealCards(()=> { StartCoroutine(RoundPresentation(round)); }));
         }
 
         private IEnumerator RoundPresentation(Round round)
         {
             foreach (var cardView in _showdownView.GetUnitsCardsPlayed())
             {
-                foreach (var card in round.CardsPlayed)
-                {
-                    if (cardView.CardName == card.UnitCardData.cardName)
-                        cardView.ShowFrontCard();
-                }
-                yield return new WaitForSeconds(1f);
-                foreach (var card in round.CardsPlayed)
-                {
-                    if (cardView.CardName == card.UnitCardData.cardName)
-                        cardView.IncreasePowerAnimation(_upgradesView, card.UnitCardPower, 1f);
-                }
-                yield return new WaitForSeconds(2f);
+                var card = round.CardsPlayed.FirstOrDefault(c => c.UnitCardData.cardName == cardView.CardName);
+                cardView.IncreasePowerAnimation(_upgradesView, card.UnitCardPower, 1f);
             }
-
+            yield return new WaitForSeconds(2f);
             StartCoroutine(StartNewRound(round));
         }
 

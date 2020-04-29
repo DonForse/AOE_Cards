@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using Common;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -22,6 +24,7 @@ namespace Game
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject cardback;
         private static readonly int Hover = Animator.StringToHash("hover");
+        private static readonly int RevealCard = Animator.StringToHash("revealcard");
 
         private bool dragging = false;
         private bool _draggable = false;
@@ -69,9 +72,25 @@ namespace Game
 
         public void ShowFrontCard()
         {
-            //animator.SetTrigger("frontcard");
-            cardback.SetActive(false);
+            StartCoroutine(FlipAnimation(1f));
+            // cardback.SetActive(false);
         }
+        private IEnumerator FlipAnimation(float duration)
+        {
+            float n = 0;  // lerped value
+            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
+            {
+                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 0, f / duration), transform.localScale.y, transform.localScale.z);
+                yield return null;
+            }
+            cardback.SetActive(false);
+            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
+            {
+                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
+                yield return null;
+            }
+        }
+
 
         public void OnPointerEnter(PointerEventData eventData)
         {

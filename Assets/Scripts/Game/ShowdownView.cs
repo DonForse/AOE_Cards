@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Infrastructure.Services;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,35 +13,54 @@ namespace Game
         [SerializeField] private GameObject playerFieldContainer;
         [SerializeField] private GameObject rivalFieldContainer;
         [SerializeField] private TextMeshProUGUI _dropHereText;
-        private GameObject _upgradeWait;
-        private GameObject _unitWait;
+        private UpgradeCardView _upgradeWait;
+        private UnitCardView _unitWait;
 
-        internal void PlayUpgradeCard(UpgradeCardView upgradeCardPlayed, PlayerType playerType)
+        internal void PlayUpgradeCard(UpgradeCardView card, PlayerType playerType)
         {
-            //animation stuff
-            ClearUpgradeWaitCard();
-            var container = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
-            upgradeCardPlayed.transform.SetParent(container.transform);
-            upgradeCardPlayed.transform.position = (container.transform.position);
+            GameObject container;
+            if (playerType == PlayerType.Player) {
+                container = playerFieldContainer;
+            }
+            else
+            {
+                ClearUpgradeWaitCard();
+                container = rivalFieldContainer;
+                _upgradeWait = card;
+                _upgradeWait.ShowCardBack();
+            }
+
+            card.transform.SetParent(container.transform);
+            card.transform.position = (container.transform.position);
+            card.transform.localScale = Vector3.one;
             RefreshView(container);
         }
 
         private void ClearUpgradeWaitCard()
         {
             if (_upgradeWait != null)
-                Destroy(_upgradeWait);
+                Destroy(_upgradeWait.gameObject);
             _upgradeWait = null;
         }
 
-        internal void PlayUnitCard(UnitCardView unitCardPlayed, PlayerType playerType)
+        internal void PlayUnitCard(UnitCardView card, PlayerType playerType)
         {
-            //animation stuff
-            var container = playerType == PlayerType.Player ? playerFieldContainer : rivalFieldContainer;
-            if (playerType == PlayerType.Rival && _unitWait != null)
+            GameObject container;
+            if (playerType == PlayerType.Player)
+            {
+                container = playerFieldContainer;
+            }
+            else
+            {
                 ClearUnitWaitCard();
-            unitCardPlayed.transform.SetParent(container.transform);
-            unitCardPlayed.transform.position = (container.transform.position);
-       
+                container = rivalFieldContainer;
+                _unitWait = card;
+                _unitWait.ShowCardBack();
+            }
+            card.transform.SetParent(container.transform);
+            card.transform.position = (container.transform.position);
+            card.transform.localScale = Vector3.one;
+
             RefreshView(container);
         }
         
@@ -51,7 +73,8 @@ namespace Game
             unit.ShowCardBack();
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
-            _unitWait = card;
+            card.transform.localScale = Vector3.one;
+            _unitWait = unit;
         }
 
         internal void ShowRivalWaitUpgrade(GameObject go)
@@ -63,13 +86,14 @@ namespace Game
             upgrade.ShowCardBack();
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
-            _upgradeWait = card;
-        }
+            card.transform.localScale = Vector3.one;
+            _upgradeWait = upgrade;
+        }        
 
         private void ClearUnitWaitCard()
         {
             if (_unitWait != null)
-                Destroy(_unitWait);
+                Destroy(_unitWait.gameObject);
             _unitWait = null;
         }
 
@@ -132,6 +156,20 @@ namespace Game
             if (!dragging)
                 _dropHereText.gameObject.SetActive(false);
         }
-        
+
+        internal IEnumerator RevealCards(Action onFinish)
+        {
+            if (_upgradeWait != null) { 
+                _upgradeWait.ShowFrontCard();
+                _upgradeWait = null;
+            }
+            if (_unitWait != null)
+            {
+                _unitWait.ShowFrontCard();
+                _unitWait = null;
+            }
+            yield return new WaitForSeconds(1f);
+            onFinish();
+        }
     }
 }
