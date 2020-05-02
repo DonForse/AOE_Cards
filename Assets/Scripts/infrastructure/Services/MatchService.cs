@@ -15,6 +15,11 @@ namespace Infrastructure.Services
 
         public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
+            StartCoroutine(Post(onStartMatchComplete, onError));
+        }
+
+        public void GetMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        {
             StartCoroutine(Get(onStartMatchComplete, onError));
         }
 
@@ -44,6 +49,40 @@ namespace Infrastructure.Services
                 else {
                     onStartMatchComplete(DtoToMatchStatus(dto));
                 }   
+            }
+            else
+            {
+                yield return new WaitForSeconds(3f);
+                StartCoroutine(Get(onStartMatchComplete, onError));
+            }
+        }
+        private IEnumerator Post(Action<Match> onStartMatchComplete, Action<long, string> onError)
+        {
+            ResponseInfo response;
+            using (var webRequest = UnityWebRequest.Post(StartMatchUrl,""))
+            {
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
+                yield return webRequest.SendWebRequest();
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
+            }
+
+            if (response.isError)
+            {
+                onError(response.code, response.response);
+            }
+            else if (response.isComplete)
+            {
+                var dto = JsonUtility.FromJson<MatchDto>(response.response);
+                if (string.IsNullOrWhiteSpace(dto.matchId))
+                {
+                    yield return new WaitForSeconds(3f);
+                    StartCoroutine(Get(onStartMatchComplete, onError));
+                }
+                else
+                {
+                    onStartMatchComplete(DtoToMatchStatus(dto));
+                }
             }
             else
             {
