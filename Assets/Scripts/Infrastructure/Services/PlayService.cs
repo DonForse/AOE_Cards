@@ -93,7 +93,7 @@ namespace Infrastructure.Services
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
-                webRequest.SetRequestHeader("Content-Type", "application/json");
+                webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
                 response = new ResponseInfo(webRequest);

@@ -1,11 +1,11 @@
-﻿namespace Infrastructure.Services
+﻿using System;
+
+namespace Infrastructure.Services
 {
-    public partial class LoginService
+    public class UserDto
     {
-        public class UserDto
-        {
-            public string username;
-            public string password;
-        }
+        public string username;
+        public string password;
+        public string date;
     }
 }

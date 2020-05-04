@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Infrastructure.Services
 {
-    public partial class LoginService : MonoBehaviour, ILoginService
+    public class LoginService : MonoBehaviour, ILoginService
     {
         
         private string ApiUrl => Configuration.UrlBase + "/api/user/";
@@ -15,15 +14,48 @@ namespace Infrastructure.Services
 
         public void Register(string playerName, string password, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
-            string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password });
+            var dt = DateTime.Now;
+            password = EncodePassword(password, dt);
+            string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password, date = dt.ToString("dd-MM-yyyy hhmmss") });
             StartCoroutine(Put(data, onRegisterComplete, onRegisterFailed));
         }
 
         public void Login(string playerName, string password, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
-            string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password });
+            var dt = DateTime.Now;
+            password = EncodePassword(password, dt);
+            string data = JsonUtility.ToJson(new UserDto { username = playerName, password = password, date = dt.ToString("dd-MM-yyyy hhmmss") });
             StartCoroutine(Post(data, onLoginComplete, onLoginFailed));
         }
+
+        private string EncodePassword(string password, DateTime dt)
+        {
+            var encoding = Encoding.GetEncoding("ISO-8859-1");
+
+            var phrase = "!AoE.MAG1#C-4nt11C4it##";
+            byte[] bytesPhrase = encoding.GetBytes(phrase);
+
+            var date = encoding.GetBytes(dt.ToString("dd-MM-yyyy hhmmss"));
+
+            var bytePassword = encoding.GetBytes(password);
+            var newPassword = new byte[bytePassword.Length];
+            for (int i = 0; i < bytePassword.Length; i++)
+            {
+                var dateIndex = i;
+                while (date.Length - dateIndex <= 0)
+                {
+                    dateIndex = dateIndex - date.Length;
+                }
+                var phraseIndex = i;
+                while (bytesPhrase.Length - phraseIndex <= 0)
+                {
+                    phraseIndex = phraseIndex - bytesPhrase.Length;
+                }
+                newPassword[i] = (byte)((int)bytePassword[i] + (int)date[dateIndex] + (int)bytesPhrase[phraseIndex]);
+            }
+            return Convert.ToBase64String(newPassword);
+        }
+
 
         private IEnumerator Put(string data, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
@@ -35,7 +67,7 @@ namespace Infrastructure.Services
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPUT;
-                webRequest.SetRequestHeader("Content-Type", "text/json");
+                webRequest.SetRequestHeader("Content-Type", "text/json;charset=ISO-8859-1");
                 yield return webRequest.SendWebRequest();
                 response = new ResponseInfo(webRequest);
                 Debug.Log(response.response);
@@ -66,7 +98,7 @@ namespace Infrastructure.Services
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
-                webRequest.SetRequestHeader("Content-Type", "text/json");
+                webRequest.SetRequestHeader("Content-Type", "text/json;charset=ISO-8859-1");
                 yield return webRequest.SendWebRequest();
                 response = new ResponseInfo(webRequest);
                 Debug.Log(response.response);
