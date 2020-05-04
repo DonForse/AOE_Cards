@@ -100,8 +100,7 @@ namespace Game
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (isPlayable)
-                animator.SetTrigger(Startglow);
+            animator.SetTrigger(Startglow);
         }
 
         public void OnPointerExit(PointerEventData eventData)

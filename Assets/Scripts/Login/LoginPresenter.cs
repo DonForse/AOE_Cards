@@ -16,11 +16,31 @@ namespace Login
 
         public void Login(string username, string password)
         {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                _view.ShowError("Username cannot be empty");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                _view.ShowError("Password cannot be empty");
+                return;
+            }
             _loginService.Login(username, password, OnLoginComplete,OnLoginFailed);  
         }
 
         public void Register(string username, string password)
         {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                _view.ShowError("Username cannot be empty");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                _view.ShowError("Password cannot be empty");
+                return;
+            }
             _loginService.Register(username, password, OnLoginComplete, OnRegisterFailed);
         }
 

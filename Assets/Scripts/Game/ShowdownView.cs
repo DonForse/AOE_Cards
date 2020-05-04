@@ -32,6 +32,7 @@ namespace Game
 
             card.transform.SetParent(container.transform);
             card.transform.position = (container.transform.position);
+            card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
             RefreshView(container);
         }
@@ -59,6 +60,7 @@ namespace Game
             }
             card.transform.SetParent(container.transform);
             card.transform.position = (container.transform.position);
+            card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
 
             RefreshView(container);

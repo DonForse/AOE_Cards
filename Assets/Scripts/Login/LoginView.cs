@@ -14,7 +14,7 @@ namespace Login
         [SerializeField] private Button continueButton;
         [SerializeField] private GameObject actionsContainer;
         [SerializeField] private GameObject loginContainer;
-        [SerializeField] private TextMeshProUGUI username;
+        [SerializeField] private TMP_InputField username;
         [SerializeField] private TMP_InputField password;
         [SerializeField] private TextMeshProUGUI errorMessage;
         [SerializeField] private ServicesProvider servicesProvider;
@@ -77,6 +77,12 @@ namespace Login
         {
             loginButton.onClick.RemoveAllListeners();
             this.gameObject.SetActive(false);
+        }
+
+        public void ShowError(string error)
+        {
+            errorMessage.text = error;
+            errorMessage.gameObject.SetActive(true);
         }
     }
 }

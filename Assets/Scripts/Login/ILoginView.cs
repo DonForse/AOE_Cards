@@ -4,5 +4,6 @@
     {
         void OnLoginComplete();
         void OnLoginFail(string message);
+        void ShowError(string error);
     }
 }
