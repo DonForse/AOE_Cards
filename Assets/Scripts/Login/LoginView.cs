@@ -10,6 +10,7 @@ namespace Login
     {
         [SerializeField] private Button loginButton;
         [SerializeField] private Button registerButton;
+        [SerializeField] private Button guestButton;
         [SerializeField] private Button backButton;
         [SerializeField] private Button continueButton;
         [SerializeField] private GameObject actionsContainer;
@@ -27,6 +28,7 @@ namespace Login
             loginButton.onClick.AddListener(Login);
             registerButton.onClick.AddListener(Register);
             continueButton.onClick.AddListener(SendLogin);
+            guestButton.onClick.AddListener(GuestLogin);
             backButton.onClick.AddListener(Back);
             this.gameObject.SetActive(true);
         }
@@ -61,6 +63,11 @@ namespace Login
             action = "register";
             actionsContainer.SetActive(false);
             loginContainer.SetActive(true);
+        }
+
+        private void GuestLogin()
+        {
+            _presenter.Register("GUEST", Guid.NewGuid().ToString());
         }
 
         public void OnLoginComplete() {
