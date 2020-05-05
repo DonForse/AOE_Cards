@@ -35,6 +35,7 @@
         SelectUnit,
         WaitUnit,
         RoundResultReveal,
+        EndRound,
         EndGame,
     }
 }

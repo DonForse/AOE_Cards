@@ -255,8 +255,7 @@ namespace Game
             {
                 ShowRoundUpdatesUnit(round);
             }
-
-            if (matchState == MatchState.RoundResultReveal)
+            if (matchState == MatchState.EndRound)
             {
                 InitializeRound(round);
             }
@@ -355,7 +354,6 @@ namespace Game
             yield return new WaitForSeconds(1f);
 
             _showdownView.MoveCards(_upgradesView);
-
             _gameInfoView.WinRound(round.WinnerPlayers);
 
             if (_presenter.IsMatchOver())
@@ -365,6 +363,7 @@ namespace Game
             }
             else
             {
+                ChangeMatchState(MatchState.EndRound);
                 _presenter.StartNewRound();
             }
         }
