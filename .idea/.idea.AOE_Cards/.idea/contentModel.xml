@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/Library/Caches/Rider2019.3/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/Rider2019.3/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_AOE_Cards.-111838671.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_AOE_Cards.-111838671.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="AOE_Cards.sln" t="IncludeFlat" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
@@ -14,16 +14,21 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Common" t="Include">
-            <e p="Draggable.cs" t="Include" />
+            <e p="Utilities" t="Include">
+              <e p="ArcLayout.cs" t="Include" />
+              <e p="Draggable.cs" t="Include" />
+            </e>
             <e p="ViewsHelper.cs" t="Include" />
           </e>
           <e p="Configuration.cs" t="Include" />
           <e p="Data" t="Include">
+            <e p="CardData.cs" t="Include" />
             <e p="UnitCardData.cs" t="Include" />
             <e p="UpgradeCardData.cs" t="Include" />
           </e>
           <e p="Game" t="Include">
             <e p="CardArchetypeView.cs" t="Include" />
+            <e p="CardView.cs" t="Include" />
             <e p="Enums.cs" t="Include" />
             <e p="GameInfoView.cs" t="Include" />
             <e p="GamePresenter.cs" t="Include" />
@@ -32,6 +37,7 @@
             <e p="HandView.cs" t="Include" />
             <e p="ICardView.cs" t="Include" />
             <e p="IGameView.cs" t="Include" />
+            <e p="RerollView.cs" t="Include" />
             <e p="ShowdownView.cs" t="Include" />
             <e p="TimerView.cs" t="Include" />
             <e p="UnitCardView.cs" t="Include" />
@@ -53,6 +59,7 @@
               <e p="HandDto.cs" t="Include" />
               <e p="MatchDto.cs" t="Include" />
               <e p="PlayerCardDto.cs" t="Include" />
+              <e p="RerollInfoDto.cs" t="Include" />
               <e p="RoundDto.cs" t="Include" />
               <e p="UserDto.cs" t="Include" />
             </e>

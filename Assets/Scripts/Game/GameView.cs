@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Home;
@@ -15,7 +16,7 @@ namespace Game
         [SerializeField] private ServicesProvider servicesProvider;
         [SerializeField] private GameObject unitCardGo;
         [SerializeField] private GameObject upgradeCardGo;
-        [SerializeField] private GameObject _showDrawnHandContainer;
+        [SerializeField] private GameObject _rerollView;
         [SerializeField] private UpgradesView _upgradesView;
         [SerializeField] private GameInfoView _gameInfoView;
         [SerializeField] private HandView _handView;
@@ -134,13 +135,13 @@ namespace Game
 
         public void InitializeGame(Match match)
         {
-
+            var lastRound = match.Board.Rounds.Last();
             InstantiateHandCards(match.Hand);
-            InitializeRound(match.Board.Rounds.Last());
+            InitializeRound(lastRound);
             ChangeMatchState(MatchState.InitializeGame);
             _timerView.gameObject.SetActive(true);
-            if (match.Board.Rounds.Count == 1 && match.Board.Rounds.First().CardsPlayed.All(uc => uc.UpgradeCardData == null))
-                StartCoroutine(ShowDrawnCards());
+            if (lastRound.HasReroll && lastRound.CardsPlayed.All(uc => uc.UpgradeCardData == null))
+                ShowReroll();
         }
 
         public void InitializeRound(Round round)
@@ -186,25 +187,31 @@ namespace Game
             }
         }
 
-        private IEnumerator ShowDrawnCards()
+        private void ShowReroll()
         {
-            _timerView.gameObject.SetActive(false);
+            _timerView.gameObject.SetActive(true);
             var units = _handView.GetUnitCards();
             var upgrades = _handView.GetUpgradeCards();
+            _timerView.WithTimer(30, 5).WithTimerCompleteCallback(()=>RerollComplete(units, upgrades));
+            
+
             foreach (var unit in units)
             {
-                unit.transform.SetParent(_showDrawnHandContainer.transform);
+                unit.transform.SetParent(_rerollView.transform);
                 unit.transform.localScale = Vector3.one;
-                unit.transform.position = _showDrawnHandContainer.transform.position;
+                unit.transform.position = _rerollView.transform.position;
             }
             foreach (var upgrade in upgrades)
             {
-                upgrade.transform.SetParent(_showDrawnHandContainer.transform);
+                upgrade.transform.SetParent(_rerollView.transform);
                 upgrade.transform.localScale = Vector3.one;
-                upgrade.transform.position = _showDrawnHandContainer.transform.position;
+                upgrade.transform.position = _rerollView.transform.position;
             }
-            _showDrawnHandContainer.SetActive(true);
-            yield return new WaitForSeconds(3f);
+            _rerollView.SetActive(true);
+        }
+
+        private void RerollComplete(IList<GameObject> units, IList<GameObject> upgrades)
+        {
             foreach (var unit in units)
             {
                 _handView.SetUnitCard(unit);
@@ -212,9 +219,8 @@ namespace Game
             foreach (var upgrade in upgrades)
             {
                 _handView.SetUpgradeCard(upgrade);
-
             }
-            _showDrawnHandContainer.SetActive(false);
+            _rerollView.SetActive(false);
             LayoutRebuilder.MarkLayoutForRebuild(_handView.GetComponent<RectTransform>());
             LayoutRebuilder.ForceRebuildLayoutImmediate(_handView.GetComponent<RectTransform>());
             Canvas.ForceUpdateCanvases();
