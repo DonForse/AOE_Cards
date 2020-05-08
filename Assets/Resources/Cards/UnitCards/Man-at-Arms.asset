@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Man-at-Arms
   m_EditorClassIdentifier: 
   cardName: Man-at-Arms
-  archetype: Infantry|Militia
+  archetypes: Infantry
   effect: 
   effectPower: 0
   power: 8

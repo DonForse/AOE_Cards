@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Crossbowman
   m_EditorClassIdentifier: 
   cardName: Crossbowman
-  archetype: Archer
+  archetypes: Archer
   effect: 
   effectPower: 0
   power: 12

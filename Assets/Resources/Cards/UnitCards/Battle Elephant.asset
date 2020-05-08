@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Battle Elephant
   m_EditorClassIdentifier: 
   cardName: Battle Elephant
-  archetype: Cavalry|Elephant
+  archetypes: Cavalry|Elephant
   effect: 
   effectPower: 0
   power: 23

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Militia
   m_EditorClassIdentifier: 
   cardName: Militia
-  archetype: Infantry|Militia
+  archetypes: Infantry
   effect: 
   effectPower: 0
   power: 6

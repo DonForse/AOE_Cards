@@ -3,26 +3,14 @@ using System.Collections;
 using Common;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Game
 {
-    public class UnitCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
+    public class UnitCardView : CardView
     {
-        public string CardName { get; private set; }
-
-        [SerializeField] private TextMeshProUGUI cardName;
         [SerializeField] private TextMeshProUGUI effect;
         [SerializeField] private TextMeshProUGUI power;
-        [SerializeField] private Image artwork;
-        [SerializeField] private Image background;
-        [SerializeField] private CardArchetypeView archetypeSection;
-        [SerializeField] private Animator animator;
-        [SerializeField] private GameObject cardback;
 
-        private static readonly int Hover = Animator.StringToHash("hover");
         private static readonly int PoweringUp = Animator.StringToHash("PoweringUp");
         private int basePower;
         private bool isPlayable = false;
@@ -40,8 +28,8 @@ namespace Game
             power.text = card.power.ToString();
             artwork.sprite = card.artwork;
             artwork.preserveAspect = true;
-            //background.sprite = card.background;
-
+            
+            SetBackgroundColor(card.GetArchetypes());
 
             if (draggable)
             {
@@ -52,7 +40,7 @@ namespace Game
                     .WithDropArea(dropAreaPlay);
             }
 
-            archetypeSection.SetCard(card.archetype);
+            archetypeSection.SetCard(card.GetArchetypes());
         }
 
         public void IncreasePowerAnimation(UpgradesView upgrades, int newPower, float animationDuration)
@@ -72,16 +60,6 @@ namespace Game
             }
         }
 
-        public void ShowCardBack() {
-            //animator.SetTrigger("backcard");
-            cardback.SetActive(true);
-        }
-
-        public void ShowFrontCard()
-        {
-            StartCoroutine(FlipAnimation(1f));
-            // cardback.SetActive(false);
-        }
         private IEnumerator FlipAnimation(float duration)
         {
             float n = 0;  // lerped value
@@ -96,16 +74,6 @@ namespace Game
                 transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
                 yield return null;
             }
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            animator.SetTrigger(Startglow);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            animator.SetTrigger(Stopglow);
         }
     }
 }

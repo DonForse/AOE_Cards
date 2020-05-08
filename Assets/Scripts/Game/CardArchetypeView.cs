@@ -11,9 +11,8 @@ namespace Game
         [SerializeField] string pathToIcons;
         public Sprite sprite;
 
-        public void SetCard(string archetypesSerialized)
+        public void SetCard(IList<Archetype> archetypes)
         {
-            var archetypes = GetArchetypes(archetypesSerialized);
             SetArchetypes(archetypes);
         }
 
@@ -31,52 +30,6 @@ namespace Game
         private Sprite GetSprite(Archetype archetype)
         {
             return Resources.Load<Sprite>(string.Format("{0}/{1}", pathToIcons, archetype.ToString()));
-        }
-
-        private IList<Archetype> GetArchetypes(string archetypesstring)
-        {
-            var archetypesData = archetypesstring.Split('|');
-            var archetypes = new List<Archetype>();
-            foreach (var arc in archetypesData)
-                switch (arc.ToLower())
-                {
-                    case "infantry":
-                        archetypes.Add(Archetype.Infantry);
-                        break;
-                    case "militia":
-                        archetypes.Add(Archetype.Militia);
-                        break;
-                    case "archer":
-                        archetypes.Add(Archetype.Archer);
-                        break;
-                    case "cavalry":
-                        archetypes.Add(Archetype.Cavalry);
-                        break;
-                    case "camel":
-                        archetypes.Add(Archetype.Camel);
-                        break;
-                    case "elephant":
-                        archetypes.Add(Archetype.Elephant);
-                        break;
-                    case "cavalryarcher":
-                        archetypes.Add(Archetype.CavalryArcher);
-                        break;
-                    case "villager":
-                        archetypes.Add(Archetype.Villager);
-                        break;
-                    case "monk":
-                        archetypes.Add(Archetype.Monk);
-                        break;
-                    case "siege":
-                        archetypes.Add(Archetype.Siege);
-                        break;
-                    case "eagle":
-                        archetypes.Add(Archetype.Eagle);
-                        break;
-                    default:
-                        break;
-                }
-            return archetypes;
         }
     }
 }

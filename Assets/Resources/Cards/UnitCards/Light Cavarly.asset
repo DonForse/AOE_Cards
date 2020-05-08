@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Light Cavarly
   m_EditorClassIdentifier: 
   cardName: Light Cavalry
-  archetype: Cavalry|CounterUnit
+  archetypes: Cavalry|Counter Unit
   effect: +5 vs Archer
   effectPower: 5
   power: 10

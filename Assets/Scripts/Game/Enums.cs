@@ -27,6 +27,7 @@
     public enum MatchState
     {
         InitializeGame,
+        Reroll,
         StartRound,
         RoundUpgradeReveal,
         SelectUpgrade,

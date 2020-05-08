@@ -11,8 +11,9 @@ namespace Infrastructure.Services
 {
     public partial class PlayService : MonoBehaviour, IPlayService
     {
-        private string GetRoundUrl => Configuration.UrlBase + "/api/play?matchid={0}&roundNumber={1}";
+        private string GetRoundUrl => Configuration.UrlBase + "/api/round?matchid={0}&roundNumber={1}";
         private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}";
+        private string RerollUrl=> Configuration.UrlBase + "/api/reroll?matchid={0}";
 
         public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<long, string> onError)
         {
@@ -30,6 +31,12 @@ namespace Infrastructure.Services
         {
             string data = JsonUtility.ToJson(new CardPostDto { cardname = cardName, type = "unit" });
             StartCoroutine(PlayCard(data, onUnitCardFinished, onError));
+        }
+
+        public void RerollCards(List<string> unitCards, List<string> upgradeCards, Action<Hand> onRerollFinished, Action<long, string> onError)
+        {
+            string data = JsonUtility.ToJson(new RerollInfoDto { unitCards = unitCards, upgradeCards = upgradeCards });
+            StartCoroutine(RerollCards(data, onRerollFinished, onError));
         }
 
         private IEnumerator Get(string url, Action<Round> onStartMatchComplete, Action<long, string> onError)
@@ -117,10 +124,46 @@ namespace Infrastructure.Services
             }
         }
 
+        private IEnumerator RerollCards(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
+        {
+            ResponseInfo response;
+            var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
+
+            Debug.Log(playCardUrl);
+            using (var webRequest = UnityWebRequest.Post(playCardUrl, data))
+            {
+                byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
+                webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+                webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                webRequest.method = UnityWebRequest.kHttpVerbPOST;
+                webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
+                yield return webRequest.SendWebRequest();
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
+            }
+
+            if (response.isError)
+            {
+                onPostFailed(response.code, response.response);
+            }
+            else if (response.isComplete)
+            {
+                var dto = JsonUtility.FromJson<HandDto>(response.response);
+                onPostComplete(DtoToHand(dto));
+
+            }
+            else
+            {
+                yield return new WaitForSeconds(3f);
+                StartCoroutine(PlayCard(data, onPostComplete, onPostFailed));
+            }
+        }
+
         private Hand DtoToHand(HandDto dto)
         {
             return new Hand(dto.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).OrderBy(c => c.cardName.ToLower() == "villager" ? int.MaxValue : c.power).ToList(),
-                        dto.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).OrderBy(c => c.archetypes.FirstOrDefault()).ToList());
+                        dto.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
         }
     }
 }

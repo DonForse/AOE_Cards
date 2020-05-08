@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Siege Ram
   m_EditorClassIdentifier: 
   cardName: Siege Ram
-  archetype: Siege
+  archetypes: Siege
   effect: Always wins vs Archer
   effectPower: 0
   power: 0

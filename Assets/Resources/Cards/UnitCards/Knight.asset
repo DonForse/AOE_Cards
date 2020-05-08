@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: 
   cardName: Knight
-  archetype: Cavalry
+  archetypes: Cavalry
   effect: 
   effectPower: 0
   power: 13

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Arbalester
   m_EditorClassIdentifier: 
   cardName: Arbalester
-  archetype: Archer
+  archetypes: Archer
   effect: 
   effectPower: 0
   power: 18

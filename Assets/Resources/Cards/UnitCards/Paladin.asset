@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Paladin
   m_EditorClassIdentifier: 
   cardName: Paladin
-  archetype: Cavalry
+  archetypes: Cavalry
   effect: 
   effectPower: 0
   power: 24

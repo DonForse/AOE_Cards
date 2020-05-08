@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Villager
   m_EditorClassIdentifier: 
   cardName: Villager
-  archetype: Villager
+  archetypes: Villager
   effect: Can always be played
   effectPower: 0
   power: 1

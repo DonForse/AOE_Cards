@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Eagle Warrior
   m_EditorClassIdentifier: 
   cardName: Eagle Warrior
-  archetype: Infantry|Eagle
+  archetypes: Infantry|Eagle
   effect: 
   effectPower: 0
   power: 13

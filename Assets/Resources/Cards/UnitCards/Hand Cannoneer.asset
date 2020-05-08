@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hand Cannoneer
   m_EditorClassIdentifier: 
   cardName: Hand Cannoneer
-  archetype: Archer|Infantry
+  archetypes: Archer|Infantry
   effect: 
   effectPower: 0
   power: 18

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Monk
   m_EditorClassIdentifier: 
   cardName: Monk
-  archetype: Monk
+  archetypes: Monk
   effect: Always wins vs Cavarly
   effectPower: 0
   power: 0

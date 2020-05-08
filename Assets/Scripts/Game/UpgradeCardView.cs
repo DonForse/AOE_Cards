@@ -1,34 +1,20 @@
 ﻿using System;
-using System.Collections;
 using Common;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Game
 {
-    public class UpgradeCardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
+    public class UpgradeCardView : CardView
     {
-        public string CardName { get; private set; }
         public Sprite Image => artwork.sprite;
         public string Effect => effect.text;
         public int PowerEffect;
 
-        [SerializeField] private TextMeshProUGUI cardName;
         [SerializeField] private TextMeshProUGUI effect;
-        [SerializeField] private Image artwork;
-        [SerializeField] private Image background;
-        [SerializeField] private CardArchetypeView archetypeSection;
-        [SerializeField] private Animator animator;
-        [SerializeField] private GameObject cardback;
-        private static readonly int Hover = Animator.StringToHash("hover");
-        private static readonly int RevealCard = Animator.StringToHash("revealcard");
-
+      
         private bool dragging = false;
         private bool _draggable = false;
-
 
         public void Update()
         {
@@ -47,7 +33,8 @@ namespace Game
             artwork.sprite = card.artwork;
             artwork.preserveAspect = true;
             PowerEffect = card.powerEffect;
-        
+            SetBackgroundColor(card.GetArchetypes());
+
             if (draggable)
             {
                 var draggableComponent = GetComponent<Draggable>();
@@ -56,50 +43,12 @@ namespace Game
                     .WithDragAction(OnDrag)
                     .WithDropArea(dropAreaPlay);
             }
-        
-            archetypeSection.SetCard(card.archetypes);
+
+            archetypeSection.SetCard(card.GetArchetypes());
         }
         public Sprite GetArchetypeImage()
         {
             return archetypeSection.sprite;
-        }
-
-        public void ShowCardBack()
-        {
-            //animator.SetTrigger("backcard");
-            cardback.SetActive(true);
-        }
-
-        public void ShowFrontCard()
-        {
-            StartCoroutine(FlipAnimation(1f));
-            // cardback.SetActive(false);
-        }
-        private IEnumerator FlipAnimation(float duration)
-        {
-            float n = 0;  // lerped value
-            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
-            {
-                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 0, f / duration), transform.localScale.y, transform.localScale.z);
-                yield return null;
-            }
-            cardback.SetActive(false);
-            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
-            {
-                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
-                yield return null;
-            }
-        }
-
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            animator.SetTrigger("startglow");
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            animator.SetTrigger("stopglow");
         }
     }
 }
