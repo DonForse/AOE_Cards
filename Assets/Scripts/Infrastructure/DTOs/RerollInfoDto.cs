@@ -2,12 +2,9 @@
 
 namespace Infrastructure.Services
 {
-    public partial class PlayService
+    public class RerollInfoDto
     {
-        public class RerollInfoDto
-        {
-            public IList<string> upgradeCards;
-            public IList<string> unitCards;
-        }
+        public string[] upgradeCards;
+        public string[] unitCards;
     }
 }

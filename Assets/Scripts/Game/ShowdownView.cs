@@ -66,30 +66,29 @@ namespace Game
             RefreshView(container);
         }
         
-        internal void ShowRivalWaitUnit(GameObject go)
+        internal void ShowRivalWaitUnit()
         {
             if (_unitWait != null)
                 return;
-            var card = GameObject.Instantiate(go);
-            var unit = card.GetComponent<UnitCardView>();
-            unit.ShowCardBack();
+
+            var card = Instantiator.Instance.CreateUnitCardGO(null);
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
             card.transform.localScale = Vector3.one;
-            _unitWait = unit;
+            card.ShowCardBack();
+            _unitWait = card;
         }
 
-        internal void ShowRivalWaitUpgrade(GameObject go)
+        internal void ShowRivalWaitUpgrade()
         {
             if (_upgradeWait != null)
                 return;
-            var card = GameObject.Instantiate(go);
-            var upgrade = card.GetComponent<UpgradeCardView>();
-            upgrade.ShowCardBack();
+            var card = Instantiator.Instance.CreateUpgradeCardGO(null);
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
             card.transform.localScale = Vector3.one;
-            _upgradeWait = upgrade;
+            card.ShowCardBack(); 
+            _upgradeWait = card;
         }        
 
         private void ClearUnitWaitCard()
@@ -135,6 +134,11 @@ namespace Game
             result.AddRange(playerFieldContainer.GetComponentsInChildren<UnitCardView>());
             result.AddRange(rivalFieldContainer.GetComponentsInChildren<UnitCardView>());
             return result;
+        }
+
+        internal void SetGame(Round lastRound)
+        {
+            //throw new NotImplementedException();
         }
 
         internal void Clear()

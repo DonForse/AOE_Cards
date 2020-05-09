@@ -18,7 +18,7 @@ namespace Game
         private static readonly int Startglow = Animator.StringToHash("startglow");
         private static readonly int Stopglow = Animator.StringToHash("stopglow");
 
-        public void SetCard(UnitCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable, Action<bool> OnDrag)
+        public void SetCard(UnitCardData card)
         {
             this.name = card.cardName;
             CardName = card.cardName;
@@ -30,16 +30,6 @@ namespace Game
             artwork.preserveAspect = true;
             
             SetBackgroundColor(card.GetArchetypes());
-
-            if (draggable)
-            {
-                var draggableComponent = GetComponent<Draggable>();
-                draggableComponent
-                    .WithCallback(onPlayCallback)
-                    .WithDragAction(OnDrag)
-                    .WithDropArea(dropAreaPlay);
-            }
-
             archetypeSection.SetCard(card.GetArchetypes());
         }
 

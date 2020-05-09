@@ -1103,6 +1103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7660645200975920527}
   - component: {fileID: -4135660628681113253}
+  - component: {fileID: 6384927224114251971}
   - component: {fileID: 8932986118642382426}
   - component: {fileID: 4774816617454995768}
   - component: {fileID: 3348933316007151685}
@@ -1160,6 +1161,18 @@ MonoBehaviour:
   cardBackground: {fileID: 7660645199876642897}
   effect: {fileID: 7660645199542104631}
   power: {fileID: 7660645199969866362}
+--- !u!114 &6384927224114251971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660645200975920526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b7cb0c563d76c74d8e9c62ebbac0b1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8932986118642382426
 MonoBehaviour:
   m_ObjectHideFlags: 0

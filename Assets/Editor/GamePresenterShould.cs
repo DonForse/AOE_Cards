@@ -35,14 +35,13 @@ namespace Editor
         [Test]
         public void GiveUnitCardsToPlayerOnGameSetup()
         {
-            WhenGetPlayerHand();
+         //   WhenGetPlayerHand();
             ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand);
         }
 
         [Test]
         public void GiveUpgradeCardsToPlayerOnGameSetup()
         {
-            WhenGetPlayerHand();
             ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand);
         }
 
@@ -57,7 +56,6 @@ namespace Editor
         public void RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed()
         {
             WhenUpgradeCardIsPlayed();
-            WhenGetPlayerHand();
             ThenUpgradeCardIsRemovedFromHand();
         }
 
@@ -72,7 +70,6 @@ namespace Editor
         public void RemoveUnitCardFromHandWhenUnitCardIsPlayed()
         {
             WhenUnitCardIsPlayed();
-            WhenGetPlayerHand();
             ThenUnitCardIsRemovedFromHand();
         }
 
@@ -148,10 +145,6 @@ namespace Editor
             _presenter.PlayUpgradeCard(null);
         }
 
-        private void WhenGetPlayerHand()
-        {
-            _cardsInHand = _presenter.GetHand();
-        }
 
         private void WhenGameSetup()
         {

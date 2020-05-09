@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Infrastructure.Services;
+using UnityEngine;
 
 namespace Game
 {
@@ -42,6 +44,20 @@ namespace Game
                 Destroy(upgradeIcon.gameObject);
             foreach (var upgradeIcon in roundCardContainer.GetComponentsInChildren<UpgradeIconView>())
                 Destroy(upgradeIcon.gameObject);
+        }
+
+        internal void SetGame(Match match)
+        {
+            foreach (var round in match.Board.Rounds) {
+                foreach (var cardPlayed in round.CardsPlayed) {
+                    if (cardPlayed.UpgradeCardData == null)
+                        continue;
+                    //CreateCard(cardPlayed.UpgradeCardData);
+              //      SetUpgrade(cardPlayed.UpgradeCardData, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
+                }
+            }
+            //SetRoundUpgradeCard();
+
         }
     }
 }

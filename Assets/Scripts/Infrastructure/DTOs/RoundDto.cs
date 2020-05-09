@@ -12,5 +12,6 @@ namespace Infrastructure.Services
         public string[] winnerplayer;
         public string upgradecardround;
         public bool rivalready;
+        public RoundState roundState;
     }
 }

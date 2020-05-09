@@ -74,14 +74,14 @@ namespace Game
             btnToggleImage.sprite = imgUnitIcon;
         }
 
-        internal IList<GameObject> GetUnitCards()
+        internal IList<UnitCardView> GetUnitCards()
         {
-            return unitCardsContainer.GetComponentsInChildren<UnitCardView>().Select(t => t.gameObject).ToList();
+            return unitCardsContainer.GetComponentsInChildren<UnitCardView>().ToList();
         }
 
-        internal IList<GameObject> GetUpgradeCards()
+        internal IList<UpgradeCardView> GetUpgradeCards()
         {
-            return upgradeCardsContainer.GetComponentsInChildren<UpgradeCardView>().Select(t => t.gameObject).ToList();
+            return upgradeCardsContainer.GetComponentsInChildren<UpgradeCardView>().ToList();
         }
 
         internal void Clear()

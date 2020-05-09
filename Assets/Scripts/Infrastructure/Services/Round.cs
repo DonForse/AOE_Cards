@@ -10,6 +10,6 @@ namespace Infrastructure.Services
         public UpgradeCardData UpgradeCardRound;
         public bool Finished;
         public bool RivalReady;
-        public bool HasReroll;
+        public RoundState RoundState;
     }
 }

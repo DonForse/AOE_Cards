@@ -54,6 +54,12 @@ namespace Game
         public void ShowState(MatchState state) {
             switch (state)
             {
+                case MatchState.Reroll:
+                    textPhase.text = "Rerolling Cards";
+                    break;
+                //case MatchState.RerollWait:
+                  //  textPhase.text = "Wait for all opponents to reroll";
+                   // break;
                 case MatchState.SelectUpgrade:
                     textPhase.text = "Select Upgrade";
                     break;

@@ -24,8 +24,10 @@ namespace Game
             transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         }
 
-        public void SetCard(UpgradeCardData card, Action<Draggable> onPlayCallback, RectTransform dropAreaPlay, bool draggable, Action<bool> OnDrag)
+        public void SetCard(UpgradeCardData card)
         {
+            if (card == null)
+                return;
             this.name = card.cardName;
             CardName = card.cardName;
             cardName.text = card.cardName;
@@ -34,15 +36,6 @@ namespace Game
             artwork.preserveAspect = true;
             PowerEffect = card.powerEffect;
             SetBackgroundColor(card.GetArchetypes());
-
-            if (draggable)
-            {
-                var draggableComponent = GetComponent<Draggable>();
-                draggableComponent
-                    .WithCallback(onPlayCallback)
-                    .WithDragAction(OnDrag)
-                    .WithDropArea(dropAreaPlay);
-            }
 
             archetypeSection.SetCard(card.GetArchetypes());
         }

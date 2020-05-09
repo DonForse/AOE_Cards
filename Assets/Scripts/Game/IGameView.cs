@@ -4,10 +4,15 @@ namespace Game
 {
     public interface IGameView
     {
-        void ShowError(string message);
+        void InitializeGame(Match match);
+
         void UpgradeCardSentPlay();
         void UnitCardSentPlay(Hand hand);
         void OnGetRoundInfo(Round round);
-        void InitializeGame(Match match);
+        
+        void OnRerollComplete(Hand hand);
+
+
+        void ShowError(string message);
     }
 }

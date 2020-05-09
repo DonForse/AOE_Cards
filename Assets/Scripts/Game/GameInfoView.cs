@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Services;
 using TMPro;
@@ -24,9 +25,22 @@ namespace Game
 
         public void SetGame(Match match)
         {
+            Clear();
             SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
             SetPlayerName(match.Users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
             SetRoundNumber(match.Board.Rounds.Count());
+            SetRoundWinners(match.Board.Rounds);
+        }
+
+        private void SetRoundWinners(List<Round> rounds)
+        {
+            foreach (var round in rounds)
+            {
+                if (round.RoundState == RoundState.Finished || round.RoundState == RoundState.GameFinished)
+                {
+                    WinRound(round.WinnerPlayers);
+                }
+            }
         }
 
         public void SetPlayerName(string name, PlayerType playerType)

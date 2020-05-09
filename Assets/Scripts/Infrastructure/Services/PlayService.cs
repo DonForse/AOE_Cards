@@ -33,9 +33,9 @@ namespace Infrastructure.Services
             StartCoroutine(PlayCard(data, onUnitCardFinished, onError));
         }
 
-        public void RerollCards(List<string> unitCards, List<string> upgradeCards, Action<Hand> onRerollFinished, Action<long, string> onError)
+        public void RerollCards(IList<string> unitCards, IList<string> upgradeCards, Action<Hand> onRerollFinished, Action<long, string> onError)
         {
-            string data = JsonUtility.ToJson(new RerollInfoDto { unitCards = unitCards, upgradeCards = upgradeCards });
+            string data = JsonUtility.ToJson(new RerollInfoDto { unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray() });
             StartCoroutine(RerollCards(data, onRerollFinished, onError));
         }
 
@@ -84,7 +84,8 @@ namespace Infrastructure.Services
                         UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard),
                         UnitCardPower = cp.unitcardpower,
                     }).ToList(),
-                RivalReady = dto.rivalready
+                RivalReady = dto.rivalready,
+                RoundState = dto.roundState
             };
         }
 
@@ -127,10 +128,10 @@ namespace Infrastructure.Services
         private IEnumerator RerollCards(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
         {
             ResponseInfo response;
-            var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
+            var rerollUrl = string.Format(RerollUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
 
-            Debug.Log(playCardUrl);
-            using (var webRequest = UnityWebRequest.Post(playCardUrl, data))
+            Debug.Log(rerollUrl);
+            using (var webRequest = UnityWebRequest.Post(rerollUrl, data))
             {
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);

@@ -1,12 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Infrastructure.Services;
 using UnityEngine;
 
 namespace Game
 {
-    public class GamePresenter
+    public class GamePresenter : IGamePresenter
     {
-        private Match _match;
         private int currentRound;
         private readonly IGameView _view;
         private readonly IPlayService _playService;
@@ -19,18 +20,11 @@ namespace Game
             _tokenService = tokenService;
         }
 
-        public Hand GetHand()
-        {
-            return _match.Hand;
-        }
-
         public void GameSetup(Match match)
         {
-            _match = match;
-            currentRound = _match.Board.Rounds.Count() -1;
+            currentRound = match.Board.Rounds.Count() -1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
-
-            _view.InitializeGame(_match);
+            _view.InitializeGame(match);
         }
 
         public void StartNewRound()
@@ -41,14 +35,12 @@ namespace Game
 
         public void PlayUpgradeCard(string cardName)
         {
-            var card = _match.Hand.TakeUpgradeCard(cardName);
-            _playService.PlayUpgradeCard(card.cardName, OnUpgradeCardPostComplete, OnError);
+            _playService.PlayUpgradeCard(cardName, OnUpgradeCardPostComplete, OnError);
         }
 
         public void PlayUnitCard(string cardName)
         {
-            var card = _match.Hand.TakeUnitCard(cardName);
-            _playService.PlayUnitCard(card.cardName, OnUnitCardPostComplete, OnError);
+            _playService.PlayUnitCard(cardName, OnUnitCardPostComplete, OnError);
         }
 
         public void GetRound()
@@ -56,13 +48,17 @@ namespace Game
             _playService.GetRound(currentRound, OnGetRoundComplete, OnError);
         }
 
+        public void SendReroll(IList<string> upgradeCards, IList<string> unitCards) {
+            _playService.RerollCards(unitCards, upgradeCards, OnRerollComplete, OnError);
+        }
+
+        private void OnRerollComplete(Hand hand)
+        {
+            _view.OnRerollComplete(hand);
+        }
+
         private void OnGetRoundComplete(Round round)
         {
-            if (round.WinnerPlayers.Count > 0)
-            {
-                if (!_match.Board.Rounds.Any(r => r.RoundNumber == round.RoundNumber))
-                    _match.Board.Rounds.Add(round);
-            }
             _view.OnGetRoundInfo(round);
         }
 
@@ -91,19 +87,12 @@ namespace Game
 
         private void OnUnitCardPostComplete(Hand hand)
         {
-            _match.Hand = hand; 
             _view.UnitCardSentPlay(hand);
         }
 
         private void OnUpgradeCardPostComplete(Hand hand)
         {
-            _match.Hand = hand;
             _view.UpgradeCardSentPlay();
-        }
-
-        internal bool IsMatchOver()
-        {
-            return _match.Board.Rounds.SelectMany(r => r.WinnerPlayers).GroupBy(wp=>wp).Any(group=>group.Count() >= 4);
         }
     }
 }
