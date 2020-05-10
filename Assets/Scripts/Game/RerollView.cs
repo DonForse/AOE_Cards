@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class RerollView : MonoBehaviour
 {
     [SerializeField] private Button continueButton;
-    [SerializeField] private GameObject gridContainer;
+    [SerializeField] private GridLayoutGroup gridContainer;
 
     private List<CardView> selectedUnitCards;
     private List<CardView> selectedUpgradeCards;
@@ -75,27 +75,35 @@ public class RerollView : MonoBehaviour
                 .WithUnselectAction(selectComponent => { OnUnitCardUnSelect(selectComponent); });
             selectable.enabled = true;
         }
+        gridContainer.constraintCount = gridContainer.transform.childCount;
     }
 
-    private void OnUnitCardUnSelect(CardSelectable card)
-    {
-        selectedUnitCards.Remove(card.GetComponent<UnitCardView>());
-    }
 
     private void OnUnitCardSelect(CardSelectable card)
     {
+        var unit = card.GetComponent<UnitCardView>();
+        unit.SetSelected();
         selectedUnitCards.Add(card.GetComponent<UnitCardView>());
     }
-
-
-    private void OnUpgradeCardUnSelect(CardSelectable card)
+    private void OnUnitCardUnSelect(CardSelectable card)
     {
-        selectedUpgradeCards.Remove(card.GetComponent<UpgradeCardView>());
+        var unit = card.GetComponent<UnitCardView>();
+        unit.SetUnSelected();
+        selectedUnitCards.Remove(unit);
     }
 
     private void OnUpgradeCardSelect(CardSelectable card)
     {
+        var upgrade = card.GetComponent<UpgradeCardView>();
+        upgrade.SetSelected();
         selectedUpgradeCards.Add(card.GetComponent<UpgradeCardView>());
+    }
+
+    private void OnUpgradeCardUnSelect(CardSelectable card)
+    {
+        var upgrade = card.GetComponent<UpgradeCardView>();
+        upgrade.SetUnSelected();
+        selectedUpgradeCards.Remove(card.GetComponent<UpgradeCardView>());
     }
 
     public void SendReroll()

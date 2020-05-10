@@ -20,13 +20,15 @@ namespace Game
         [SerializeField] internal GameObject cardBackground;
 
         private readonly int Startglow = Animator.StringToHash("startglow");
+        
         private readonly int Stopglow = Animator.StringToHash("stopglow");
+        private readonly int Selected = Animator.StringToHash("selected");
 
         internal virtual void SetBackgroundColor(IList<Archetype> archetypes)
         {
             for (int i = 0; i < archetypes.Count; i++) {
                 var go = new GameObject("background");
-                go = Instantiate<GameObject>(go);
+                //go = Instantiate<GameObject>(go);
                 var rt = go.AddComponent<RectTransform>();
                 go.transform.SetParent(cardBackground.transform);
 
@@ -82,6 +84,16 @@ namespace Game
         public virtual void ShowFrontCard()
         {
             StartCoroutine(FlipAnimation(1f));
+        }
+
+        public virtual void SetSelected()
+        {
+            animator.SetBool(Selected, true);
+        }
+
+        public virtual void SetUnSelected()
+        {
+            animator.SetBool(Selected,false);
         }
 
         private IEnumerator FlipAnimation(float duration)

@@ -24,11 +24,19 @@ public class ArcLayout : LayoutGroup
         var halfAngle = angle / 2;
         var angleDif = angle / (rectChildren.Count - 1);
         var halfChilds = (rectChildren.Count - 1) / 2f;
-
-        for (int i = 0; i < rectChildren.Count; i++)
+        if (rectChildren.Count == 1)
         {
-            rectChildren[i].position = new Vector3( ((halfChilds - i) * spreadWidth) + pivot.x , this.rectTransform.position.y, this.rectTransform.position.z);
-            rectChildren[i].eulerAngles = new Vector3(this.transform.rotation.x, this.transform.rotation.y, -halfAngle + (angleDif * i));
+            rectChildren[0].position = new Vector3(pivot.x, this.rectTransform.position.y, this.rectTransform.position.z);
+            rectChildren[0].eulerAngles = new Vector3(0f, 0f, 0f);
+        }
+        else
+        {
+            for (int i = 0; i < rectChildren.Count; i++)
+            {
+                rectChildren[i].position = new Vector3(((halfChilds - i) * spreadWidth) + pivot.x, this.rectTransform.position.y, this.rectTransform.position.z);
+                rectChildren[i].eulerAngles = new Vector3(0f, 0f, -halfAngle + (angleDif * i));
+
+            }
         }
     }
 
