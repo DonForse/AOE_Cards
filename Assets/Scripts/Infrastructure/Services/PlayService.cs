@@ -85,7 +85,8 @@ namespace Infrastructure.Services
                         UnitCardPower = cp.unitcardpower,
                     }).ToList(),
                 RivalReady = dto.rivalready,
-                RoundState = dto.roundState
+                RoundState = dto.roundState,
+                HasReroll = dto.hasReroll
             };
         }
 

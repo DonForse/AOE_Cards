@@ -20,6 +20,8 @@ namespace Game
 
         public void SetCard(UnitCardData card)
         {
+            if (card == null)
+                return;
             this.name = card.cardName;
             CardName = card.cardName;
             cardName.text = card.cardName;

@@ -19,7 +19,7 @@ namespace Game
         private float currentTime;
 
         private Action timerCompleteCallback;
-        private bool doingCountdown  =false;
+        private bool doingCountdown = false;
 
         // Update is called once per frame
         void Update()
@@ -31,7 +31,7 @@ namespace Game
 
             if (currentTime <= lowtimer)
                 textTimer.color = Color.red;
-        
+
             if (currentTime >= 0)
                 return;
 
@@ -41,25 +41,28 @@ namespace Game
             timerCompleteCallback();
         }
 
-        public TimerView WithTimerCompleteCallback(Action timerComplete) {
+        public TimerView WithTimerCompleteCallback(Action timerComplete)
+        {
             timerCompleteCallback = timerComplete;
             return this;
         }
-        public TimerView WithTimer(float timerCount, float lowTime) {
+        public TimerView WithTimer(float timerCount, float lowTime)
+        {
             timer = timerCount;
             lowtimer = lowTime;
             currentTime = timer;
             return this;
         }
-        public void ShowState(MatchState state) {
+        public void ShowState(MatchState state)
+        {
             switch (state)
             {
                 case MatchState.Reroll:
                     textPhase.text = "Rerolling Cards";
                     break;
-                //case MatchState.RerollWait:
-                  //  textPhase.text = "Wait for all opponents to reroll";
-                   // break;
+                case MatchState.WaitReroll:
+                    textPhase.text = "Wait Opponent";
+                    break;
                 case MatchState.SelectUpgrade:
                     textPhase.text = "Select Upgrade";
                     break;
@@ -86,12 +89,8 @@ namespace Game
             textTimer.color = defaultColor;
         }
 
-        internal object WithTimer(object turnTimer)
+        public void StopTimer()
         {
-            throw new NotImplementedException();
-        }
-
-        public void StopTimer() {
             textTimer.text = "-";
             doingCountdown = false;
         }
@@ -100,7 +99,7 @@ namespace Game
             currentTime = timer;
             textTimer.color = defaultColor;
             doingCountdown = true;
-        
+
         }
     }
 }

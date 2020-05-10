@@ -13,5 +13,6 @@ namespace Infrastructure.Services
         public string upgradecardround;
         public bool rivalready;
         public RoundState roundState;
+        public bool hasReroll;
     }
 }

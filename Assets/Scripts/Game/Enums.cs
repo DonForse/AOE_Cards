@@ -28,6 +28,7 @@
     {
         InitializeGame,
         Reroll,
+        WaitReroll,
         StartRound,
         RoundUpgradeReveal,
         SelectUpgrade,

@@ -16,8 +16,8 @@ public class RerollView : MonoBehaviour
 
     private void OnEnable()
     {
-        Clear();
         continueButton.onClick.AddListener(SendReroll);
+        ViewsHelper.RefreshView(this.gridContainer.GetComponent<RectTransform>());
     }
 
     private void OnDisable()
@@ -34,6 +34,9 @@ public class RerollView : MonoBehaviour
     }
 
     public void Clear() {
+        foreach (Transform card in gridContainer.transform) {
+            Destroy(card.gameObject);
+        }
         selectedUnitCards = new List<CardView>();
         selectedUpgradeCards = new List<CardView>();
     }
@@ -45,6 +48,7 @@ public class RerollView : MonoBehaviour
             card.transform.SetParent(gridContainer.transform);
             card.transform.localScale = Vector3.one;
             card.transform.position = gridContainer.transform.position;
+            card.transform.rotation = this.transform.rotation;
             card.GetComponent<Draggable>().enabled = false;
             var selectable = card.GetComponent<CardSelectable>();
 
@@ -58,9 +62,12 @@ public class RerollView : MonoBehaviour
     {
         foreach (var card in cards)
         {
+            if (card.CardName.ToLower() == "villager")
+                continue;
             card.transform.SetParent(gridContainer.transform);
             card.transform.localScale = Vector3.one;
             card.transform.position = gridContainer.transform.position;
+            card.transform.rotation = this.transform.rotation;
             card.GetComponent<Draggable>().enabled = false;
             var selectable = card.GetComponent<CardSelectable>();
 

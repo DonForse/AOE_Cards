@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Scout
   m_EditorClassIdentifier: 
   cardName: Scout
-  archetypes: Cavalry|Counter Unit
+  archetypes: Cavalry|CounterUnit
   effect: +4 vs Archer
   effectPower: 4
   power: 5

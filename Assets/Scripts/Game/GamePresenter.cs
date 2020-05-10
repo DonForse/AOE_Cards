@@ -12,6 +12,7 @@ namespace Game
         private readonly IGameView _view;
         private readonly IPlayService _playService;
         private readonly ITokenService _tokenService;
+        private Hand _hand;
 
         public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService)
         {
@@ -25,6 +26,7 @@ namespace Game
             currentRound = match.Board.Rounds.Count() -1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
             _view.InitializeGame(match);
+            _hand = match.Hand;
         }
 
         public void StartNewRound()
@@ -50,11 +52,6 @@ namespace Game
 
         public void SendReroll(IList<string> upgradeCards, IList<string> unitCards) {
             _playService.RerollCards(unitCards, upgradeCards, OnRerollComplete, OnError);
-        }
-
-        private void OnRerollComplete(Hand hand)
-        {
-            _view.OnRerollComplete(hand);
         }
 
         private void OnGetRoundComplete(Round round)
@@ -85,13 +82,26 @@ namespace Game
             PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
         }
 
+        internal Hand GetHand()
+        {
+            return _hand;
+        }
+
+        private void OnRerollComplete(Hand hand)
+        {
+            _hand = hand;
+            _view.OnRerollComplete(hand);
+        }
+
         private void OnUnitCardPostComplete(Hand hand)
         {
+            _hand = hand;
             _view.UnitCardSentPlay(hand);
         }
 
         private void OnUpgradeCardPostComplete(Hand hand)
         {
+            _hand = hand;
             _view.UpgradeCardSentPlay();
         }
     }

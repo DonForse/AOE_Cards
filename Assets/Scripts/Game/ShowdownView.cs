@@ -19,7 +19,8 @@ namespace Game
         internal void PlayUpgradeCard(UpgradeCardView card, PlayerType playerType)
         {
             GameObject container;
-            if (playerType == PlayerType.Player) {
+            if (playerType == PlayerType.Player)
+            {
                 container = playerFieldContainer;
             }
             else
@@ -65,7 +66,7 @@ namespace Game
 
             RefreshView(container);
         }
-        
+
         internal void ShowRivalWaitUnit()
         {
             if (_unitWait != null)
@@ -87,9 +88,9 @@ namespace Game
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
             card.transform.localScale = Vector3.one;
-            card.ShowCardBack(); 
+            card.ShowCardBack();
             _upgradeWait = card;
-        }        
+        }
 
         private void ClearUnitWaitCard()
         {
@@ -108,7 +109,8 @@ namespace Game
         internal void MoveCards(UpgradesView upgradesView)
         {
             var upgrades = playerFieldContainer.GetComponentsInChildren<UpgradeCardView>();
-            foreach (var upgrade in upgrades) {
+            foreach (var upgrade in upgrades)
+            {
                 upgradesView.SetUpgrade(upgrade.gameObject, PlayerType.Player);
             }
 
@@ -118,7 +120,8 @@ namespace Game
                 upgradesView.SetUpgrade(upgrade.gameObject, PlayerType.Rival);
             }
             var units = playerFieldContainer.GetComponentsInChildren<UnitCardView>();
-            foreach (var unit in units) {
+            foreach (var unit in units)
+            {
                 GameObject.Destroy(unit.gameObject);
             }
             var rivalUnits = rivalFieldContainer.GetComponentsInChildren<UnitCardView>();
@@ -138,7 +141,19 @@ namespace Game
 
         internal void SetGame(Round lastRound)
         {
-            //throw new NotImplementedException();
+            foreach (var cardPlayed in lastRound.CardsPlayed)
+            {
+                if (cardPlayed.UpgradeCardData != null)
+                {
+                    var upgrade = Instantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
+                    PlayUpgradeCard(upgrade, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
+                }
+                if (cardPlayed.UnitCardData != null)
+                {
+                    var unit = Instantiator.Instance.CreateUnitCardGO(cardPlayed.UnitCardData);
+                    PlayUnitCard(unit, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
+                }
+            }
         }
 
         internal void Clear()
@@ -165,7 +180,8 @@ namespace Game
 
         internal IEnumerator RevealCards(Action onFinish)
         {
-            if (_upgradeWait != null) { 
+            if (_upgradeWait != null)
+            {
                 _upgradeWait.ShowFrontCard();
                 _upgradeWait = null;
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Infrastructure.Services;
 using UnityEngine;
 
@@ -48,15 +49,18 @@ namespace Game
 
         internal void SetGame(Match match)
         {
-            foreach (var round in match.Board.Rounds) {
+            var rounds = match.Board.Rounds.Take(match.Board.Rounds.Count - 1);
+            foreach (var round in rounds) {
                 foreach (var cardPlayed in round.CardsPlayed) {
                     if (cardPlayed.UpgradeCardData == null)
                         continue;
-                    //CreateCard(cardPlayed.UpgradeCardData);
-              //      SetUpgrade(cardPlayed.UpgradeCardData, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
+                    var upgrade = Instantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
+                    SetUpgrade(upgrade.gameObject, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
             }
-            //SetRoundUpgradeCard();
+            var lastRound = match.Board.Rounds.Last();
+            var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
+            SetRoundUpgradeCard(upgradeRound.gameObject);
 
         }
     }

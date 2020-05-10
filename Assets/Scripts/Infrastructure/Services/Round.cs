@@ -11,5 +11,6 @@ namespace Infrastructure.Services
         public bool Finished;
         public bool RivalReady;
         public RoundState RoundState;
+        public bool HasReroll;
     }
 }
