@@ -33,7 +33,6 @@ namespace Game
         public void StartNewRound()
         {
             currentRound++;
-            GetRound();
         }
 
 

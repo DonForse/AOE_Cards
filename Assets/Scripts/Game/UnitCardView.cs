@@ -37,7 +37,7 @@ namespace Game
             archetypeSection.SetCard(card.GetArchetypes());
         }
 
-        public void IncreasePowerAnimation(UpgradesView upgrades, int newPower, float animationDuration)
+        public void IncreasePowerAnimation(int newPower, float animationDuration)
         {
             animator.SetTrigger(PoweringUp);
             StartCoroutine(IncreasePowerInTime(newPower, animationDuration));

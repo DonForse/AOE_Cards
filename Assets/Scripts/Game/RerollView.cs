@@ -13,7 +13,9 @@ public class RerollView : MonoBehaviour
     [SerializeField] private GridLayoutGroup gridContainer;
 
     private List<CardView> selectedCards = new List<CardView>();
-
+    private Action<List<string>, List<string>> _rerollAction;
+    
+    
     private void OnEnable()
     {
         continueButton.onClick.AddListener(SendReroll);
@@ -26,10 +28,9 @@ public class RerollView : MonoBehaviour
         Clear();
     }
 
-    private GamePresenter _presenter;
-
-    public RerollView WithGamePresenter(GamePresenter presenter) {
-        _presenter = presenter;
+    public RerollView WithRerollAction(Action<List<string>, List<string>> reroll)
+    {
+        _rerollAction = reroll;
         return this;
     }
 
@@ -60,7 +61,7 @@ public class RerollView : MonoBehaviour
         var units= selectedCards.Where(c => c.CardType == CardType.Unit);
         var upgrades= selectedCards.Where(c => c.CardType == CardType.Upgrade);
 
-        _presenter.SendReroll(upgrades.Select(c=>c.CardName).ToList(), units.Select(c=>c.CardName).ToList());
+        _rerollAction?.Invoke(upgrades.Select(c => c.CardName).ToList(), units.Select(c => c.CardName).ToList());
     }
 
     internal IEnumerator SwapCards(IEnumerable<CardView> newCards)

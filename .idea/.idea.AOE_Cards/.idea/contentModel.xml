@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_AOE_Cards.-111838671.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.3/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.3/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_AOE_Cards.-111838671.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="AOE_Cards.sln" t="IncludeFlat" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
@@ -16,6 +16,7 @@
           <e p="Common" t="Include">
             <e p="Utilities" t="Include">
               <e p="ArcLayout.cs" t="Include" />
+              <e p="CardSelectable.cs" t="Include" />
               <e p="Draggable.cs" t="Include" />
             </e>
             <e p="ViewsHelper.cs" t="Include" />
@@ -36,7 +37,9 @@
             <e p="Hand.cs" t="Include" />
             <e p="HandView.cs" t="Include" />
             <e p="ICardView.cs" t="Include" />
+            <e p="IGamePresenter.cs" t="Include" />
             <e p="IGameView.cs" t="Include" />
+            <e p="Instantiator.cs" t="Include" />
             <e p="RerollView.cs" t="Include" />
             <e p="ShowdownView.cs" t="Include" />
             <e p="TimerView.cs" t="Include" />
@@ -76,8 +79,10 @@
               <e p="MatchService.cs" t="Include" />
               <e p="PlayerCard.cs" t="Include" />
               <e p="PlayService.cs" t="Include" />
+              <e p="ResponseDto.cs" t="Include" />
               <e p="ResponseInfo.cs" t="Include" />
               <e p="Round.cs" t="Include" />
+              <e p="RoundState.cs" t="Include" />
               <e p="TokenService.cs" t="Include" />
               <e p="UserResponseDto.cs" t="Include" />
             </e>

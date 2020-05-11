@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using Infrastructure.Services;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Game
         [SerializeField] private GameObject rivalUpgradesContainer;
         [SerializeField] private GameObject roundCardContainer;
 
-        internal void SetRoundUpgradeCard(GameObject go)
+        internal IEnumerator SetRoundUpgradeCard(GameObject go, Action callback)
         {
             foreach (Transform child in roundCardContainer.transform)
             { 
@@ -24,6 +25,9 @@ namespace Game
             iconView.SetUpgrade(upgradeView);
             go.SetActive(false);
             go.transform.SetParent(icon.transform);
+            yield return new WaitForSeconds(1f);
+
+            callback();
         }
         
         internal void SetUpgrade(GameObject go, PlayerType playerType)
@@ -60,8 +64,7 @@ namespace Game
             }
             var lastRound = match.Board.Rounds.Last();
             var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
-            SetRoundUpgradeCard(upgradeRound.gameObject);
-
+            StartCoroutine(SetRoundUpgradeCard(upgradeRound.gameObject, () => { }));
         }
     }
 }

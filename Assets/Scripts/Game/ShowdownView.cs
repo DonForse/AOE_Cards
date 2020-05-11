@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,7 +68,7 @@ namespace Game
             RefreshView(container);
         }
 
-        internal void ShowRivalWaitUnit()
+        public void ShowRivalWaitUnit()
         {
             if (_unitWait != null)
                 return;
@@ -80,7 +81,7 @@ namespace Game
             _unitWait = card;
         }
 
-        internal void ShowRivalWaitUpgrade()
+        public void ShowRivalWaitUpgrade()
         {
             if (_upgradeWait != null)
                 return;
@@ -139,7 +140,7 @@ namespace Game
             return result;
         }
 
-        internal void SetGame(Round lastRound)
+        internal void SetRound(Round lastRound)
         {
             foreach (var cardPlayed in lastRound.CardsPlayed)
             {
@@ -148,10 +149,20 @@ namespace Game
                     var upgrade = Instantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
                     PlayUpgradeCard(upgrade, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
+                else
+                {
+                    if (lastRound.RivalReady)
+                        ShowRivalWaitUpgrade();
+                }
+
                 if (cardPlayed.UnitCardData != null)
                 {
                     var unit = Instantiator.Instance.CreateUnitCardGO(cardPlayed.UnitCardData);
                     PlayUnitCard(unit, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
+                }
+                else
+                {  if (lastRound.RivalReady)
+                    ShowRivalWaitUnit();
                 }
             }
         }
@@ -192,6 +203,22 @@ namespace Game
             }
             yield return new WaitForSeconds(1f);
             onFinish();
+        }
+
+        public IEnumerator UnitShowdown(Round round, Action callbackComplete)
+        {
+            yield return RevealCards(() =>
+            {
+                foreach (var cardView in GetUnitsCardsPlayed())
+                {
+                    var card = round.CardsPlayed.FirstOrDefault(c => c.UnitCardData.cardName == cardView.CardName);
+                    if (card == null)
+                        continue;
+                    cardView.IncreasePowerAnimation(card.UnitCardPower, 1f);
+                }
+            });
+            yield return new WaitForSeconds(2f);
+            callbackComplete?.Invoke();
         }
     }
 }
