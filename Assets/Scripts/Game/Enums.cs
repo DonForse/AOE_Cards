@@ -5,6 +5,10 @@
         Player,Rival
     }
 
+    public enum CardType {
+        Unit,Upgrade
+    }
+
     public enum Archetype {
         Villager,
         Eagle,

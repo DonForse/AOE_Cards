@@ -1,8 +1,14 @@
-﻿namespace Game
+﻿using System.Collections;
+using UnityEngine;
+
+namespace Game
 {
     internal interface ICardView
     {
-        void ShowFrontCard();
+        string CardName { get; }
+        CardType CardType { get; }
+        IEnumerator MoveToPoint(Vector3 newPosition);
+        IEnumerator FlipCard(bool show);
         void ShowCardBack();
     }
 }

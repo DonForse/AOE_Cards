@@ -1,6 +1,7 @@
 ﻿using Common;
 using Game;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,8 +12,7 @@ public class RerollView : MonoBehaviour
     [SerializeField] private Button continueButton;
     [SerializeField] private GridLayoutGroup gridContainer;
 
-    private List<CardView> selectedUnitCards;
-    private List<CardView> selectedUpgradeCards;
+    private List<CardView> selectedCards = new List<CardView>();
 
     private void OnEnable()
     {
@@ -33,87 +33,81 @@ public class RerollView : MonoBehaviour
         return this;
     }
 
-    public void Clear() {
-        foreach (Transform card in gridContainer.transform) {
+    public void Clear()
+    {
+        foreach (var card in selectedCards)
+        {
             Destroy(card.gameObject);
         }
-        selectedUnitCards = new List<CardView>();
-        selectedUpgradeCards = new List<CardView>();
+        selectedCards = new List<CardView>();
     }
 
-    public void AddUpgradeCards(IList<UpgradeCardView> cards)
+    private void OnCardSelect(CardSelectable card)
     {
-        foreach (var card in cards)
-        {
-            card.transform.SetParent(gridContainer.transform);
-            card.transform.localScale = Vector3.one;
-            card.transform.position = gridContainer.transform.position;
-            card.transform.rotation = this.transform.rotation;
-            card.GetComponent<Draggable>().enabled = false;
-            var selectable = card.GetComponent<CardSelectable>();
-
-            selectable.WithSelectAction(selectComponent => { OnUpgradeCardSelect(selectComponent); })
-                .WithUnselectAction(selectComponent => { OnUpgradeCardUnSelect(selectComponent); });
-            selectable.enabled = true;
-        }
-    }
-
-    public void AddUnitCards(IList<UnitCardView> cards)
-    {
-        foreach (var card in cards)
-        {
-            if (card.CardName.ToLower() == "villager")
-                continue;
-            card.transform.SetParent(gridContainer.transform);
-            card.transform.localScale = Vector3.one;
-            card.transform.position = gridContainer.transform.position;
-            card.transform.rotation = this.transform.rotation;
-            card.GetComponent<Draggable>().enabled = false;
-            var selectable = card.GetComponent<CardSelectable>();
-
-            selectable.WithSelectAction(selectComponent=> { OnUnitCardSelect(selectComponent); })
-                .WithUnselectAction(selectComponent => { OnUnitCardUnSelect(selectComponent); });
-            selectable.enabled = true;
-        }
-        gridContainer.constraintCount = gridContainer.transform.childCount;
-    }
-
-
-    private void OnUnitCardSelect(CardSelectable card)
-    {
-        var unit = card.GetComponent<UnitCardView>();
+        var unit = card.GetComponent<CardView>();
         unit.SetSelected();
-        selectedUnitCards.Add(card.GetComponent<UnitCardView>());
+        selectedCards.Add(card.GetComponent<CardView>());
     }
-    private void OnUnitCardUnSelect(CardSelectable card)
+    private void OnCardUnselect(CardSelectable card)
     {
-        var unit = card.GetComponent<UnitCardView>();
+        var unit = card.GetComponent<CardView>();
         unit.SetUnSelected();
-        selectedUnitCards.Remove(unit);
-    }
-
-    private void OnUpgradeCardSelect(CardSelectable card)
-    {
-        var upgrade = card.GetComponent<UpgradeCardView>();
-        upgrade.SetSelected();
-        selectedUpgradeCards.Add(card.GetComponent<UpgradeCardView>());
-    }
-
-    private void OnUpgradeCardUnSelect(CardSelectable card)
-    {
-        var upgrade = card.GetComponent<UpgradeCardView>();
-        upgrade.SetUnSelected();
-        selectedUpgradeCards.Remove(card.GetComponent<UpgradeCardView>());
+        selectedCards.Remove(unit);
     }
 
     public void SendReroll()
     {
-        _presenter.SendReroll(selectedUpgradeCards.Select(c=>c.CardName).ToList(), selectedUnitCards.Select(c=>c.CardName).ToList());
+        var units= selectedCards.Where(c => c.CardType == CardType.Unit);
+        var upgrades= selectedCards.Where(c => c.CardType == CardType.Upgrade);
+
+        _presenter.SendReroll(upgrades.Select(c=>c.CardName).ToList(), units.Select(c=>c.CardName).ToList());
     }
 
-    internal void SwapCards(Hand hand, Action onComplete)
+    internal IEnumerator SwapCards(IEnumerable<CardView> newCards)
     {
-        //some cute little fucking effect
-        onComplete();
+        gridContainer.enabled = false;
+        foreach (var card in newCards)
+        {
+            card.transform.SetParent(gridContainer.transform);
+            card.transform.localScale = Vector3.one;
+            card.transform.position = Vector3.down * 1000f;
+            card.transform.rotation = this.transform.rotation;
+        }
+        
+        foreach (var card in selectedCards) {
+            StartCoroutine(card.FlipCard(false));
+        }
+        yield return new WaitForSeconds(1f);
+        gridContainer.enabled = false;
+        foreach (var card in selectedCards)
+        {
+            StartCoroutine(card.MoveToPoint(Vector3.down*1000f));
+        }
+        yield return new WaitForSeconds(2f);
+        foreach (var card in newCards)
+        {
+            StartCoroutine(card.MoveToPoint(Vector3.zero* 1000f));
+        }
+
+        gridContainer.enabled = true;
+        yield return new WaitForSeconds(2f);
+    }
+
+    internal void PutCards(IEnumerable<CardView> cards)
+    {
+        foreach (var card in cards.OrderBy(c=>c.CardType))
+        {
+            card.transform.SetParent(gridContainer.transform);
+            card.transform.localScale = Vector3.one;
+            card.transform.position = gridContainer.transform.position;
+            card.transform.rotation = this.transform.rotation;
+            card.GetComponent<Draggable>().enabled = false;
+            var selectable = card.GetComponent<CardSelectable>();
+
+            selectable.WithSelectAction(selectComponent => { OnCardSelect(selectComponent); })
+                .WithUnselectAction(selectComponent => { OnCardUnselect(selectComponent); });
+            selectable.enabled = true;
+        }
+        gridContainer.constraintCount = cards.Count(c => c.CardType == CardType.Unit);
     }
 }

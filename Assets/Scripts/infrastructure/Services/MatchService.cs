@@ -39,8 +39,9 @@ namespace Infrastructure.Services
                 onError(response.code, response.response);
             }
             else if (response.isComplete)
-            {                
-                var dto = JsonUtility.FromJson<MatchDto>(response.response);
+            {
+                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
+                var dto = JsonUtility.FromJson<MatchDto>(responseDto.response);
                 if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);
@@ -73,7 +74,8 @@ namespace Infrastructure.Services
             }
             else if (response.isComplete)
             {
-                var dto = JsonUtility.FromJson<MatchDto>(response.response);
+                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
+                var dto = JsonUtility.FromJson<MatchDto>(responseDto.response);
                 if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);

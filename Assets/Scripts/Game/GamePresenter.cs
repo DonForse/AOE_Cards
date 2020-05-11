@@ -24,9 +24,10 @@ namespace Game
         public void GameSetup(Match match)
         {
             currentRound = match.Board.Rounds.Count() -1;
+            _hand = match.Hand;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
             _view.InitializeGame(match);
-            _hand = match.Hand;
+            
         }
 
         public void StartNewRound()
@@ -35,13 +36,16 @@ namespace Game
             GetRound();
         }
 
+
         public void PlayUpgradeCard(string cardName)
         {
+            _hand.TakeUpgradeCard(cardName);
             _playService.PlayUpgradeCard(cardName, OnUpgradeCardPostComplete, OnError);
         }
 
         public void PlayUnitCard(string cardName)
         {
+            _hand.TakeUnitCard(cardName);
             _playService.PlayUnitCard(cardName, OnUnitCardPostComplete, OnError);
         }
 
@@ -96,7 +100,7 @@ namespace Game
         private void OnUnitCardPostComplete(Hand hand)
         {
             _hand = hand;
-            _view.UnitCardSentPlay(hand);
+            _view.UnitCardSentPlay();
         }
 
         private void OnUpgradeCardPostComplete(Hand hand)

@@ -11,12 +11,14 @@ namespace Game
         [SerializeField] private TextMeshProUGUI effect;
         [SerializeField] private TextMeshProUGUI power;
 
+
         private static readonly int PoweringUp = Animator.StringToHash("PoweringUp");
         private int basePower;
         private bool isPlayable = false;
         private static readonly int RevealCard = Animator.StringToHash("revealcard");
         private static readonly int Startglow = Animator.StringToHash("startglow");
         private static readonly int Stopglow = Animator.StringToHash("stopglow");
+        public override CardType CardType => CardType.Unit;
 
         public void SetCard(UnitCardData card)
         {
@@ -47,7 +49,7 @@ namespace Game
             for (float f = 0; f <= duration; f += Time.deltaTime)
             {
                 var updatePower = Mathf.Lerp(basePower, newPower, f / duration);
-                power.text = ((int)updatePower).ToString();
+                power.text = updatePower > 50 ? "∞" : (Mathf.CeilToInt(updatePower)).ToString();
                 yield return null;
             }
         }

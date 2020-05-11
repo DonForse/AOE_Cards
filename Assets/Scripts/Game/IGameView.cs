@@ -7,7 +7,7 @@ namespace Game
         void InitializeGame(Match match);
 
         void UpgradeCardSentPlay();
-        void UnitCardSentPlay(Hand hand);
+        void UnitCardSentPlay();
         void OnGetRoundInfo(Round round);
         
         void OnRerollComplete(Hand hand);

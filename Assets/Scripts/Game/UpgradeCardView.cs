@@ -10,6 +10,7 @@ namespace Game
         public Sprite Image => artwork.sprite;
         public string Effect => effect.text;
         public int PowerEffect;
+        public override CardType CardType => CardType.Upgrade;
 
         [SerializeField] private TextMeshProUGUI effect;
       

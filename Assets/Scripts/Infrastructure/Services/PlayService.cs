@@ -57,7 +57,8 @@ namespace Infrastructure.Services
             }
             else if (response.isComplete)
             {
-                var dto = JsonUtility.FromJson<RoundDto>(response.response);
+                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
+                var dto = JsonUtility.FromJson<RoundDto>(responseDto.response);
                 onStartMatchComplete(DtoToRound(dto));
                 //onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
             }
@@ -115,7 +116,8 @@ namespace Infrastructure.Services
             }
             else if (response.isComplete)
             {
-                var dto = JsonUtility.FromJson<HandDto>(response.response);
+                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
+                var dto = JsonUtility.FromJson<HandDto>(responseDto.response);
                 onPostComplete(DtoToHand(dto));
 
             }
@@ -151,7 +153,8 @@ namespace Infrastructure.Services
             }
             else if (response.isComplete)
             {
-                var dto = JsonUtility.FromJson<HandDto>(response.response);
+                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
+                var dto = JsonUtility.FromJson<HandDto>(responseDto.response);
                 onPostComplete(DtoToHand(dto));
 
             }

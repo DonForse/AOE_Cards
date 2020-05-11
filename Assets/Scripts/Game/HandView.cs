@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Common;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -94,6 +96,20 @@ namespace Game
             {
                 Destroy(card.gameObject);
             }
+        }
+
+        internal void PutCards(IList<CardView> cards)
+        {
+            foreach (var card in cards)
+            {
+                var container = card.CardType == CardType.Unit ? unitCardsContainer : upgradeCardsContainer;
+                card.transform.SetParent(container.transform);
+                card.transform.position = (container.transform.position);
+                card.transform.localScale = Vector3.one;
+                card.GetComponent<CardSelectable>().enabled = false;
+                card.GetComponent<Draggable>().enabled = true;
+            }
+            ViewsHelper.RefreshView(GetComponent<RectTransform>());
         }
     }
 }

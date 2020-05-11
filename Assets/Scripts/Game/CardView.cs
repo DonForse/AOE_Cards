@@ -9,6 +9,7 @@ namespace Game
 {
     public abstract class CardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
     {
+        public abstract CardType CardType { get; }
         public string CardName { get; internal set; }
 
         [SerializeField] internal TextMeshProUGUI cardName;
@@ -77,13 +78,30 @@ namespace Game
             }
         }
 
+        public virtual IEnumerator MoveToPoint(Vector3 newPosition) {
+            yield return StartCoroutine(MoveToPointAnimation(newPosition, 2f));
+        }
+
+        private IEnumerator MoveToPointAnimation(Vector3 newPosition, float duration)
+        {
+            float n = 0;
+            for (float f = 0; f <= duration; f += Time.deltaTime)
+            {
+                var x = Mathf.Lerp(transform.localPosition.x, newPosition.x, f / duration);
+                var y = Mathf.Lerp(transform.localPosition.y, newPosition.y, f / duration);
+                var z = Mathf.Lerp(transform.localPosition.z, newPosition.z, f / duration);
+                transform.localPosition = new Vector3(x,y,z);
+                yield return null;
+            }
+        }
+
         public virtual void ShowCardBack() {
             cardback.SetActive(true);
         }
 
-        public virtual void ShowFrontCard()
+        public virtual IEnumerator FlipCard(bool show)
         {
-            StartCoroutine(FlipAnimation(1f));
+            yield return StartCoroutine(FlipAnimation(1f, show));
         }
 
         public virtual void SetSelected()
@@ -96,7 +114,7 @@ namespace Game
             animator.SetBool(Selected,false);
         }
 
-        private IEnumerator FlipAnimation(float duration)
+        private IEnumerator FlipAnimation(float duration, bool activate)
         {
             float n = 0; 
             for (float f = 0; f <= duration / 2; f += Time.deltaTime)
@@ -104,7 +122,7 @@ namespace Game
                 transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 0, f / duration), transform.localScale.y, transform.localScale.z);
                 yield return null;
             }
-            cardback.SetActive(false);
+            cardback.SetActive(!activate);
             for (float f = 0; f <= duration / 2; f += Time.deltaTime)
             {
                 transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
