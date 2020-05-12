@@ -60,6 +60,11 @@ public class RerollView : MonoBehaviour
     public void SendReroll()
     {
         continueButton.interactable = false;
+        foreach (Transform card in gridContainer.transform)
+        {
+            card.GetComponent<CardSelectable>().enabled = false;
+        }
+
         var units= selectedCards.Where(c => c.CardType == CardType.Unit);
         var upgrades= selectedCards.Where(c => c.CardType == CardType.Upgrade);
 

@@ -36,7 +36,7 @@ namespace Game
             card.transform.position = (container.transform.position);
             card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
-            RefreshView(container);
+            ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
         }
 
         private void ClearUpgradeWaitCard()
@@ -65,7 +65,7 @@ namespace Game
             card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
 
-            RefreshView(container);
+            ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
         }
 
         public void ShowRivalWaitUnit()
@@ -98,13 +98,6 @@ namespace Game
             if (_unitWait != null)
                 Destroy(_unitWait.gameObject);
             _unitWait = null;
-        }
-
-        private static void RefreshView(GameObject container)
-        {
-            LayoutRebuilder.MarkLayoutForRebuild(container.GetComponent<RectTransform>());
-            LayoutRebuilder.ForceRebuildLayoutImmediate(container.GetComponent<RectTransform>());
-            Canvas.ForceUpdateCanvases();
         }
 
         internal void MoveCards(UpgradesView upgradesView)
