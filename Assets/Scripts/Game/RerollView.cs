@@ -18,6 +18,7 @@ public class RerollView : MonoBehaviour
     
     private void OnEnable()
     {
+        continueButton.interactable = true;
         continueButton.onClick.AddListener(SendReroll);
         ViewsHelper.RefreshView(this.gridContainer.GetComponent<RectTransform>());
     }
@@ -58,6 +59,7 @@ public class RerollView : MonoBehaviour
 
     public void SendReroll()
     {
+        continueButton.interactable = false;
         var units= selectedCards.Where(c => c.CardType == CardType.Unit);
         var upgrades= selectedCards.Where(c => c.CardType == CardType.Upgrade);
 

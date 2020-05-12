@@ -12,6 +12,7 @@ namespace Home
         [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
         [SerializeField] private Button _playButton;
+        [SerializeField] private Button _optionsButton;
         [SerializeField] private Button _rulesButton;
         [SerializeField] private Button _exitButton;
         [SerializeField] private GameObject _matchMakingContainer;
@@ -25,6 +26,9 @@ namespace Home
         {
             _matchFoundContainer.SetActive(false);
             _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
+
+            ActivateButtons();
+
             _playButton.onClick.AddListener(PlayMatch);
             _rulesButton.onClick.AddListener(OpenRules);
             _exitButton.onClick.AddListener(Application.Quit);
@@ -48,10 +52,12 @@ namespace Home
 
         private void OpenRules()
         {
+            DeactivateButtons();
             _navigator.OpenTutorialView();
         }
         private void PlayMatch()
         {
+            DeactivateButtons();
             _presenter.StartSearchingMatch();
             //navigator.
         }
@@ -86,6 +92,20 @@ namespace Home
         public void OnError(string message)
         {
             throw new NotImplementedException();
+        }
+
+        private void DeactivateButtons() {
+            //_optionsButton.interactable = false;
+            _playButton.interactable = false;
+            _rulesButton.interactable = false;
+            _exitButton.interactable = false;
+        }
+
+        private void ActivateButtons()
+        {
+            _playButton.interactable = true;
+            _rulesButton.interactable = true;
+            _exitButton.interactable = true;
         }
     }
 }

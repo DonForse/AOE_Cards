@@ -407,10 +407,10 @@ namespace Game
         {
             if (matchState != MatchState.SelectUnit)
                 return;
-            isWorking = true;
-            var unitCard = draggable.GetComponent<UnitCardView>();
             if (_unitCardPlayed != null)
                 return;
+            isWorking = true;
+            var unitCard = draggable.GetComponent<UnitCardView>();
             _unitCardPlayed = unitCard;
             _playableCards.Remove(unitCard);
             _presenter.PlayUnitCard(unitCard.CardName);
@@ -420,10 +420,11 @@ namespace Game
         {
             if (matchState != MatchState.SelectUpgrade)
                 return;
-            isWorking = true;
-            var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             if (_upgradeCardPlayed != null)
                 return;
+
+            isWorking = true;
+            var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             _upgradeCardPlayed = upgradeCard;
             _playableCards.Remove(upgradeCard);
             _presenter.PlayUpgradeCard(upgradeCard.CardName);

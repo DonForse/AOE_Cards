@@ -25,6 +25,13 @@ namespace Login
         public void OnOpening()
         {
             _presenter = new LoginPresenter(this, servicesProvider.GetLoginService());
+
+            loginButton.interactable = true;
+            registerButton.interactable = true;
+            continueButton.interactable = true;
+            guestButton.interactable = true;
+            backButton.interactable = true;
+
             loginButton.onClick.AddListener(Login);
             registerButton.onClick.AddListener(Register);
             continueButton.onClick.AddListener(SendLogin);
@@ -35,6 +42,8 @@ namespace Login
 
         private void Back()
         {
+            ActivateButtons();
+
             action = "";
             errorMessage.gameObject.SetActive(false);
             errorMessage.text = "";
@@ -44,6 +53,7 @@ namespace Login
 
         private void SendLogin()
         {
+            DeactivateButtons();
             if (action == "login")
                 _presenter.Login(username.text, password.text);
             if (action == "register")
@@ -67,6 +77,7 @@ namespace Login
 
         private void GuestLogin()
         {
+            DeactivateButtons();
             _presenter.Register("GUEST", Guid.NewGuid().ToString());
         }
 
@@ -78,6 +89,8 @@ namespace Login
         {
             errorMessage.text = message;
             errorMessage.gameObject.SetActive(true);
+
+            ActivateButtons();
         }
 
         public void OnClosing()
@@ -90,6 +103,25 @@ namespace Login
         {
             errorMessage.text = error;
             errorMessage.gameObject.SetActive(true);
+            ActivateButtons();
+        }
+
+        private void DeactivateButtons()
+        {
+            loginButton.interactable = false;
+            registerButton.interactable = false;
+            continueButton.interactable = false;
+            guestButton.interactable = false;
+            backButton.interactable = false;
+        }
+
+        private void ActivateButtons()
+        {
+            loginButton.interactable = true;
+            registerButton.interactable = true;
+            continueButton.interactable = true;
+            guestButton.interactable = true;
+            backButton.interactable = true;
         }
     }
 }
