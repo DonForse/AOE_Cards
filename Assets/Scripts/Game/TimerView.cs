@@ -1,4 +1,5 @@
 ﻿using System;
+using Infrastructure.Services;
 using TMPro;
 using UnityEngine;
 
@@ -14,11 +15,9 @@ namespace Game
         [SerializeField] private Color defaultColor;
         [SerializeField] private Color lowTimeColor;
 
-        private float timer;
         private float lowtimer;
         private float currentTime;
 
-        private Action timerCompleteCallback;
         private bool doingCountdown = false;
 
         // Update is called once per frame
@@ -27,30 +26,20 @@ namespace Game
             if (!doingCountdown)
                 return;
             currentTime -= Time.deltaTime;
-            textTimer.text = ((int)Math.Floor(currentTime)).ToString();
 
-            if (currentTime <= lowtimer)
-                textTimer.color = Color.red;
+            textTimer.color = currentTime <= lowtimer ? lowTimeColor : defaultColor;
 
-            if (currentTime >= 0)
-                return;
-
-            if (timerCompleteCallback == null)
-                return;
-            StopTimer();
-            timerCompleteCallback();
+            textTimer.text = currentTime <= 0 ? "-" : ((int)Math.Floor(currentTime)).ToString();
         }
 
-        public TimerView WithTimerCompleteCallback(Action timerComplete)
+        internal void Update(Round round)
         {
-            timerCompleteCallback = timerComplete;
-            return this;
+            currentTime = round.Timer;
         }
-        public TimerView WithTimer(float timerCount, float lowTime)
+
+        public TimerView WithLowTimer(float lowTime)
         {
-            timer = timerCount;
             lowtimer = lowTime;
-            currentTime = timer;
             return this;
         }
         public void ShowState(MatchState state)
@@ -58,24 +47,42 @@ namespace Game
             switch (state)
             {
                 case MatchState.Reroll:
+                    StartTimer();
                     textPhase.text = "Rerolling Cards";
                     break;
-                case MatchState.WaitReroll:
-                    textPhase.text = "Wait Opponent";
-                    break;
                 case MatchState.SelectUpgrade:
+                    StartTimer();
                     textPhase.text = "Select Upgrade";
                     break;
+                case MatchState.RoundUpgradeReveal:
+                case MatchState.StartUnit:
+                    StartTimer();
+                    textPhase.text = "Revealing Upgrade";
+                    break;
                 case MatchState.SelectUnit:
+                    StartTimer();
                     textPhase.text = "Select Unit";
                     break;
+                case MatchState.StartRound:
+                case MatchState.StartUpgrade:
+                case MatchState.StartReroll:
+                case MatchState.WaitReroll:
                 case MatchState.WaitUnit:
                 case MatchState.WaitUpgrade:
+                case MatchState.InitializeGame:
+                    StopTimer();
                     textPhase.text = "Wait Opponent";
                     break;
+                case MatchState.EndRound:
+                case MatchState.EndGame:
                 case MatchState.RoundResultReveal:
                     StopTimer();
                     textPhase.text = "Revealing Winner";
+                    break;
+                case MatchState.UpgradeReveal:
+                case MatchState.StartRoundUpgradeReveal:
+                    StopTimer();
+                    textPhase.text = "Revealing Round Upgrade";
                     break;
                 default:
                     textPhase.text = string.Empty;
@@ -83,23 +90,16 @@ namespace Game
             }
         }
 
-        public void ResetTimer()
-        {
-            currentTime = timer;
-            textTimer.color = defaultColor;
-        }
-
         public void StopTimer()
         {
             textTimer.text = "-";
             doingCountdown = false;
         }
-        public void StartCountdown()
+
+        public void StartTimer()
         {
-            currentTime = timer;
             textTimer.color = defaultColor;
             doingCountdown = true;
-
         }
     }
 }

@@ -87,7 +87,9 @@ namespace Infrastructure.Services
                     }).ToList(),
                 RivalReady = dto.rivalready,
                 RoundState = dto.roundState,
-                HasReroll = dto.hasReroll
+                HasReroll = dto.hasReroll,
+                Timer = dto.roundTimer
+
             };
         }
 

@@ -14,5 +14,6 @@ namespace Infrastructure.Services
         public bool rivalready;
         public RoundState roundState;
         public bool hasReroll;
+        public int roundTimer;
     }
 }

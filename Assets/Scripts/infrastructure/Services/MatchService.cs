@@ -136,6 +136,7 @@ namespace Infrastructure.Services
                         WinnerPlayers = r.winnerplayer,
                         UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(r.upgradecardround),
                         HasReroll = r.hasReroll,
+                        Timer = r.roundTimer,
                         RoundState = r.roundState,
                         CardsPlayed = r.cardsplayed?.Select(cp =>
                             new PlayerCard

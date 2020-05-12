@@ -68,10 +68,10 @@ namespace Game
             ChangeMatchState(MatchState.InitializeGame);
             _gameInfoView.SetGame(match);
             _upgradesView.SetGame(match);
-
             var lastRound = match.Board.Rounds.Last();
             _showdownView.SetRound(lastRound);
-
+            _timerView.WithLowTimer(5f);
+            _timerView.StartTimer();
             GetOrInstantiateHandCards(_presenter.GetHand());
 
             ChangeMatchState(MatchState.StartRound);
@@ -90,6 +90,7 @@ namespace Game
 
         public void OnGetRoundInfo(Round round)
         {
+            _timerView.Update(round);
             if (isWorking)
                 return;
             if (matchState == MatchState.StartRound)
@@ -392,7 +393,7 @@ namespace Game
             _upgradesView.Clear();
             _rerollView.Clear();
             isWorking = false;
-            //_timerView.Clear();
+            _timerView.StopTimer();
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
         }
 
@@ -481,6 +482,7 @@ namespace Game
         private void ChangeMatchState(MatchState state)
         {
             matchState = state;
+            _timerView.ShowState(state);
         }
     }
 }
