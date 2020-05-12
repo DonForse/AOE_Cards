@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -8,5 +6,6 @@ namespace Infrastructure.Services
     {
         void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long,string> onError);
         void GetMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError);
+        void RemoveMatch(Action onRemoveMatchComplete, Action<long, string> onError);
     }
 }

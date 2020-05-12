@@ -15,6 +15,9 @@ namespace Infrastructure.Services
             isComplete = webRequest.isDone;
             code = webRequest.responseCode;
             isError = code >= 400 || webRequest.isNetworkError;
+            if (webRequest.downloadHandler == null)
+                return;
+
             response = isError ?
                               webRequest.error
                               : isComplete ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)

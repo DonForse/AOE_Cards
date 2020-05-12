@@ -30,11 +30,14 @@ namespace Game
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
-        private bool isRerolling = false;
-        private bool hasStartedRound = false;
-        private bool hasShownUpgrades = false;
-        private bool hasShownUnits = false;
+        //private bool isRerolling = false;
+        //private bool hasInitializedRound = false;
+        //private bool hasShownRoundUpgrade = false;
+        //private bool hasShownUpgrades = false;
+        //private bool hasShownUnits = false;
         private bool isWorking = false;
+
+        MatchState matchState = MatchState.InitializeGame;
 
         public void OnOpening()
         {
@@ -62,6 +65,7 @@ namespace Game
 
         public void InitializeGame(Match match)
         {
+            ChangeMatchState(MatchState.InitializeGame);
             _gameInfoView.SetGame(match);
             _upgradesView.SetGame(match);
 
@@ -70,7 +74,8 @@ namespace Game
 
             GetOrInstantiateHandCards(_presenter.GetHand());
 
-            InvokeRepeating("GetRound", 0.5f, 3f);
+            ChangeMatchState(MatchState.StartRound);
+            InvokeRepeating("GetRound", 0.5f, 2f);
         }
 
         private void GetRound()
@@ -87,25 +92,47 @@ namespace Game
         {
             if (isWorking)
                 return;
-            if (!hasStartedRound)
+            if (matchState == MatchState.StartRound)
             {
                 StartRound(round);
+            }
+            
+            if (matchState == MatchState.StartRoundUpgradeReveal)
+            {
+                ShowRoundUpgrade(round);
                 return;
             }
-
-            if (round.RoundState == RoundState.Reroll && !isRerolling)
+            if (matchState == MatchState.StartReroll)
             {
                 ShowReroll();
+                return;
             }
-
+            if (matchState == MatchState.StartUpgrade)
+            {
+                GetOrInstantiateHandCards(_presenter.GetHand());
+                PutCardsInHand();
+                ChangeMatchState(MatchState.SelectUpgrade);
+                _handView.ShowHandUpgrades();
+                return;
+            }
+            if (matchState == MatchState.StartUnit)
+            {
+                //GetOrInstantiateHandCards(_presenter.GetHand());
+                //PutCardsInHand();
+                ChangeMatchState(MatchState.SelectUnit);
+                _handView.ShowHandUnits();
+                return;
+            }
             if (round.RoundState == RoundState.Upgrade)
             {
                 ShowUpgradeTurn(round);
+                return;
             }
 
             if (round.RoundState == RoundState.Unit)
             {
                 ShowUnitTurn(round);
+                return;
             }
 
             if (round.RoundState == RoundState.Finished || round.RoundState == RoundState.GameFinished)
@@ -114,9 +141,23 @@ namespace Game
             }
         }
 
+        private void StartRound(Round round)
+        {
+            isWorking = true;
+            GetOrInstantiateHandCards(_presenter.GetHand());
+            ChangeMatchState(MatchState.StartRoundUpgradeReveal);
+            isWorking = false;
+        }
         private void ShowUpgradeTurn(Round round)
         {
             isWorking = true;
+            if (matchState == MatchState.Reroll)
+            {
+                HideReroll();
+                isWorking = false;
+                return;
+            };
+
             if (round.RivalReady)
             {
                 _showdownView.ShowRivalWaitUpgrade();
@@ -128,11 +169,12 @@ namespace Game
         private void ShowUnitTurn(Round round)
         {
             isWorking = true;
-            if (!hasShownUpgrades)
+            if (matchState.IsUpgradePhase())
             {
+                ChangeMatchState(MatchState.RoundUpgradeReveal);
                 ShowUpgradeCardsPlayedRound(round, () =>
                 {
-                    hasShownUpgrades = true;
+                    ChangeMatchState(MatchState.StartUnit);
                     isWorking = false;
                 });
                 return;
@@ -149,11 +191,12 @@ namespace Game
         private void ShowRoundEnd(Round round)
         {
             isWorking = true;
-            if (!hasShownUnits)
+            if (matchState.IsUnitPhase())
             {
+                ChangeMatchState(MatchState.RoundResultReveal);
                 ShowUnitCardsPlayedRound(round, () =>
                 {
-                    hasShownUnits = true;
+                    ChangeMatchState(MatchState.EndRound);
                     isWorking = false;
                 });
                 return;
@@ -209,11 +252,18 @@ namespace Game
 
         public void ShowError(string message)
         {
+            isWorking = false;
             //_presenter.GetRound();
             Debug.LogError(message);
         }
 
         public void UpgradeCardSentPlay()
+        {
+            MoveUpgradeCardToShowdown();
+            isWorking = false;
+        }
+
+        private void MoveUpgradeCardToShowdown()
         {
             _showdownView.PlayUpgradeCard(_upgradeCardPlayed, PlayerType.Player);
             GetOrInstantiateHandCards(_presenter.GetHand());
@@ -221,6 +271,12 @@ namespace Game
         }
 
         public void UnitCardSentPlay()
+        {
+            MoveUnitCardToShowdown();
+            isWorking = false;
+        }
+
+        private void MoveUnitCardToShowdown()
         {
             _showdownView.PlayUnitCard(_unitCardPlayed, PlayerType.Player);
             GetOrInstantiateHandCards(_presenter.GetHand());
@@ -230,7 +286,15 @@ namespace Game
         private void ShowUpgradeCardsPlayedRound(Round round, Action callbackComplete)
         {
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
+            var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
+            var upgradePlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UpgradeCardData.cardName);
+            if (upgradePlayed != null) {
+                _playableCards.Remove(upgradePlayed);
+                _presenter.RemoveCard(upgradePlayed.CardName, true);
+                _upgradeCardPlayed = (UpgradeCardView)upgradePlayed;
 
+                MoveUpgradeCardToShowdown();
+            }
             foreach (var card in rivalCards)
             {
                 if (card.UpgradeCardData == null)
@@ -250,7 +314,18 @@ namespace Game
         private void ShowUnitCardsPlayedRound(Round round, Action callbackComplete)
         {
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
-            
+
+            var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
+            var unitPlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UnitCardData.cardName);
+            if (unitPlayed != null)
+            {
+                _playableCards.Remove(unitPlayed);
+                _presenter.RemoveCard(unitPlayed.CardName, false);
+                _unitCardPlayed = (UnitCardView)unitPlayed;
+
+                MoveUnitCardToShowdown();
+            }
+
             foreach (var card in rivalCards)
             {
                 if (card.UnitCardData == null) //some player didnt play yet
@@ -266,40 +341,40 @@ namespace Game
             }));
         }
         
-        private void StartRound(Round round)
+        private void ShowRoundUpgrade(Round round)
         {
             ClearGameObjectData();
             isWorking = true;
 
             var upgradeCard = Instantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
-            StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => { isWorking = false; }));
+            StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
+            {
+                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
+                isWorking = false;
+            }));
         }
 
         private void EndRound(Round round)
         {
+            isWorking = true;
             _showdownView.MoveCards(_upgradesView);
             _gameInfoView.WinRound(round.WinnerPlayers);
 
             if (round.RoundState == RoundState.GameFinished)
             {
                 EndGame();
+                return;
             }
-
-            return;
-            
             PrepareNewRound();
+            isWorking = false;
         }
 
         private void PrepareNewRound()
         {
-             bool isRerolling = false;
-             bool hasStartedRound = false;
-             bool hasShownUpgrades = false;
-             bool hasShownUnits = false;
-             bool isWorking = false;
-             
-             _presenter.StartNewRound();
+            _presenter.StartNewRound();
+            ChangeMatchState(MatchState.StartRound);
         }
+
 
         private void EndGame()
         {
@@ -309,8 +384,6 @@ namespace Game
 
         private void ClearView()
         {
-            isRerolling = false;
-            hasStartedRound = false;
             _playableCards = new List<CardView>();
             ClearGameObjectData();
             _handView.Clear();
@@ -318,6 +391,7 @@ namespace Game
             _showdownView.Clear();
             _upgradesView.Clear();
             _rerollView.Clear();
+            isWorking = false;
             //_timerView.Clear();
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
         }
@@ -330,6 +404,9 @@ namespace Game
 
         private void PlayUnitCard(Draggable draggable)
         {
+            if (matchState != MatchState.SelectUnit)
+                return;
+            isWorking = true;
             var unitCard = draggable.GetComponent<UnitCardView>();
             if (_unitCardPlayed != null)
                 return;
@@ -340,6 +417,9 @@ namespace Game
 
         private void PlayUpgradeCard(Draggable draggable)
         {
+            if (matchState != MatchState.SelectUpgrade)
+                return;
+            isWorking = true;
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             if (_upgradeCardPlayed != null)
                 return;
@@ -355,28 +435,29 @@ namespace Game
 
         private void ShowReroll()
         {
-            isRerolling = true;
+            isWorking = true;
+
             var cards = _playableCards.Where(c => c.CardName.ToLower() != "villager");
-
-            _rerollView.WithRerollAction((upgrades, units) => { _presenter.SendReroll(upgrades, units); });
+            _rerollView.WithRerollAction((upgrades, units) => 
+            {
+                isWorking = true;
+                _presenter.SendReroll(upgrades, units);
+            });
             _rerollView.PutCards(cards);
-
-            _timerView
-                .WithTimer(30, 5)
-                .WithTimerCompleteCallback(HideReroll);
-            _timerView.gameObject.SetActive(true);
-            _timerView.ResetTimer();
-
             _rerollView.gameObject.SetActive(true);
+            ChangeMatchState(MatchState.Reroll);
+            isWorking = false;
         }
 
         private void HideReroll()
         {
             _rerollView.gameObject.SetActive(false);
+            ChangeMatchState(MatchState.StartUpgrade);
         }
 
         private IEnumerator RerollComplete(Hand hand)
         {
+            isWorking = true;
             /*IEnumerable<CardView> */
             var cardsBefore = _playableCards.Select(c => c.CardName);
             GetOrInstantiateHandCards(hand);
@@ -393,11 +474,13 @@ namespace Game
             }
 
             yield return _rerollView.SwapCards(newCards);
-            _timerView.StopTimer();
-            _timerView.WithTimer(Configuration.TurnTimer, Configuration.LowTimer);
+            HideReroll();
+            isWorking = false; 
+        }
 
-            _rerollView.gameObject.SetActive(false);
-            _timerView.gameObject.SetActive(true);
+        private void ChangeMatchState(MatchState state)
+        {
+            matchState = state;
         }
     }
 }

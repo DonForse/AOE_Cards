@@ -107,5 +107,13 @@ namespace Game
             _hand = hand;
             _view.UpgradeCardSentPlay();
         }
+
+        internal void RemoveCard(string cardName, bool upgrade)
+        {
+            if (upgrade)
+                _hand.TakeUpgradeCard(cardName);
+            else
+                _hand.TakeUnitCard(cardName);
+        }
     }
 }

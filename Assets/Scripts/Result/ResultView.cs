@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ResultView : MonoBehaviour, IView
 {
-
+    [SerializeField] private ServicesProvider servicesProvider;
     [SerializeField] private TextMeshProUGUI _resultText;
     [SerializeField] private Button _continueButton;
     [SerializeField] private Navigator _navigator;
@@ -42,7 +42,12 @@ public class ResultView : MonoBehaviour, IView
 
     }
 
-    private void GoBackHome() {
+    private void GoBackHome()
+    {
+        servicesProvider.GetMatchService().RemoveMatch(() => { }, (code, error) => {
+            //TODO: Be careful on token error and this shit is not enabled, idk what the fuck it will happen. also even if enabled, this shit is not doing anyhitng about tokens.
+            //think better token management architechture, make the services implement the token refresh shit.
+        });
         _navigator.OpenHomeView();
     }
 }

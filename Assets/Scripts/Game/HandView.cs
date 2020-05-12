@@ -40,6 +40,8 @@ namespace Game
                 ShowHandUnits();
             else
                 ShowHandUpgrades();
+
+            ViewsHelper.RefreshView(GetComponent<RectTransform>());
         }
 
         public void ShowHandUnits()
@@ -57,6 +59,7 @@ namespace Game
                 upgradeButton.interactable = false;
 
             btnToggleImage.sprite = imgUpgradesIcon;
+            ViewsHelper.RefreshView(GetComponent<RectTransform>());
         }
 
         public void ShowHandUpgrades()
@@ -74,6 +77,7 @@ namespace Game
                 upgradeButton.interactable = true;
 
             btnToggleImage.sprite = imgUnitIcon;
+            ViewsHelper.RefreshView(GetComponent<RectTransform>());
         }
 
         internal IList<UnitCardView> GetUnitCards()
@@ -109,7 +113,8 @@ namespace Game
                 card.GetComponent<CardSelectable>().enabled = false;
                 card.GetComponent<Draggable>().enabled = true;
             }
-            ViewsHelper.RefreshView(GetComponent<RectTransform>());
+            ViewsHelper.RefreshView(unitCardsContainer.GetComponent<RectTransform>());
+            ViewsHelper.RefreshView(upgradeCardsContainer.GetComponent<RectTransform>());
         }
     }
 }

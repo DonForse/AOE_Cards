@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Game;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,7 +9,7 @@ namespace Infrastructure.Services
 {
     public class MatchService : MonoBehaviour, IMatchService
     {
-        private string StartMatchUrl => Configuration.UrlBase + "/api/match";
+        private string MatchUrl => Configuration.UrlBase + "/api/match";
 
         public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
@@ -23,10 +21,42 @@ namespace Infrastructure.Services
             StartCoroutine(Get(onStartMatchComplete, onError));
         }
 
+
+        public void RemoveMatch(Action onRemoveMatchComplete, Action<long, string> onError)
+        {
+            StartCoroutine(Delete(onRemoveMatchComplete, onError));
+        }
+
+        private IEnumerator Delete(Action onRemoveMatchComplete, Action<long, string> onError)
+        {
+            ResponseInfo response;
+            using (var webRequest = UnityWebRequest.Delete(MatchUrl))
+            {
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
+                yield return webRequest.SendWebRequest();
+                response = new ResponseInfo(webRequest);
+                Debug.Log(response.response);
+            }
+
+            if (response.isError)
+            {
+                onError(response.code, response.response);
+            }
+            else if (response.isComplete)
+            {
+                onRemoveMatchComplete();
+            }
+            else
+            {
+                yield return new WaitForSeconds(3f);
+                StartCoroutine(Delete(onRemoveMatchComplete, onError));
+            }
+        }
+
         private IEnumerator Get(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             ResponseInfo response;
-            using (var webRequest = UnityWebRequest.Get(StartMatchUrl))
+            using (var webRequest = UnityWebRequest.Get(MatchUrl))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
@@ -60,7 +90,7 @@ namespace Infrastructure.Services
         private IEnumerator Post(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             ResponseInfo response;
-            using (var webRequest = UnityWebRequest.Post(StartMatchUrl,""))
+            using (var webRequest = UnityWebRequest.Post(MatchUrl,""))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();

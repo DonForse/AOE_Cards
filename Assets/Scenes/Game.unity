@@ -4206,6 +4206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666f2b632bb05474b87271c019f6d376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  servicesProvider: {fileID: 1160600281}
   _resultText: {fileID: 705818445}
   _continueButton: {fileID: 1709049355}
   _navigator: {fileID: 298151886}
@@ -13472,7 +13473,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.45}
-  m_AnchoredPosition: {x: 0, y: 100.00003}
+  m_AnchoredPosition: {x: 0, y: 100.00004}
   m_SizeDelta: {x: -200, y: -200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1957425157
@@ -14938,7 +14939,7 @@ PrefabInstance:
     - target: {fileID: 625043313586769130, guid: 4eae1a55b2d9e494fa86198c917da49c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 100.00003
+      value: 100.00004
       objectReference: {fileID: 0}
     - target: {fileID: 625043313662466649, guid: 4eae1a55b2d9e494fa86198c917da49c,
         type: 3}

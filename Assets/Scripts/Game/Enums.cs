@@ -31,17 +31,47 @@
     public enum MatchState
     {
         InitializeGame,
+        StartRound,
+        StartRoundUpgradeReveal,
+        RoundUpgradeReveal,
+        StartReroll,
         Reroll,
         WaitReroll,
-        StartRound,
-        RoundUpgradeReveal,
+        StartUpgrade,
         SelectUpgrade,
         WaitUpgrade,
         UpgradeReveal,
+        StartUnit,
         SelectUnit,
         WaitUnit,
         RoundResultReveal,
         EndRound,
         EndGame,
+    }
+
+    public static class MatchStateExtensions {
+        public static bool IsUpgradePhase(this MatchState matchState) {
+            switch (matchState)
+            {
+                case MatchState.StartUpgrade:
+                case MatchState.SelectUpgrade:
+                case MatchState.WaitUpgrade:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        public static bool IsUnitPhase(this MatchState matchState)
+        {
+            switch (matchState)
+            {
+                case MatchState.StartUnit:
+                case MatchState.SelectUnit:
+                case MatchState.WaitUnit:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }
