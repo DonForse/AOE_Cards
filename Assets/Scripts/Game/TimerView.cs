@@ -93,12 +93,14 @@ namespace Game
         public void StopTimer()
         {
             textTimer.text = "-";
+            animator.SetBool("active", false);
             doingCountdown = false;
         }
 
         public void StartTimer()
         {
             textTimer.color = defaultColor;
+            animator.SetBool("active", true);
             doingCountdown = true;
         }
     }
