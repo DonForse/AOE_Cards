@@ -110,9 +110,10 @@ namespace Game
             }
             if (matchState == MatchState.StartUpgrade)
             {
+                if (round.RoundState == RoundState.Upgrade)
+                    ChangeMatchState(MatchState.SelectUpgrade);
                 GetOrInstantiateHandCards(_presenter.GetHand());
                 PutCardsInHand();
-                ChangeMatchState(MatchState.SelectUpgrade);
                 _handView.ShowHandUpgrades();
                 return;
             }
@@ -120,7 +121,8 @@ namespace Game
             {
                 //GetOrInstantiateHandCards(_presenter.GetHand());
                 //PutCardsInHand();
-                ChangeMatchState(MatchState.SelectUnit);
+                if (round.RoundState == RoundState.Unit)
+                    ChangeMatchState(MatchState.SelectUnit);
                 _handView.ShowHandUnits();
                 return;
             }

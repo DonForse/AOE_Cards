@@ -41,24 +41,22 @@ namespace Infrastructure.Services
 
         private IEnumerator Get(string url, Action<Round> onStartMatchComplete, Action<long, string> onError)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             using (var webRequest = UnityWebRequest.Get(url))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
 
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (response.isError)
+            if (responseInfo.isError)
             {
-                onError(response.code, response.response);
+                onError(responseInfo.code, responseInfo.response?.error);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
-                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
-                var dto = JsonUtility.FromJson<RoundDto>(responseDto.response);
+                var dto = JsonUtility.FromJson<RoundDto>(responseInfo.response?.response);
                 onStartMatchComplete(DtoToRound(dto));
                 //onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
             }
@@ -95,7 +93,7 @@ namespace Infrastructure.Services
 
         private IEnumerator PlayCard(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
 
             Debug.Log(playCardUrl);
@@ -108,18 +106,16 @@ namespace Infrastructure.Services
                 webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-             if (response.isError)
+             if (responseInfo.isError)
             {
-                onPostFailed(response.code, response.response);
+                onPostFailed(responseInfo.code, responseInfo.response?.error);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
-                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
-                var dto = JsonUtility.FromJson<HandDto>(responseDto.response);
+                var dto = JsonUtility.FromJson<HandDto>(responseInfo.response?.response);
                 onPostComplete(DtoToHand(dto));
 
             }
@@ -132,7 +128,7 @@ namespace Infrastructure.Services
 
         private IEnumerator RerollCards(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             var rerollUrl = string.Format(RerollUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
 
             Debug.Log(rerollUrl);
@@ -145,18 +141,16 @@ namespace Infrastructure.Services
                 webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (response.isError)
+            if (responseInfo.isError)
             {
-                onPostFailed(response.code, response.response);
+                onPostFailed(responseInfo.code, responseInfo.response?.error);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
-                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
-                var dto = JsonUtility.FromJson<HandDto>(responseDto.response);
+                var dto = JsonUtility.FromJson<HandDto>(responseInfo.response?.response);
                 onPostComplete(DtoToHand(dto));
 
             }

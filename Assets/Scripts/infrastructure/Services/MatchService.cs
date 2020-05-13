@@ -29,20 +29,19 @@ namespace Infrastructure.Services
 
         private IEnumerator Delete(Action onRemoveMatchComplete, Action<long, string> onError)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             using (var webRequest = UnityWebRequest.Delete(MatchUrl))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (response.isError)
+            if (responseInfo.isError)
             {
-                onError(response.code, response.response);
+                onError(responseInfo.code, responseInfo.response.error);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
                 onRemoveMatchComplete();
             }
@@ -55,23 +54,21 @@ namespace Infrastructure.Services
 
         private IEnumerator Get(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             using (var webRequest = UnityWebRequest.Get(MatchUrl))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (response.isError)
+            if (responseInfo.isError)
             {
-                onError(response.code, response.response);
+                onError(responseInfo.code, responseInfo.response.error);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
-                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
-                var dto = JsonUtility.FromJson<MatchDto>(responseDto.response);
+                var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
                 if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);
@@ -89,23 +86,21 @@ namespace Infrastructure.Services
         }
         private IEnumerator Post(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             using (var webRequest = UnityWebRequest.Post(MatchUrl,""))
             {
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (response.isError)
+            if (responseInfo.isError)
             {
-                onError(response.code, response.response);
+                onError(responseInfo.code, responseInfo.response.error);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
-                var responseDto = JsonUtility.FromJson<ResponseDto>(response.response);
-                var dto = JsonUtility.FromJson<MatchDto>(responseDto.response);
+                var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
                 if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
                     yield return new WaitForSeconds(3f);

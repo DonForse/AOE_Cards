@@ -15,22 +15,21 @@ namespace Infrastructure.Services
         }
         private IEnumerator Get(Action<UserResponseDto> onPostComplete, Action<string> onPostFailed)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             Debug.Log(TokenUrl);
             using (var webRequest = UnityWebRequest.Get(TokenUrl))
             { 
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.RefreshToken));
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
-             if (response.isError)
+             if (responseInfo.isError)
             {
-                onPostFailed(response.response);
+                onPostFailed(responseInfo.responseString);
             }
-            else if (response.isComplete)
+            else if (responseInfo.isComplete)
             {
-                var dto = UserResponseDto.Parse(response.response);
+                var dto = UserResponseDto.Parse(responseInfo.responseString);
                 onPostComplete(dto);
             }
             else

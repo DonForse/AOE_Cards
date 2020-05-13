@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using NSubstitute;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -59,7 +60,7 @@ namespace Infrastructure.Services
 
         private IEnumerator Put(string data, Action<UserResponseDto> onLoginComplete, Action<string> onLoginFailed)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             Debug.Log("Put: " + ApiUrl);
             using (var webRequest = UnityWebRequest.Put(ApiUrl, data))
             {
@@ -69,17 +70,16 @@ namespace Infrastructure.Services
                 webRequest.method = UnityWebRequest.kHttpVerbPUT;
                 webRequest.SetRequestHeader("Content-Type", "text/json;charset=ISO-8859-1");
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (!response.isError && response.isComplete)
+            if (!responseInfo.isError && responseInfo.isComplete)
             {
-                onLoginComplete(UserResponseDto.Parse(response.response));
+                onLoginComplete(UserResponseDto.Parse(responseInfo.responseString));
             }
-            else if (response.isError)
+            else if (responseInfo.isError)
             {
-                onLoginFailed(response.response);
+                onLoginFailed(responseInfo.responseString);
             }
             else
             {
@@ -90,7 +90,7 @@ namespace Infrastructure.Services
 
         private IEnumerator Post(string data, Action<UserResponseDto> onRegisterComplete, Action<string> onRegisterFailed)
         {
-            ResponseInfo response;
+            ResponseInfo responseInfo;
             Debug.Log("Post: " + ApiUrl);
             using (var webRequest = UnityWebRequest.Post(ApiUrl, data))
             {
@@ -100,17 +100,16 @@ namespace Infrastructure.Services
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
                 webRequest.SetRequestHeader("Content-Type", "text/json;charset=ISO-8859-1");
                 yield return webRequest.SendWebRequest();
-                response = new ResponseInfo(webRequest);
-                Debug.Log(response.response);
+                responseInfo = new ResponseInfo(webRequest);
             }
 
-            if (!response.isError && response.isComplete)
+            if (!responseInfo.isError && responseInfo.isComplete)
             {
-                onRegisterComplete(UserResponseDto.Parse(response.response));
+                onRegisterComplete(UserResponseDto.Parse(responseInfo.responseString));
             }
-            else if (response.isError)
+            else if (responseInfo.isError)
             {
-                onRegisterFailed(response.response);
+                onRegisterFailed(responseInfo.responseString);
             }
             else
             {
