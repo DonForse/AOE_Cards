@@ -155,8 +155,6 @@ namespace Game
             if (matchState == MatchState.Reroll)
             {
                 HideReroll();
-                isWorking = false;
-                return;
             };
 
             if (round.RivalReady)
@@ -289,7 +287,7 @@ namespace Game
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
             var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
             var upgradePlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UpgradeCardData.cardName);
-            if (upgradePlayed != null) {
+            if (_upgradeCardPlayed == null && upgradePlayed != null) {
                 _playableCards.Remove(upgradePlayed);
                 _presenter.RemoveCard(upgradePlayed.CardName, true);
                 _upgradeCardPlayed = (UpgradeCardView)upgradePlayed;
@@ -318,12 +316,11 @@ namespace Game
 
             var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
             var unitPlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UnitCardData.cardName);
-            if (unitPlayed != null)
+            if (_unitCardPlayed == null & unitPlayed != null)
             {
                 _playableCards.Remove(unitPlayed);
                 _presenter.RemoveCard(unitPlayed.CardName, false);
                 _unitCardPlayed = (UnitCardView)unitPlayed;
-
                 MoveUnitCardToShowdown();
             }
 

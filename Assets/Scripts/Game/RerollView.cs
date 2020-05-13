@@ -92,6 +92,7 @@ public class RerollView : MonoBehaviour
             StartCoroutine(card.MoveToPoint(Vector3.down*1000f));
         }
         yield return new WaitForSeconds(2f);
+        gridContainer.enabled = false;
         foreach (var card in newCards)
         {
             StartCoroutine(card.MoveToPoint(Vector3.zero* 1000f));
