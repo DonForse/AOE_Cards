@@ -73,33 +73,50 @@ public class RerollView : MonoBehaviour
 
     internal IEnumerator SwapCards(IEnumerable<CardView> newCards)
     {
-        gridContainer.enabled = false;
         foreach (var card in newCards)
         {
             card.transform.SetParent(gridContainer.transform);
             card.transform.localScale = Vector3.one;
             card.transform.position = Vector3.down * 1000f;
             card.transform.rotation = this.transform.rotation;
+            card.ShowCardBack();
         }
-        
+
+        gridContainer.enabled = false;
+        var dictionaryPositions = new Dictionary<CardType, List<Vector3>>
+        {
+            {CardType.Unit, new List<Vector3>()}, 
+            {CardType.Upgrade, new List<Vector3>()}
+        };
+
         foreach (var card in selectedCards) {
-            StartCoroutine(card.FlipCard(false));
+            StartCoroutine(card.FlipCard(false,0.5f));
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
+        
         gridContainer.enabled = false;
         foreach (var card in selectedCards)
         {
-            StartCoroutine(card.MoveToPoint(Vector3.down*1000f));
+            dictionaryPositions[card.CardType].Add(card.transform.localPosition);
+            StartCoroutine(card.MoveToPoint(Vector3.down*1000f,2f));
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
+        
         gridContainer.enabled = false;
         foreach (var card in newCards)
         {
-            StartCoroutine(card.MoveToPoint(Vector3.zero* 1000f));
+            var position = dictionaryPositions[card.CardType].First();
+            dictionaryPositions[card.CardType].RemoveAt(0);
+            StartCoroutine(card.MoveToPoint(position,1.7f));
         }
-
-        gridContainer.enabled = true;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
+        gridContainer.enabled = false;
+        foreach (var card in newCards)
+        {
+            StartCoroutine(card.FlipCard(true, 0.5f));
+        }
+        yield return new WaitForSeconds(5.5f);
+        gridContainer.enabled = false;
     }
 
     internal void PutCards(IEnumerable<CardView> cards)

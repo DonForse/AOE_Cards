@@ -460,9 +460,9 @@ namespace Game
         {
             isWorking = true;
             /*IEnumerable<CardView> */
-            var cardsBefore = _playableCards.Select(c => c.CardName);
+            var cardsBefore = _playableCards.Select(c => c.CardName).ToList();
             GetOrInstantiateHandCards(hand);
-            var newCards = _playableCards.Where(c => cardsBefore.All(cn => cn != c.CardName));
+            var newCards = _playableCards.Where(c => cardsBefore.All(cn => cn != c.CardName)).ToList();
 
             var handCards = new List<CardData>();
             handCards.AddRange(hand.GetUnitCards());

@@ -78,8 +78,8 @@ namespace Game
             }
         }
 
-        public virtual IEnumerator MoveToPoint(Vector3 newPosition) {
-            yield return StartCoroutine(MoveToPointAnimation(newPosition, 2f));
+        public virtual IEnumerator MoveToPoint(Vector3 newPosition, float duration) {
+            yield return StartCoroutine(MoveToPointAnimation(newPosition, duration));
         }
 
         private IEnumerator MoveToPointAnimation(Vector3 newPosition, float duration)
@@ -99,9 +99,9 @@ namespace Game
             cardback.SetActive(true);
         }
 
-        public virtual IEnumerator FlipCard(bool show)
+        public virtual IEnumerator FlipCard(bool show, float duration)
         {
-            yield return StartCoroutine(FlipAnimation(1f, show));
+            yield return StartCoroutine(FlipAnimation(duration, show));
         }
 
         public virtual void SetSelected()

@@ -186,12 +186,12 @@ namespace Game
         {
             if (_upgradeWait != null)
             {
-                StartCoroutine(_upgradeWait.FlipCard(true));
+                StartCoroutine(_upgradeWait.FlipCard(true,1f));
                 _upgradeWait = null;
             }
             if (_unitWait != null)
             {
-                StartCoroutine(_unitWait.FlipCard(true));
+                StartCoroutine(_unitWait.FlipCard(true, 1f));
                 _unitWait = null;
             }
             yield return new WaitForSeconds(1f);

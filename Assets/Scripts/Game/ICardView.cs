@@ -7,8 +7,8 @@ namespace Game
     {
         string CardName { get; }
         CardType CardType { get; }
-        IEnumerator MoveToPoint(Vector3 newPosition);
-        IEnumerator FlipCard(bool show);
+        IEnumerator MoveToPoint(Vector3 newPosition, float duration);
+        IEnumerator FlipCard(bool show, float duration);
         void ShowCardBack();
     }
 }
