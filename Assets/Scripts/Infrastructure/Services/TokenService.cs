@@ -25,11 +25,11 @@ namespace Infrastructure.Services
             }
              if (responseInfo.isError)
             {
-                onPostFailed(responseInfo.responseString);
+                onPostFailed(responseInfo.response.response);
             }
             else if (responseInfo.isComplete)
             {
-                var dto = UserResponseDto.Parse(responseInfo.responseString);
+                var dto = UserResponseDto.Parse(responseInfo.response.error);
                 onPostComplete(dto);
             }
             else

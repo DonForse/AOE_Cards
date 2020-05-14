@@ -1,7 +1,4 @@
-﻿using Game;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName ="Unit Card",menuName ="Cards/Unit")]
 public class UnitCardData : CardData
@@ -11,5 +8,4 @@ public class UnitCardData : CardData
     public int power;
     public Sprite artwork;
     public Sprite background;
-
 }

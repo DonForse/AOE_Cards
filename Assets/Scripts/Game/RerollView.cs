@@ -18,6 +18,7 @@ public class RerollView : MonoBehaviour
     
     private void OnEnable()
     {
+        gridContainer.enabled = true;
         continueButton.interactable = true;
         continueButton.onClick.AddListener(SendReroll);
         ViewsHelper.RefreshView(this.gridContainer.GetComponent<RectTransform>());
@@ -76,8 +77,8 @@ public class RerollView : MonoBehaviour
         foreach (var card in newCards)
         {
             card.transform.SetParent(gridContainer.transform);
-            card.transform.localScale = Vector3.one;
             card.transform.position = Vector3.down * 1000f;
+            card.transform.localScale = Vector3.one;
             card.transform.rotation = this.transform.rotation;
             card.ShowCardBack();
         }

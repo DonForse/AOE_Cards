@@ -25,7 +25,7 @@ namespace Game
             iconView.SetUpgrade(upgradeView);
             go.SetActive(false);
             go.transform.SetParent(icon.transform);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
 
             callback();
         }

@@ -9,7 +9,6 @@ namespace Infrastructure.Services
         public bool isComplete;
         public bool isError;
         public long code;
-        public string responseString;
         public ResponseDto response;
 
         public ResponseInfo(UnityWebRequest webRequest)
@@ -19,27 +18,23 @@ namespace Infrastructure.Services
             isError = code >= 400 || webRequest.isNetworkError;
             if (webRequest.downloadHandler == null)
                 return;
-            
-            responseString = isError ?
-                              webRequest.error
-                              : isComplete ? Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3)
-                              : string.Empty;
+            if (isError || !webRequest.isDone) {
+                response = new ResponseDto();
+                response.error = webRequest?.error;
+                if (isError)
+                    Debug.LogWarning(response.error);
+                return;
+            }
+            var responseString =  Encoding.UTF8.GetString(webRequest.downloadHandler.data, 3, webRequest.downloadHandler.data.Length - 3);
 
             response = JsonUtility.FromJson<ResponseDto>(responseString);
             
-            //todo: change server to user this responsedto for all requests
-            // isError = isError || !string.IsNullOrWhiteSpace(response.error);
+             isError = isError || !string.IsNullOrWhiteSpace(response.error);
             if (isError)
                 Debug.LogWarning(responseString + ". "+  response.error);
             else
                 Debug.Log(responseString + ". "+ response.response);
                 
-        }
-
-        public class ResponseDto
-        {
-            public string error;
-            public string response;
         }
     }
 }

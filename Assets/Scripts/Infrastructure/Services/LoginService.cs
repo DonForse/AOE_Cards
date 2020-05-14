@@ -74,11 +74,11 @@ namespace Infrastructure.Services
 
             if (!responseInfo.isError && responseInfo.isComplete)
             {
-                onLoginComplete(UserResponseDto.Parse(responseInfo.responseString));
+                onLoginComplete(UserResponseDto.Parse(responseInfo.response.response));
             }
             else if (responseInfo.isError)
             {
-                onLoginFailed(responseInfo.responseString);
+                onLoginFailed(responseInfo.response.error);
             }
             else
             {
@@ -104,11 +104,11 @@ namespace Infrastructure.Services
 
             if (!responseInfo.isError && responseInfo.isComplete)
             {
-                onRegisterComplete(UserResponseDto.Parse(responseInfo.responseString));
+                onRegisterComplete(UserResponseDto.Parse(responseInfo.response.response));
             }
             else if (responseInfo.isError)
             {
-                onRegisterFailed(responseInfo.responseString);
+                onRegisterFailed(responseInfo.response.error);
             }
             else
             {
