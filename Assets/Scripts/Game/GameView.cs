@@ -68,7 +68,43 @@ namespace Game
 
         private void RevertLastAction()
         {
-            
+            switch (matchState)
+            {
+                case MatchState.InitializeGame:
+                case MatchState.StartRound:
+                case MatchState.StartRoundUpgradeReveal:
+                case MatchState.RoundUpgradeReveal:
+                case MatchState.StartReroll:
+                case MatchState.StartUpgrade:
+                case MatchState.UpgradeReveal:
+                case MatchState.StartUnit:
+                case MatchState.RoundResultReveal:
+                case MatchState.EndRound:
+                case MatchState.EndGame:
+                    break;
+                case MatchState.Reroll:
+                case MatchState.WaitReroll:
+                    GetOrInstantiateHandCards(_presenter.GetHand());
+                    PutCardsInHand();
+                    ShowReroll();
+                    break;
+                case MatchState.SelectUpgrade:
+                case MatchState.WaitUpgrade:
+                    GetOrInstantiateHandCards(_presenter.GetHand());
+                    PutCardsInHand();
+                    _upgradeCardPlayed = null;
+                    ChangeMatchState(MatchState.SelectUpgrade);
+                    break;
+                case MatchState.SelectUnit:
+                case MatchState.WaitUnit:
+                    GetOrInstantiateHandCards(_presenter.GetHand());
+                    PutCardsInHand();
+                    _unitCardPlayed = null;
+                    ChangeMatchState(MatchState.SelectUnit);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void InitializeGame(Match match)

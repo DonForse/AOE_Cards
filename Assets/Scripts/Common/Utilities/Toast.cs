@@ -41,6 +41,8 @@ public class Toast : MonoBehaviour
 
     public void ShowToast(string message, string header)
     {
+        this.message.text = message;
+        this.header.text = header;
         Invoke("HideToast", duration);
         animator.SetTrigger("show");
     }
