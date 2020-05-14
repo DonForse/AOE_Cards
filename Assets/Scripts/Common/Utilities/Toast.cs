@@ -7,10 +7,30 @@ using UnityEngine.UI;
 
 public class Toast : MonoBehaviour
 {
+    
+    #region Singleton
+    private static Toast _instance;
+
+    public static Toast Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+    #endregion
+    
     [SerializeField] private float duration;
     [SerializeField] private TextMeshProUGUI message;
     [SerializeField] private TextMeshProUGUI header;
-    Animator animator;
+    private Animator animator;
+
     private void Start()
     {
         animator = GetComponent<Animator>();

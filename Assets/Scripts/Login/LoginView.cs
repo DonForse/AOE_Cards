@@ -87,6 +87,7 @@ namespace Login
     
         public void OnLoginFail(string message)
         {
+            Toast.Instance.ShowToast(message, "Error");
             errorMessage.text = message;
             errorMessage.gameObject.SetActive(true);
 
@@ -101,6 +102,7 @@ namespace Login
 
         public void ShowError(string error)
         {
+            Toast.Instance.ShowToast(error, "Warning");
             errorMessage.text = error;
             errorMessage.gameObject.SetActive(true);
             ActivateButtons();

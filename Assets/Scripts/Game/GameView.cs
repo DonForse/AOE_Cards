@@ -60,7 +60,15 @@ namespace Game
 
         private void UnexpectedError()
         {
-            throw new NotImplementedException("Unexpected");
+            Toast.Instance.ShowToast("Unexpected","Error");
+            RevertLastAction();
+            isWorking = false;
+            //throw new NotImplementedException("Unexpected");
+        }
+
+        private void RevertLastAction()
+        {
+            
         }
 
         public void InitializeGame(Match match)
@@ -253,8 +261,10 @@ namespace Game
 
         public void ShowError(string message)
         {
+            RevertLastAction();
             isWorking = false;
             //_presenter.GetRound();
+            Toast.Instance.ShowToast(message, "Error");
             Debug.LogError(message);
         }
 

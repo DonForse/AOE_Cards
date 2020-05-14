@@ -18,6 +18,7 @@
               <e p="ArcLayout.cs" t="Include" />
               <e p="CardSelectable.cs" t="Include" />
               <e p="Draggable.cs" t="Include" />
+              <e p="Toast.cs" t="Include" />
             </e>
             <e p="ViewsHelper.cs" t="Include" />
           </e>
@@ -63,6 +64,7 @@
               <e p="MatchDto.cs" t="Include" />
               <e p="PlayerCardDto.cs" t="Include" />
               <e p="RerollInfoDto.cs" t="Include" />
+              <e p="ResponseDto.cs" t="Include" />
               <e p="RoundDto.cs" t="Include" />
               <e p="UserDto.cs" t="Include" />
             </e>
@@ -79,7 +81,6 @@
               <e p="MatchService.cs" t="Include" />
               <e p="PlayerCard.cs" t="Include" />
               <e p="PlayService.cs" t="Include" />
-              <e p="ResponseDto.cs" t="Include" />
               <e p="ResponseInfo.cs" t="Include" />
               <e p="Round.cs" t="Include" />
               <e p="RoundState.cs" t="Include" />
