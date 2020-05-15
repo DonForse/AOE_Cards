@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] private HandView _handView;
         [SerializeField] private ShowdownView _showdownView;
         [SerializeField] private TimerView _timerView;
+        [SerializeField] private ActionView _actionView;
 
         private GamePresenter _presenter;
 
@@ -112,8 +113,8 @@ namespace Game
             ChangeMatchState(MatchState.InitializeGame);
             _gameInfoView.SetGame(match);
             _upgradesView.SetGame(match);
-            var lastRound = match.Board.Rounds.Last();
-            _showdownView.SetRound(lastRound);
+            //    var lastRound = match.Board.Rounds.Last();
+            //    _showdownView.SetRound(lastRound);
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
             GetOrInstantiateHandCards(_presenter.GetHand());
@@ -216,7 +217,7 @@ namespace Game
             isWorking = true;
             if (matchState.IsUpgradePhase())
             {
-                ChangeMatchState(MatchState.RoundUpgradeReveal);
+                ChangeMatchState(MatchState.UpgradeReveal);
                 ShowUpgradeCardsPlayedRound(round, () =>
                 {
                     ChangeMatchState(MatchState.StartUnit);
@@ -389,9 +390,8 @@ namespace Game
         
         private void ShowRoundUpgrade(Round round)
         {
-            ClearGameObjectData();
             isWorking = true;
-
+            ClearGameObjectData();
             var upgradeCard = Instantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
             StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
             {
@@ -529,6 +529,7 @@ namespace Game
         {
             matchState = state;
             _timerView.ShowState(state);
+            _actionView.ShowState(state);
         }
     }
 }

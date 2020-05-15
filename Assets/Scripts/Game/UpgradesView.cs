@@ -12,13 +12,22 @@ namespace Game
         [SerializeField] private GameObject playerUpgradesContainer;
         [SerializeField] private GameObject rivalUpgradesContainer;
         [SerializeField] private GameObject roundCardContainer;
+        [SerializeField] private GameObject roundCardShowDownContainer;
 
         internal IEnumerator SetRoundUpgradeCard(GameObject go, Action callback)
         {
             foreach (Transform child in roundCardContainer.transform)
-            { 
+            {
                 child.gameObject.SetActive(false);
             }
+            go.transform.SetParent(roundCardShowDownContainer.transform);
+            go.transform.position = Vector3.zero;
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localScale = Vector3.one;
+            go.transform.rotation = this.transform.rotation;
+            ViewsHelper.RefreshView(roundCardShowDownContainer.GetComponent<RectTransform>());
+            yield return new WaitForSeconds(3f);
+
             var icon = Instantiate(upgradeIconGo, roundCardContainer.transform);
             var iconView = icon.GetComponent<UpgradeIconView>();
             var upgradeView = go.GetComponent<UpgradeCardView>();

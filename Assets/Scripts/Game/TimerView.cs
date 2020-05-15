@@ -7,11 +7,8 @@ namespace Game
 {
     public class TimerView : MonoBehaviour
     {
-
         [SerializeField] private Animator animator;
         [SerializeField] private TextMeshProUGUI textTimer;
-        [SerializeField] private TextMeshProUGUI textPhase;
-
         [SerializeField] private Color defaultColor;
         [SerializeField] private Color lowTimeColor;
 
@@ -48,20 +45,16 @@ namespace Game
             {
                 case MatchState.Reroll:
                     StartTimer();
-                    textPhase.text = "Rerolling Cards";
                     break;
                 case MatchState.SelectUpgrade:
                     StartTimer();
-                    textPhase.text = "Select Upgrade";
                     break;
                 case MatchState.RoundUpgradeReveal:
                 case MatchState.StartUnit:
                     StartTimer();
-                    textPhase.text = "Revealing Upgrade";
                     break;
                 case MatchState.SelectUnit:
                     StartTimer();
-                    textPhase.text = "Select Unit";
                     break;
                 case MatchState.StartRound:
                 case MatchState.StartUpgrade:
@@ -71,21 +64,17 @@ namespace Game
                 case MatchState.WaitUpgrade:
                 case MatchState.InitializeGame:
                     StopTimer();
-                    textPhase.text = "Wait Opponent";
                     break;
                 case MatchState.EndRound:
                 case MatchState.EndGame:
                 case MatchState.RoundResultReveal:
                     StopTimer();
-                    textPhase.text = "Revealing Winner";
                     break;
                 case MatchState.UpgradeReveal:
                 case MatchState.StartRoundUpgradeReveal:
                     StopTimer();
-                    textPhase.text = "Revealing Round Upgrade";
                     break;
                 default:
-                    textPhase.text = string.Empty;
                     break;
             }
         }
