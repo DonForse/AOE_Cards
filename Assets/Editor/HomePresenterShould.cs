@@ -50,12 +50,12 @@ namespace Editor
 
         private void WhenStartNewMatch()
         {
-            _presenter.StartSearchingMatch();
+            _presenter.StartSearchingMatch(true);
         }
 
         private void ThenMatchServiceIsCalled()
         {
-            _matchService.Received(1).StartMatch(string.Empty, Arg.Any<Action<Infrastructure.Services.Match>>(), Arg.Any<Action<long, string>>());
+            _matchService.Received(1).StartMatch(true, Arg.Any<Action<Infrastructure.Services.Match>>(), Arg.Any<Action<long, string>>());
         }
 
         private void ThenInformViewMatchFound(Infrastructure.Services.Match matchStatus)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common;
 using TMPro;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Game
         public string Effect => effect.text;
         public int PowerEffect;
         public override CardType CardType => CardType.Upgrade;
+        public IList<Archetype> Archetypes;
 
         [SerializeField] private TextMeshProUGUI effect;
       
@@ -37,7 +39,7 @@ namespace Game
             artwork.preserveAspect = true;
             PowerEffect = card.powerEffect;
             SetBackgroundColor(card.GetArchetypes());
-
+            Archetypes = card.GetArchetypes();
             archetypeSection.SetCard(card.GetArchetypes());
         }
         public Sprite GetArchetypeImage()

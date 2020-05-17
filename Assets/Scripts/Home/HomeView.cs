@@ -12,6 +12,7 @@ namespace Home
         [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
         [SerializeField] private Button _playButton;
+        [SerializeField] private Button _playBotButton;
         [SerializeField] private Button _optionsButton;
         [SerializeField] private Button _rulesButton;
         [SerializeField] private Button _exitButton;
@@ -30,6 +31,7 @@ namespace Home
             ActivateButtons();
 
             _playButton.onClick.AddListener(PlayMatch);
+            _playBotButton.onClick.AddListener(PlayVersusBot);
             _rulesButton.onClick.AddListener(OpenRules);
             _exitButton.onClick.AddListener(Application.Quit);
             this.gameObject.SetActive(true);
@@ -58,7 +60,14 @@ namespace Home
         private void PlayMatch()
         {
             DeactivateButtons();
-            _presenter.StartSearchingMatch();
+            _presenter.StartSearchingMatch(false);
+            //navigator.
+        }
+
+        private void PlayVersusBot()
+        {
+            DeactivateButtons();
+            _presenter.StartSearchingMatch(true);
             //navigator.
         }
 
@@ -96,6 +105,7 @@ namespace Home
 
         private void DeactivateButtons() {
             //_optionsButton.interactable = false;
+            _playBotButton.interactable = false;
             _playButton.interactable = false;
             _rulesButton.interactable = false;
             _exitButton.interactable = false;
@@ -103,6 +113,7 @@ namespace Home
 
         private void ActivateButtons()
         {
+            _playBotButton.interactable = true;
             _playButton.interactable = true;
             _rulesButton.interactable = true;
             _exitButton.interactable = true;

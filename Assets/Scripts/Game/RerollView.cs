@@ -78,7 +78,7 @@ public class RerollView : MonoBehaviour
         {
             card.transform.SetParent(gridContainer.transform);
             card.transform.position = Vector3.down * 1000f;
-            card.transform.localScale = Vector3.one;
+            card.transform.localScale = this.transform.localScale;
             card.transform.rotation = this.transform.rotation;
             card.ShowCardBack();
         }
@@ -106,7 +106,11 @@ public class RerollView : MonoBehaviour
         gridContainer.enabled = false;
         foreach (var card in newCards)
         {
-            var position = dictionaryPositions[card.CardType].First();
+            if (!dictionaryPositions.ContainsKey(card.CardType))
+                continue;
+            var position = dictionaryPositions[card.CardType].FirstOrDefault();
+            if (position == null)
+                continue;
             dictionaryPositions[card.CardType].RemoveAt(0);
             StartCoroutine(card.MoveToPoint(position,1.7f));
         }
@@ -115,6 +119,10 @@ public class RerollView : MonoBehaviour
         foreach (var card in newCards)
         {
             StartCoroutine(card.FlipCard(true, 0.5f));
+        }
+        foreach (var card in newCards)
+        {
+            card.transform.localScale = this.transform.localScale;
         }
         yield return new WaitForSeconds(5.5f);
         gridContainer.enabled = false;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Text;
 using Game;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,12 +12,13 @@ namespace Infrastructure.Services
     {
         private string MatchUrl => Configuration.UrlBase + "/api/match";
 
-        public void StartMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        public void StartMatch(bool vsBot, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
-            StartCoroutine(Post(onStartMatchComplete, onError));
+            string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot });
+            StartCoroutine(Post(data, onStartMatchComplete, onError));
         }
 
-        public void GetMatch(string playerId, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        public void GetMatch(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             StartCoroutine(Get(onStartMatchComplete, onError));
         }
@@ -84,11 +86,17 @@ namespace Infrastructure.Services
                 StartCoroutine(Get(onStartMatchComplete, onError));
             }
         }
-        private IEnumerator Post(Action<Match> onStartMatchComplete, Action<long, string> onError)
+
+        private IEnumerator Post(string data, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             ResponseInfo responseInfo;
-            using (var webRequest = UnityWebRequest.Post(MatchUrl,""))
+            using (var webRequest = UnityWebRequest.Post(MatchUrl, data))
             {
+                byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
+                webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+                webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                webRequest.method = UnityWebRequest.kHttpVerbPOST;
+                webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 yield return webRequest.SendWebRequest();
                 responseInfo = new ResponseInfo(webRequest);

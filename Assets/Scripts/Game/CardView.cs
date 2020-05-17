@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] internal GameObject cardback;
         [SerializeField] internal GameObject cardBackground;
 
+
         private readonly int Startglow = Animator.StringToHash("startglow");
         
         private readonly int Stopglow = Animator.StringToHash("stopglow");

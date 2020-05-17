@@ -72,8 +72,8 @@ namespace Game
                 }
             }
             var lastRound = match.Board.Rounds.Last();
-            var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
-            StartCoroutine(SetRoundUpgradeCard(upgradeRound.gameObject, () => { }));
+            //var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
+            //StartCoroutine(SetRoundUpgradeCard(upgradeRound.gameObject, () => { }));
         }
     }
 }

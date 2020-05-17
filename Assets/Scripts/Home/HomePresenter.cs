@@ -10,7 +10,7 @@ namespace Home
         private readonly IMatchService _matchService;
         private readonly ITokenService _tokenService;
         private readonly IHomeView _view;
-
+        private bool previousPlayVsBot = false;
         public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService)
         {
             _view = view;
@@ -18,9 +18,10 @@ namespace Home
             _tokenService = tokenService;
         }
 
-        public void StartSearchingMatch()
+        public void StartSearchingMatch(bool vsBot)
         {
-           _matchService.StartMatch(PlayerPrefs.GetString(PlayerPrefsHelper.UserId), OnMatchStatusComplete, OnError);
+            previousPlayVsBot = vsBot;
+           _matchService.StartMatch(vsBot, OnMatchStatusComplete, OnError);
            _view.OnStartLookingForMatch();
         }
 
@@ -46,7 +47,7 @@ namespace Home
             PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
             PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
 
-            StartSearchingMatch();
+            StartSearchingMatch(previousPlayVsBot);
         }
 
         private void OnMatchStatusComplete(Match matchStatus)

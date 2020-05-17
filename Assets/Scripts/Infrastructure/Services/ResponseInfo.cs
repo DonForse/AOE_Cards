@@ -33,7 +33,7 @@ namespace Infrastructure.Services
             if (isError)
                 Debug.LogWarning(responseString + ". "+  response.error);
             else
-                Debug.Log(responseString + ". "+ response.response);
+                Debug.Log(response.response);
                 
         }
     }
