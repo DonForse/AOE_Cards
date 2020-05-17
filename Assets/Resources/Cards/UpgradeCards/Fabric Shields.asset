@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fabric Shields
   m_EditorClassIdentifier: 
   cardName: Fabric Shields
-  archetypes: eagle
-  effect: Eagle Warriors + 4
+  archetypes: eagle|counterunit
+  effect: Eagle Warriors and counter units +4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: 282c2f389280d7944a22d782a234398d, type: 3}
