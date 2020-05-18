@@ -40,7 +40,7 @@ namespace Game
             PowerEffect = card.powerEffect;
             SetBackgroundColor(card.GetArchetypes());
             Archetypes = card.GetArchetypes();
-            archetypeSection.SetCard(card.GetArchetypes());
+            //archetypeSection.SetCard(card.GetArchetypes());
         }
         public Sprite GetArchetypeImage()
         {

@@ -112,7 +112,7 @@ namespace Game
         {
             ChangeMatchState(MatchState.InitializeGame);
             _gameInfoView.SetGame(match);
-            _upgradesView.SetGame(match);
+            _upgradesView.WithShowDownView(_showdownView).SetGame(match);
             //    var lastRound = match.Board.Rounds.Last();
             //    _showdownView.SetRound(lastRound);
             _timerView.WithLowTimer(5f);

@@ -34,7 +34,7 @@ namespace Game
             artwork.preserveAspect = true;
             
             SetBackgroundColor(card.GetArchetypes());
-            archetypeSection.SetCard(card.GetArchetypes());
+            //archetypeSection.SetCard(card.GetArchetypes());
         }
 
         public void IncreasePowerAnimation(int newPower, float animationDuration)

@@ -13,6 +13,7 @@ namespace Game
     {
         [SerializeField] private GameObject playerFieldContainer;
         [SerializeField] private GameObject rivalFieldContainer;
+        [SerializeField] private GameObject roundUpgradeContainer;
         [SerializeField] private TextMeshProUGUI _dropHereText;
         private UpgradeCardView _upgradeWait;
         private UnitCardView _unitWait;
@@ -37,6 +38,16 @@ namespace Game
             card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
             ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
+        }
+
+        internal void SetRoundUpgradeCard(GameObject go)
+        {
+            go.transform.SetParent(roundUpgradeContainer.transform);
+            go.transform.position = Vector3.zero;
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localScale = Vector3.one;
+            go.transform.rotation = this.transform.rotation;
+            ViewsHelper.RefreshView(roundUpgradeContainer.GetComponent<RectTransform>());
         }
 
         private void ClearUpgradeWaitCard()
@@ -162,15 +173,20 @@ namespace Game
 
         internal void Clear()
         {
-            var units = playerFieldContainer.GetComponentsInChildren<UnitCardView>();
-            foreach (var unit in units)
+            var player = playerFieldContainer.GetComponentsInChildren<CardView>();
+            foreach (var card in player)
             {
-                GameObject.Destroy(unit.gameObject);
+                GameObject.Destroy(card.gameObject);
             }
-            var rivalUnits = rivalFieldContainer.GetComponentsInChildren<UnitCardView>();
-            foreach (var unit in rivalUnits)
+            var rival = rivalFieldContainer.GetComponentsInChildren<CardView>();
+            foreach (var card in rival)
             {
-                GameObject.Destroy(unit.gameObject);
+                GameObject.Destroy(card.gameObject);
+            }
+            var roundUpgrade = roundUpgradeContainer.GetComponentsInChildren<CardView>();
+            foreach (var card in roundUpgrade)
+            {
+                GameObject.Destroy(card.gameObject);
             }
         }
 

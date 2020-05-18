@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Imperial Skirmisher
   m_EditorClassIdentifier: 
   cardName: Imperial Skirmisher
-  archetypes: Archer|CounterUnit
+  archetypes: CounterUnit|Archer
   effect: +6 vs Infantry
   effectPower: 6
   power: 15

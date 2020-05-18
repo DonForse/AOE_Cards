@@ -101,7 +101,7 @@ public class RerollView : MonoBehaviour
             dictionaryPositions[card.CardType].Add(card.transform.localPosition);
             StartCoroutine(card.MoveToPoint(Vector3.down*1000f,2f));
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.2f);
         
         gridContainer.enabled = false;
         foreach (var card in newCards)
@@ -114,17 +114,13 @@ public class RerollView : MonoBehaviour
             dictionaryPositions[card.CardType].RemoveAt(0);
             StartCoroutine(card.MoveToPoint(position,1.7f));
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.7f);
         gridContainer.enabled = false;
         foreach (var card in newCards)
         {
-            StartCoroutine(card.FlipCard(true, 0.5f));
+            StartCoroutine(card.FlipCard(true, 1f));
         }
-        foreach (var card in newCards)
-        {
-            card.transform.localScale = this.transform.localScale;
-        }
-        yield return new WaitForSeconds(5.5f);
+        yield return new WaitForSeconds(4.5f);
         gridContainer.enabled = false;
     }
 

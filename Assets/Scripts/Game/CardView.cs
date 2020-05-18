@@ -69,7 +69,7 @@ namespace Game
                 case Archetype.Eagle:
                     return Resources.Load<Sprite>("Cards/Cardbackgrounds/purple");
                 case Archetype.CounterUnit:
-                    return Resources.Load<Sprite>("Cards/Cardbackgrounds/gray");
+                    return Resources.Load<Sprite>("Cards/Cardbackgrounds/pink");
                 case Archetype.Siege:
                     return Resources.Load<Sprite>("Cards/Cardbackgrounds/white");
                 case Archetype.Monk:
@@ -120,12 +120,14 @@ namespace Game
             float n = 0; 
             for (float f = 0; f <= duration / 2; f += Time.deltaTime)
             {
+                //this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, Mathf.Lerp(transform.eulerAngles.y, 90, f / duration), this.transform.eulerAngles.z);
                 transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 0, f / duration), transform.localScale.y, transform.localScale.z);
                 yield return null;
             }
             cardback.SetActive(!activate);
             for (float f = 0; f <= duration / 2; f += Time.deltaTime)
             {
+                this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, Mathf.Lerp(transform.eulerAngles.y, 0, f / duration), this.transform.eulerAngles.z);
                 transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
                 yield return null;
             }

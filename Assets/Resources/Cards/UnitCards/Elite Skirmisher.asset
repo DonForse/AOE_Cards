@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Elite Skirmisher
   m_EditorClassIdentifier: 
   cardName: Elite Skirmisher
-  archetypes: Archer|CounterUnit
+  archetypes: CounterUnit|Archer
   effect: +5 vs Infantry
   effectPower: 5
   power: 10

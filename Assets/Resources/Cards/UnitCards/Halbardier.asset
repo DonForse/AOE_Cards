@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Halbardier
   m_EditorClassIdentifier: 
   cardName: Halbardier
-  archetypes: Infantry|CounterUnit
+  archetypes: CounterUnit|Infantry
   effect: +6 vs Cavalry
   effectPower: 6
   power: 15
