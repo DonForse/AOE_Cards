@@ -63,7 +63,7 @@ namespace Game
             switch (archetype)
             {
                 case Archetype.Villager:
-                    return Resources.Load<Sprite>("Cards/Cardbackgrounds/pink");
+                    return Resources.Load<Sprite>("Cards/Cardbackgrounds/gray");
                 case Archetype.Camel:
                     return Resources.Load<Sprite>("Cards/Cardbackgrounds/yellow");
                 case Archetype.Elephant:
@@ -80,7 +80,7 @@ namespace Game
                 case Archetype.Eagle:
                     return Resources.Load<Sprite>("Cards/Cardbackgrounds/purple");
                 case Archetype.CounterUnit:
-                    return Resources.Load<Sprite>("Cards/Cardbackgrounds/gray");
+                    return Resources.Load<Sprite>("Cards/Cardbackgrounds/pink");
                 case Archetype.Siege:
                     return Resources.Load<Sprite>("Cards/Cardbackgrounds/white");
                 case Archetype.Monk:

@@ -9,10 +9,7 @@ namespace Game
         void UpgradeCardSentPlay();
         void UnitCardSentPlay();
         void OnGetRoundInfo(Round round);
-        
         void OnRerollComplete(Hand hand);
-
-
         void ShowError(string message);
     }
 }

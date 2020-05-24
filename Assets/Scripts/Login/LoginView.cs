@@ -20,17 +20,16 @@ namespace Login
         [SerializeField] private TextMeshProUGUI errorMessage;
         [SerializeField] private ServicesProvider servicesProvider;
         [SerializeField] private Navigator navigator;
+        [SerializeField] private AudioClip mainThemeClip;
+
         private LoginPresenter _presenter;
         private string action;
         public void OnOpening()
         {
+            SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, true);
             _presenter = new LoginPresenter(this, servicesProvider.GetLoginService());
 
-            loginButton.interactable = true;
-            registerButton.interactable = true;
-            continueButton.interactable = true;
-            guestButton.interactable = true;
-            backButton.interactable = true;
+            ActivateButtons();
 
             loginButton.onClick.AddListener(Login);
             registerButton.onClick.AddListener(Register);

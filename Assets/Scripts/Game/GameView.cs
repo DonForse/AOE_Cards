@@ -21,30 +21,31 @@ namespace Game
         [SerializeField] private ShowdownView _showdownView;
         [SerializeField] private TimerView _timerView;
         [SerializeField] private ActionView _actionView;
+        private IList<AudioClip> clips = null;
 
         private GamePresenter _presenter;
-
         private UnitCardView _unitCardPlayed;
         private UpgradeCardView _upgradeCardPlayed;
 
         private IList<CardView> _playableCards;
-
-        private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
-
-        //private bool isRerolling = false;
-        //private bool hasInitializedRound = false;
-        //private bool hasShownRoundUpgrade = false;
-        //private bool hasShownUpgrades = false;
-        //private bool hasShownUnits = false;
         private bool isWorking = false;
-
         MatchState matchState = MatchState.InitializeGame;
+        private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
         public void OnOpening()
         {
             ClearView();
+            LoadAudio();
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
             this.gameObject.SetActive(true);
+        }
+
+        private void LoadAudio()
+        {
+            if (clips == null)
+                clips = Resources.LoadAll<AudioClip>("Sounds/GameBackground");
+            var index = UnityEngine.Random.Range(0, clips.Count);
+            SoundManager.Instance.PlayBackground(clips[index], new AudioClipOptions { loop = true }, true);
         }
 
         public void OnClosing()

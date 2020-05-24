@@ -19,12 +19,17 @@ namespace Home
         [SerializeField] private GameObject _matchMakingContainer;
         [SerializeField] private GameObject _matchFoundContainer;
         [SerializeField] private TextMeshProUGUI _matchMakingTimerLabel;
+        [SerializeField] private AudioClip mainThemeClip;
+
         private float timerStartTime;
         private bool timerRunning = false;
         private HomePresenter _presenter;
+
         
+
         public void OnOpening()
         {
+            SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, false);
             _matchFoundContainer.SetActive(false);
             _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
 
@@ -33,7 +38,8 @@ namespace Home
             _playButton.onClick.AddListener(PlayMatch);
             _playBotButton.onClick.AddListener(PlayVersusBot);
             _rulesButton.onClick.AddListener(OpenRules);
-            _exitButton.onClick.AddListener(Application.Quit);
+            if (_exitButton != null)
+                _exitButton.onClick.AddListener(Application.Quit);
             this.gameObject.SetActive(true);
         }
 
@@ -108,7 +114,8 @@ namespace Home
             _playBotButton.interactable = false;
             _playButton.interactable = false;
             _rulesButton.interactable = false;
-            _exitButton.interactable = false;
+            if (_exitButton != null)
+                _exitButton.interactable = false;
         }
 
         private void ActivateButtons()
@@ -116,7 +123,8 @@ namespace Home
             _playBotButton.interactable = true;
             _playButton.interactable = true;
             _rulesButton.interactable = true;
-            _exitButton.interactable = true;
+            if (_exitButton != null)
+                _exitButton.interactable = true;
         }
     }
 }
