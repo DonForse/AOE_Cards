@@ -6,6 +6,7 @@ using UnityEngine;
 public class UpgradeCardData : CardData
 {
     public string effect;
-    public int powerEffect;
+    public string powerEffect;
     public Sprite artwork;
+    public AudioClip revealClip;
 }

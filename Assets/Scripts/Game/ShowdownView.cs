@@ -15,6 +15,8 @@ namespace Game
         [SerializeField] private GameObject rivalFieldContainer;
         [SerializeField] private GameObject roundUpgradeContainer;
         [SerializeField] private TextMeshProUGUI _dropHereText;
+        [SerializeField] private AudioClip battleHornClip;
+
         private UpgradeCardView _upgradeWait;
         private UnitCardView _unitWait;
 
@@ -38,6 +40,7 @@ namespace Game
             card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
             ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
+            card.PlayRevealSound();
         }
 
         internal void SetRoundUpgradeCard(GameObject go)
@@ -77,6 +80,7 @@ namespace Game
             card.transform.localScale = Vector3.one;
 
             ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
+            card.PlayRevealSound();
         }
 
         public void ShowRivalWaitUnit()
@@ -165,8 +169,9 @@ namespace Game
                     PlayUnitCard(unit, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
                 else
-                {  if (lastRound.RivalReady)
-                    ShowRivalWaitUnit();
+                {
+                    if (lastRound.RivalReady)
+                        ShowRivalWaitUnit();
                 }
             }
         }
@@ -202,15 +207,21 @@ namespace Game
         {
             if (_upgradeWait != null)
             {
-                StartCoroutine(_upgradeWait.FlipCard(true,1f));
+                StartCoroutine(_upgradeWait.FlipCard(true, 1f));
+                _upgradeWait.PlayRevealSound();
                 _upgradeWait = null;
+                yield return new WaitForSeconds(1f);
+
             }
             if (_unitWait != null)
             {
                 StartCoroutine(_unitWait.FlipCard(true, 1f));
+                _unitWait.PlayRevealSound();
                 _unitWait = null;
+                yield return new WaitForSeconds(1f);
+                SoundManager.Instance.PlayAudioClip(battleHornClip, new AudioClipOptions { loop = false });
             }
-            yield return new WaitForSeconds(1f);
+
             onFinish();
         }
 

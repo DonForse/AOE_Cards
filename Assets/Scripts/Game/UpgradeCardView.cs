@@ -10,10 +10,9 @@ namespace Game
     {
         public Sprite Image => artwork.sprite;
         public string Effect => effect.text;
-        public int PowerEffect;
+        public string PowerEffect;
         public override CardType CardType => CardType.Upgrade;
         public IList<Archetype> Archetypes;
-
         [SerializeField] private TextMeshProUGUI effect;
       
         private bool dragging = false;
@@ -40,6 +39,7 @@ namespace Game
             PowerEffect = card.powerEffect;
             SetBackgroundColor(card.GetArchetypes());
             Archetypes = card.GetArchetypes();
+            revealClip = card.revealClip;
             //archetypeSection.SetCard(card.GetArchetypes());
         }
         public Sprite GetArchetypeImage()

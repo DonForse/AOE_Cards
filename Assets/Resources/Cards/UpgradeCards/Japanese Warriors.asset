@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Infantry + 4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: 88c88c356f5e5d44b88ffed7fa22884b, type: 3}
+  revealClip: {fileID: 8300000, guid: 408f781a061cc08489d878d41a2b6b40, type: 3}

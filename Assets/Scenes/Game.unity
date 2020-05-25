@@ -1884,8 +1884,10 @@ MonoBehaviour:
   _resultText: {fileID: 705818445}
   _continueButton: {fileID: 1709049355}
   _navigator: {fileID: 298151886}
-  victoryClip: {fileID: 8300000, guid: 3a13785da8165a542b3a6d0a5962e5dc, type: 3}
-  defeatClip: {fileID: 8300000, guid: 9fc38bed5bc4e734295c6f2aaa0052c3, type: 3}
+  victoryMusicClip: {fileID: 8300000, guid: 3a13785da8165a542b3a6d0a5962e5dc, type: 3}
+  defeatMusicClip: {fileID: 8300000, guid: 9fc38bed5bc4e734295c6f2aaa0052c3, type: 3}
+  victorySoundClip: {fileID: 8300000, guid: 781f63aa5ced6d9489cad3cead9d7fc5, type: 3}
+  defeatSoundClip: {fileID: 8300000, guid: cef11af78d3c4174d83f1426af3a409a, type: 3}
 --- !u!1 &705818443
 GameObject:
   m_ObjectHideFlags: 0
@@ -4960,6 +4962,11 @@ PrefabInstance:
       propertyPath: servicesProvider
       value: 
       objectReference: {fileID: 1160600281}
+    - target: {fileID: 9040389755977754868, guid: b361c47069101402b9b055011e82c6d6,
+        type: 3}
+      propertyPath: battleHornClip
+      value: 
+      objectReference: {fileID: 8300000, guid: fa9ecfceb65aa3e4cbb88b847d18db3e, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b361c47069101402b9b055011e82c6d6, type: 3}
 --- !u!224 &1283788897 stripped

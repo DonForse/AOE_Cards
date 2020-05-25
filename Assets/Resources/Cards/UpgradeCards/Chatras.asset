@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Elephants +6
   powerEffect: 6
   artwork: {fileID: 21300000, guid: adc2fb4c9985c4d43b3a794d3fad6add, type: 3}
+  revealClip: {fileID: 8300000, guid: 06fe93fdbf92d2d44bfd102da868bf54, type: 3}

@@ -15,5 +15,6 @@ MonoBehaviour:
   cardName: Rocketry
   archetypes: archer
   effect: Archers +4 vs Infantry
-  powerEffect: 4
+  powerEffect: 4 I
   artwork: {fileID: 21300000, guid: b1d8d93919e7b084d8828031d5cff961, type: 3}
+  revealClip: {fileID: 8300000, guid: 88053be51a158db48b8c458da490dd3e, type: 3}

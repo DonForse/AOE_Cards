@@ -15,5 +15,6 @@ MonoBehaviour:
   cardName: Madrasah
   archetypes: monk
   effect: Monk returns to hand after combat
-  powerEffect: 0
+  powerEffect: "\u2190"
   artwork: {fileID: 21300000, guid: 41422b5cd65564b49be1b1a67ab0a592, type: 3}
+  revealClip: {fileID: 8300000, guid: cc92b537fadd6ff428ded2daeec739a7, type: 3}

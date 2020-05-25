@@ -15,5 +15,6 @@ MonoBehaviour:
   cardName: Druzhina
   archetypes: infantry
   effect: Infantry + 8 vs Infantry
-  powerEffect: 8
+  powerEffect: 8 I
   artwork: {fileID: 21300000, guid: 99d323fde78a9f2458b18873afd0c71a, type: 3}
+  revealClip: {fileID: 8300000, guid: 163a4947eb5ca4e47a424bf3f72b7cb1, type: 3}

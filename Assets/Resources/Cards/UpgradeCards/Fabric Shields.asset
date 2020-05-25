@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Eagle Warriors and counter units +4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: 282c2f389280d7944a22d782a234398d, type: 3}
+  revealClip: {fileID: 8300000, guid: 5274324a7bf609449bde6156fcd98187, type: 3}

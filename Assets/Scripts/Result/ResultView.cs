@@ -11,8 +11,11 @@ public class ResultView : MonoBehaviour, IView
     [SerializeField] private Button _continueButton;
     [SerializeField] private Navigator _navigator;
 
-    [SerializeField] private AudioClip victoryClip;
-    [SerializeField] private AudioClip defeatClip;
+    [SerializeField] private AudioClip victoryMusicClip;
+    [SerializeField] private AudioClip defeatMusicClip;
+
+    [SerializeField] private AudioClip victorySoundClip;
+    [SerializeField] private AudioClip defeatSoundClip;
     public void OnClosing()
     {
         this.gameObject.SetActive(false);
@@ -28,18 +31,21 @@ public class ResultView : MonoBehaviour, IView
     {
         if (result == MatchResult.Win)
         {
-            SoundManager.Instance.PlayBackground(victoryClip, new AudioClipOptions { loop = true }, true);
+            SoundManager.Instance.PlayBackground(victoryMusicClip, new AudioClipOptions { loop = true }, true);
+            SoundManager.Instance.PlayAudioClip(victorySoundClip, new AudioClipOptions { loop = false });
+
             _resultText.text = "Victory";
             _resultText.color = Color.green;
         }
         else if (result == MatchResult.Lose)
         {
-            SoundManager.Instance.PlayBackground(defeatClip, new AudioClipOptions { loop = true }, true);
+            SoundManager.Instance.PlayBackground(defeatMusicClip, new AudioClipOptions { loop = true }, true);
+            SoundManager.Instance.PlayAudioClip(defeatSoundClip, new AudioClipOptions { loop = false });
             _resultText.text = "Defeat";
             _resultText.color = Color.red;
         }
         else {
-            SoundManager.Instance.PlayBackground(victoryClip, new AudioClipOptions { loop = true }, true);
+            SoundManager.Instance.PlayBackground(victoryMusicClip, new AudioClipOptions { loop = true }, true);
             _resultText.text = "Tie";
             _resultText.color = Color.yellow;
         }

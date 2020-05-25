@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Common;
 using TMPro;
 using UnityEngine;
@@ -34,7 +36,49 @@ namespace Game
             artwork.preserveAspect = true;
             
             SetBackgroundColor(card.GetArchetypes());
+            LoadAudioClip(card.GetArchetypes());
             //archetypeSection.SetCard(card.GetArchetypes());
+        }
+
+        internal void LoadAudioClip(IList<Archetype> archetypes)
+        {
+            if (archetypes.Any(a => a == Archetype.Villager))
+            {
+                revealClip = Resources.Load<AudioClip>("Sounds/Units/villager");
+                defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/villager");
+                return;
+            }
+            if (archetypes.Any(a => a == Archetype.Archer))
+            {
+                revealClip = Resources.Load<AudioClip>("Sounds/Units/archeryrange");
+                defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/unit");
+                return;
+            }
+            if (archetypes.Any(a => a == Archetype.Cavalry))
+            {
+                revealClip = Resources.Load<AudioClip>("Sounds/Units/stable");
+                defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/cavalry");
+                return;
+            }
+            if (archetypes.Any(a => a == Archetype.Infantry))
+            {
+                revealClip = Resources.Load<AudioClip>("Sounds/Units/barracks");
+                defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/unit");
+                return;
+            }
+            if (archetypes.Any(a => a == Archetype.Siege))
+            {
+                revealClip = Resources.Load<AudioClip>("Sounds/Units/siege");
+                defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/catapult");
+                return;
+            }
+            if (archetypes.Any(a => a == Archetype.Monk))
+            {
+                revealClip = Resources.Load<AudioClip>("Sounds/Units/monk");
+                defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/unit");
+                return;
+            }
+            defeatClip = Resources.Load<AudioClip>("Sounds/Units/dead/unit");
         }
 
         public void IncreasePowerAnimation(int newPower, float animationDuration)

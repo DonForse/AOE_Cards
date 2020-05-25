@@ -15,5 +15,6 @@ MonoBehaviour:
   cardName: Bagains
   archetypes: infantry
   effect: Infantry + 8 vs Archers
-  powerEffect: 8
+  powerEffect: 8 A
   artwork: {fileID: 21300000, guid: f4310bafda5582b4fae449005102199b, type: 3}
+  revealClip: {fileID: 8300000, guid: 408f781a061cc08489d878d41a2b6b40, type: 3}

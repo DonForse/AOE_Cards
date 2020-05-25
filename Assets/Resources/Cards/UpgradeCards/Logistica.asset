@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Logistica
   archetypes: cavalry
-  effect: Cavarly +4 vs Soldier
-  powerEffect: 4
+  effect: Cavarly +4 vs Infantry
+  powerEffect: 4 I
   artwork: {fileID: 21300000, guid: 70df676743a8cbc4ea717fa8bc9ae869, type: 3}
+  revealClip: {fileID: 8300000, guid: 8b0337ed0b05c034ca43dad4beaa6c7d, type: 3}

@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Archers +6
   powerEffect: 6
   artwork: {fileID: 21300000, guid: e515c7b5022c5674ab2e74c2982d47e0, type: 3}
+  revealClip: {fileID: 8300000, guid: 5bb71543e3fb1fe4fb0c1c1b3dd8642f, type: 3}

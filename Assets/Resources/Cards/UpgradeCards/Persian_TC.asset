@@ -15,5 +15,6 @@ MonoBehaviour:
   cardName: Persian Town Center
   archetypes: villager
   effect: Duplicates Villager Power (calculated last)
-  powerEffect: 0
+  powerEffect: x2
   artwork: {fileID: 21300000, guid: da0358227ab0dac41a3d98a40d41f74b, type: 3}
+  revealClip: {fileID: 8300000, guid: 364c03473aa7d5b4ca4ee5aae28b54e9, type: 3}

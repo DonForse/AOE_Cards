@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,12 +21,15 @@ namespace Game
         [SerializeField] internal Animator animator;
         [SerializeField] internal GameObject cardback;
         [SerializeField] internal GameObject cardBackground;
+        internal AudioClip revealClip;
+        internal AudioClip defeatClip;
 
 
         private readonly int Startglow = Animator.StringToHash("startglow");
         
         private readonly int Stopglow = Animator.StringToHash("stopglow");
         private readonly int Selected = Animator.StringToHash("selected");
+        
 
         internal virtual void SetBackgroundColor(IList<Archetype> archetypes)
         {
@@ -43,7 +48,7 @@ namespace Game
                 rt.offsetMax = new Vector2(0, 0);
                 var image = go.AddComponent<Image>();
 
-                image.sprite = GetArchetypeColorBackground(archetypes[i]); 
+                image.sprite = GetArchetypeColorBackground(archetypes[i]);
             }
         }
 
@@ -94,6 +99,18 @@ namespace Game
                 transform.localPosition = new Vector3(x,y,z);
                 yield return null;
             }
+        }
+
+        public virtual void PlayRevealSound()
+        {
+            if (revealClip != null)
+                SoundManager.Instance.PlayAudioClip(revealClip,new AudioClipOptions { loop = false});
+        }
+
+        public virtual void PlayDefeatSound()
+        {
+            if (defeatClip != null)
+                SoundManager.Instance.PlayAudioClip(defeatClip, new AudioClipOptions { loop = false });
         }
 
         public virtual void ShowCardBack() {

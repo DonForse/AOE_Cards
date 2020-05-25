@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Counter Units +3
   powerEffect: 3
   artwork: {fileID: 21300000, guid: 7f885378b3b8b9747944ff898a697c7d, type: 3}
+  revealClip: {fileID: 8300000, guid: 408f781a061cc08489d878d41a2b6b40, type: 3}

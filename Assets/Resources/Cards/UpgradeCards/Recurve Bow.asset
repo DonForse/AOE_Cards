@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Cavarly Archer +4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: 8d1776b421aa73b4a89be3e51f40a761, type: 3}
+  revealClip: {fileID: 8300000, guid: a1c3243a96cbde344a63993f4b1ac068, type: 3}

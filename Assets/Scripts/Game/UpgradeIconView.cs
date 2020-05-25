@@ -30,8 +30,7 @@ namespace Game
             //image.sprite = upgradeView.GetArchetypeImage();
             effect.text = upgradeView.Effect;
             cardName.text = upgradeView.CardName;
-            if (upgradeView.PowerEffect > 0)
-                power.text = upgradeView.PowerEffect.ToString();
+            power.text = upgradeView.PowerEffect;
             SetBackgroundColor(upgradeView.Archetypes);
         }
 

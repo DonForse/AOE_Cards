@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Camels +6
   powerEffect: 6
   artwork: {fileID: 21300000, guid: c144b0ad043f07c45be7894504d09830, type: 3}
+  revealClip: {fileID: 8300000, guid: b26d2578ac4ad824ba25fdfdab5281d5, type: 3}

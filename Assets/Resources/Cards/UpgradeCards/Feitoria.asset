@@ -17,3 +17,4 @@ MonoBehaviour:
   effect: Villagers + 4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: a0d8d4742fb6c5e4dabc878b18e7edba, type: 3}
+  revealClip: {fileID: 8300000, guid: 049ddd29b8645054f801ffc418a5e42d, type: 3}
