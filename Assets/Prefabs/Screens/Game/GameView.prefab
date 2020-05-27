@@ -1957,6 +1957,7 @@ MonoBehaviour:
   rivalFieldContainer: {fileID: 4240639984743063422}
   roundUpgradeContainer: {fileID: 388627784}
   _dropHereText: {fileID: 6365457442111684102}
+  battleHornClip: {fileID: 8300000, guid: fa9ecfceb65aa3e4cbb88b847d18db3e, type: 3}
 --- !u!1 &2916356544563309430
 GameObject:
   m_ObjectHideFlags: 0

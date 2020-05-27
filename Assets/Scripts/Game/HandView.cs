@@ -27,11 +27,13 @@ namespace Game
             card.transform.SetParent(unitCardsContainer.transform);
             card.transform.position = (unitCardsContainer.transform.position);
             card.transform.localScale = Vector3.one;
+            card.GetComponent<Draggable>().enabled = true;
         }
         public void SetUpgradeCard(GameObject card) {
             card.transform.SetParent(upgradeCardsContainer.transform);
             card.transform.position = (upgradeCardsContainer.transform.position);
             card.transform.localScale = Vector3.one;
+            card.GetComponent<Draggable>().enabled = true;
         }
 
         private void ToggleHandCards()

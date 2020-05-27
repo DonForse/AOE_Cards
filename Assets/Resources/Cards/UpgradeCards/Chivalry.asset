@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Chivalry
   archetypes: cavalry
-  effect: Cavarly+4
+  effect: Cavalry+4
   powerEffect: 4
   artwork: {fileID: 21300000, guid: de004dc584abfd741b02f6688007c159, type: 3}
   revealClip: {fileID: 8300000, guid: d0b009e4ba0e49d4e89e50854deeecad, type: 3}

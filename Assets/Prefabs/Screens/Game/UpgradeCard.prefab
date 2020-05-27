@@ -1150,7 +1150,7 @@ MonoBehaviour:
   animator: {fileID: 7451833773519365812}
   cardback: {fileID: 1961457194695490093}
   cardBackground: {fileID: 1604155422733450735}
-  PowerEffect: 0
+  PowerEffect: 
   effect: {fileID: 7660645199542104631}
 --- !u!114 &3078315293477803424
 MonoBehaviour:
@@ -1159,7 +1159,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7660645200975920526}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ecd60b1e54a49a4c9d1d9a04c97bece, type: 3}
   m_Name: 

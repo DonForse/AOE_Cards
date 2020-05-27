@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Teutons Faith
   archetypes: cavalry
-  effect: 'Cavarly no longer loses vs monks '
+  effect: 'Cavalry no longer loses vs monks '
   powerEffect: "\u221E M"
   artwork: {fileID: 21300000, guid: aba44740be818f24f8f8574d325c5f8f, type: 3}
   revealClip: {fileID: 8300000, guid: 668b89fb3418eae4284932126af1ec1b, type: 3}

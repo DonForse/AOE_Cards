@@ -34,8 +34,8 @@ public class ResultView : MonoBehaviour, IView
             SoundManager.Instance.PlayBackground(victoryMusicClip, new AudioClipOptions { loop = true }, true);
             SoundManager.Instance.PlayAudioClip(victorySoundClip, new AudioClipOptions { loop = false });
 
-            _resultText.text = "Victory";
-            _resultText.color = Color.green;
+            _resultText.text = "You are Victorious";
+            _resultText.color = new Color(255,204,0);
         }
         else if (result == MatchResult.Lose)
         {

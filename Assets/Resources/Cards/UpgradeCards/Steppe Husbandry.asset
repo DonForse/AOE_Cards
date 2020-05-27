@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Steppe Husbandry
   archetypes: cavalryarcher
-  effect: Cavarly Archers + 6
+  effect: Cavalry Archers + 6
   powerEffect: 6
   artwork: {fileID: 21300000, guid: 45938e243f33b99438d1bc8cc472e6ed, type: 3}
   revealClip: {fileID: 8300000, guid: 408f781a061cc08489d878d41a2b6b40, type: 3}

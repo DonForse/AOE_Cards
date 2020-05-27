@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Chieftains
   archetypes: infantry
-  effect: Infantry + 8 vs Cavarly
+  effect: Infantry + 8 vs Cavalry
   powerEffect: 8 C
   artwork: {fileID: 21300000, guid: f67a1abbfd81fd941bdf7bbc626b86bc, type: 3}
   revealClip: {fileID: 8300000, guid: 4699616d3ed8a4947a673aa794b7bde6, type: 3}

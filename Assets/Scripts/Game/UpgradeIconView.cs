@@ -17,7 +17,28 @@ namespace Game
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            hoverContainer.SetActive(true);
+            if (this.transform.parent.name == "RoundCardContainer") //hotfix horrible por el container.
+            {
+                hoverContainer.SetActive(true);
+                return;
+            }
+            var rect = hoverContainer.GetComponent<RectTransform>();
+            var parentRect = this.GetComponent<RectTransform>();
+            if (this.transform.parent.name == "PlayerUpgradesContainer") //hotfix horrible por el container.
+            {
+                if (parentRect.anchoredPosition.x - rect.rect.width / 2 < 0)
+                    rect.anchoredPosition = new Vector2(10f + rect.rect.width / 2 + 10f, rect.anchoredPosition.y);
+                hoverContainer.SetActive(true);
+                return;
+            }
+            if (this.transform.parent.name == "RivalUpgradesContainer") //hotfix horrible por el container.
+            {
+                if (parentRect.anchoredPosition.x > 310f)
+                    rect.anchoredPosition = new Vector2(-rect.rect.width / 2 - 10f, rect.anchoredPosition.y);
+                hoverContainer.SetActive(true);
+                return;
+            }
+            
         }
 
         public void OnPointerExit(PointerEventData eventData)

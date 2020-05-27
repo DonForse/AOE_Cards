@@ -1,4 +1,5 @@
-﻿using Infrastructure.Services;
+﻿using Common;
+using Infrastructure.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,6 +40,8 @@ namespace Game
             card.transform.position = (container.transform.position);
             card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
+            card.GetComponent<Draggable>().enabled = false;
+
             ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
             card.PlayRevealSound();
         }
@@ -78,6 +81,7 @@ namespace Game
             card.transform.position = (container.transform.position);
             card.transform.rotation = (container.transform.rotation);
             card.transform.localScale = Vector3.one;
+            card.GetComponent<Draggable>().enabled = false;
 
             ViewsHelper.RefreshView(container.GetComponent<RectTransform>());
             card.PlayRevealSound();

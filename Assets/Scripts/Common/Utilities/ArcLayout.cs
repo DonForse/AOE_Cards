@@ -45,7 +45,7 @@ public class ArcLayout : LayoutGroup
         var halfChilds = (rectChildren.Count - 1) / 2f;
         for (int i = 0; i < rectChildren.Count; i++)
         {
-            float height = -3 * Mathf.Pow((halfChilds - i) / 6,2); //height calculation formula. Try to find something that makes more sense...
+            float height = -3 * Mathf.Pow((halfChilds - i) / rectChildren.Count, 2); //height calculation formula. Try to find something that makes more sense...
             rectChildren[i].position = new Vector3(rectChildren[i].position.x, this.transform.position.y + pivot.y + height, rectChildren[i].position.z);
         }
     }
