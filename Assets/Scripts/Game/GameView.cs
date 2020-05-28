@@ -587,6 +587,7 @@ namespace Game
 
         private void HideReroll()
         {
+            _rerollView.Clear();
             _rerollView.gameObject.SetActive(false);
             ChangeMatchState(MatchState.StartUpgrade);
         }
