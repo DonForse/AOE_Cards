@@ -21,20 +21,17 @@ namespace Game
             _tokenService = tokenService;
         }
 
-        public void GameSetup(Match match)
+        public void SetMatch(Match match)
         {
-            currentRound = match.Board.Rounds.Count() -1;
             _hand = match.Hand;
+            currentRound = match.Board.Rounds.Count() - 1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
-            _view.InitializeGame(match);
-            
         }
 
         public void StartNewRound()
         {
             currentRound++;
         }
-
 
         public void PlayUpgradeCard(string cardName)
         {
@@ -115,5 +112,6 @@ namespace Game
             else
                 _hand.TakeUnitCard(cardName);
         }
+
     }
 }

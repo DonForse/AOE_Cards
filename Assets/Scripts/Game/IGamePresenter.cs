@@ -5,7 +5,7 @@ namespace Game
 {
     public interface IGamePresenter
     {
-        void GameSetup(Match match);
+        void SetMatch(Match match);
         void GetRound();
         void PlayUnitCard(string cardName);
         void PlayUpgradeCard(string cardName);

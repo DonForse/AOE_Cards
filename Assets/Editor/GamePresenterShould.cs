@@ -153,7 +153,7 @@ namespace Editor
                 Hand = new Hand(_cardProvider.GetUnitCards().Take(5).ToList(),
                     _cardProvider.GetUpgradeCards().Take(5).ToList())
             };
-            _presenter.GameSetup(_matchStatus);
+            _presenter.SetMatch(_matchStatus);
         }
 
         private void WhenRoundSetup()

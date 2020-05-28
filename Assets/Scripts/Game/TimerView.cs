@@ -43,33 +43,24 @@ namespace Game
         {
             switch (state)
             {
-                case MatchState.Reroll:
-                    StartTimer();
-                    break;
-                case MatchState.SelectUpgrade:
-                    StartTimer();
-                    break;
-                case MatchState.RoundUpgradeReveal:
-                case MatchState.StartUnit:
-                    StartTimer();
-                    break;
-                case MatchState.SelectUnit:
-                    StartTimer();
-                    break;
-                case MatchState.StartRound:
-                case MatchState.StartUpgrade:
-                case MatchState.StartReroll:
                 case MatchState.WaitReroll:
                 case MatchState.WaitUnit:
                 case MatchState.WaitUpgrade:
-                case MatchState.InitializeGame:
-                    StopTimer();
+                case MatchState.Reroll:
+                case MatchState.SelectUpgrade:
+                case MatchState.RoundUpgradeReveal:
+                case MatchState.StartUnit:
+                case MatchState.SelectUnit:
+                    StartTimer();
                     break;
+
+                case MatchState.StartRound:
+                case MatchState.StartUpgrade:
+                case MatchState.StartReroll:
+                case MatchState.InitializeGame:
                 case MatchState.EndRound:
                 case MatchState.EndGame:
                 case MatchState.RoundResultReveal:
-                    StopTimer();
-                    break;
                 case MatchState.UpgradeReveal:
                 case MatchState.StartRoundUpgradeReveal:
                     StopTimer();

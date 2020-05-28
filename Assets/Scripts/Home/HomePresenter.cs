@@ -21,7 +21,8 @@ namespace Home
         public void StartSearchingMatch(bool vsBot)
         {
             previousPlayVsBot = vsBot;
-           _matchService.StartMatch(vsBot, OnMatchStatusComplete, OnError);
+            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
+            _matchService.StartMatch(vsBot, OnMatchStatusComplete, OnError);
            _view.OnStartLookingForMatch();
         }
 

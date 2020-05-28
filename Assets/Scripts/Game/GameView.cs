@@ -57,19 +57,96 @@ namespace Game
 
         public void SetGame(Match match)
         {
-            _presenter.GameSetup(match);
+            InitializeGame(match);
+        }
+
+        private void OnApplicationPause(bool pause)
+        {
+            Debug.Log("Pause");
+            isWorking = true;
+            CancelInvoke("GetRound");
+        }
+
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus)
+            {
+                Debug.Log("Focus");
+                servicesProvider.GetMatchService().GetMatch(ResetGameState, SomeError);
+            }
+            else {
+                Debug.Log("Pause");
+                isWorking = true;
+                CancelInvoke("GetRound");
+            }
         }
 
         private void UnexpectedError()
         {
             Toast.Instance.ShowToast("Unexpected","Error");
-            RevertLastAction();
+            //RevertLastAction();
+            servicesProvider.GetMatchService().GetMatch(ResetGameState, SomeError);
+            //ResetGameState();
             isWorking = false;
             //throw new NotImplementedException("Unexpected");
         }
 
+        private void ResetGameState(Match match)
+        {
+            ClearView();
+            StartGame(match);
+            GetOrInstantiateHandCards(match.Hand);
+            RecoverMatchState(match);
+            if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
+                _handView.PutCards(_playableCards);
+            Debug.Log("Reset");
+            InvokeRepeating("GetRound", 0.5f, 2f);
+        }
+
+        private void RecoverMatchState(Match match)
+        {
+            if (match.Board == null)
+                _navigator.OpenHomeView();
+            var round = match.Board.Rounds.Last();
+            switch (round.RoundState)
+            {
+                case RoundState.Reroll:
+                    if (round.HasReroll)
+                        matchState = MatchState.StartReroll;
+                    else
+                        matchState = MatchState.WaitReroll;
+                    break;
+                case RoundState.Upgrade:
+                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName).UpgradeCardData != null)
+                        matchState = MatchState.WaitUpgrade;
+                    else
+                        matchState = MatchState.StartUpgrade;
+                    break;
+                case RoundState.Unit:
+                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName).UnitCardData != null)
+                        matchState = MatchState.WaitUnit;
+                    else
+                        matchState = MatchState.StartUnit;
+                    break;
+                case RoundState.Finished:
+                    matchState = MatchState.StartRound;
+                    break;
+                case RoundState.GameFinished:
+                    EndGame();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void SomeError(long arg1, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
         private void RevertLastAction()
         {
+            Debug.Log(string.Format("match state: {0}", matchState));
             switch (matchState)
             {
                 case MatchState.InitializeGame:
@@ -111,17 +188,22 @@ namespace Game
 
         public void InitializeGame(Match match)
         {
-            ChangeMatchState(MatchState.InitializeGame);
-            _gameInfoView.SetGame(match);
-            _upgradesView.WithShowDownView(_showdownView).SetGame(match);
-            //    var lastRound = match.Board.Rounds.Last();
-            //    _showdownView.SetRound(lastRound);
-            _timerView.WithLowTimer(5f);
-            _timerView.StartTimer();
-            GetOrInstantiateHandCards(_presenter.GetHand());
+            StartGame(match);
 
             ChangeMatchState(MatchState.StartRound);
             InvokeRepeating("GetRound", 0.5f, 2f);
+        }
+
+        private void StartGame(Match match)
+        {
+            _presenter.SetMatch(match);
+            ChangeMatchState(MatchState.InitializeGame);
+            _gameInfoView.SetGame(match);
+            _upgradesView.WithShowDownView(_showdownView).SetGame(match);
+            _showdownView.SetRound(match.Board.Rounds.Last());
+            _timerView.WithLowTimer(5f);
+            _timerView.StartTimer();
+            GetOrInstantiateHandCards(_presenter.GetHand());
         }
 
         private void GetRound()
@@ -431,6 +513,13 @@ namespace Game
 
         private void ClearView()
         {
+            if (_playableCards != null)
+            {
+                foreach (var card in _playableCards)
+                {
+                    Destroy(card.gameObject);
+                }
+            }
             _playableCards = new List<CardView>();
             ClearGameObjectData();
             _handView.Clear();
@@ -440,7 +529,6 @@ namespace Game
             _rerollView.Clear();
             isWorking = false;
             _timerView.StopTimer();
-            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
         }
 
         private void ClearGameObjectData()

@@ -28,8 +28,8 @@ namespace Game
             Clear();
             SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
             SetPlayerName(match.Users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
-            SetRoundNumber(match.Board.Rounds.Count());
             SetRoundWinners(match.Board.Rounds);
+            SetRoundNumber(match.Board.Rounds.Count());
         }
 
         private void SetRoundWinners(List<Round> rounds)
@@ -105,7 +105,7 @@ namespace Game
             {
                 imageCounter.color = _neutralColorCounter;
             }
-            SetRoundNumber(0);
+            SetRoundNumber(1);
         }
     }
 }

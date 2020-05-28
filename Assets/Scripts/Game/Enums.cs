@@ -73,5 +73,17 @@
                     return false;
             }
         }
+        public static bool IsRerollPhase(this MatchState matchState)
+        {
+            switch (matchState)
+            {
+                case MatchState.StartReroll:
+                case MatchState.Reroll:
+                case MatchState.WaitReroll:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }
