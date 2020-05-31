@@ -6,5 +6,7 @@ namespace Infrastructure.Services
     public class MatchPostDto
     {
         public bool vsBot;
+        public bool vsFriend;
+        public string friendCode;
     }
 }

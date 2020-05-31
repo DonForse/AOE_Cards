@@ -12,20 +12,27 @@ namespace Home
         [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
         [SerializeField] private Button _playButton;
+        [SerializeField] private Button _playFriendButton;
+        [SerializeField] private Button _openPlayFriendButton;
+        [SerializeField] private Button _closePlayFriendButton;
         [SerializeField] private Button _playBotButton;
         [SerializeField] private Button _optionsButton;
         [SerializeField] private Button _rulesButton;
         [SerializeField] private Button _exitButton;
+
+        [SerializeField] private Button _leaveQueueButton;
+
         [SerializeField] private GameObject _matchMakingContainer;
         [SerializeField] private GameObject _matchFoundContainer;
+        [SerializeField] private GameObject _playFriendContainer;
         [SerializeField] private TextMeshProUGUI _matchMakingTimerLabel;
+        [SerializeField] private TextMeshProUGUI _userCodeLabel;
+        [SerializeField] private TMP_InputField _friendCode;
         [SerializeField] private AudioClip mainThemeClip;
 
         private float timerStartTime;
         private bool timerRunning = false;
         private HomePresenter _presenter;
-
-        
 
         public void OnOpening()
         {
@@ -35,18 +42,31 @@ namespace Home
 
             ActivateButtons();
 
+            _userCodeLabel.text = PlayerPrefs.GetString(PlayerPrefsHelper.FriendCode);
+
             _playButton.onClick.AddListener(PlayMatch);
             _playBotButton.onClick.AddListener(PlayVersusBot);
             _rulesButton.onClick.AddListener(OpenRules);
+            _playFriendButton.onClick.AddListener(PlayVersusFriend);
+            _openPlayFriendButton.onClick.AddListener(OpenVersusFriend);
+            _closePlayFriendButton.onClick.AddListener(CloseVersusFriend);
+            _leaveQueueButton.onClick.AddListener(LeaveQueue);
             if (_exitButton != null)
                 _exitButton.onClick.AddListener(Application.Quit);
             this.gameObject.SetActive(true);
         }
 
+
         public void OnClosing()
         {
             _rulesButton.onClick.RemoveAllListeners();
             _playButton.onClick.RemoveAllListeners();
+            _playBotButton.onClick.RemoveAllListeners();
+            _rulesButton.onClick.RemoveAllListeners();
+            _playFriendButton.onClick.RemoveAllListeners();
+            _openPlayFriendButton.onClick.RemoveAllListeners();
+            _closePlayFriendButton.onClick.RemoveAllListeners();
+            _leaveQueueButton.onClick.RemoveAllListeners();
             this.gameObject.SetActive(false);
         }
         
@@ -66,14 +86,45 @@ namespace Home
         private void PlayMatch()
         {
             DeactivateButtons();
-            _presenter.StartSearchingMatch(false);
+            _presenter.StartSearchingMatch(false,false,string.Empty);
             //navigator.
         }
 
         private void PlayVersusBot()
         {
             DeactivateButtons();
-            _presenter.StartSearchingMatch(true);
+            _presenter.StartSearchingMatch(true, false, string.Empty);
+            //navigator.
+        }
+
+
+        private void OpenVersusFriend()
+        {
+            _playFriendContainer.SetActive(true);
+        }
+
+        private void CloseVersusFriend()
+        {
+            _playFriendContainer.SetActive(false);
+        }
+
+        private void LeaveQueue()
+        {
+            _presenter.LeaveQueue();
+        }
+
+        public void OnQueueLeft()
+        {
+            StopTimer();
+            ActivateButtons();
+            _matchMakingContainer.SetActive(false);
+        }
+
+        private void PlayVersusFriend()
+        {
+            CloseVersusFriend();
+            DeactivateButtons();
+            _presenter.StartSearchingMatch(false, true, _friendCode.text);
             //navigator.
         }
 
@@ -93,27 +144,33 @@ namespace Home
 
         public void OnMatchFound(Match matchStatus)
         {
+            _matchFoundContainer.SetActive(true);
             StopTimer();
             // _matchMakingContainer.SetActive(false);
-            _matchFoundContainer.SetActive(true);
             _navigator.OpenGameView(matchStatus);
         }
 
-        public void OnStartLookingForMatch()
+        public void OnStartLookingForMatch(bool vsBot)
         {
+            if (vsBot)
+            {
+                _matchFoundContainer.SetActive(true);
+                return;
+            }
             StartTimer();
         }
 
         public void OnError(string message)
         {
-            throw new NotImplementedException();
+            Toast.Instance.ShowToast("An Error Ocurred, please log in again", "Error");
+            _navigator.OpenLoginView();
         }
 
         private void DeactivateButtons() {
-            //_optionsButton.interactable = false;
             _playBotButton.interactable = false;
             _playButton.interactable = false;
             _rulesButton.interactable = false;
+            _openPlayFriendButton.interactable = false;
             if (_exitButton != null)
                 _exitButton.interactable = false;
         }
@@ -123,6 +180,7 @@ namespace Home
             _playBotButton.interactable = true;
             _playButton.interactable = true;
             _rulesButton.interactable = true;
+            _openPlayFriendButton.interactable = true;
             if (_exitButton != null)
                 _exitButton.interactable = true;
         }

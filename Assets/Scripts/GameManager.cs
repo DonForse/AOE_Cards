@@ -2,12 +2,12 @@
 using UnityEngine;
 
 
-    internal class GameManager
+internal class GameManager
+{
+    internal static void SessionExpired()
     {
-        internal static void SessionExpired()
-        {
-            PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
 
-            Application.Quit();
-        }
+        Application.Quit();
     }
+}

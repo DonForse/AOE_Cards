@@ -26,6 +26,7 @@ namespace Game
             _hand = match.Hand;
             currentRound = match.Board.Rounds.Count() - 1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
+            PlayerPrefs.Save();
         }
 
         public void StartNewRound()
@@ -78,8 +79,10 @@ namespace Game
         {
             PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            PlayerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
             PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
             PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
+            PlayerPrefs.Save();
         }
 
         internal Hand GetHand()

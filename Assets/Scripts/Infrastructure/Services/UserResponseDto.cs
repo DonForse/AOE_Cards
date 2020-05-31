@@ -7,6 +7,7 @@ namespace Infrastructure.Services
     {
         public string username;
         public string guid;
+        public string friendCode;
         public string accessToken;
         public string refreshToken;
 

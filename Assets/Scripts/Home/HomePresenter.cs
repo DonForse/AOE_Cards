@@ -11,6 +11,8 @@ namespace Home
         private readonly ITokenService _tokenService;
         private readonly IHomeView _view;
         private bool previousPlayVsBot = false;
+        private bool previousPlayVsFriend = false;
+        private string previousFriendCode= "";
         public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService)
         {
             _view = view;
@@ -18,12 +20,15 @@ namespace Home
             _tokenService = tokenService;
         }
 
-        public void StartSearchingMatch(bool vsBot)
+        public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode)
         {
             previousPlayVsBot = vsBot;
+            previousPlayVsFriend = vsFriend;
+            previousFriendCode = friendCode;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
-            _matchService.StartMatch(vsBot, OnMatchStatusComplete, OnError);
-           _view.OnStartLookingForMatch();
+            PlayerPrefs.Save();
+            _matchService.StartMatch(vsBot, vsFriend, friendCode, OnMatchStatusComplete, OnError);
+           _view.OnStartLookingForMatch(vsBot);
         }
 
         private void OnError(long responseCode, string message)
@@ -45,15 +50,26 @@ namespace Home
         {
             PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            PlayerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
             PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
             PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
-
-            StartSearchingMatch(previousPlayVsBot);
+            PlayerPrefs.Save();
+            StartSearchingMatch(previousPlayVsBot, previousPlayVsFriend, previousFriendCode);
         }
 
         private void OnMatchStatusComplete(Match matchStatus)
         {
             _view.OnMatchFound(matchStatus);
+        }
+
+        internal void LeaveQueue()
+        {
+            _matchService.RemoveMatch(OnLeaveQueueComplete, OnError);
+        }
+
+        private void OnLeaveQueueComplete()
+        {
+            _view.OnQueueLeft();
         }
     }
 }

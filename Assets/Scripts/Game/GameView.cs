@@ -21,7 +21,8 @@ namespace Game
         [SerializeField] private ShowdownView _showdownView;
         [SerializeField] private TimerView _timerView;
         [SerializeField] private ActionView _actionView;
-        private IList<AudioClip> clips = null;
+        [SerializeField] private GameObject _focusOutGameObject;
+        [SerializeField] private AudioClip[] clips;
 
         private GamePresenter _presenter;
         private UnitCardView _unitCardPlayed;
@@ -42,9 +43,10 @@ namespace Game
 
         private void LoadAudio()
         {
-            if (clips == null)
+            if (clips == null || clips.Length == 0)
                 clips = Resources.LoadAll<AudioClip>("Sounds/GameBackground");
-            var index = UnityEngine.Random.Range(0, clips.Count);
+
+            var index = UnityEngine.Random.Range(0, clips.Length);
             SoundManager.Instance.PlayBackground(clips[index], new AudioClipOptions { loop = true }, true);
         }
 
@@ -60,13 +62,6 @@ namespace Game
             InitializeGame(match);
         }
 
-        private void OnApplicationPause(bool pause)
-        {
-            Debug.Log("Pause");
-            isWorking = true;
-            CancelInvoke("GetRound");
-        }
-
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
@@ -78,6 +73,7 @@ namespace Game
                 Debug.Log("Pause");
                 isWorking = true;
                 CancelInvoke("GetRound");
+                _focusOutGameObject.SetActive(true);
             }
         }
 
@@ -100,7 +96,9 @@ namespace Game
             if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
                 _handView.PutCards(_playableCards);
             Debug.Log("Reset");
+            _focusOutGameObject.SetActive(false);
             InvokeRepeating("GetRound", 0.5f, 2f);
+            
         }
 
         private void RecoverMatchState(Match match)

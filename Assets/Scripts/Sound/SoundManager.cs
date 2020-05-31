@@ -8,7 +8,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioSource trackSource;
     public bool IsMuted { get; private set; }
 
-    public void ToggleMute() {
+    public void ToggleMute()
+    {
         IsMuted = !IsMuted;
         audioSource.volume = IsMuted ? 0f : 1f;
         trackSource.volume = IsMuted ? 0f : 1f;
@@ -33,7 +34,8 @@ public class SoundManager : MonoBehaviour
     }
     #endregion
 
-    public void PlayAudioClip(AudioClip audioClip, AudioClipOptions audioOptions) {
+    public void PlayAudioClip(AudioClip audioClip, AudioClipOptions audioOptions)
+    {
         audioSource.clip = audioClip;
         audioSource.loop = audioOptions.loop;
         audioSource.Play();

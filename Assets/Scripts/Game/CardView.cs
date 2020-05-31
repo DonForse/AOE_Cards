@@ -148,6 +148,8 @@ namespace Game
                 transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
                 yield return null;
             }
+
+            transform.localScale = Vector3.one;
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)

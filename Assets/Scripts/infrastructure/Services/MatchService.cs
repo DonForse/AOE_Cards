@@ -12,20 +12,25 @@ namespace Infrastructure.Services
     {
         private string MatchUrl => Configuration.UrlBase + "/api/match";
 
-        public void StartMatch(bool vsBot, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        private bool stopLooking = false;
+
+        public void StartMatch(bool vsBot, bool vsFriend,string friendCode, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
-            string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot });
+            stopLooking = false;
+            string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode });
             StartCoroutine(Post(data, onStartMatchComplete, onError));
         }
 
         public void GetMatch(Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
+            stopLooking = false;
             StartCoroutine(Get(onStartMatchComplete, onError));
         }
 
 
         public void RemoveMatch(Action onRemoveMatchComplete, Action<long, string> onError)
         {
+            stopLooking = true;
             StartCoroutine(Delete(onRemoveMatchComplete, onError));
         }
 
@@ -47,7 +52,7 @@ namespace Infrastructure.Services
             {
                 onRemoveMatchComplete();
             }
-            else
+            else 
             {
                 yield return new WaitForSeconds(3f);
                 StartCoroutine(Delete(onRemoveMatchComplete, onError));
@@ -82,6 +87,9 @@ namespace Infrastructure.Services
             }
             else
             {
+                if (stopLooking)
+                    yield break;
+
                 yield return new WaitForSeconds(3f);
                 StartCoroutine(Get(onStartMatchComplete, onError));
             }
@@ -89,6 +97,8 @@ namespace Infrastructure.Services
 
         private IEnumerator Post(string data, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
+            if (stopLooking)
+                yield break;
             ResponseInfo responseInfo;
             using (var webRequest = UnityWebRequest.Post(MatchUrl, data))
             {

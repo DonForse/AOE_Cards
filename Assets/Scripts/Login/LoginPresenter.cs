@@ -58,8 +58,10 @@ namespace Login
         {
             PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            PlayerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
             PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
             PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
+            PlayerPrefs.Save();
             _view.OnLoginComplete();
         }
     }

@@ -30,17 +30,22 @@ namespace Game
             _showdownView.SetRoundUpgradeCard(go);
             yield return new WaitForSeconds(3f);
 
+            SetRoundUpgrade(go);
+            yield return new WaitForSeconds(2f);
+
+            callback();
+        }
+
+        private void SetRoundUpgrade(GameObject go)
+        {
             var icon = Instantiate(upgradeIconGo, roundCardContainer.transform);
             var iconView = icon.GetComponent<UpgradeIconView>();
             var upgradeView = go.GetComponent<UpgradeCardView>();
             iconView.SetUpgrade(upgradeView);
             go.SetActive(false);
             go.transform.SetParent(icon.transform);
-            yield return new WaitForSeconds(2f);
-
-            callback();
         }
-        
+
         internal void SetUpgrade(GameObject go, PlayerType playerType)
         {
             var container = playerType == PlayerType.Player ? playerUpgradesContainer : rivalUpgradesContainer;
@@ -74,8 +79,8 @@ namespace Game
                 }
             }
             var lastRound = match.Board.Rounds.Last();
-            //var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
-            //StartCoroutine(SetRoundUpgradeCard(upgradeRound.gameObject, () => { }));
+            var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
+            SetRoundUpgrade(upgradeRound.gameObject);
         }
     }
 }

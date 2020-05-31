@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Game;
 using Infrastructure.Services;
 using Login;
@@ -20,6 +17,12 @@ namespace Home
 
         private void Start()
         {
+            //not the best practice, but dont want to implement a new class right now.
+#if UNITY_EDITOR
+  Debug.logger.logEnabled = true;
+#else
+            Debug.unityLogger.logEnabled = false;
+#endif
             OpenLoginView();
         }
 

@@ -10,18 +10,30 @@ public class MuteSound : MonoBehaviour
     private void Start()
     {
         _button.onClick.AddListener(ToggleSound);
+
+        if (PlayerPrefs.GetInt(PlayerPrefsHelper.Sound) == 1)
+            return;
+
+        ToggleSound();
     }
 
-    public void ToggleSound() {
+    public void ToggleSound()
+    {
         SoundManager.Instance.ToggleMute();
-        if (SoundManager.Instance.IsMuted) {
+        
+        if (SoundManager.Instance.IsMuted)
+        {
             soundOnImage.SetActive(false);
             soundOffImage.SetActive(true);
+            PlayerPrefs.SetInt(PlayerPrefsHelper.Sound, 0);
         }
-        else {
+        else
+        {
             soundOnImage.SetActive(true);
             soundOffImage.SetActive(false);
+            PlayerPrefs.SetInt(PlayerPrefsHelper.Sound, 1);
         }
-        
+        PlayerPrefs.Save();
+
     }
 }
