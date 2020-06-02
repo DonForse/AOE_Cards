@@ -58,3 +58,21 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+BuildWeb/Build/BuildWeb.data.unityweb
+BuildWeb/Build/BuildWeb.json
+BuildWeb/Build/BuildWeb.wasm.code.unityweb
+BuildWeb/Build/BuildWeb.wasm.framework.unityweb
+BuildWeb/Build/UnityLoader.js
+BuildWeb/BuildWeb.zip
+BuildWeb/index.html
+BuildWeb/TemplateData/favicon.ico
+BuildWeb/TemplateData/fullscreen.png
+BuildWeb/TemplateData/progressEmpty.Dark.png
+BuildWeb/TemplateData/progressEmpty.Light.png
+BuildWeb/TemplateData/progressFull.Dark.png
+BuildWeb/TemplateData/progressFull.Light.png
+BuildWeb/TemplateData/progressLogo.Dark.png
+BuildWeb/TemplateData/progressLogo.Light.png
+BuildWeb/TemplateData/style.css
+BuildWeb/TemplateData/UnityProgress.js
+BuildWeb/TemplateData/webgl-logo.png

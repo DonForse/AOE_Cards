@@ -1337,10 +1337,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1871861223287439489}
-  - {fileID: 4394647003100587915}
   - {fileID: 2957555336357591725}
   - {fileID: 4650700320809408789}
   - {fileID: 4086643693915104912}
+  - {fileID: 4394647003100587915}
   - {fileID: 1540351422803531118}
   - {fileID: 2350930425804854091}
   - {fileID: 6465258384863052987}
@@ -1377,6 +1377,7 @@ MonoBehaviour:
   _timerView: {fileID: 979827639963189516}
   _actionView: {fileID: 325126204603557978}
   _focusOutGameObject: {fileID: 8520706630353460836}
+  clips: []
 --- !u!95 &5120377038585279558
 Animator:
   serializedVersion: 3
@@ -1973,7 +1974,7 @@ RectTransform:
   - {fileID: 388627785}
   - {fileID: 2293541741592675736}
   m_Father: {fileID: 1871861222407515394}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.1, y: 0.25}
   m_AnchorMax: {x: 0.9, y: 0.65}
@@ -3336,7 +3337,7 @@ RectTransform:
   - {fileID: 7296013874620846838}
   - {fileID: 5291197305726967342}
   m_Father: {fileID: 1871861222407515394}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -4140,7 +4141,7 @@ RectTransform:
   - {fileID: 5677668034427160920}
   - {fileID: 1194996054222606090}
   m_Father: {fileID: 1871861222407515394}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.85}
   m_AnchorMax: {x: 1, y: 1}
@@ -4806,7 +4807,7 @@ RectTransform:
   - {fileID: 311281388069236269}
   - {fileID: 6824046154918708908}
   m_Father: {fileID: 1871861222407515394}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.3}
   m_AnchorMax: {x: 1, y: 0.88}
