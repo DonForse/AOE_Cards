@@ -80,11 +80,8 @@ namespace Game
         private void UnexpectedError()
         {
             Toast.Instance.ShowToast("Unexpected","Error");
-            //RevertLastAction();
             servicesProvider.GetMatchService().GetMatch(ResetGameState, SomeError);
-            //ResetGameState();
             isWorking = false;
-            //throw new NotImplementedException("Unexpected");
         }
 
         private void ResetGameState(Match match)
@@ -525,6 +522,7 @@ namespace Game
             _showdownView.Clear();
             _upgradesView.Clear();
             _rerollView.Clear();
+            _rerollView.gameObject.SetActive(false);
             isWorking = false;
             _timerView.StopTimer();
         }

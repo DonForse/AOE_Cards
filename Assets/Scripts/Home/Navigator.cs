@@ -19,7 +19,7 @@ namespace Home
         {
             //not the best practice, but dont want to implement a new class right now.
 #if UNITY_EDITOR
-  Debug.logger.logEnabled = true;
+  Debug.unityLogger.logEnabled = true;
 #else
             Debug.unityLogger.logEnabled = false;
 #endif
