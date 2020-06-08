@@ -16,6 +16,9 @@ namespace Home
         [SerializeField] private Button _openPlayFriendButton;
         [SerializeField] private Button _closePlayFriendButton;
         [SerializeField] private Button _playBotButton;
+        [SerializeField] private Button _openBotMenuButton;
+        [SerializeField] private Button _closeBotMenuButton;
+        [SerializeField] private Button _playhardBotButton;
         [SerializeField] private Button _optionsButton;
         [SerializeField] private Button _rulesButton;
         [SerializeField] private Button _exitButton;
@@ -25,6 +28,7 @@ namespace Home
         [SerializeField] private GameObject _matchMakingContainer;
         [SerializeField] private GameObject _matchFoundContainer;
         [SerializeField] private GameObject _playFriendContainer;
+        [SerializeField] private GameObject _playBotContainer;
         [SerializeField] private TextMeshProUGUI _matchMakingTimerLabel;
         [SerializeField] private TextMeshProUGUI _userCodeLabel;
         [SerializeField] private TMP_InputField _friendCode;
@@ -45,7 +49,10 @@ namespace Home
             _userCodeLabel.text = PlayerPrefs.GetString(PlayerPrefsHelper.FriendCode);
 
             _playButton.onClick.AddListener(PlayMatch);
+            _openBotMenuButton.onClick.AddListener(OpenBotMenu);
+            _playhardBotButton.onClick.AddListener(PlayVersusBotHard);
             _playBotButton.onClick.AddListener(PlayVersusBot);
+            _closeBotMenuButton.onClick.AddListener(CloseBotMenu);
             _rulesButton.onClick.AddListener(OpenRules);
             _playFriendButton.onClick.AddListener(PlayVersusFriend);
             _openPlayFriendButton.onClick.AddListener(OpenVersusFriend);
@@ -55,7 +62,6 @@ namespace Home
                 _exitButton.onClick.AddListener(Application.Quit);
             this.gameObject.SetActive(true);
         }
-
 
         public void OnClosing()
         {
@@ -92,9 +98,27 @@ namespace Home
 
         private void PlayVersusBot()
         {
+            CloseBotMenu();
             DeactivateButtons();
-            _presenter.StartSearchingMatch(true, false, string.Empty);
+            _presenter.StartSearchingMatch(true, false, string.Empty, 0);
             //navigator.
+        }
+
+        private void PlayVersusBotHard()
+        {
+            CloseBotMenu();
+            DeactivateButtons();
+            _presenter.StartSearchingMatch(true, false, string.Empty, 1);
+        }
+
+        private void OpenBotMenu()
+        {
+            _playBotContainer.SetActive(true);
+        }
+
+        private void CloseBotMenu()
+        {
+            _playBotContainer.SetActive(false);
         }
 
 
@@ -168,6 +192,7 @@ namespace Home
 
         private void DeactivateButtons() {
             _playBotButton.interactable = false;
+            _playhardBotButton.interactable = false;
             _playButton.interactable = false;
             _rulesButton.interactable = false;
             _openPlayFriendButton.interactable = false;
@@ -179,6 +204,7 @@ namespace Home
         {
             _playBotButton.interactable = true;
             _playButton.interactable = true;
+            _playhardBotButton.interactable = true;
             _rulesButton.interactable = true;
             _openPlayFriendButton.interactable = true;
             if (_exitButton != null)

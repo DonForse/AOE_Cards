@@ -14,10 +14,10 @@ namespace Infrastructure.Services
 
         private bool stopLooking = false;
 
-        public void StartMatch(bool vsBot, bool vsFriend,string friendCode, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        public void StartMatch(bool vsBot, bool vsFriend,string friendCode, int botDifficulty, Action<Match> onStartMatchComplete, Action<long, string> onError)
         {
             stopLooking = false;
-            string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode });
+            string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty });
             StartCoroutine(Post(data, onStartMatchComplete, onError));
         }
 

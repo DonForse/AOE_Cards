@@ -20,14 +20,14 @@ namespace Home
             _tokenService = tokenService;
         }
 
-        public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode)
+        public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
         {
             previousPlayVsBot = vsBot;
             previousPlayVsFriend = vsFriend;
             previousFriendCode = friendCode;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
             PlayerPrefs.Save();
-            _matchService.StartMatch(vsBot, vsFriend, friendCode, OnMatchStatusComplete, OnError);
+            _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty, OnMatchStatusComplete, OnError);
            _view.OnStartLookingForMatch(vsBot);
         }
 

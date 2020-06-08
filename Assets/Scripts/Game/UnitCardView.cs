@@ -5,6 +5,7 @@ using System.Linq;
 using Common;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -36,8 +37,28 @@ namespace Game
             artwork.preserveAspect = true;
             
             SetBackgroundColor(card.GetArchetypes());
+            background.sprite = SetImageBackground(card.GetArchetypes());
             LoadAudioClip(card.GetArchetypes());
             //archetypeSection.SetCard(card.GetArchetypes());
+        }
+
+        private Sprite SetImageBackground(IList<Archetype> list)
+        {
+            foreach (var archetype in list)
+            {
+                switch (archetype) { 
+                    case Archetype.Cavalry:
+                        return Resources.Load<Sprite>("Cards/CardbackgroundsImages/steppe");
+                    case Archetype.Archer:
+                        return Resources.Load<Sprite>("Cards/CardbackgroundsImages/drygrass");
+                    case Archetype.Militia:
+                    case Archetype.Infantry:
+                        return Resources.Load<Sprite>("Cards/CardbackgroundsImages/road");
+                    default:
+                        break;
+                }
+            }
+            return Resources.Load<Sprite>("Cards/CardbackgroundsImages/land");
         }
 
         internal void LoadAudioClip(IList<Archetype> archetypes)

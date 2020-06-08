@@ -512,6 +512,8 @@ namespace Game
             {
                 foreach (var card in _playableCards)
                 {
+                    if (card == null)
+                        continue;
                     Destroy(card.gameObject);
                 }
             }
