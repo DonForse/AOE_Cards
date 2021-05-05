@@ -66,6 +66,17 @@ namespace Login.UnityDelivery
 
         private void SendLogin()
         {
+            if (string.IsNullOrWhiteSpace(username.text))
+            {
+                ShowError("Username cannot be empty");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(password.text))
+            {
+                ShowError("Password cannot be empty");
+                return;
+            }
+
             DisableButtons();
             if (action == "login")
                 _presenter.Login(username.text, password.text);

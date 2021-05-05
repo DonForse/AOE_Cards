@@ -2,8 +2,6 @@
 using Login.Scripts.Infrastructure;
 using UnityEngine;
 using UniRx;
-using System.Collections.Generic;
-using System;
 
 namespace Login.Scripts.Domain
 {
@@ -21,16 +19,6 @@ namespace Login.Scripts.Domain
 
         public void Login(string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                _view.ShowError("Username cannot be empty");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                _view.ShowError("Password cannot be empty");
-                return;
-            }
             _loginService.Login(username, password)
                 .DoOnError(err => OnLoginFailed(err.Message))
                 .Subscribe(user => OnLoginComplete(user))
@@ -39,27 +27,12 @@ namespace Login.Scripts.Domain
 
         public void Register(string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                _view.ShowError("Username cannot be empty");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                _view.ShowError("Password cannot be empty");
-                return;
-            }
             _loginService.Register(username, password)
                 .DoOnError(err => OnLoginFailed(err.Message))
                 .Subscribe(user => OnLoginComplete(user)).AddTo(_disposables);
         }
 
         private void OnLoginFailed(string errorMessage)
-        {
-            _view.OnLoginFail(errorMessage);
-        }
-
-        private void OnRegisterFailed(string errorMessage)
         {
             _view.OnLoginFail(errorMessage);
         }
