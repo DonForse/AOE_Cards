@@ -1,5 +1,6 @@
 using System;
 using Infrastructure.Services;
+using Login.Scripts.Infrastructure;
 using UnityEngine;
 
 public class ServicesProvider : MonoBehaviour
