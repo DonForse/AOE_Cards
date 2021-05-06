@@ -50,7 +50,7 @@ namespace Login.Scripts.Domain
 
         public void Dispose()
         {
-            _disposables.Clear();
+            _disposables.Dispose();
         }
     }
 }

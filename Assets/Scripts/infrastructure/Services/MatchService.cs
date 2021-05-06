@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Game;
@@ -14,26 +12,27 @@ namespace Infrastructure.Services
     {
         private string MatchUrl => Configuration.UrlBase + "/api/match";
 
-        private bool stopLooking = false;
         private CompositeDisposable _disposables = new CompositeDisposable();
+
+        public void StopSearch()
+        {
+            _disposables.Dispose();
+        }
 
         public IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
-            stopLooking = false;
             string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty });
             return Post(data).Retry(3);
         }
 
-        public void GetMatch(Action<Match> onStartMatchComplete, Action<long, string> onError)
+        public IObservable<Match> GetMatch()
         {
-            stopLooking = false;
-            StartCoroutine(Get(onStartMatchComplete, onError));
+            return Get().Retry(3);
         }
 
 
         public IObservable<Unit> RemoveMatch()
         {
-            stopLooking = true;
             return Delete().Retry(3);
         }
 
@@ -62,53 +61,56 @@ namespace Infrastructure.Services
                         }
                         else
                         {
-                            throw new TimeoutException("cannot reach server");
+                            throw new TimeoutException("Cannot reach server");
                         }
 
                     }).AddTo(_disposables);
             });
         }
 
-        private IEnumerator Get(Action<Match> onStartMatchComplete, Action<long, string> onError)
+        private IObservable<Match> Get()
         {
-            ResponseInfo responseInfo;
-            using (var webRequest = UnityWebRequest.Get(MatchUrl))
+            return Observable.Create<Match>(emitter =>
             {
+                ResponseInfo responseInfo;
+                var webRequest = UnityWebRequest.Get(MatchUrl);
+
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                yield return webRequest.SendWebRequest();
-                responseInfo = new ResponseInfo(webRequest);
-            }
-
-            if (responseInfo.isError)
-            {
-                onError(responseInfo.code, responseInfo.response.error);
-            }
-            else if (responseInfo.isComplete)
-            {
-                var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
-                if (string.IsNullOrWhiteSpace(dto.matchId))
-                {
-                    yield return new WaitForSeconds(3f);
-                    StartCoroutine(Get(onStartMatchComplete, onError));
-                }
-                else
-                {
-                    onStartMatchComplete(DtoToMatchStatus(dto));
-                }
-            }
-            else
-            {
-                if (stopLooking)
-                    yield break;
-
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(onStartMatchComplete, onError));
-            }
+                return webRequest.SendWebRequest().AsObservable()
+                    .DoOnCompleted(() => webRequest.Dispose())
+                    .Subscribe(_ =>
+                    {
+                        responseInfo = new ResponseInfo(webRequest);
+                        if (responseInfo.isError)
+                        {
+                            emitter.OnError(new MatchServiceException(responseInfo.response.error, responseInfo.code));
+                            emitter.OnCompleted();
+                        }
+                        else if (responseInfo.isComplete)
+                        {
+                            var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
+                            if (string.IsNullOrWhiteSpace(dto.matchId))
+                            {
+                                emitter.OnNext(null);
+                            }
+                            else
+                            {
+                                emitter.OnNext(DtoToMatchStatus(dto));
+                                emitter.OnCompleted();
+                            }
+                        }
+                        else
+                        {
+                            throw new TimeoutException("Cannot reach server");
+                        }
+                    }).AddTo(_disposables);
+            });
         }
 
         private IObservable<Match> Post(string data)
         {
-            return Observable.Create<Match>(emitter => {
+            return Observable.Create<Match>(emitter =>
+            {
                 ResponseInfo responseInfo;
                 var webRequest = UnityWebRequest.Post(MatchUrl, data);
 
@@ -143,10 +145,9 @@ namespace Infrastructure.Services
                     }
                     else
                     {
-                        throw new TimeoutException("cannot reach server");
+                        throw new TimeoutException("Cannot reach server");
                     }
-                }
-                ).AddTo(_disposables);
+                }).AddTo(_disposables);
             });
         }
 

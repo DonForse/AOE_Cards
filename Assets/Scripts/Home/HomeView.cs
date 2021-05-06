@@ -68,7 +68,7 @@ namespace Home
 
         public void OnClosing()
         {
-            _disposables.Clear();
+            _disposables.Dispose();
             this.gameObject.SetActive(false);
         }
         

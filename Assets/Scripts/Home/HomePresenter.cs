@@ -2,8 +2,6 @@ using Infrastructure.Services;
 using UnityEngine;
 using UniRx;
 using System;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace Home
 {
@@ -14,9 +12,8 @@ namespace Home
         private readonly IHomeView _view;
         private bool previousPlayVsBot = false;
         private bool previousPlayVsFriend = false;
-        private string previousFriendCode= "";
+        private string previousFriendCode = "";
         private CompositeDisposable _disposables = new CompositeDisposable();
-        private Match _match = null;
 
         public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService)
         {
@@ -27,7 +24,6 @@ namespace Home
 
         public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
         {
-            _match = null;
             previousPlayVsBot = vsBot;
             previousPlayVsFriend = vsFriend;
             previousFriendCode = friendCode;
@@ -41,13 +37,30 @@ namespace Home
         {
             _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty)
                 .DoOnError(error => OnError((MatchServiceException)error))
-                .Do(match => _match = match)
-                .Delay(TimeSpan.FromSeconds(3))
-                .Subscribe(match =>
+                .Subscribe(startMatch =>
                 {
-                    if (_match != null)
-                        OnMatchStatusComplete(match);
-                    else _matchService.GetMatch(OnMatchStatusComplete, (code, error) => OnError(new MatchServiceException(error,code)));
+                    if (startMatch != null)
+                    {
+                        OnMatchStatusComplete(startMatch);
+                    }
+                    else
+                    {
+                        Observable.Interval(TimeSpan.FromSeconds(3))
+                        .Subscribe(_ =>
+                        {
+                            _matchService.GetMatch()
+                                .DoOnError(err => OnError((MatchServiceException)err))
+                                .Subscribe(match =>
+                                {
+                                    if (match != null)
+                                    {
+                                        _matchService.StopSearch();
+                                        _disposables.Dispose();
+                                        OnMatchStatusComplete(match);
+                                    }
+                                }).AddTo(_disposables);
+                        });
+                    }
                 })
                 .AddTo(_disposables);
         }
@@ -87,7 +100,7 @@ namespace Home
         {
             _matchService.RemoveMatch()
                 .DoOnError(err => OnError((MatchServiceException)err))
-                .Subscribe(_=>OnLeaveQueueComplete());
+                .Subscribe(_ => OnLeaveQueueComplete());
         }
 
         private void OnLeaveQueueComplete()

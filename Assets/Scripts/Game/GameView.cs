@@ -5,6 +5,7 @@ using System.Linq;
 using Common;
 using Home;
 using Infrastructure.Services;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,7 +68,10 @@ namespace Game
             if (focus)
             {
                 Debug.Log("Focus");
-                servicesProvider.GetMatchService().GetMatch(ResetGameState, SomeError);
+                servicesProvider.GetMatchService().GetMatch()
+                    .DoOnError(error=>SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
+                    .Subscribe(match => ResetGameState(match));
+                //(ResetGameState, SomeError);
             }
             else {
                 Debug.Log("Pause");
@@ -80,7 +84,9 @@ namespace Game
         private void UnexpectedError()
         {
             Toast.Instance.ShowToast("Unexpected","Error");
-            servicesProvider.GetMatchService().GetMatch(ResetGameState, SomeError);
+            servicesProvider.GetMatchService().GetMatch()
+                .DoOnError(error=> SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
+                .Subscribe(match =>ResetGameState(match));
             isWorking = false;
         }
 

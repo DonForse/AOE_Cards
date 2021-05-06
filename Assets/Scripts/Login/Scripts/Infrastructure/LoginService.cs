@@ -15,7 +15,7 @@ namespace Login.Scripts.Infrastructure
         {
             _disposables = new CompositeDisposable();
         }
-        ~LoginService() =>_disposables.Clear();
+        ~LoginService() =>_disposables.Dispose();
 
 
         private CompositeDisposable _disposables;
@@ -41,7 +41,7 @@ namespace Login.Scripts.Infrastructure
         }
         public void Unload()
         {
-            _disposables.Clear();
+            _disposables.Dispose();
         }
 
         private string EncodePassword(string password, DateTime dt)

@@ -39,7 +39,7 @@ namespace Login.UnityDelivery
 
         public void OnClosing()
         {
-            _disposables.Clear();
+            _disposables.Dispose();
             _presenter.Dispose();
             this.gameObject.SetActive(false);
         }
