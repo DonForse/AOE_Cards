@@ -56,10 +56,7 @@ public class ResultView : MonoBehaviour, IView
 
     private void GoBackHome()
     {
-        servicesProvider.GetMatchService().RemoveMatch(() => { }, (code, error) => {
-            //TODO: Be careful on token error and this shit is not enabled, idk what the fuck it will happen. also even if enabled, this shit is not doing anyhitng about tokens.
-            //think better token management architechture, make the services implement the token refresh shit.
-        });
+        servicesProvider.GetMatchService().RemoveMatch();
         _navigator.OpenHomeView();
     }
 }

@@ -1,7 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using Infrastructure.Services;
 using UnityEngine;
+using UniRx;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Home
 {
@@ -13,6 +15,9 @@ namespace Home
         private bool previousPlayVsBot = false;
         private bool previousPlayVsFriend = false;
         private string previousFriendCode= "";
+        private CompositeDisposable _disposables = new CompositeDisposable();
+        private Match _match = null;
+
         public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService)
         {
             _view = view;
@@ -22,23 +27,39 @@ namespace Home
 
         public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
         {
+            _match = null;
             previousPlayVsBot = vsBot;
             previousPlayVsFriend = vsFriend;
             previousFriendCode = friendCode;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
             PlayerPrefs.Save();
-            _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty, OnMatchStatusComplete, OnError);
-           _view.OnStartLookingForMatch(vsBot);
+            StartMatch(vsBot, vsFriend, friendCode, botDifficulty);
+            _view.OnStartLookingForMatch(vsBot);
         }
 
-        private void OnError(long responseCode, string message)
+        private void StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
-            if (responseCode == 401)
+            _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty)
+                .DoOnError(error => OnError((MatchServiceException)error))
+                .Do(match => _match = match)
+                .Delay(TimeSpan.FromSeconds(3))
+                .Subscribe(match =>
+                {
+                    if (_match != null)
+                        OnMatchStatusComplete(match);
+                    else _matchService.GetMatch(OnMatchStatusComplete, (code, error) => OnError(new MatchServiceException(error,code)));
+                })
+                .AddTo(_disposables);
+        }
+
+        private void OnError(MatchServiceException exception)
+        {
+            if (exception.Code == 401)
             {
                 _tokenService.RefreshToken(onRefreshTokenComplete, onRefreshTokenError);
                 return;
             }
-            _view.OnError(message);
+            _view.OnError(exception.Error);
         }
 
         private void onRefreshTokenError(string error)
@@ -64,7 +85,9 @@ namespace Home
 
         internal void LeaveQueue()
         {
-            _matchService.RemoveMatch(OnLeaveQueueComplete, OnError);
+            _matchService.RemoveMatch()
+                .DoOnError(err => OnError((MatchServiceException)err))
+                .Subscribe(_=>OnLeaveQueueComplete());
         }
 
         private void OnLeaveQueueComplete()

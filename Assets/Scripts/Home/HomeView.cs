@@ -1,7 +1,7 @@
 ﻿using System;
-using Game;
 using Infrastructure.Services;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,6 +34,8 @@ namespace Home
         [SerializeField] private TMP_InputField _friendCode;
         [SerializeField] private AudioClip mainThemeClip;
 
+        private CompositeDisposable _disposables = new CompositeDisposable();
+
         private float timerStartTime;
         private bool timerRunning = false;
         private HomePresenter _presenter;
@@ -44,35 +46,29 @@ namespace Home
             _matchFoundContainer.SetActive(false);
             _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
 
-            ActivateButtons();
+            EnableButtons();
 
             _userCodeLabel.text = PlayerPrefs.GetString(PlayerPrefsHelper.FriendCode);
 
-            _playButton.onClick.AddListener(PlayMatch);
-            _openBotMenuButton.onClick.AddListener(OpenBotMenu);
-            _playhardBotButton.onClick.AddListener(PlayVersusBotHard);
-            _playBotButton.onClick.AddListener(PlayVersusBot);
-            _closeBotMenuButton.onClick.AddListener(CloseBotMenu);
-            _rulesButton.onClick.AddListener(OpenRules);
-            _playFriendButton.onClick.AddListener(PlayVersusFriend);
-            _openPlayFriendButton.onClick.AddListener(OpenVersusFriend);
-            _closePlayFriendButton.onClick.AddListener(CloseVersusFriend);
-            _leaveQueueButton.onClick.AddListener(LeaveQueue);
+            _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_=>PlayMatch()).AddTo(_disposables);
+            _openBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_=>OpenBotMenu());
+            _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBotHard());
+            _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBot());
+            _closeBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => CloseBotMenu()).AddTo(_disposables);
+            _rulesButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenRules()).AddTo(_disposables);
+            _playFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusFriend()).AddTo(_disposables);
+            _openPlayFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenVersusFriend()).AddTo(_disposables);
+            _closePlayFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => CloseVersusFriend()).AddTo(_disposables);
+            _leaveQueueButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => LeaveQueue()).AddTo(_disposables);
+
             if (_exitButton != null)
-                _exitButton.onClick.AddListener(Application.Quit);
+                _exitButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_=>Application.Quit()).AddTo(_disposables);
             this.gameObject.SetActive(true);
         }
 
         public void OnClosing()
         {
-            _rulesButton.onClick.RemoveAllListeners();
-            _playButton.onClick.RemoveAllListeners();
-            _playBotButton.onClick.RemoveAllListeners();
-            _rulesButton.onClick.RemoveAllListeners();
-            _playFriendButton.onClick.RemoveAllListeners();
-            _openPlayFriendButton.onClick.RemoveAllListeners();
-            _closePlayFriendButton.onClick.RemoveAllListeners();
-            _leaveQueueButton.onClick.RemoveAllListeners();
+            _disposables.Clear();
             this.gameObject.SetActive(false);
         }
         
@@ -86,12 +82,12 @@ namespace Home
 
         private void OpenRules()
         {
-            DeactivateButtons();
+            DisableButtons();
             _navigator.OpenTutorialView();
         }
         private void PlayMatch()
         {
-            DeactivateButtons();
+            DisableButtons();
             _presenter.StartSearchingMatch(false,false,string.Empty);
             //navigator.
         }
@@ -99,7 +95,7 @@ namespace Home
         private void PlayVersusBot()
         {
             CloseBotMenu();
-            DeactivateButtons();
+            DisableButtons();
             _presenter.StartSearchingMatch(true, false, string.Empty, 0);
             //navigator.
         }
@@ -107,7 +103,7 @@ namespace Home
         private void PlayVersusBotHard()
         {
             CloseBotMenu();
-            DeactivateButtons();
+            DisableButtons();
             _presenter.StartSearchingMatch(true, false, string.Empty, 1);
         }
 
@@ -140,14 +136,14 @@ namespace Home
         public void OnQueueLeft()
         {
             StopTimer();
-            ActivateButtons();
+            EnableButtons();
             _matchMakingContainer.SetActive(false);
         }
 
         private void PlayVersusFriend()
         {
             CloseVersusFriend();
-            DeactivateButtons();
+            DisableButtons();
             _presenter.StartSearchingMatch(false, true, _friendCode.text);
             //navigator.
         }
@@ -190,7 +186,8 @@ namespace Home
             _navigator.OpenLoginView();
         }
 
-        private void DeactivateButtons() {
+        private void DisableButtons() 
+        {
             _playBotButton.interactable = false;
             _playhardBotButton.interactable = false;
             _playButton.interactable = false;
@@ -200,7 +197,7 @@ namespace Home
                 _exitButton.interactable = false;
         }
 
-        private void ActivateButtons()
+        private void EnableButtons()
         {
             _playBotButton.interactable = true;
             _playButton.interactable = true;

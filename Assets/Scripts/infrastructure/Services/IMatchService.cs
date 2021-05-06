@@ -1,11 +1,12 @@
 using System;
+using UniRx;
 
 namespace Infrastructure.Services
 {
     public interface IMatchService
     {
-        void StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty , Action<Match> onStartMatchComplete, Action<long, string> onError);
+        IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty);
         void GetMatch(Action<Match> onStartMatchComplete, Action<long, string> onError);
-        void RemoveMatch(Action onRemoveMatchComplete, Action<long, string> onError);
+        IObservable<Unit> RemoveMatch();
     }
 }

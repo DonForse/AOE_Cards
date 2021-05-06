@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Game;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,12 +15,13 @@ namespace Infrastructure.Services
         private string MatchUrl => Configuration.UrlBase + "/api/match";
 
         private bool stopLooking = false;
+        private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public void StartMatch(bool vsBot, bool vsFriend,string friendCode, int botDifficulty, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        public IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             stopLooking = false;
             string data = JsonUtility.ToJson(new MatchPostDto { vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty });
-            StartCoroutine(Post(data, onStartMatchComplete, onError));
+            return Post(data).Retry(3);
         }
 
         public void GetMatch(Action<Match> onStartMatchComplete, Action<long, string> onError)
@@ -28,35 +31,42 @@ namespace Infrastructure.Services
         }
 
 
-        public void RemoveMatch(Action onRemoveMatchComplete, Action<long, string> onError)
+        public IObservable<Unit> RemoveMatch()
         {
             stopLooking = true;
-            StartCoroutine(Delete(onRemoveMatchComplete, onError));
+            return Delete().Retry(3);
         }
 
-        private IEnumerator Delete(Action onRemoveMatchComplete, Action<long, string> onError)
+        private IObservable<Unit> Delete()
         {
-            ResponseInfo responseInfo;
-            using (var webRequest = UnityWebRequest.Delete(MatchUrl))
+            return Observable.Create<Unit>(emitter =>
             {
-                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                yield return webRequest.SendWebRequest();
-                responseInfo = new ResponseInfo(webRequest);
-            }
+                ResponseInfo responseInfo;
+                var webRequest = UnityWebRequest.Delete(MatchUrl);
 
-            if (responseInfo.isError)
-            {
-                onError(responseInfo.code, responseInfo.response.error);
-            }
-            else if (responseInfo.isComplete)
-            {
-                onRemoveMatchComplete();
-            }
-            else 
-            {
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(Delete(onRemoveMatchComplete, onError));
-            }
+                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
+                return webRequest.SendWebRequest().AsObservable()
+                    .DoOnCompleted(() => webRequest.Dispose())
+                    .Subscribe(_ =>
+                    {
+                        responseInfo = new ResponseInfo(webRequest);
+                        if (responseInfo.isError)
+                        {
+                            emitter.OnError(new MatchServiceException(responseInfo.response.error, responseInfo.code));
+                            emitter.OnCompleted();
+                        }
+                        else if (responseInfo.isComplete)
+                        {
+                            emitter.OnNext(Unit.Default);
+                            emitter.OnCompleted();
+                        }
+                        else
+                        {
+                            throw new TimeoutException("cannot reach server");
+                        }
+
+                    }).AddTo(_disposables);
+            });
         }
 
         private IEnumerator Get(Action<Match> onStartMatchComplete, Action<long, string> onError)
@@ -81,9 +91,10 @@ namespace Infrastructure.Services
                     yield return new WaitForSeconds(3f);
                     StartCoroutine(Get(onStartMatchComplete, onError));
                 }
-                else {
+                else
+                {
                     onStartMatchComplete(DtoToMatchStatus(dto));
-                }   
+                }
             }
             else
             {
@@ -95,45 +106,48 @@ namespace Infrastructure.Services
             }
         }
 
-        private IEnumerator Post(string data, Action<Match> onStartMatchComplete, Action<long, string> onError)
+        private IObservable<Match> Post(string data)
         {
-            if (stopLooking)
-                yield break;
-            ResponseInfo responseInfo;
-            using (var webRequest = UnityWebRequest.Post(MatchUrl, data))
-            {
+            return Observable.Create<Match>(emitter => {
+                ResponseInfo responseInfo;
+                var webRequest = UnityWebRequest.Post(MatchUrl, data);
+
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
                 webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                yield return webRequest.SendWebRequest();
-                responseInfo = new ResponseInfo(webRequest);
-            }
-
-            if (responseInfo.isError)
-            {
-                onError(responseInfo.code, responseInfo.response.error);
-            }
-            else if (responseInfo.isComplete)
-            {
-                var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
-                if (string.IsNullOrWhiteSpace(dto.matchId))
+                return webRequest.SendWebRequest().AsObservable()
+                .DoOnCompleted(() => webRequest.Dispose())
+                .Subscribe(_ =>
                 {
-                    yield return new WaitForSeconds(3f);
-                    StartCoroutine(Get(onStartMatchComplete, onError));
+                    responseInfo = new ResponseInfo(webRequest);
+                    if (responseInfo.isError)
+                    {
+                        emitter.OnError(new MatchServiceException(responseInfo.response.error, responseInfo.code));
+                        emitter.OnCompleted();
+                    }
+                    else if (responseInfo.isComplete)
+                    {
+                        var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
+                        if (string.IsNullOrWhiteSpace(dto.matchId))
+                        {
+                            emitter.OnNext(null);
+                        }
+                        else
+                        {
+                            emitter.OnNext(DtoToMatchStatus(dto));
+                            emitter.OnCompleted();
+                        }
+                    }
+                    else
+                    {
+                        throw new TimeoutException("cannot reach server");
+                    }
                 }
-                else
-                {
-                    onStartMatchComplete(DtoToMatchStatus(dto));
-                }
-            }
-            else
-            {
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(onStartMatchComplete, onError));
-            }
+                ).AddTo(_disposables);
+            });
         }
 
         private Match DtoToMatchStatus(MatchDto dto)
@@ -160,7 +174,7 @@ namespace Infrastructure.Services
                             }).ToList()
                     }).ToList()
             };
-            ms.Hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).OrderByDescending(c=>c.cardName.ToLower() == "villager" ? -1 : c.power).ToList(),
+            ms.Hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).OrderByDescending(c => c.cardName.ToLower() == "villager" ? -1 : c.power).ToList(),
                         dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
             ms.Users = dto.users;
             return ms;
