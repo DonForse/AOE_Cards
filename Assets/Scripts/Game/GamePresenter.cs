@@ -74,7 +74,9 @@ namespace Game
         {
             if (error.Code == 401)
             {
-                _tokenService.RefreshToken(OnRefreshTokenComplete, OnRefreshTokenError);
+                _tokenService.RefreshToken()
+                    .DoOnError(err => OnRefreshTokenError(err.Message))
+                    .Subscribe(OnRefreshTokenComplete);
                 return;
             }
             _view.ShowError(error.Message);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,34 +10,43 @@ namespace Infrastructure.Services
     {
         private string TokenUrl => Configuration.UrlBase + "/api/token";
 
-        public void RefreshToken(Action<UserResponseDto> onRefreshTokenComplete, Action<string> onError)
+        public IObservable<UserResponseDto> RefreshToken()
         {
-            StartCoroutine(Get(onRefreshTokenComplete, onError));
+            return Get().Retry(3);
         }
-        private IEnumerator Get(Action<UserResponseDto> onPostComplete, Action<string> onPostFailed)
+        private IObservable<UserResponseDto> Get()
         {
-            ResponseInfo responseInfo;
-            Debug.Log(TokenUrl);
-            using (var webRequest = UnityWebRequest.Get(TokenUrl))
-            { 
-                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.RefreshToken));
-                yield return webRequest.SendWebRequest();
-                responseInfo = new ResponseInfo(webRequest);
-            }
-             if (responseInfo.isError)
+            return Observable.Create<UserResponseDto>(emitter =>
             {
-                onPostFailed(responseInfo.response.response);
-            }
-            else if (responseInfo.isComplete)
-            {
-                var dto = UserResponseDto.Parse(responseInfo.response.error);
-                onPostComplete(dto);
-            }
-            else
-            {
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(onPostComplete, onPostFailed));
-            }
+                ResponseInfo responseInfo;
+                Debug.Log(TokenUrl);
+                var webRequest = UnityWebRequest.Get(TokenUrl);
+                {
+                    webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.RefreshToken));
+                    return webRequest.SendWebRequest().AsObservable()
+                    .DoOnCompleted(() => webRequest.Dispose())
+                    .Subscribe(_ =>
+                    {
+                        responseInfo = new ResponseInfo(webRequest);
+                        if (responseInfo.isError)
+                        {
+                            emitter.OnError(new Exception(responseInfo.response.error));
+                        }
+                        else if (responseInfo.isComplete)
+                        {
+                            var dto = UserResponseDto.Parse(responseInfo.response.response);
+                            emitter.OnNext(dto);
+                            emitter.OnCompleted();
+                        }
+                        else
+                        {
+                            throw new TimeoutException("Request Timed Out");
+                        }
+                    });
+                }
+            });
+
+
         }
     }
 }

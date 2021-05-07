@@ -69,18 +69,21 @@ namespace Home
         {
             if (exception.Code == 401)
             {
-                _tokenService.RefreshToken(onRefreshTokenComplete, onRefreshTokenError);
+                _tokenService.RefreshToken()
+                    .DoOnError(err => OnRefreshTokenError(err.Message))
+                    .Subscribe(OnRefreshTokenComplete);
+
                 return;
             }
             _view.OnError(exception.Error);
         }
 
-        private void onRefreshTokenError(string error)
+        private void OnRefreshTokenError(string error)
         {
             GameManager.SessionExpired();
         }
 
-        private void onRefreshTokenComplete(UserResponseDto response)
+        private void OnRefreshTokenComplete(UserResponseDto response)
         {
             PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
