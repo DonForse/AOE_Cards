@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Services;
+using UniRx;
 using UnityEngine;
 
 namespace Game
@@ -37,22 +38,31 @@ namespace Game
         public void PlayUpgradeCard(string cardName)
         {
             _hand.TakeUpgradeCard(cardName);
-            _playService.PlayUpgradeCard(cardName, OnUpgradeCardPostComplete, OnError);
+            _playService.PlayUpgradeCard(cardName)
+                .DoOnError(err => OnError((PlayServiceException)err))
+                .Subscribe(OnUpgradeCardPostComplete);
         }
 
         public void PlayUnitCard(string cardName)
         {
             _hand.TakeUnitCard(cardName);
-            _playService.PlayUnitCard(cardName, OnUnitCardPostComplete, OnError);
+            _playService.PlayUnitCard(cardName)
+                .DoOnError(err => OnError((PlayServiceException)err))
+                .Subscribe(OnUnitCardPostComplete);
         }
 
         public void GetRound()
         {
-            _playService.GetRound(currentRound, OnGetRoundComplete, OnError);
+            _playService.GetRound(currentRound)
+                 .DoOnError(err => OnError((PlayServiceException)err))
+                 .Subscribe(OnGetRoundComplete);
         }
 
-        public void SendReroll(IList<string> upgradeCards, IList<string> unitCards) {
-            _playService.RerollCards(unitCards, upgradeCards, OnRerollComplete, OnError);
+        public void SendReroll(IList<string> upgradeCards, IList<string> unitCards)
+        {
+            _playService.RerollCards(unitCards, upgradeCards)
+                 .DoOnError(err => OnError((PlayServiceException)err))
+                 .Subscribe(OnRerollComplete);
         }
 
         private void OnGetRoundComplete(Round round)
@@ -60,14 +70,14 @@ namespace Game
             _view.OnGetRoundInfo(round);
         }
 
-        private void OnError(long responseCode, string message)
+        private void OnError(PlayServiceException error)
         {
-            if (responseCode == 401)
+            if (error.Code == 401)
             {
                 _tokenService.RefreshToken(OnRefreshTokenComplete, OnRefreshTokenError);
                 return;
             }
-            _view.ShowError(message);
+            _view.ShowError(error.Message);
         }
 
         private void OnRefreshTokenError(string error)

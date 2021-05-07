@@ -6,10 +6,9 @@ namespace Infrastructure.Services
 {
     public interface IPlayService
     {
-        void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<long, string> onError);
-        void PlayUnitCard(string cardName, Action<Hand> onUnitCardFinished, Action<long, string> onError);
-        void PlayUpgradeCard(string cardName, Action<Hand> onUnitCardFinished, Action<long, string> onError);
-        void RerollCards(IList<string> unitCards, IList<string> upgradeCards, Action<Hand> onRerollFinished,
-            Action<long, string> onError);
+        IObservable<Round> GetRound(int roundNumber);
+        IObservable<Hand> PlayUnitCard(string cardName);
+        IObservable<Hand> PlayUpgradeCard(string cardName);
+        IObservable<Hand> RerollCards(IList<string> unitCards, IList<string> upgradeCards);
     }
 }

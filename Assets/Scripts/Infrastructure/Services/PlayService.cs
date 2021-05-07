@@ -6,65 +6,70 @@ using System.Text;
 using Game;
 using UnityEngine;
 using UnityEngine.Networking;
+using UniRx;
 
 namespace Infrastructure.Services
 {
-    public partial class PlayService : MonoBehaviour, IPlayService
+    public class PlayService : MonoBehaviour, IPlayService
     {
         private string GetRoundUrl => Configuration.UrlBase + "/api/round?matchid={0}&roundNumber={1}";
         private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}";
-        private string RerollUrl=> Configuration.UrlBase + "/api/reroll?matchid={0}";
+        private string RerollUrl => Configuration.UrlBase + "/api/reroll?matchid={0}";
 
-        public void GetRound(int roundNumber, Action<Round> onGetRoundComplete, Action<long, string> onError)
+        public IObservable<Round> GetRound(int roundNumber)
         {
             var url = string.Format(GetRoundUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId), roundNumber);
-            StartCoroutine(Get(url, onGetRoundComplete, onError));
+            return Get(url).Retry(3);
         }
 
-        public void PlayUpgradeCard(string cardName, Action<Hand> onUpgradeCardsFinished, Action<long, string> onError)
+        public IObservable<Hand> PlayUpgradeCard(string cardName)
         {
             string data = JsonUtility.ToJson(new CardPostDto { cardname = cardName, type = "upgrade" });
-            StartCoroutine(PlayCard(data, onUpgradeCardsFinished, onError));
+            return PlayCard(data).Retry(3);
         }
 
-        public void PlayUnitCard(string cardName, Action<Hand> onUnitCardFinished, Action<long, string> onError)
+        public IObservable<Hand> PlayUnitCard(string cardName)
         {
             string data = JsonUtility.ToJson(new CardPostDto { cardname = cardName, type = "unit" });
-            StartCoroutine(PlayCard(data, onUnitCardFinished, onError));
+            return PlayCard(data);
         }
 
-        public void RerollCards(IList<string> unitCards, IList<string> upgradeCards, Action<Hand> onRerollFinished, Action<long, string> onError)
+        public IObservable<Hand> RerollCards(IList<string> unitCards, IList<string> upgradeCards)
         {
             string data = JsonUtility.ToJson(new RerollInfoDto { unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray() });
-            StartCoroutine(RerollCards(data, onRerollFinished, onError));
+            return RerollCards(data).Retry(3);
         }
 
-        private IEnumerator Get(string url, Action<Round> onStartMatchComplete, Action<long, string> onError)
+        private IObservable<Round> Get(string url)
         {
-            ResponseInfo responseInfo;
-            using (var webRequest = UnityWebRequest.Get(url))
+            return Observable.Create<Round>(emitter =>
             {
+                ResponseInfo responseInfo;
+                var webRequest = UnityWebRequest.Get(url);
+
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                yield return webRequest.SendWebRequest();
-
-                responseInfo = new ResponseInfo(webRequest);
-            }
-
-            if (responseInfo.isError)
-            {
-                onError(responseInfo.code, responseInfo.response?.error);
-            }
-            else if (responseInfo.isComplete)
-            {
-                var dto = JsonUtility.FromJson<RoundDto>(responseInfo.response?.response);
-                onStartMatchComplete(DtoToRound(dto));
-                //onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
-            }
-            else
-            {
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(Get(url, onStartMatchComplete, onError));
-            }
+                return webRequest.SendWebRequest().AsObservable()
+                .DoOnCompleted(() => webRequest.Dispose())
+                .Subscribe(_ =>
+                {
+                    responseInfo = new ResponseInfo(webRequest);
+                    if (responseInfo.isError)
+                    {
+                        emitter.OnError(new PlayServiceException(responseInfo.code, responseInfo.response?.error));
+                    }
+                    else if (responseInfo.isComplete)
+                    {
+                        var dto = JsonUtility.FromJson<RoundDto>(responseInfo.response?.response);
+                        emitter.OnNext(DtoToRound(dto));
+                        emitter.OnCompleted();
+                        //onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Server does not respond");
+                    }
+                });
+            });
         }
 
         private Round DtoToRound(RoundDto dto)
@@ -91,74 +96,80 @@ namespace Infrastructure.Services
             };
         }
 
-        private IEnumerator PlayCard(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
+        private IObservable<Hand> PlayCard(string data)
         {
-            ResponseInfo responseInfo;
-            var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
-
-            Debug.Log(playCardUrl);
-            using (var webRequest = UnityWebRequest.Post(playCardUrl, data))
+            return Observable.Create<Hand>(emitter =>
             {
+                ResponseInfo responseInfo;
+                var playCardUrl = string.Format(PlayCardUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
+
+                Debug.Log(playCardUrl);
+                var webRequest = UnityWebRequest.Post(playCardUrl, data);
+
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
                 webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                yield return webRequest.SendWebRequest();
-                responseInfo = new ResponseInfo(webRequest);
-            }
-
-             if (responseInfo.isError)
-            {
-                onPostFailed(responseInfo.code, responseInfo.response?.error);
-            }
-            else if (responseInfo.isComplete)
-            {
-                var dto = JsonUtility.FromJson<HandDto>(responseInfo.response?.response);
-                onPostComplete(DtoToHand(dto));
-
-            }
-            else
-            {
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(PlayCard(data, onPostComplete, onPostFailed));
-            }
+                return webRequest.SendWebRequest().AsObservable().DoOnCompleted(() => webRequest.Dispose()).Subscribe(_ =>
+                {
+                    responseInfo = new ResponseInfo(webRequest);
+                    if (responseInfo.isError)
+                    {
+                        emitter.OnError(new PlayServiceException(responseInfo.code, responseInfo.response?.error));
+                    }
+                    else if (responseInfo.isComplete)
+                    {
+                        var dto = JsonUtility.FromJson<HandDto>(responseInfo.response?.response);
+                        emitter.OnNext(DtoToHand(dto));
+                        emitter.OnCompleted();
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Request timed out");
+                    }
+                });
+            });
         }
 
-        private IEnumerator RerollCards(string data, Action<Hand> onPostComplete, Action<long, string> onPostFailed)
+        private IObservable<Hand> RerollCards(string data)
         {
-            ResponseInfo responseInfo;
-            var rerollUrl = string.Format(RerollUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
-
-            Debug.Log(rerollUrl);
-            using (var webRequest = UnityWebRequest.Post(rerollUrl, data))
+            return Observable.Create<Hand>(emitter =>
             {
+                ResponseInfo responseInfo;
+                var rerollUrl = string.Format(RerollUrl, PlayerPrefs.GetString(PlayerPrefsHelper.MatchId));
+
+                Debug.Log(rerollUrl);
+                var webRequest = UnityWebRequest.Post(rerollUrl, data);
+
                 byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
                 webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
                 webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 webRequest.method = UnityWebRequest.kHttpVerbPOST;
                 webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                yield return webRequest.SendWebRequest();
-                responseInfo = new ResponseInfo(webRequest);
-            }
 
-            if (responseInfo.isError)
-            {
-                onPostFailed(responseInfo.code, responseInfo.response?.error);
-            }
-            else if (responseInfo.isComplete)
-            {
-                var dto = JsonUtility.FromJson<HandDto>(responseInfo.response?.response);
-                onPostComplete(DtoToHand(dto));
+                return webRequest.SendWebRequest().AsObservable().DoOnCompleted(() => webRequest.Dispose()).Subscribe(_ =>
+                {
+                    responseInfo = new ResponseInfo(webRequest);
+                    if (responseInfo.isError)
+                    {
+                        emitter.OnError(new PlayServiceException(responseInfo.code, responseInfo.response?.error));
+                    }
+                    else if (responseInfo.isComplete)
+                    {
+                        var dto = JsonUtility.FromJson<HandDto>(responseInfo.response?.response);
+                        emitter.OnNext(DtoToHand(dto));
+                        emitter.OnCompleted();
 
-            }
-            else
-            {
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(PlayCard(data, onPostComplete, onPostFailed));
-            }
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Response timed out");
+                    }
+                });
+            });
         }
 
         private Hand DtoToHand(HandDto dto)
