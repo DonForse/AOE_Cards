@@ -4,15 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class InMemoryCardProvider : ICardProvider
+public class InMemoryCardProvider : MonoBehaviour, ICardProvider
 {
+    [SerializeField] List<UnitCardData> units;
+    [SerializeField] List<UpgradeCardData> upgrades;
+
     private IList<UnitCardData> _unitCards = null;
     private IList<UpgradeCardData> _upgradeCards = null;
 
     public IList<UpgradeCardData> GetUpgradeCards()
     {
         if (_upgradeCards == null)
-            _upgradeCards = Resources.LoadAll<UpgradeCardData>("Cards/UpgradeCards");
+            _upgradeCards = upgrades;
         
         return _upgradeCards.ToList();
     }
@@ -20,7 +23,7 @@ public class InMemoryCardProvider : ICardProvider
     public IList<UnitCardData> GetUnitCards()
     {
         if (_unitCards == null)
-            _unitCards = Resources.LoadAll<UnitCardData>("Cards/UnitCards");
+            _unitCards = units;
 
         return _unitCards.ToList();
     }

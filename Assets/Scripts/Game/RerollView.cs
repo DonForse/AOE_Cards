@@ -91,7 +91,7 @@ public class RerollView : MonoBehaviour
         };
 
         foreach (var card in selectedCards) {
-            StartCoroutine(card.FlipCard(false,0.5f));
+            card.FlipCard(false,0.5f);
         }
         yield return new WaitForSeconds(0.3f);
         
@@ -118,7 +118,7 @@ public class RerollView : MonoBehaviour
         gridContainer.enabled = false;
         foreach (var card in newCards)
         {
-            StartCoroutine(card.FlipCard(true, 1f));
+            card.FlipCard(true, 1f);
         }
         yield return new WaitForSeconds(4.5f);
         gridContainer.enabled = false;

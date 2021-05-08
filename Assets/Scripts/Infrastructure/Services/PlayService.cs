@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +11,8 @@ namespace Infrastructure.Services
 {
     public class PlayService : MonoBehaviour, IPlayService
     {
+        [SerializeField] InMemoryCardProvider _cardProvider;
+
         private string GetRoundUrl => Configuration.UrlBase + "/api/round?matchid={0}&roundNumber={1}";
         private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}";
         private string RerollUrl => Configuration.UrlBase + "/api/reroll?matchid={0}";
@@ -50,6 +51,7 @@ namespace Infrastructure.Services
                 webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
                 return webRequest.SendWebRequest().AsObservable()
                 .DoOnCompleted(() => webRequest.Dispose())
+                .ObserveOn(Scheduler.CurrentThread)
                 .Subscribe(_ =>
                 {
                     responseInfo = new ResponseInfo(webRequest);
@@ -61,7 +63,6 @@ namespace Infrastructure.Services
                     {
                         var dto = JsonUtility.FromJson<RoundDto>(responseInfo.response?.response);
                         emitter.OnNext(DtoToRound(dto));
-                        emitter.OnCompleted();
                         //onStartMatchComplete(DtoToMatchStatus(new MatchStatusDto()));
                     }
                     else
@@ -79,13 +80,13 @@ namespace Infrastructure.Services
                 Finished = dto.finished,
                 RoundNumber = dto.roundnumber,
                 WinnerPlayers = dto.winnerplayer,
-                UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(dto.upgradecardround),
+                UpgradeCardRound = _cardProvider.GetUpgradeCard(dto.upgradecardround),
                 CardsPlayed = dto.cardsplayed.Select(cp =>
                     new PlayerCard
                     {
                         Player = cp.player,
-                        UnitCardData = new InMemoryCardProvider().GetUnitCard(cp.unitcard),
-                        UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard),
+                        UnitCardData = _cardProvider.GetUnitCard(cp.unitcard),
+                        UpgradeCardData = _cardProvider.GetUpgradeCard(cp.upgradecard),
                         UnitCardPower = cp.unitcardpower,
                     }).ToList(),
                 RivalReady = dto.rivalready,
@@ -174,8 +175,8 @@ namespace Infrastructure.Services
 
         private Hand DtoToHand(HandDto dto)
         {
-            return new Hand(dto.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).OrderBy(c => c.cardName.ToLower() == "villager" ? int.MaxValue : c.power).ToList(),
-                        dto.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
+            return new Hand(dto.units.Select(cardName => _cardProvider.GetUnitCard(cardName)).OrderBy(c => c.cardName.ToLower() == "villager" ? int.MaxValue : c.power).ToList(),
+                        dto.upgrades.Select(cardName => _cardProvider.GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
         }
     }
 }

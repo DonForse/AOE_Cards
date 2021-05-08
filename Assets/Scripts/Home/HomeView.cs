@@ -50,8 +50,8 @@ namespace Home
 
             _userCodeLabel.text = PlayerPrefs.GetString(PlayerPrefsHelper.FriendCode);
 
-            _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_=>PlayMatch()).AddTo(_disposables);
-            _openBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_=>OpenBotMenu());
+            _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayMatch()).AddTo(_disposables);
+            _openBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenBotMenu());
             _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBotHard());
             _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBot());
             _closeBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => CloseBotMenu()).AddTo(_disposables);
@@ -62,7 +62,7 @@ namespace Home
             _leaveQueueButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => LeaveQueue()).AddTo(_disposables);
 
             if (_exitButton != null)
-                _exitButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_=>Application.Quit()).AddTo(_disposables);
+                _exitButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Application.Quit()).AddTo(_disposables);
             this.gameObject.SetActive(true);
         }
 
@@ -71,7 +71,7 @@ namespace Home
             _disposables.Dispose();
             this.gameObject.SetActive(false);
         }
-        
+
         // Update is called once per frame
         void Update()
         {
@@ -88,7 +88,7 @@ namespace Home
         private void PlayMatch()
         {
             DisableButtons();
-            _presenter.StartSearchingMatch(false,false,string.Empty);
+            _presenter.StartSearchingMatch(false, false, string.Empty);
             //navigator.
         }
 
@@ -168,6 +168,7 @@ namespace Home
             StopTimer();
             // _matchMakingContainer.SetActive(false);
             _navigator.OpenGameView(matchStatus);
+
         }
 
         public void OnStartLookingForMatch(bool vsBot)
@@ -186,7 +187,7 @@ namespace Home
             _navigator.OpenLoginView();
         }
 
-        private void DisableButtons() 
+        private void DisableButtons()
         {
             _playBotButton.interactable = false;
             _playhardBotButton.interactable = false;

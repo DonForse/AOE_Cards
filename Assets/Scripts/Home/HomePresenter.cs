@@ -49,13 +49,14 @@ namespace Home
                         .Subscribe(_ =>
                         {
                             _matchService.GetMatch()
+                            .ObserveOnMainThread()
                                 .DoOnError(err => OnError((MatchServiceException)err))
+                                .DoOnCompleted(() => _disposables.Dispose())
                                 .Subscribe(match =>
                                 {
                                     if (match != null)
                                     {
                                         _matchService.StopSearch();
-                                        _disposables.Dispose();
                                         OnMatchStatusComplete(match);
                                     }
                                 }).AddTo(_disposables);

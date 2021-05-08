@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UniRx;
 
 namespace Game
 {
@@ -117,9 +118,9 @@ namespace Game
             cardback.SetActive(true);
         }
 
-        public virtual IEnumerator FlipCard(bool show, float duration)
+        public virtual void FlipCard(bool show, float duration)
         {
-            yield return StartCoroutine(FlipAnimation(duration, show));
+            FlipAnimation(duration, show);
         }
 
         public virtual void SetSelected()
@@ -132,24 +133,16 @@ namespace Game
             animator.SetBool(Selected,false);
         }
 
-        private IEnumerator FlipAnimation(float duration, bool activate)
+        private void FlipAnimation(float duration, bool activate)
         {
-            float n = 0; 
-            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
-            {
-                //this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, Mathf.Lerp(transform.eulerAngles.y, 90, f / duration), this.transform.eulerAngles.z);
-                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 0, f / duration), transform.localScale.y, transform.localScale.z);
-                yield return null;
-            }
-            cardback.SetActive(!activate);
-            for (float f = 0; f <= duration / 2; f += Time.deltaTime)
-            {
-                this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, Mathf.Lerp(transform.eulerAngles.y, 0, f / duration), this.transform.eulerAngles.z);
-                transform.localScale = new Vector3(Mathf.Lerp(transform.localScale.x, 1, f / duration), transform.localScale.y, transform.localScale.z);
-                yield return null;
-            }
-
-            transform.localScale = Vector3.one;
+            ObservableTween.Tween(transform.localScale.x, 0, duration, ObservableTween.EaseType.Linear, 
+                onCompleteTween:()=> 
+                {
+                    ObservableTween.Tween(transform.localScale.x, 1, duration, ObservableTween.EaseType.Linear)
+                    .Subscribe(x => transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z));
+                })
+                .DoOnCompleted(()=> { cardback.SetActive(!activate); })
+                .Subscribe(x => transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z));
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)

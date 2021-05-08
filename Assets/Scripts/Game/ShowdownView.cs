@@ -218,7 +218,7 @@ namespace Game
         {
             if (_upgradeWait != null)
             {
-                StartCoroutine(_upgradeWait.FlipCard(true, 1f));
+                _upgradeWait.FlipCard(true, 1f);
                 _upgradeWait.PlayRevealSound();
                 _upgradeWait = null;
                 yield return new WaitForSeconds(1f);
@@ -226,7 +226,7 @@ namespace Game
             }
             if (_unitWait != null)
             {
-                StartCoroutine(_unitWait.FlipCard(true, 1f));
+                _unitWait.FlipCard(true, 1f);
                 _unitWait.PlayRevealSound();
                 _unitWait = null;
                 yield return new WaitForSeconds(1f);

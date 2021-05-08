@@ -32,6 +32,8 @@ namespace Game
         private IList<CardView> _playableCards;
         private bool isWorking = false;
         MatchState matchState = MatchState.InitializeGame;
+        private CompositeDisposable _focusDisposables = new CompositeDisposable();
+
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
         public void OnOpening()
@@ -62,16 +64,20 @@ namespace Game
         {
             InitializeGame(match);
         }
+        //bool _wait = false;
 
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
             {
                 Debug.Log("Focus");
-                servicesProvider.GetMatchService().GetMatch()
+
+                _focusDisposables?.Dispose();
+                servicesProvider.GetMatchService().GetMatch().ObserveOn(Scheduler.MainThread)
                     .DoOnError(error=>SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
-                    .Subscribe(match => ResetGameState(match));
-                //(ResetGameState, SomeError);
+                    .Do(_=> Debug.LogError("DO"))
+                    .Subscribe(match => ResetGameState(match))
+                    .AddTo(_focusDisposables);
             }
             else {
                 Debug.Log("Pause");
@@ -142,7 +148,8 @@ namespace Game
 
         private void SomeError(long arg1, string arg2)
         {
-            throw new NotImplementedException();
+            Debug.LogError(arg2);
+            //throw new NotImplementedException();
         }
 
         private void RevertLastAction()
