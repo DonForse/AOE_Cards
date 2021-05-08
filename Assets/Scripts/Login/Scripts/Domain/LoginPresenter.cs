@@ -2,18 +2,25 @@
 using Login.Scripts.Infrastructure;
 using UnityEngine;
 using UniRx;
+using System;
 
 namespace Login.Scripts.Domain
 {
     internal class LoginPresenter
     {
-        private readonly ILoginView _view;
+        
         private readonly ILoginService _loginService;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public LoginPresenter(ILoginView loginView, ILoginService loginService)
+        private ISubject<Unit> _onLoginComplete = new Subject<Unit>();
+        public IObservable<Unit> OnLoginComplete => _onLoginComplete;
+
+
+        private ISubject<string> _onLoginError = new Subject<string>();
+        public IObservable<string> OnLoginError => _onLoginError;
+
+        public LoginPresenter(ILoginService loginService)
         {
-            _view = loginView;
             _loginService = loginService;
         }
 
@@ -21,7 +28,7 @@ namespace Login.Scripts.Domain
         {
             _loginService.Login(username, password)
                 .DoOnError(err => OnLoginFailed(err.Message))
-                .Subscribe(user => OnLoginComplete(user))
+                .Subscribe(user => HandleLoginComplete(user))
                 .AddTo(_disposables);
         }
 
@@ -29,15 +36,15 @@ namespace Login.Scripts.Domain
         {
             _loginService.Register(username, password)
                 .DoOnError(err => OnLoginFailed(err.Message))
-                .Subscribe(user => OnLoginComplete(user)).AddTo(_disposables);
+                .Subscribe(user => HandleLoginComplete(user)).AddTo(_disposables);
         }
 
         private void OnLoginFailed(string errorMessage)
         {
-            _view.OnLoginFail(errorMessage);
+            _onLoginError.OnNext(errorMessage);
         }
 
-        private void OnLoginComplete(UserResponseDto response)
+        private void HandleLoginComplete(UserResponseDto response)
         {
             PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
             PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
@@ -45,10 +52,10 @@ namespace Login.Scripts.Domain
             PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
             PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
             PlayerPrefs.Save();
-            _view.OnLoginComplete();
+            _onLoginComplete.OnNext(Unit.Default);
         }
 
-        public void Dispose()
+        public void Unload()
         {
             _disposables.Dispose();
         }

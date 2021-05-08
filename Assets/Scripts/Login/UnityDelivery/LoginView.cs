@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Login.UnityDelivery
 {
-    public class LoginView : MonoBehaviour, IView, ILoginView
+    public class LoginView : MonoBehaviour, IView
     {
         [SerializeField] private Button loginButton;
         [SerializeField] private Button registerButton;
@@ -30,8 +30,10 @@ namespace Login.UnityDelivery
         public void OnOpening()
         {
             SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, true);
-            _presenter = new LoginPresenter(this, servicesProvider.GetLoginService());
-            
+            _presenter = new LoginPresenter(servicesProvider.GetLoginService());
+            _presenter.OnLoginComplete.Subscribe(_ => OnLoginComplete()).AddTo(_disposables);
+            _presenter.OnLoginError.Subscribe(error => OnLoginFail(error)).AddTo(_disposables);
+
             RegisterButtons();
             EnableButtons();
             this.gameObject.SetActive(true);
@@ -40,7 +42,7 @@ namespace Login.UnityDelivery
         public void OnClosing()
         {
             _disposables.Dispose();
-            _presenter.Dispose();
+            _presenter.Unload();
             this.gameObject.SetActive(false);
         }
         

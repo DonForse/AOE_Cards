@@ -135,10 +135,10 @@ namespace Game
 
         private void FlipAnimation(float duration, bool activate)
         {
-            ObservableTween.Tween(transform.localScale.x, 0, duration, ObservableTween.EaseType.Linear, 
+            ObservableTween.Tween(transform.localScale.x, 0, duration/2, ObservableTween.EaseType.Linear, 
                 onCompleteTween:()=> 
                 {
-                    ObservableTween.Tween(transform.localScale.x, 1, duration, ObservableTween.EaseType.Linear)
+                    ObservableTween.Tween(transform.localScale.x, 1, duration/2, ObservableTween.EaseType.Linear)
                     .Subscribe(x => transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z));
                 })
                 .DoOnCompleted(()=> { cardback.SetActive(!activate); })

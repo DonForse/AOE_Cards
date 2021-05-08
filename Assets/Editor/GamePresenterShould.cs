@@ -15,7 +15,6 @@ namespace Editor
         private GamePresenter _presenter;
         private Match _matchStatus;
         private ICardProvider _cardProvider;
-        private IGameView _view;
         private IPlayService _playService;
         private ITokenService _tokenService;
 
@@ -25,10 +24,9 @@ namespace Editor
         public void Setup()
         {
             GivenCardProvider();
-            GivenGameplayView();
             GivenPlayService();
             GivenTokenService();
-            _presenter = new GamePresenter(_view, _playService, _tokenService);
+            _presenter = new GamePresenter(_playService, _tokenService);
             WhenGameSetup();
         }
 
@@ -43,13 +41,6 @@ namespace Editor
         public void GiveUpgradeCardsToPlayerOnGameSetup()
         {
             ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand);
-        }
-
-        [Test]
-        public void PresentUpgradeCardWhenRoundStarts()
-        {
-            WhenRoundSetup();
-            _view.Received(1).OnGetRoundInfo(Arg.Any<Round>());
         }
 
         [Test]
@@ -83,11 +74,6 @@ namespace Editor
         private void GivenPlayService()
         {
             _playService = Substitute.For<IPlayService>();
-        }
-
-        private void GivenGameplayView()
-        {
-            _view = Substitute.For<IGameView>();
         }
 
 

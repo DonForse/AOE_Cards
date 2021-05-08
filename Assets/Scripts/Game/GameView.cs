@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class GameView : MonoBehaviour, IGameView, IView
+    public class GameView : MonoBehaviour, IView
     {
         [SerializeField] private Navigator _navigator;
         [SerializeField] private ServicesProvider servicesProvider;
@@ -32,7 +32,8 @@ namespace Game
         private IList<CardView> _playableCards;
         private bool isWorking = false;
         MatchState matchState = MatchState.InitializeGame;
-        private CompositeDisposable _focusDisposables = new CompositeDisposable();
+        private CompositeDisposable _disposables = new CompositeDisposable();
+
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
@@ -40,7 +41,12 @@ namespace Game
         {
             ClearView();
             LoadAudio();
-            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
+            _presenter = new GamePresenter(servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
+            _presenter.OnGetRoundInfo.Subscribe(round => OnGetRoundInfo(round)).AddTo(_disposables);
+            _presenter.OnError.Subscribe(error => ShowError(error)).AddTo(_disposables);
+            _presenter.OnReroll.Subscribe(hand => OnRerollComplete(hand)).AddTo(_disposables);
+            _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
+            _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
             this.gameObject.SetActive(true);
         }
 
@@ -55,6 +61,8 @@ namespace Game
 
         public void OnClosing()
         {
+            _disposables.Dispose();
+            _presenter.Unload();
             CancelInvoke("GetRound");
             ClearView();
             this.gameObject.SetActive(false);
@@ -72,12 +80,10 @@ namespace Game
             {
                 Debug.Log("Focus");
 
-                _focusDisposables?.Dispose();
                 servicesProvider.GetMatchService().GetMatch().ObserveOn(Scheduler.MainThread)
                     .DoOnError(error=>SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
-                    .Do(_=> Debug.LogError("DO"))
                     .Subscribe(match => ResetGameState(match))
-                    .AddTo(_focusDisposables);
+                    .AddTo(_disposables);
             }
             else {
                 Debug.Log("Pause");
@@ -224,7 +230,7 @@ namespace Game
             _handView.PutCards(_playableCards);
         }
 
-        public void OnGetRoundInfo(Round round)
+        private void OnGetRoundInfo(Round round)
         {
             _timerView.Update(round);
             if (isWorking)
@@ -387,7 +393,7 @@ namespace Game
             return _playableCards;
         }
 
-        public void ShowError(string message)
+        private void ShowError(string message)
         {
             RevertLastAction();
             isWorking = false;
@@ -396,7 +402,7 @@ namespace Game
             Debug.LogError(message);
         }
 
-        public void UpgradeCardSentPlay()
+        private void UpgradeCardSentPlay()
         {
             MoveUpgradeCardToShowdown();
             isWorking = false;
@@ -409,7 +415,7 @@ namespace Game
             PutCardsInHand();
         }
 
-        public void UnitCardSentPlay()
+        private void UnitCardSentPlay()
         {
             MoveUnitCardToShowdown();
             isWorking = false;
@@ -575,7 +581,7 @@ namespace Game
             _presenter.PlayUpgradeCard(upgradeCard.CardName);
         }
 
-        public void OnRerollComplete(Hand hand)
+        private void OnRerollComplete(Hand hand)
         {
             StartCoroutine(RerollComplete(hand));
         }

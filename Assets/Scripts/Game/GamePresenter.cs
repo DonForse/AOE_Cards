@@ -10,14 +10,28 @@ namespace Game
     public class GamePresenter : IGamePresenter
     {
         private int currentRound;
-        private readonly IGameView _view;
+        //private readonly IGameView _view;
         private readonly IPlayService _playService;
         private readonly ITokenService _tokenService;
         private Hand _hand;
 
-        public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService)
+        private ISubject<Round> _onGetRoundInfo = new Subject<Round>();
+        public IObservable<Round> OnGetRoundInfo => _onGetRoundInfo;
+        private ISubject<string> _onError = new Subject<string>();
+        public IObservable<string> OnError=> _onError;
+
+        private ISubject<Hand> _onReroll = new Subject<Hand>();
+        public IObservable<Hand> OnReroll=> _onReroll;
+
+        private ISubject<Unit> _onUnitCardPlayed = new Subject<Unit>();
+        public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
+        private ISubject<Unit> _onUpgradeCardPlayed = new Subject<Unit>();
+        private CompositeDisposable _disposables = new CompositeDisposable();
+
+        public IObservable<Unit> OnUpgradeCardPlayed => _onUpgradeCardPlayed;
+
+        public GamePresenter( IPlayService playService, ITokenService tokenService)
         {
-            _view = view;
             _playService = playService;
             _tokenService = tokenService;
         }
@@ -39,7 +53,7 @@ namespace Game
         {
             _hand.TakeUpgradeCard(cardName);
             _playService.PlayUpgradeCard(cardName)
-                .DoOnError(err => OnError((PlayServiceException)err))
+                .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUpgradeCardPostComplete);
         }
 
@@ -47,30 +61,35 @@ namespace Game
         {
             _hand.TakeUnitCard(cardName);
             _playService.PlayUnitCard(cardName)
-                .DoOnError(err => OnError((PlayServiceException)err))
+                .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUnitCardPostComplete);
         }
 
         public void GetRound()
         {
             _playService.GetRound(currentRound)
-                 .DoOnError(err => OnError((PlayServiceException)err))
+                 .DoOnError(err => HandleError((PlayServiceException)err))
                  .Subscribe(OnGetRoundComplete);
         }
 
         public void SendReroll(IList<string> upgradeCards, IList<string> unitCards)
         {
             _playService.RerollCards(unitCards, upgradeCards)
-                 .DoOnError(err => OnError((PlayServiceException)err))
+                 .DoOnError(err => HandleError((PlayServiceException)err))
                  .Subscribe(OnRerollComplete);
+        }
+
+        internal void Unload()
+        {
+            _disposables.Dispose();
         }
 
         private void OnGetRoundComplete(Round round)
         {
-            _view.OnGetRoundInfo(round);
+            _onGetRoundInfo.OnNext(round);
         }
 
-        private void OnError(PlayServiceException error)
+        private void HandleError(PlayServiceException error)
         {
             if (error.Code == 401)
             {
@@ -79,7 +98,7 @@ namespace Game
                     .Subscribe(OnRefreshTokenComplete);
                 return;
             }
-            _view.ShowError(error.Message);
+            _onError.OnNext(error.Message);
         }
 
         private void OnRefreshTokenError(string error)
@@ -105,19 +124,19 @@ namespace Game
         private void OnRerollComplete(Hand hand)
         {
             _hand = hand;
-            _view.OnRerollComplete(hand);
+            _onReroll.OnNext(hand);
         }
 
         private void OnUnitCardPostComplete(Hand hand)
         {
             _hand = hand;
-            _view.UnitCardSentPlay();
+            _onUnitCardPlayed.OnNext(Unit.Default);
         }
 
         private void OnUpgradeCardPostComplete(Hand hand)
         {
             _hand = hand;
-            _view.UpgradeCardSentPlay();
+            _onUpgradeCardPlayed.OnNext(Unit.Default);
         }
 
         internal void RemoveCard(string cardName, bool upgrade)
