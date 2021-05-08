@@ -67,15 +67,16 @@ namespace Game
         public void OnClosing()
         {
             _disposables.Clear();
-            _presenter.Unload();
-            CancelInvoke("GetRound");
-            ClearView();
+            _presenter.Unload();            ClearView();
             this.gameObject.SetActive(false);
         }
 
         public void SetGame(Match match)
         {
             InitializeGame(match);
+            Observable.Interval(TimeSpan.FromSeconds(3))
+                .Subscribe(_ => _presenter.GetRound())
+                .AddTo(_disposables);
         }
         //bool _wait = false;
 
@@ -93,18 +94,8 @@ namespace Game
             else {
                 Debug.Log("Pause");
                 isWorking = true;
-                CancelInvoke("GetRound");
                 _focusOutGameObject.SetActive(true);
             }
-        }
-
-        private void UnexpectedError()
-        {
-            Toast.Instance.ShowToast("Unexpected","Error");
-            servicesProvider.GetMatchService().GetMatch()
-                .DoOnError(error=> SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
-                .Subscribe(match =>ResetGameState(match));
-            isWorking = false;
         }
 
         private void ResetGameState(Match match)
@@ -117,7 +108,6 @@ namespace Game
                 _handView.PutCards(_playableCards);
             Debug.Log("Reset");
             _focusOutGameObject.SetActive(false);
-            InvokeRepeating("GetRound", 0.5f, 2f);
             
         }
 
@@ -211,7 +201,6 @@ namespace Game
             StartGame(match);
 
             ChangeMatchState(MatchState.StartRound);
-            InvokeRepeating("GetRound", 0.5f, 2f);
         }
 
         private void StartGame(Match match)
@@ -403,7 +392,6 @@ namespace Game
         {
             RevertLastAction();
             isWorking = false;
-            //_presenter.GetRound();
             Toast.Instance.ShowToast(message, "Error");
             Debug.LogError(message);
         }
