@@ -1,5 +1,8 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Game;
 using UniRx;
@@ -10,9 +13,13 @@ namespace Infrastructure.Services
 {
     public class MatchService : MonoBehaviour, IMatchService
     {
+        [SerializeField] InMemoryCardProvider _cardProvider;
         private string MatchUrl => Configuration.UrlBase + "/api/match";
 
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private UnityWebRequest _getWebRequest;
+        private UnityWebRequest _deleteWebRequest;
+        private UnityWebRequest _postWebRequest;
 
         public void StopSearch()
         {
@@ -41,14 +48,14 @@ namespace Infrastructure.Services
             return Observable.Create<Unit>(emitter =>
             {
                 ResponseInfo responseInfo;
-                var webRequest = UnityWebRequest.Delete(MatchUrl);
+                _deleteWebRequest = UnityWebRequest.Delete(MatchUrl);
 
-                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                return webRequest.SendWebRequest().AsObservable()
-                    .DoOnCompleted(() => webRequest.Dispose())
+                _deleteWebRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
+                return _deleteWebRequest.SendWebRequest().AsObservable()
+                    .DoOnCompleted(() => _deleteWebRequest?.Dispose())
                     .Subscribe(_ =>
                     {
-                        responseInfo = new ResponseInfo(webRequest);
+                        responseInfo = new ResponseInfo(_deleteWebRequest);
                         if (responseInfo.isError)
                         {
                             emitter.OnError(new MatchServiceException(responseInfo.response.error, responseInfo.code));
@@ -64,7 +71,7 @@ namespace Infrastructure.Services
                             throw new TimeoutException("Cannot reach server");
                         }
 
-                    }).AddTo(_disposables);
+                    });
             });
         }
 
@@ -107,78 +114,78 @@ namespace Infrastructure.Services
             });
         }
 
-        private IObservable<Match> Post(string data)
-        {
-            return Observable.Create<Match>(emitter =>
-            {
-                ResponseInfo responseInfo;
-                var webRequest = UnityWebRequest.Post(MatchUrl, data);
+private IObservable<Match> Post(string data)
+{
+    return Observable.Create<Match>(emitter =>
+    {
+        ResponseInfo responseInfo;
+        _postWebRequest = UnityWebRequest.Post(MatchUrl, data);
 
-                byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
-                webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-                webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                webRequest.method = UnityWebRequest.kHttpVerbPOST;
-                webRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
-                webRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
-                return webRequest.SendWebRequest().AsObservable()
-                .DoOnCompleted(() => webRequest.Dispose())
-                .Subscribe(_ =>
+        byte[] jsonToSend = Encoding.UTF8.GetBytes(data);
+        _postWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        _postWebRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        _postWebRequest.method = UnityWebRequest.kHttpVerbPOST;
+        _postWebRequest.SetRequestHeader("Content-Type", "application/json;charset=ISO-8859-1");
+        _postWebRequest.SetRequestHeader("Authorization", "Bearer " + PlayerPrefs.GetString(PlayerPrefsHelper.AccessToken));
+        return _postWebRequest.SendWebRequest().AsObservable()
+        .DoOnCompleted(() => _postWebRequest?.Dispose())
+        .Subscribe(_ =>
+        {
+            responseInfo = new ResponseInfo(_postWebRequest);
+            if (responseInfo.isError)
+            {
+                emitter.OnError(new MatchServiceException(responseInfo.response.error, responseInfo.code));
+                emitter.OnCompleted();
+            }
+            else if (responseInfo.isComplete)
+            {
+                var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
+                if (string.IsNullOrWhiteSpace(dto.matchId))
                 {
-                    responseInfo = new ResponseInfo(webRequest);
-                    if (responseInfo.isError)
-                    {
-                        emitter.OnError(new MatchServiceException(responseInfo.response.error, responseInfo.code));
-                        emitter.OnCompleted();
-                    }
-                    else if (responseInfo.isComplete)
-                    {
-                        var dto = JsonUtility.FromJson<MatchDto>(responseInfo.response.response);
-                        if (string.IsNullOrWhiteSpace(dto.matchId))
-                        {
-                            emitter.OnNext(null);
-                        }
-                        else
-                        {
-                            emitter.OnNext(DtoToMatchStatus(dto));
-                            emitter.OnCompleted();
-                        }
-                    }
-                    else
-                    {
-                        throw new TimeoutException("Cannot reach server");
-                    }
-                }).AddTo(_disposables);
-            });
-        }
-
-        private Match DtoToMatchStatus(MatchDto dto)
-        {
-            var ms = new Match();
-            ms.Id = dto.matchId;
-            ms.Board = new Board
+                    emitter.OnNext(null);
+                }
+                else
+                {
+                    emitter.OnNext(DtoToMatchStatus(dto));
+                    emitter.OnCompleted();
+                }
+            }
+            else
             {
-                Rounds = dto.board.rounds.Select(r =>
-                    new Round
+                throw new TimeoutException("Cannot reach server");
+            }
+        });
+    });
+}
+
+private Match DtoToMatchStatus(MatchDto dto)
+{
+    var ms = new Match();
+    ms.Id = dto.matchId;
+    ms.Board = new Board
+    {
+        Rounds = dto.board.rounds.Select(r =>
+            new Round
+            {
+                Finished = r.finished,
+                WinnerPlayers = r.winnerplayer,
+                UpgradeCardRound = _cardProvider.GetUpgradeCard(r.upgradecardround),
+                HasReroll = r.hasReroll,
+                Timer = r.roundTimer,
+                RoundState = r.roundState,
+                CardsPlayed = r.cardsplayed?.Select(cp =>
+                    new PlayerCard
                     {
-                        Finished = r.finished,
-                        WinnerPlayers = r.winnerplayer,
-                        UpgradeCardRound = new InMemoryCardProvider().GetUpgradeCard(r.upgradecardround),
-                        HasReroll = r.hasReroll,
-                        Timer = r.roundTimer,
-                        RoundState = r.roundState,
-                        CardsPlayed = r.cardsplayed?.Select(cp =>
-                            new PlayerCard
-                            {
-                                Player = cp.player,
-                                UnitCardData = new InMemoryCardProvider().GetUnitCard(cp.unitcard),
-                                UpgradeCardData = new InMemoryCardProvider().GetUpgradeCard(cp.upgradecard)
-                            }).ToList()
+                        Player = cp.player,
+                        UnitCardData = _cardProvider.GetUnitCard(cp.unitcard),
+                        UpgradeCardData = _cardProvider.GetUpgradeCard(cp.upgradecard)
                     }).ToList()
-            };
-            ms.Hand = new Hand(dto.hand.units.Select(cardName => new InMemoryCardProvider().GetUnitCard(cardName)).OrderByDescending(c => c.cardName.ToLower() == "villager" ? -1 : c.power).ToList(),
-                        dto.hand.upgrades.Select(cardName => new InMemoryCardProvider().GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
-            ms.Users = dto.users;
-            return ms;
-        }
+            }).ToList()
+    };
+    ms.Hand = new Hand(dto.hand.units.Select(cardName => _cardProvider.GetUnitCard(cardName)).OrderByDescending(c => c.cardName.ToLower() == "villager" ? -1 : c.power).ToList(),
+                dto.hand.upgrades.Select(cardName => _cardProvider.GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
+    ms.Users = dto.users;
+    return ms;
+}
     }
 }
