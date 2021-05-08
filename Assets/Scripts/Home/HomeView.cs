@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Home
 {
-    public class HomeView : MonoBehaviour, IView, IHomeView
+    public class HomeView : MonoBehaviour, IView
     {
         [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
@@ -44,7 +44,9 @@ namespace Home
         {
             SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, false);
             _matchFoundContainer.SetActive(false);
-            _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
+            _presenter = new HomePresenter(_servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
+            _presenter.OnError.Subscribe(error => OnError(error)).AddTo(_disposables);
+            _presenter.OnMatchFound.Subscribe(match => OnMatchFound(match)).AddTo(_disposables);
 
             EnableButtons();
 
@@ -68,6 +70,7 @@ namespace Home
 
         public void OnClosing()
         {
+            _presenter.Unload();
             _disposables.Dispose();
             this.gameObject.SetActive(false);
         }
@@ -89,6 +92,8 @@ namespace Home
         {
             DisableButtons();
             _presenter.StartSearchingMatch(false, false, string.Empty);
+            OnStartLookingForMatch(false);
+
             //navigator.
         }
 
@@ -97,6 +102,8 @@ namespace Home
             CloseBotMenu();
             DisableButtons();
             _presenter.StartSearchingMatch(true, false, string.Empty, 0);
+            OnStartLookingForMatch(true);
+
             //navigator.
         }
 
@@ -105,6 +112,7 @@ namespace Home
             CloseBotMenu();
             DisableButtons();
             _presenter.StartSearchingMatch(true, false, string.Empty, 1);
+            OnStartLookingForMatch(true);
         }
 
         private void OpenBotMenu()
@@ -131,9 +139,10 @@ namespace Home
         private void LeaveQueue()
         {
             _presenter.LeaveQueue();
+            OnQueueLeft();
         }
 
-        public void OnQueueLeft()
+        private void OnQueueLeft()
         {
             StopTimer();
             EnableButtons();
@@ -162,7 +171,7 @@ namespace Home
 
         }
 
-        public void OnMatchFound(Match matchStatus)
+        private  void OnMatchFound(Match matchStatus)
         {
             _matchFoundContainer.SetActive(true);
             StopTimer();
@@ -171,7 +180,7 @@ namespace Home
 
         }
 
-        public void OnStartLookingForMatch(bool vsBot)
+        private void OnStartLookingForMatch(bool vsBot)
         {
             if (vsBot)
             {
@@ -181,7 +190,7 @@ namespace Home
             StartTimer();
         }
 
-        public void OnError(string message)
+        private void OnError(string message)
         {
             Toast.Instance.ShowToast("An Error Ocurred, please log in again", "Error");
             _navigator.OpenLoginView();

@@ -9,17 +9,26 @@ namespace Home
     {
         private readonly IMatchService _matchService;
         private readonly ITokenService _tokenService;
-        private readonly IHomeView _view;
         private bool previousPlayVsBot = false;
         private bool previousPlayVsFriend = false;
         private string previousFriendCode = "";
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService)
+        private ISubject<Match> _onMatchFound = new Subject<Match>();
+        public IObservable<Match> OnMatchFound => _onMatchFound;
+
+        private ISubject<string> _onError = new Subject<string>();
+        public IObservable<string> OnError => _onError;
+
+        public HomePresenter(IMatchService matchService, ITokenService tokenService)
         {
-            _view = view;
             _matchService = matchService;
             _tokenService = tokenService;
+        }
+
+        public void Unload()
+        {
+            _disposables.Dispose();
         }
 
         public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
@@ -30,53 +39,52 @@ namespace Home
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
             PlayerPrefs.Save();
             StartMatch(vsBot, vsFriend, friendCode, botDifficulty);
-            _view.OnStartLookingForMatch(vsBot);
         }
 
         private void StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty)
-                .DoOnError(error => OnError((MatchServiceException)error))
+                .DoOnError(error => HandleError((MatchServiceException)error))
                 .Subscribe(startMatch =>
                 {
                     if (startMatch != null)
                     {
-                        OnMatchStatusComplete(startMatch);
+                        _onMatchFound.OnNext(startMatch);
+                        return;
                     }
-                    else
+
+                    Observable.Interval(TimeSpan.FromSeconds(3))
+                    .Subscribe(_ =>
                     {
-                        Observable.Interval(TimeSpan.FromSeconds(3))
-                        .Subscribe(_ =>
-                        {
-                            _matchService.GetMatch()
-                            .ObserveOnMainThread()
-                                .DoOnError(err => OnError((MatchServiceException)err))
-                                .DoOnCompleted(() => _disposables.Dispose())
-                                .Subscribe(match =>
-                                {
-                                    if (match != null)
-                                    {
-                                        _matchService.StopSearch();
-                                        OnMatchStatusComplete(match);
-                                    }
-                                }).AddTo(_disposables);
-                        });
-                    }
+                        _matchService.GetMatch()
+                            .DoOnError(err => HandleError((MatchServiceException)err))
+                            .Subscribe(match =>
+                            {
+                                if (match == null) return;
+                                
+                                _onMatchFound.OnNext(match);
+
+                            }).AddTo(_disposables);
+                    })
+                    .AddTo(_disposables);
                 })
                 .AddTo(_disposables);
         }
 
-        private void OnError(MatchServiceException exception)
+        private void HandleError(MatchServiceException exception)
         {
-            if (exception.Code == 401)
+            if (exception.Code != 401)
             {
-                _tokenService.RefreshToken()
-                    .DoOnError(err => OnRefreshTokenError(err.Message))
-                    .Subscribe(OnRefreshTokenComplete);
-
+                _onError.OnNext(exception.Error);
                 return;
             }
-            _view.OnError(exception.Error);
+
+            _tokenService.RefreshToken()
+                .DoOnError(err => OnRefreshTokenError(err.Message))
+                .Subscribe(OnRefreshTokenComplete).AddTo(_disposables);
+            return;
+
+
         }
 
         private void OnRefreshTokenError(string error)
@@ -95,21 +103,12 @@ namespace Home
             StartSearchingMatch(previousPlayVsBot, previousPlayVsFriend, previousFriendCode);
         }
 
-        private void OnMatchStatusComplete(Match matchStatus)
-        {
-            _view.OnMatchFound(matchStatus);
-        }
-
         internal void LeaveQueue()
         {
             _matchService.RemoveMatch()
-                .DoOnError(err => OnError((MatchServiceException)err))
-                .Subscribe(_ => OnLeaveQueueComplete());
-        }
-
-        private void OnLeaveQueueComplete()
-        {
-            _view.OnQueueLeft();
+                .DoOnError(err => HandleError((MatchServiceException)err))
+                .Subscribe()
+                .AddTo(_disposables);
         }
     }
 }
