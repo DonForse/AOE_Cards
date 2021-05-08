@@ -2,7 +2,6 @@ using System.Net.Http;
 
 public static class Configuration
 {
-    public static readonly HttpClient client = new HttpClient();
     //public const string UrlBase = "https://gameofcardsaoeapi.somee.com/";
     public const string UrlBase = "https://aoegamecards.ar/";
     //public const string UrlBase = "https://localhost:44324";
