@@ -28,7 +28,7 @@ namespace Home
 
         public void Unload()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
         }
 
         public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)

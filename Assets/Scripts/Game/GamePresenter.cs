@@ -81,7 +81,7 @@ namespace Game
 
         internal void Unload()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
         }
 
         private void OnGetRoundComplete(Round round)

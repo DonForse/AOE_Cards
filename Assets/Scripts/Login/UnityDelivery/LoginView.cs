@@ -41,7 +41,7 @@ namespace Login.UnityDelivery
 
         public void OnClosing()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
             _presenter.Unload();
             this.gameObject.SetActive(false);
         }

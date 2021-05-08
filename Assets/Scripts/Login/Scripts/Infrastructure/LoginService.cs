@@ -15,8 +15,6 @@ namespace Login.Scripts.Infrastructure
         {
             _disposables = new CompositeDisposable();
         }
-        ~LoginService() =>_disposables.Dispose();
-
 
         private CompositeDisposable _disposables;
         private string ApiUrl => Configuration.UrlBase + "/api/user/";
@@ -41,7 +39,7 @@ namespace Login.Scripts.Infrastructure
         }
         public void Unload()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
         }
 
         private string EncodePassword(string password, DateTime dt)

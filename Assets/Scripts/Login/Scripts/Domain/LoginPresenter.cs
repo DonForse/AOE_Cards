@@ -57,7 +57,7 @@ namespace Login.Scripts.Domain
 
         public void Unload()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
         }
     }
 }

@@ -41,13 +41,18 @@ namespace Game
         {
             ClearView();
             LoadAudio();
+            RegisterToPresenterEvents();
+            this.gameObject.SetActive(true);
+        }
+
+        private void RegisterToPresenterEvents()
+        {
             _presenter = new GamePresenter(servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
             _presenter.OnGetRoundInfo.Subscribe(round => OnGetRoundInfo(round)).AddTo(_disposables);
             _presenter.OnError.Subscribe(error => ShowError(error)).AddTo(_disposables);
             _presenter.OnReroll.Subscribe(hand => OnRerollComplete(hand)).AddTo(_disposables);
             _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
             _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
-            this.gameObject.SetActive(true);
         }
 
         private void LoadAudio()
@@ -61,7 +66,7 @@ namespace Game
 
         public void OnClosing()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
             _presenter.Unload();
             CancelInvoke("GetRound");
             ClearView();
@@ -154,6 +159,7 @@ namespace Game
 
         private void SomeError(long arg1, string arg2)
         {
+            
             Debug.LogError(arg2);
             //throw new NotImplementedException();
         }

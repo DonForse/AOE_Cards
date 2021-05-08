@@ -23,7 +23,7 @@ namespace Infrastructure.Services
 
         public void StopSearch()
         {
-            _disposables.Dispose();
+            _disposables.Clear();
         }
 
         public IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
