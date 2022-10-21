@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Infrastructure.Services;
+using Login.Scripts.Domain;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Login.Scripts.Infrastructure
 {
-    public class LoginService : MonoBehaviour, ILoginService
+    public class LoginService : ILoginService
     {
         public LoginService()
         {

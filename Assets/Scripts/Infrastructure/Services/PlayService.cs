@@ -9,9 +9,14 @@ using UniRx;
 
 namespace Infrastructure.Services
 {
-    public class PlayService : MonoBehaviour, IPlayService
+    public class PlayService : IPlayService
     {
-        [SerializeField] InMemoryCardProvider _cardProvider;
+        readonly ICardProvider _cardProvider;
+        public PlayService(ICardProvider cardProvider)
+        {
+            _cardProvider = cardProvider;
+        }
+
 
         private string GetRoundUrl => Configuration.UrlBase + "/api/round?matchid={0}&roundNumber={1}";
         private string PlayCardUrl => Configuration.UrlBase + "/api/play?matchid={0}";

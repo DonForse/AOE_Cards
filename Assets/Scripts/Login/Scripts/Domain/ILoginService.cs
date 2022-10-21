@@ -1,7 +1,7 @@
 ﻿using System;
 using Infrastructure.Services;
 
-namespace Login.Scripts.Infrastructure
+namespace Login.Scripts.Domain
 {
     public interface ILoginService
     {

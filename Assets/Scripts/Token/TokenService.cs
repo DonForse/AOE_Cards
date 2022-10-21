@@ -6,14 +6,12 @@ using UnityEngine.Networking;
 
 namespace Infrastructure.Services
 {
-    public class TokenService : MonoBehaviour, ITokenService
+    public class TokenService : ITokenService
     {
         private string TokenUrl => Configuration.UrlBase + "/api/token";
 
-        public IObservable<UserResponseDto> RefreshToken()
-        {
-            return Get().Retry(3);
-        }
+        public IObservable<UserResponseDto> RefreshToken() => Get().Retry(3);
+
         private IObservable<UserResponseDto> Get()
         {
             return Observable.Create<UserResponseDto>(emitter =>
@@ -45,8 +43,6 @@ namespace Infrastructure.Services
                     });
                 }
             });
-
-
         }
     }
 }

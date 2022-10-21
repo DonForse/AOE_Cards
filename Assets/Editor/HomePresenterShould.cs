@@ -1,6 +1,4 @@
-﻿using System;
-using Home;
-using ICSharpCode.NRefactory.Visitors;
+﻿using Home;
 using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
