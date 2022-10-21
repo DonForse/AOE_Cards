@@ -8,11 +8,11 @@ public class ServicesProvider : MonoBehaviour
 {
     [SerializeField] private InMemoryCardProvider cardProvider;
 
-    public IMatchService GetMatchService() => MatchProvider.MatchService(cardProvider);
+    public IMatchService GetMatchService() => MatchProvider.OfflineMatchService(cardProvider);
 
-    internal ILoginService GetLoginService() => LoginProvider.LoginService();
+    internal ILoginService GetLoginService() => LoginProvider.OfflineLoginService();
 
-    internal ITokenService GetTokenService() => TokenProvider.TokenService();
+    internal ITokenService GetTokenService() => TokenProvider.OfflineTokenService();
 
-    internal IPlayService GetPlayService() => PlayProvider.PlayService(cardProvider);
+    internal IPlayService GetPlayService() => PlayProvider.OfflinePlayService(cardProvider);
 }

@@ -8,5 +8,7 @@ namespace Login
         private static ILoginService _loginService;
 
         public static ILoginService LoginService() => _loginService ??= new LoginService();
+
+        public static ILoginService OfflineLoginService() => _loginService ??= new OfflineLoginService();
     }
 }

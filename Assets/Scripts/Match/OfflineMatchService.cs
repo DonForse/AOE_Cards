@@ -5,6 +5,11 @@ namespace Infrastructure.Services
 {
     public class OfflineMatchService : IMatchService
     {
+        public OfflineMatchService(ICardProvider cardProvider)
+        {
+            throw new NotImplementedException();
+        }
+
         public IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             throw new NotImplementedException();

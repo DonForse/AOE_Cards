@@ -1,12 +1,21 @@
 ﻿using System;
+using Infrastructure.Services;
+using UniRx;
 
-namespace Infrastructure.Services
+namespace Token
 {
     public class OfflineTokenService : ITokenService
     {
         public IObservable<UserResponseDto> RefreshToken()
         {
-            throw new NotImplementedException();
+            return Observable.Return(new UserResponseDto()
+            {
+                guid = PlayerPrefsHelper.UserId,
+                username = PlayerPrefsHelper.UserName,
+                refreshToken = PlayerPrefsHelper.RefreshToken,
+                accessToken =  PlayerPrefsHelper.AccessToken,
+                friendCode =  PlayerPrefsHelper.FriendCode
+            });
         }
     }
 }
