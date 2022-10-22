@@ -556,6 +556,7 @@ namespace Game
 
         private void PlayUnitCard(Draggable draggable)
         {
+            Debug.Log("Play Unit");
             if (matchState != MatchState.SelectUnit)
                 return;
             if (_unitCardPlayed != null)
@@ -569,6 +570,7 @@ namespace Game
 
         private void PlayUpgradeCard(Draggable draggable)
         {
+            Debug.Log("Play Upgrade Card");
             if (matchState != MatchState.SelectUpgrade)
                 return;
             if (_upgradeCardPlayed != null)
