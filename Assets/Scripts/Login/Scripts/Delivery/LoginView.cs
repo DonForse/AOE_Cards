@@ -2,8 +2,8 @@
 using Common;
 using Common.Utilities;
 using Home;
+using Login.Scripts.Domain;
 using Login.Scripts.Presentation;
-using Login.UnityDelivery;
 using Sound;
 using TMPro;
 using UniRx;
@@ -15,13 +15,16 @@ namespace Login.Scripts.Delivery
     public class LoginView : MonoBehaviour, IView, ILoginView
     {
         [SerializeField] private Button openLoginButton;
-        [SerializeField] private Button registerButton;
+        [SerializeField] private Button openRegisterButton;
+        
         [SerializeField] private Button guestButton;
-        [SerializeField] private Button backButton;
-        [SerializeField] private Button continueButton;
-
+        [SerializeField] private Button closeLoginButton;
+        [SerializeField] private Button loginButton;
+        [SerializeField] private Button registerButton;
+        [SerializeField] private Button closeRegisterButton;
         [SerializeField] private GameObject actionsContainer;
         [SerializeField] private GameObject loginContainer;
+        [SerializeField] private GameObject registerContainer;
         [SerializeField] private TMP_InputField username;
         [SerializeField] private TMP_InputField password;
         [SerializeField] private TextMeshProUGUI errorMessage;
@@ -31,10 +34,8 @@ namespace Login.Scripts.Delivery
         private CompositeDisposable _disposables = new CompositeDisposable();
 
         private LoginPresenter _presenter;
-
-        private string action;
-
-        public IObservable<(string username, string password)> OnLoginButtonPressed() => continueButton
+        
+        public IObservable<(string username, string password)> OnLoginButtonPressed() => loginButton
             .OnClickAsObservable()
             .ThrottleFirst(TimeSpan.FromSeconds(1))
             .Select(_ => (username.text, password.text));
@@ -43,18 +44,18 @@ namespace Login.Scripts.Delivery
             .OnClickAsObservable()
             .ThrottleFirst(TimeSpan.FromSeconds(1));
 
-        public IObservable<(string username, string password)> OnRegisterButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
+        public IObservable<(string username, string password)> OnRegisterButtonPressed() => registerButton
+            .OnClickAsObservable()
+            .ThrottleFirst(TimeSpan.FromSeconds(1))
+            .Select(_ => (username.text, password.text));
+
+        public void NavigateToHomeView() => navigator.OpenHomeView();
 
         public void OnOpening()
         {
             SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions {loop = true}, true);
             _presenter = new LoginPresenter(this, servicesProvider.GetLoginService(), new PlayerPrefsWrapper());
             _presenter.Initialize();
-            // _presenter.OnLoginComplete.Subscribe(_ => OnLoginComplete()).AddTo(_disposables);
-            // _presenter.OnLoginError.Subscribe(OnLoginFail).AddTo(_disposables);
 
             RegisterButtons();
             EnableButtons();
@@ -72,43 +73,47 @@ namespace Login.Scripts.Delivery
         {
             openLoginButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenLoginMenu())
                 .AddTo(_disposables);
-            registerButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Register())
+            openRegisterButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenRegister())
                 .AddTo(_disposables);
-            backButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Back())
+            closeLoginButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => CloseLogin())
+                .AddTo(_disposables);
+            closeRegisterButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => CloseRegister())
                 .AddTo(_disposables);
         }
 
-        private void Back()
+        private void CloseLogin()
         {
             EnableButtons();
 
-            action = "";
             errorMessage.gameObject.SetActive(false);
             errorMessage.text = "";
             loginContainer.SetActive(false);
             actionsContainer.SetActive(true);
         }
+        
+        private void CloseRegister()
+        {
+            EnableButtons();
+
+            errorMessage.gameObject.SetActive(false);
+            errorMessage.text = "";
+            registerContainer.SetActive(false);
+            actionsContainer.SetActive(true);
+        }
 
         private void OpenLoginMenu()
         {
-            action = "login";
             actionsContainer.SetActive(false);
             loginContainer.SetActive(true);
         }
 
-        private void Register()
+        private void OpenRegister()
         {
-            action = "register";
             actionsContainer.SetActive(false);
-            loginContainer.SetActive(true);
+            registerContainer.SetActive(true);
         }
 
-        public void NavigateToHomeView()
-        {
-            navigator.OpenHomeView();
-        }
-
-        public void OnLoginFail(string message)
+        public void ShowError(string message)
         {
             Toast.Instance.ShowToast(message, "Error");
             errorMessage.text = message;
@@ -117,10 +122,10 @@ namespace Login.Scripts.Delivery
             EnableButtons();
         }
 
-        public void ShowError(string error)
+        public void ShowWarning(string message)
         {
-            Toast.Instance.ShowToast(error, "Warning");
-            errorMessage.text = error;
+            Toast.Instance.ShowToast(message, "Warning");
+            errorMessage.text = message;
             errorMessage.gameObject.SetActive(true);
             EnableButtons();
         }
@@ -128,19 +133,23 @@ namespace Login.Scripts.Delivery
         public void DisableButtons()
         {
             openLoginButton.interactable = false;
+            openRegisterButton.interactable = false;
             registerButton.interactable = false;
-            continueButton.interactable = false;
+            closeRegisterButton.interactable = false;
+            loginButton.interactable = false;
+            closeLoginButton.interactable = false;
             guestButton.interactable = false;
-            backButton.interactable = false;
         }
 
         public void EnableButtons()
         {
             openLoginButton.interactable = true;
+            openRegisterButton.interactable = true;
             registerButton.interactable = true;
-            continueButton.interactable = true;
+            closeRegisterButton.interactable = true;
+            loginButton.interactable = true;
             guestButton.interactable = true;
-            backButton.interactable = true;
+            closeLoginButton.interactable = true;
         }
     }
 }
