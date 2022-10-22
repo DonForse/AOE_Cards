@@ -182,7 +182,7 @@ namespace ServerLogic.Cards.Infrastructure
             var archetypesvs = data[5].Split(new char[] { '|'}, StringSplitOptions.RemoveEmptyEntries);
             var card = new UnitCard()
             {
-                CardName = data[0],
+                CardName = data[0].Trim('\n'),
                 BasePower = int.Parse(data[3]),
                 Archetypes = archetypes.Select(c => ConvertArchetype(c)).ToList(),
                 BonusVs = archetypesvs.Select(c => ConvertArchetype(c)).ToList(),

@@ -3,7 +3,6 @@ using System.Linq;
 using Game;
 using Infrastructure;
 using Infrastructure.Data;
-using Infrastructure.DTOs;
 using Match.Domain;
 using ServerLogic.Controllers;
 using ServerLogic.Matches.Infrastructure.DTO;
@@ -17,6 +16,7 @@ namespace Match
     {
         private readonly ICardProvider _cardProvider;
         private readonly MatchController _matchController;
+        private string UserId() => PlayerPrefs.GetString(PlayerPrefsHelper.UserId);
 
         public OfflineMatchService(ICardProvider cardProvider, MatchController matchController)
         {
@@ -26,22 +26,25 @@ namespace Match
 
         public IObservable<Domain.Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
-            var response = _matchController.Post(PlayerPrefsHelper.UserId,
+            var response = _matchController.Post(UserId(),
                 new MatchInfoDto {vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty});
             
             var dto = JsonUtility.FromJson<MatchDto>(response.response);
-            return Observable.Return(DtoToMatchStatus(dto));
+            if (string.IsNullOrWhiteSpace(dto.matchId))
+                return Observable.Return((Domain.Match)null);
+            return Observable.Return(DtoToMatchStatus(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
         public IObservable<Domain.Match> GetMatch()
         {
-            var response = _matchController.Get(PlayerPrefsHelper.UserId);
+            var response = _matchController.Get(UserId());
             var dto = JsonUtility.FromJson<MatchDto>(response.response);
-            return Observable.Return(DtoToMatchStatus(dto));        }
+            return Observable.Return(DtoToMatchStatus(dto)).Delay(TimeSpan.FromSeconds(1));
+        }
 
         public IObservable<Unit> RemoveMatch()
         {
-            _matchController.Delete(PlayerPrefsHelper.UserId);
+            _matchController.Delete(UserId());
             return Observable.ReturnUnit();
         }
 

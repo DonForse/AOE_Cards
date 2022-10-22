@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using ServerLogic.Matches.Infrastructure.DTO;
 using ServerLogic.Users.Actions;
 using ServerLogic.Users.Infrastructure;
 using ServerLogic.Users.Service;
 
-namespace AoeCards.Controllers
+namespace ServerLogic.Controllers
 {
     
     public class UserController
@@ -21,9 +21,9 @@ namespace AoeCards.Controllers
         // GET api/play/matchid(guid-guid-guid-guid)
         /// <returns> no match available</returns>
         /// <returns>matchId</returns>
-        public ResponseDto Post(JObject json)//encoded
+        public ResponseDto Post(UserRequestDto json)//encoded
         {
-            var userInfo = JsonConvert.DeserializeObject<UserRequestDto>(json.ToString());
+            var userInfo = json;
             var getUser = new GetUser(_usersRepository);
 
             var user = getUser.Execute(userInfo.username, userInfo.password, DateTime.ParseExact(userInfo.date, "dd-MM-yyyy hhmmss", System.Globalization.CultureInfo.InvariantCulture));
@@ -40,12 +40,12 @@ namespace AoeCards.Controllers
             return responseDto;
         }
 
-        public ResponseDto Put(Object json)
+        public ResponseDto Put(UserRequestDto json)
         {
-            var userInfo = JsonConvert.DeserializeObject<UserRequestDto>(json.ToString());
+            var userInfo = json;
             var createUser = new CreateUser(_usersRepository);
 
-            var user = createUser.Execute(userInfo.username, userInfo.password, DateTime.ParseExact(userInfo.date, "dd-MM-yyyy hhmmss", System.Globalization.CultureInfo.InvariantCulture));
+            var user = createUser.Execute(userInfo.username, userInfo.password);
 
             var responseDto = new ResponseDto
             {

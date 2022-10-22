@@ -53,9 +53,9 @@ namespace Game
         private void RegisterToPresenterEvents()
         {
             _presenter = new GamePresenter(servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
-            _presenter.OnGetRoundInfo.Subscribe(round => OnGetRoundInfo(round)).AddTo(_disposables);
-            _presenter.OnError.Subscribe(error => ShowError(error)).AddTo(_disposables);
-            _presenter.OnReroll.Subscribe(hand => OnRerollComplete(hand)).AddTo(_disposables);
+            _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
+            _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
+            _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
             _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
             _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
         }
@@ -403,6 +403,7 @@ namespace Game
 
         private void UpgradeCardSentPlay()
         {
+            Debug.Log("UpgradeCardSentPlay");
             MoveUpgradeCardToShowdown();
             isWorking = false;
         }

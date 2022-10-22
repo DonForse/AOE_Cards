@@ -17,7 +17,7 @@ namespace ServerLogic.Users.Actions
             random = new Random();
         }
 
-        internal User Execute(string username, string password, DateTime dt)
+        internal User Execute(string username, string password)
         {
             if (username == "GUEST")
             {
@@ -28,7 +28,7 @@ namespace ServerLogic.Users.Actions
 
             if (_usersRepository.Get(username) != null)
                 throw new ApplicationException("user already exists");
-            password = DecodePassword(password, dt);
+            password = DecodePassword(password, DateTime.Now);
             string savedPasswordHash = User.EncryptPassword(password);
             var user = new User()
             {

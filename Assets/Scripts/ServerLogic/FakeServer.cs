@@ -10,7 +10,7 @@ namespace ServerLogic
 
         private void Start()
         {
-            _matchManager = new MatchManager(new InMemoryMatchesRepository());
+            _matchManager = new MatchManager(ServerLogicProvider.MatchesRepository());
             _matchManager.Initialize();
         }
     }

@@ -87,8 +87,6 @@ namespace Home
                 .DoOnError(err => OnRefreshTokenError(err.Message))
                 .Subscribe(OnRefreshTokenComplete).AddTo(_disposables);
             return;
-
-
         }
 
         private void OnRefreshTokenError(string error)
