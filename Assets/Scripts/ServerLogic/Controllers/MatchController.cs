@@ -70,7 +70,7 @@ namespace ServerLogic.Controllers
             }
         }
 
-        public ResponseDto Post(string userId, JObject json)
+        public ResponseDto Post(string userId, MatchInfoDto matchInfoDto)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace ServerLogic.Controllers
                 var user = getUser.Execute(userId);
                 if (user == null)
                     throw new ApplicationException("user is not valid");
-                var matchInfo = JsonConvert.DeserializeObject<MatchInfoDto>(json.ToString());
+                var matchInfo = matchInfoDto;
 
                 if (matchInfo.vsBot)
                     return PlayBot(user, matchInfo.botDifficulty);
