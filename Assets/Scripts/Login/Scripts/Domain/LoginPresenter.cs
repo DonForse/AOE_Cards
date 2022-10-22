@@ -3,6 +3,7 @@ using Login.Scripts.Infrastructure;
 using UnityEngine;
 using UniRx;
 using System;
+using Infrastructure.DTOs;
 
 namespace Login.Scripts.Domain
 {

@@ -2,6 +2,10 @@ using Infrastructure.Services;
 using UnityEngine;
 using UniRx;
 using System;
+using Infrastructure.DTOs;
+using Infrastructure.Services.Exceptions;
+using Match.Domain;
+using Token;
 
 namespace Home
 {
@@ -14,8 +18,8 @@ namespace Home
         private string previousFriendCode = "";
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        private ISubject<Match> _onMatchFound = new Subject<Match>();
-        public IObservable<Match> OnMatchFound => _onMatchFound;
+        private ISubject<Match.Domain.Match> _onMatchFound = new Subject<Match.Domain.Match>();
+        public IObservable<Match.Domain.Match> OnMatchFound => _onMatchFound;
 
         private ISubject<string> _onError = new Subject<string>();
         public IObservable<string> OnError => _onError;

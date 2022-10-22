@@ -1,0 +1,37 @@
+Persians,Villager,Villager,Persian Town Center,0,,Vills have double strength (always calculated last)
+Spaniards,Villager,Villager,Supremacy,8,,Villagers +8
+Incas,Villager,Villager,Incas Villagers,6,,Villagers +6
+Berbers,Villager,Villager,Berbers Boots,5,,Villagers +5
+Portuguese,Villager,Villager,Feitoria,4,,Villagers +4
+Aztecs,Infantry,Infantry,Garland Wars,8,,Infantry +8
+Bulgarians,Infantry,Infantry,Bagains,8,Archer,Infantry +8 vs Archers
+Goths,Infantry,Infantry,Perfusion,4,,Infantry +4
+Japaneses,Infantry,Infantry,Japanese Warriors,4,,Infantry +4
+Malay,Infantry,Infantry,Forced Levy,4,,Infantry +4
+Slavs,Infantry,Infantry,Druzhina,8,Infantry,Infantry +8 vs Infantry
+Vikings,Infantry,Infantry,Chieftains,8,Cavalry,Infantry +8 vs Cavalry
+Celts,Special,Siege Unit,Furor Celtica,0,,Siege Units returns to hand after combat
+Sarracens1,Special,Monks,Madrasah,0,,Monk returns to hand after combat
+Burmeses,Cavalry,Elephant,Howdah,4,,Elephants +4
+Khmers,Cavalry,Elephant,Tusk Swords,6,,Elephants +6,
+Vietnamese,Cavalry,Elephant,Chatras,6,,Elephants +6,
+Lithuanians,Others,Counter Unit,Tower Shields,3,,Counter Units +3
+Tatars,Others,Cavalry Archer|Counter Unit,Silk Armor,4,,Cav Archers and Counter Units +4
+Cumans,Archer,Cavalry Archer,Steppe Husbandry,6,,Archers+6(Cavalry Archers)
+Mongols,Archer,Cavalry Archer,Mangudai,8,,Archers+8(Cavalry Archers)
+Byzantines,Cavalry,Cavalry,Logistica,4,Infantry,Cavalry +4 vs Infantry
+Franks,Cavalry,Cavalry,Chivalry,4,,Cavalry+4
+Huns,Cavalry,Cavalry,Marauders,4,Archer,Cavalry +4 vs Archers
+Malians,Cavalry,Cavalry,Farimba,4,,Cavalry +4
+Teutons,Cavalry,Cavalry,Teutons Faith,0,,Cavalry no longer loses vs monks
+Turks,Cavalry,Cavalry,Free Hussar,4,,Cavalry
+Indians,Cavalry,Camel,Imperial Camel Riders,6,,Camels +6
+Sarracens2,Cavalry,Camel,Zealotry,4,,Camels +4
+Britons,Archer,Archer,Yeomen,6,,Archers +6
+Chinese,Archer,Archer,Rocketry,4,Infantry,Archers +4 vs Infantry
+Ethiopians,Archer,Archer,Ethiopians Archers,6,,Archers +6
+Italians,Archer,Archer,Pavise,6,,Archers +6
+Magyars,Archer,Cavalry Archer,Recurve Bow,4,,Archers +4(Cavalry Archers)
+Mayans,Archer,Archer,Obsidian Arrows,6,,Archers +6
+Incas,Eagle Warrior,Eagle Warrior|Counter Unit,Fabric Shields,4,,Eagle Warrior and Counter Units + 4
+Mayans,Eagle Warrior,Eagle Warrior,El Dorado,6,,Eagle Warrior + 6

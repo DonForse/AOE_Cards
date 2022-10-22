@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Data;
 
-namespace Infrastructure.Services
+namespace Infrastructure.Data
 {
     public class Round
     {

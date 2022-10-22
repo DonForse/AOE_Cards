@@ -1,4 +1,6 @@
-namespace Infrastructure.Services
+using Data;
+
+namespace Infrastructure.Data
 {
     public class PlayerCard
     {

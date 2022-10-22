@@ -1,5 +1,8 @@
-﻿public interface IPlayer
+﻿namespace Player
 {
-    string GetId();
-    string GetName();
+    public interface IPlayer
+    {
+        string GetId();
+        string GetName();
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace Infrastructure.Services
+namespace Infrastructure.DTOs
 {
     [Serializable]
     public class BoardDto

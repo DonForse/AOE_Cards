@@ -1,8 +1,7 @@
 using System;
-using System.Net.Http;
 using UniRx;
 
-namespace Infrastructure.Services
+namespace Match.Domain
 {
     public interface IMatchService
     {

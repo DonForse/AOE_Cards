@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Infrastructure.Data;
 using Infrastructure.Services;
 using TMPro;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Game
         private int currentRound;
         private IList<PlayerType> roundWinners = new List<PlayerType>();
 
-        public void SetGame(Match match)
+        public void SetGame(Match.Domain.Match match)
         {
             Clear();
             SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);

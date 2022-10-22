@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Infrastructure.Services
+﻿namespace Infrastructure.DTOs
 {
     public class UserDto
     {

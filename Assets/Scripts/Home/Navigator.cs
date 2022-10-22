@@ -2,6 +2,8 @@ using Game;
 using Infrastructure.Services;
 using Login;
 using Login.UnityDelivery;
+using Result;
+using Tutorial;
 using UnityEngine;
 
 namespace Home
@@ -35,7 +37,7 @@ namespace Home
             currentActiveView = loginView;
         }
 
-        public void OpenGameView(Match ms)
+        public void OpenGameView(Match.Domain.Match ms)
         {
             if(currentActiveView != null)
                 currentActiveView.OnClosing();

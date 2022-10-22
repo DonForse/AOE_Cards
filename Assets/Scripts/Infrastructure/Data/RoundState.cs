@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Services
+﻿namespace Infrastructure.Data
 {
     public enum RoundState
     {

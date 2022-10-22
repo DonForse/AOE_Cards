@@ -1,10 +1,11 @@
 using System;
-using System.Collections;
+using Infrastructure.DTOs;
+using Infrastructure.Services;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Infrastructure.Services
+namespace Token
 {
     public class TokenService : ITokenService
     {

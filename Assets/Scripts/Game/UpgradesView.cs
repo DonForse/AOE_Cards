@@ -67,7 +67,7 @@ namespace Game
                 Destroy(upgradeIcon.gameObject);
         }
 
-        internal void SetGame(Match match)
+        internal void SetGame(Match.Domain.Match match)
         {
             var rounds = match.Board.Rounds.Take(match.Board.Rounds.Count - 1);
             foreach (var round in rounds) {

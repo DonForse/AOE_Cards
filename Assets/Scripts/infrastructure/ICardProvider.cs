@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using Data;
 
-public interface ICardProvider
+namespace Infrastructure
 {
-    IList<UnitCardData> GetUnitCards();
-    IList<UpgradeCardData> GetUpgradeCards();
+    public interface ICardProvider
+    {
+        IList<UnitCardData> GetUnitCards();
+        IList<UpgradeCardData> GetUpgradeCards();
 
-    UnitCardData GetUnitCard(string name);
-    UpgradeCardData GetUpgradeCard(string name);
+        UnitCardData GetUnitCard(string name);
+        UpgradeCardData GetUpgradeCard(string name);
+    }
 }

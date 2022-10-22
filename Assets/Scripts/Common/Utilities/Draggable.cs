@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Common
+namespace Common.Utilities
 {
     public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {

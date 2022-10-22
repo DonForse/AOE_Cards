@@ -1,15 +1,18 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
 using System.Text;
 using Game;
+using Infrastructure;
+using Infrastructure.Data;
+using Infrastructure.DTOs;
+using Infrastructure.Services;
+using Infrastructure.Services.Exceptions;
+using Match.Domain;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Infrastructure.Services
+namespace Match
 {
     public class MatchService : IMatchService
     {
@@ -31,14 +34,14 @@ namespace Infrastructure.Services
             _disposables.Clear();
         }
 
-        public IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
+        public IObservable<Domain.Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             string data = JsonUtility.ToJson(new MatchPostDto
                 {vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty});
             return Post(data).Retry(3);
         }
 
-        public IObservable<Match> GetMatch()
+        public IObservable<Domain.Match> GetMatch()
         {
             return Get().Retry(3);
         }
@@ -81,9 +84,9 @@ namespace Infrastructure.Services
             });
         }
 
-        private IObservable<Match> Get()
+        private IObservable<Domain.Match> Get()
         {
-            return Observable.Create<Match>(emitter =>
+            return Observable.Create<Domain.Match>(emitter =>
             {
                 ResponseInfo responseInfo;
                 var webRequest = UnityWebRequest.Get(MatchUrl);
@@ -121,9 +124,9 @@ namespace Infrastructure.Services
             });
         }
 
-        private IObservable<Match> Post(string data)
+        private IObservable<Domain.Match> Post(string data)
         {
-            return Observable.Create<Match>(emitter =>
+            return Observable.Create<Domain.Match>(emitter =>
             {
                 ResponseInfo responseInfo;
                 _postWebRequest = UnityWebRequest.Post(MatchUrl, data);
@@ -166,9 +169,9 @@ namespace Infrastructure.Services
             });
         }
 
-        private Match DtoToMatchStatus(MatchDto dto)
+        private Domain.Match DtoToMatchStatus(MatchDto dto)
         {
-            var ms = new Match();
+            var ms = new Domain.Match();
             ms.Id = dto.matchId;
             ms.Board = new Board
             {

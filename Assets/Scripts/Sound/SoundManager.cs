@@ -1,63 +1,64 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+namespace Sound
 {
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioSource trackSource;
-    public bool IsMuted { get; private set; }
-
-    public void ToggleMute()
+    public class SoundManager : MonoBehaviour
     {
-        IsMuted = !IsMuted;
-        audioSource.volume = IsMuted ? 0f : 1f;
-        trackSource.volume = IsMuted ? 0f : 1f;
-    }
+        [SerializeField] AudioSource audioSource;
+        [SerializeField] AudioSource trackSource;
+        public bool IsMuted { get; private set; }
 
-    #region Singleton
-    private static SoundManager _instance;
-
-    public static SoundManager Instance { get { return _instance; } }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
+        public void ToggleMute()
         {
-            Destroy(this.gameObject);
+            IsMuted = !IsMuted;
+            audioSource.volume = IsMuted ? 0f : 1f;
+            trackSource.volume = IsMuted ? 0f : 1f;
         }
-        else
+
+        #region Singleton
+        private static SoundManager _instance;
+
+        public static SoundManager Instance { get { return _instance; } }
+
+        private void Awake()
         {
-            _instance = this;
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+            _instance.IsMuted = false;
         }
-        _instance.IsMuted = false;
-    }
-    #endregion
+        #endregion
 
-    public void PlayAudioClip(AudioClip audioClip, AudioClipOptions audioOptions)
-    {
-        audioSource.clip = audioClip;
-        audioSource.loop = audioOptions.loop;
-        audioSource.Play();
-    }
+        public void PlayAudioClip(AudioClip audioClip, AudioClipOptions audioOptions)
+        {
+            audioSource.clip = audioClip;
+            audioSource.loop = audioOptions.loop;
+            audioSource.Play();
+        }
 
-    public void StopAudioClip()
-    {
-        if (audioSource.isPlaying)
-            audioSource.Stop();
-    }
+        public void StopAudioClip()
+        {
+            if (audioSource.isPlaying)
+                audioSource.Stop();
+        }
 
-    public void PlayBackground(AudioClip audioClip, AudioClipOptions audioOptions, bool interruptAudio)
-    {
-        if (!interruptAudio && trackSource.isPlaying)
-            return;
-        trackSource.clip = audioClip;
-        trackSource.loop = audioOptions.loop;
-        trackSource.Play();
-    }
-    public void StopBackground()
-    {
-        if (trackSource.isPlaying)
-            trackSource.Stop();
+        public void PlayBackground(AudioClip audioClip, AudioClipOptions audioOptions, bool interruptAudio)
+        {
+            if (!interruptAudio && trackSource.isPlaying)
+                return;
+            trackSource.clip = audioClip;
+            trackSource.loop = audioOptions.loop;
+            trackSource.Play();
+        }
+        public void StopBackground()
+        {
+            if (trackSource.isPlaying)
+                trackSource.Stop();
+        }
     }
 }

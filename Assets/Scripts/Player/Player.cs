@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-public class Player : IPlayer
+﻿namespace Player
 {
-    private string _id;
-    private string _name;
-
-    public Player(string id, string name)
+    public class Player : IPlayer
     {
-        _id = id;
-        _name = name;
-    }
+        private string _id;
+        private string _name;
 
-    public string GetId()
-    {
-        return _id;
-    }
+        public Player(string id, string name)
+        {
+            _id = id;
+            _name = name;
+        }
 
-    public string GetName()
-    {
-        return _name;
+        public string GetId()
+        {
+            return _id;
+        }
+
+        public string GetName()
+        {
+            return _name;
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Infrastructure.Services
+namespace Infrastructure.DTOs
 {
     [Serializable]
     public class PlayerCardDto

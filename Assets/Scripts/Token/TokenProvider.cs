@@ -1,6 +1,4 @@
-﻿using Token;
-
-namespace Infrastructure.Services
+﻿namespace Token
 {
     public static class TokenProvider
     {

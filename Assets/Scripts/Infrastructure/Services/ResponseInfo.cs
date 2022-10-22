@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Infrastructure.DTOs;
 using UnityEngine;
 using UnityEngine.Networking;
 

@@ -1,7 +1,9 @@
 ﻿using Home;
 using Infrastructure.Services;
+using Match.Domain;
 using NSubstitute;
 using NUnit.Framework;
+using Token;
 
 namespace Editor
 {
@@ -27,12 +29,12 @@ namespace Editor
             ThenMatchServiceIsCalled();
         }
 
-        private Match WhenMatchFound()
+        private Match.Domain.Match WhenMatchFound()
         {
             // _matchService.When(x=>x.StartMatch("",Arg.Any<Action<MatchStatus>>()))
             //     .Do();
             //fake pero algo asi
-            return new Infrastructure.Services.Match();
+            return new Match.Domain.Match();
         }
 
         private void WhenStartNewMatch()

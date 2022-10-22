@@ -1,7 +1,9 @@
 ﻿using System;
+using Infrastructure;
+using Match.Domain;
 using UniRx;
 
-namespace Infrastructure.Services
+namespace Match
 {
     public class OfflineMatchService : IMatchService
     {
@@ -10,12 +12,12 @@ namespace Infrastructure.Services
             throw new NotImplementedException();
         }
 
-        public IObservable<Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
+        public IObservable<Domain.Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             throw new NotImplementedException();
         }
 
-        public IObservable<Match> GetMatch()
+        public IObservable<Domain.Match> GetMatch()
         {
             throw new NotImplementedException();
         }

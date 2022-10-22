@@ -1,28 +1,30 @@
-﻿using System;
-using Home;
+﻿using Home;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialView : MonoBehaviour, IView
+namespace Tutorial
 {
-    [SerializeField] private ServicesProvider _servicesProvider;
-    [SerializeField] private Navigator _navigator;
-    [SerializeField] private Button _backButton;
-
-    public void OnOpening()
+    public class TutorialView : MonoBehaviour, IView
     {
-        _backButton.onClick.AddListener(CloseView);
-        this.gameObject.SetActive(true);
-    }
+        [SerializeField] private ServicesProvider _servicesProvider;
+        [SerializeField] private Navigator _navigator;
+        [SerializeField] private Button _backButton;
 
-    public void OnClosing()
-    {
-        _backButton.onClick.RemoveAllListeners();
-        this.gameObject.SetActive(false);
-    }
+        public void OnOpening()
+        {
+            _backButton.onClick.AddListener(CloseView);
+            this.gameObject.SetActive(true);
+        }
 
-    private void CloseView()
-    {
-        _navigator.OpenHomeView();
+        public void OnClosing()
+        {
+            _backButton.onClick.RemoveAllListeners();
+            this.gameObject.SetActive(false);
+        }
+
+        private void CloseView()
+        {
+            _navigator.OpenHomeView();
+        }
     }
 }

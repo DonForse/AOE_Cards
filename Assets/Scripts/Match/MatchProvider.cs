@@ -1,6 +1,7 @@
-﻿using Infrastructure.Services;
+﻿using Infrastructure;
+using Match.Domain;
 
-namespace Infrastructure
+namespace Match
 {
     public static class MatchProvider
     {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Infrastructure.Services
+﻿namespace Infrastructure.DTOs
 {
     public class RerollInfoDto
     {

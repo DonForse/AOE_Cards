@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Infrastructure.Data;
+using Infrastructure.DTOs;
 using Infrastructure.Services;
+using Infrastructure.Services.Exceptions;
+using Token;
 using UniRx;
 using UnityEngine;
 
@@ -36,7 +40,7 @@ namespace Game
             _tokenService = tokenService;
         }
 
-        public void SetMatch(Match match)
+        public void SetMatch(Match.Domain.Match match)
         {
             _hand = match.Hand;
             currentRound = match.Board.Rounds.Count() - 1;

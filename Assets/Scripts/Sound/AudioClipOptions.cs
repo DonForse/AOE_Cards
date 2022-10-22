@@ -1,4 +1,7 @@
-﻿public class AudioClipOptions
+﻿namespace Sound
 {
-    public bool loop;
+    public class AudioClipOptions
+    {
+        public bool loop;
+    }
 }

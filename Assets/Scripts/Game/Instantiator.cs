@@ -1,43 +1,44 @@
-﻿using Game;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Data;
 using UnityEngine;
 
-public class Instantiator : MonoBehaviour
+namespace Game
 {
-    #region Singleton
-    private static Instantiator _instance;
-
-    public static Instantiator Instance { get { return _instance; } }
-
-    private void Awake()
+    public class Instantiator : MonoBehaviour
     {
-        if (_instance != null && _instance != this)
+        #region Singleton
+        private static Instantiator _instance;
+
+        public static Instantiator Instance { get { return _instance; } }
+
+        private void Awake()
         {
-            Destroy(this.gameObject);
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
         }
-        else
+        #endregion
+
+        [SerializeField] private GameObject unitCardGo;
+        [SerializeField] private GameObject upgradeCardGo;
+
+        public UnitCardView CreateUnitCardGO(UnitCardData data) {
+            var go = Instantiate(unitCardGo);
+            var unitCard = go.GetComponent<UnitCardView>();
+            unitCard.SetCard(data);
+            return unitCard;
+        }
+
+        public UpgradeCardView CreateUpgradeCardGO(UpgradeCardData data)
         {
-            _instance = this;
+            var go = Instantiate(upgradeCardGo);
+            var upgradeCard = go.GetComponent<UpgradeCardView>();
+            upgradeCard.SetCard(data);
+            return upgradeCard;
         }
-    }
-    #endregion
-
-    [SerializeField] private GameObject unitCardGo;
-    [SerializeField] private GameObject upgradeCardGo;
-
-    public UnitCardView CreateUnitCardGO(UnitCardData data) {
-        var go = Instantiate(unitCardGo);
-        var unitCard = go.GetComponent<UnitCardView>();
-        unitCard.SetCard(data);
-        return unitCard;
-    }
-
-    public UpgradeCardView CreateUpgradeCardGO(UpgradeCardData data)
-    {
-        var go = Instantiate(upgradeCardGo);
-        var upgradeCard = go.GetComponent<UpgradeCardView>();
-        upgradeCard.SetCard(data);
-        return upgradeCard;
     }
 }

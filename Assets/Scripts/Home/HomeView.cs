@@ -1,5 +1,7 @@
 ﻿using System;
+using Common.Utilities;
 using Infrastructure.Services;
+using Sound;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -171,7 +173,7 @@ namespace Home
 
         }
 
-        private  void OnMatchFound(Match matchStatus)
+        private  void OnMatchFound(Match.Domain.Match matchStatus)
         {
             _matchFoundContainer.SetActive(true);
             StopTimer();

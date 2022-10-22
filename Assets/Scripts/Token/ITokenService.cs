@@ -1,6 +1,7 @@
 ﻿using System;
+using Infrastructure.DTOs;
 
-namespace Infrastructure.Services
+namespace Token
 {
     public  interface ITokenService
     {

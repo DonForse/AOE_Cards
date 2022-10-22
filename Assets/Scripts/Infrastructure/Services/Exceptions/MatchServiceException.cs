@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Infrastructure.Services
+namespace Infrastructure.Services.Exceptions
 {
     [Serializable]
     internal class MatchServiceException : Exception

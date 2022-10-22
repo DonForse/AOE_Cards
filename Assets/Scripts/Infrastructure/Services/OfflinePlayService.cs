@@ -1,29 +1,89 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AoeCards.Controllers;
 using Game;
+using Infrastructure.Data;
+using ServerLogic.Controllers;
+using ServerLogic.Matches.Infrastructure.DTO;
+using UniRx;
+using UnityEngine;
+using RoundDto = Infrastructure.DTOs.RoundDto;
 
 namespace Infrastructure.Services
 {
     public class OfflinePlayService : IPlayService
     {
+        private readonly RoundController _roundController;
+        private readonly PlayController _playController;
+        private readonly ICardProvider _cardProvider;
+        private readonly RerollController _rerollController;
+
+        public OfflinePlayService(RoundController roundController, PlayController playController, ICardProvider cardProvider, RerollController rerollController)
+        {
+            _roundController = roundController;
+            _playController = playController;
+            _cardProvider = cardProvider;
+            _rerollController = rerollController;
+        }
+
         public IObservable<Round> GetRound(int roundNumber)
         {
-            throw new NotImplementedException();
+            var responseInfo = _roundController.Get(PlayerPrefsHelper.UserId, PlayerPrefsHelper.MatchId, roundNumber);
+            var dto = JsonUtility.FromJson<RoundDto>(responseInfo.response);
+            return Observable.Return(DtoToRound(dto));
         }
 
         public IObservable<Hand> PlayUnitCard(string cardName)
         {
-            throw new NotImplementedException();
+            var responseInfo = _playController.Post(PlayerPrefsHelper.UserId, PlayerPrefsHelper.MatchId, new CardInfoDto(){cardname = cardName, type = "unit"});
+            var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
+            return Observable.Return(DtoToHand(dto));
         }
 
         public IObservable<Hand> PlayUpgradeCard(string cardName)
         {
-            throw new NotImplementedException();
+            var responseInfo = _playController.Post(PlayerPrefsHelper.UserId, PlayerPrefsHelper.MatchId, new CardInfoDto(){cardname = cardName, type = "upgrade"});
+            var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
+            return Observable.Return(DtoToHand(dto));
         }
 
         public IObservable<Hand> RerollCards(IList<string> unitCards, IList<string> upgradeCards)
         {
-            throw new NotImplementedException();
+            var responseInfo = _rerollController.Post(PlayerPrefsHelper.UserId, PlayerPrefsHelper.MatchId,
+                new RerollInfoDto {unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray()});
+            var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
+            return Observable.Return(DtoToHand(dto));
+        }
+        
+        private Hand DtoToHand(HandDto dto)
+        {
+            return new Hand(dto.units.Select(cardName => _cardProvider.GetUnitCard(cardName)).OrderBy(c => c.cardName.ToLower() == "villager" ? int.MaxValue : c.power).ToList(),
+                dto.upgrades.Select(cardName => _cardProvider.GetUpgradeCard(cardName)).OrderBy(c => c.GetArchetypes().FirstOrDefault()).ToList());
+        }
+
+        private Round DtoToRound(RoundDto dto)
+        {
+            return new Round
+            {
+                Finished = dto.finished,
+                RoundNumber = dto.roundnumber,
+                WinnerPlayers = dto.winnerplayer,
+                UpgradeCardRound = _cardProvider.GetUpgradeCard(dto.upgradecardround),
+                CardsPlayed = dto.cardsplayed.Select(cp =>
+                    new PlayerCard
+                    {
+                        Player = cp.player,
+                        UnitCardData = _cardProvider.GetUnitCard(cp.unitcard),
+                        UpgradeCardData = _cardProvider.GetUpgradeCard(cp.upgradecard),
+                        UnitCardPower = cp.unitcardpower,
+                    }).ToList(),
+                RivalReady = dto.rivalready,
+                RoundState = dto.roundState,
+                HasReroll = dto.hasReroll,
+                Timer = dto.roundTimer
+
+            };
         }
     }
 }

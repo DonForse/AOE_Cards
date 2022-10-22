@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
+using Data;
 using TMPro;
 using UnityEngine;
 

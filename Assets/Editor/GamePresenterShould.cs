@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 using Game;
+using Infrastructure;
 using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
+using Token;
 using UnityEngine;
 
 namespace Editor
@@ -13,7 +16,7 @@ namespace Editor
     {
         private Hand _cardsInHand;
         private GamePresenter _presenter;
-        private Match _matchStatus;
+        private Match.Domain.Match _matchStatus;
         private ICardProvider _cardProvider;
         private IPlayService _playService;
         private ITokenService _tokenService;
@@ -134,7 +137,7 @@ namespace Editor
 
         private void WhenGameSetup()
         {
-            _matchStatus = new Match()
+            _matchStatus = new Match.Domain.Match()
             {
                 Hand = new Hand(_cardProvider.GetUnitCards().Take(5).ToList(),
                     _cardProvider.GetUpgradeCards().Take(5).ToList())

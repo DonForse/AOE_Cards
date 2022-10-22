@@ -3,8 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Common;
+using Common.Utilities;
+using Data;
 using Home;
+using Infrastructure.Data;
 using Infrastructure.Services;
+using Infrastructure.Services.Exceptions;
+using Sound;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,7 +76,7 @@ namespace Game
             this.gameObject.SetActive(false);
         }
 
-        public void SetGame(Match match)
+        public void SetGame(Match.Domain.Match match)
         {
             InitializeGame(match);
             Observable.Interval(TimeSpan.FromSeconds(3))
@@ -98,7 +103,7 @@ namespace Game
             }
         }
 
-        private void ResetGameState(Match match)
+        private void ResetGameState(Match.Domain.Match match)
         {
             ClearView();
             StartGame(match);
@@ -111,7 +116,7 @@ namespace Game
             
         }
 
-        private void RecoverMatchState(Match match)
+        private void RecoverMatchState(Match.Domain.Match match)
         {
             if (match.Board == null)
                 _navigator.OpenHomeView();
@@ -196,14 +201,14 @@ namespace Game
             }
         }
 
-        public void InitializeGame(Match match)
+        public void InitializeGame(Match.Domain.Match match)
         {
             StartGame(match);
 
             ChangeMatchState(MatchState.StartRound);
         }
 
-        private void StartGame(Match match)
+        private void StartGame(Match.Domain.Match match)
         {
             _presenter.SetMatch(match);
             ChangeMatchState(MatchState.InitializeGame);

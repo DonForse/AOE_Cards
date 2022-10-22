@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName ="Unit Card",menuName ="Cards/Unit")]
-public class UnitCardData : CardData
+namespace Data
 {
-    public string effect;
-    public int effectPower;
-    public int power;
-    public Sprite artwork;
-    public Sprite background;
+    [CreateAssetMenu(fileName ="Unit Card",menuName ="Cards/Unit")]
+    public class UnitCardData : CardData
+    {
+        public string effect;
+        public int effectPower;
+        public int power;
+        public Sprite artwork;
+        public Sprite background;
+    }
 }

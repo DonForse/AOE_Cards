@@ -1,6 +1,7 @@
 ﻿using Game;
+using Infrastructure.Data;
 
-namespace Infrastructure.Services
+namespace Match.Domain
 {
     public class Match
     {

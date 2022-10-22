@@ -1,0 +1,34 @@
+Villager,Villager,Villager,1,Can always be played (not a drawable card),,0
+Skirmisher,Archer,Archer|Counter Unit,5,,Infantry,4
+Spearman,Infantry,Infantry|Counter Unit,5,,Cavalry,4
+Scout,Cavalry,Cavalry|Counter Unit,5,,Archer,4
+Militia,Infantry,Infantry,6,,,0
+Eagle Scout,Infantry,Infantry|Eagle Warrior,7,,,0
+Man-at-Arms,Infantry,Infantry,8,,,0
+Archer,Archer,Archer,9,,,0
+Elite Skirmisher,Archer,Archer|Counter Unit,10,+5 vs Infantry,Infantry,5
+Pikeman,Infantry,Infantry|Counter Unit,10,+5 vs Cavalry,Cavalry,5
+Light Cavalry,Cavalry,Cavalry|Counter Unit,10,+5 vs Archer,Archer,5
+Long Swordsman,Infantry,Infantry,11,,,0
+Crossbowman,Archer,Archer,12,,,0
+Eagle Warrior,Infantry,Infantry|Eagle Warrior,13,,,0
+Cavalry Archer,Archer | Cavalry,Archer|Cavalry|Cavalry Archer,12,,,0
+Knight,Cavalry,Cavalry,13,,,0
+Camel Rider,Cavalry,Cavalry|Camel,14,,,0
+Halberdier,Infantry,Infantry|Counter Unit,15,+6 vs Cavalry,Cavalry,6
+Imperial Skirmisher,Archer,Archer|Counter Unit,15,+6 vs Infantry,Infantry,6
+Hussar,Cavalry,Cavalry|Counter Unit,15,+6 vs Archer,Archer,6
+Two-Handed Swordsman,Infantry,Infantry,16,,,0
+Elite Eagle Warrior,Infantry,Infantry|Eagle Warrior,17,,,0
+Arbalester,Archer,Archer,18,,,0
+Hand Cannoneer,Archer,Archer|Infantry,18,,,0
+Cavalier,Cavalry,Cavalry,19,,,0
+Champion,Infantry,Infantry,20,,,0
+Heavy Camel Rider,Cavalry,Cavalry|Camel,21,,,0
+Heavy Cavalry Archer,Archer | Cavalry,Archer|Cavalry|Cavalry Archer,22,,,0
+Battle Elephant,Cavalry,Cavalry|Elephant,23,,,0
+Paladin,Cavalry,Cavalry,24,,,0
+Elite Battle Elephant,Cavalry,Cavalry|Elephant,25,,,0
+Monk,Special,Monk,0,Always wins vs Cavalry,Cavalry,99
+Siege Ram,Siege,Siege Unit,0,Always wins vs Archers,Archer,99
+Heavy Scorpion,Siege,Siege Unit,0,Always wins vs Infantry,Infantry,99
