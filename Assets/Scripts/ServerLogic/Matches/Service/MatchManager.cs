@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using ServerLogic.Matches.Domain;
 using ServerLogic.Matches.Domain.Bot;
@@ -6,7 +7,7 @@ using ServerLogic.Matches.Infrastructure;
 
 namespace ServerLogic.Matches.Service
 {
-    public class MatchManager
+    public class MatchManager : IDisposable
     {
         private readonly IMatchesRepository _matchesRepository;
 
@@ -18,11 +19,17 @@ namespace ServerLogic.Matches.Service
         private static Timer Timer;
         private static HardBot hardBot;
         private static Bot easyBot;
+
         public void Initialize()
         {
             Timer = new Timer(PlayMatches, null, 3000, 3000);
             hardBot = new HardBot();
             easyBot = new Bot();
+        }
+
+        public void Dispose()
+        {
+            Timer?.Dispose();
         }
 
         private void PlayMatches(object state)

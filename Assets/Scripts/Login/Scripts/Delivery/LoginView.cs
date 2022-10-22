@@ -1,22 +1,25 @@
 ﻿using System;
+using Common;
 using Common.Utilities;
 using Home;
-using Login.Scripts.Domain;
+using Login.Scripts.Presentation;
+using Login.UnityDelivery;
 using Sound;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Login.UnityDelivery
+namespace Login.Scripts.Delivery
 {
-    public class LoginView : MonoBehaviour, IView
+    public class LoginView : MonoBehaviour, IView, ILoginView
     {
-        [SerializeField] private Button loginButton;
+        [SerializeField] private Button openLoginButton;
         [SerializeField] private Button registerButton;
         [SerializeField] private Button guestButton;
         [SerializeField] private Button backButton;
         [SerializeField] private Button continueButton;
+
         [SerializeField] private GameObject actionsContainer;
         [SerializeField] private GameObject loginContainer;
         [SerializeField] private TMP_InputField username;
@@ -28,13 +31,30 @@ namespace Login.UnityDelivery
         private CompositeDisposable _disposables = new CompositeDisposable();
 
         private LoginPresenter _presenter;
+
         private string action;
+
+        public IObservable<(string username, string password)> OnLoginButtonPressed() => continueButton
+            .OnClickAsObservable()
+            .ThrottleFirst(TimeSpan.FromSeconds(1))
+            .Select(_ => (username.text, password.text));
+
+        public IObservable<Unit> OnGuestButtonPressed() => guestButton
+            .OnClickAsObservable()
+            .ThrottleFirst(TimeSpan.FromSeconds(1));
+
+        public IObservable<(string username, string password)> OnRegisterButtonPressed()
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnOpening()
         {
-            SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, true);
-            _presenter = new LoginPresenter(servicesProvider.GetLoginService());
-            _presenter.OnLoginComplete.Subscribe(_ => OnLoginComplete()).AddTo(_disposables);
-            _presenter.OnLoginError.Subscribe(error => OnLoginFail(error)).AddTo(_disposables);
+            SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions {loop = true}, true);
+            _presenter = new LoginPresenter(this, servicesProvider.GetLoginService(), new PlayerPrefsWrapper());
+            _presenter.Initialize();
+            // _presenter.OnLoginComplete.Subscribe(_ => OnLoginComplete()).AddTo(_disposables);
+            // _presenter.OnLoginError.Subscribe(OnLoginFail).AddTo(_disposables);
 
             RegisterButtons();
             EnableButtons();
@@ -44,17 +64,18 @@ namespace Login.UnityDelivery
         public void OnClosing()
         {
             _disposables.Clear();
-            _presenter.Unload();
+            _presenter.Dispose();
             this.gameObject.SetActive(false);
         }
-        
+
         private void RegisterButtons()
         {
-            loginButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Login()).AddTo(_disposables);
-            registerButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Register()).AddTo(_disposables);
-            continueButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => SendLogin()).AddTo(_disposables);
-            guestButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => GuestLogin()).AddTo(_disposables);
-            backButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Back()).AddTo(_disposables);
+            openLoginButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenLoginMenu())
+                .AddTo(_disposables);
+            registerButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Register())
+                .AddTo(_disposables);
+            backButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => Back())
+                .AddTo(_disposables);
         }
 
         private void Back()
@@ -68,27 +89,7 @@ namespace Login.UnityDelivery
             actionsContainer.SetActive(true);
         }
 
-        private void SendLogin()
-        {
-            if (string.IsNullOrWhiteSpace(username.text))
-            {
-                ShowError("Username cannot be empty");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(password.text))
-            {
-                ShowError("Password cannot be empty");
-                return;
-            }
-
-            DisableButtons();
-            if (action == "login")
-                _presenter.Login(username.text, password.text);
-            if (action == "register")
-                _presenter.Register(username.text, password.text);
-        }
-
-        private void Login()
+        private void OpenLoginMenu()
         {
             action = "login";
             actionsContainer.SetActive(false);
@@ -102,16 +103,11 @@ namespace Login.UnityDelivery
             loginContainer.SetActive(true);
         }
 
-        private void GuestLogin()
+        public void NavigateToHomeView()
         {
-            DisableButtons();
-            _presenter.Register("GUEST", Guid.NewGuid().ToString());
-        }
-
-        public void OnLoginComplete() {
             navigator.OpenHomeView();
         }
-    
+
         public void OnLoginFail(string message)
         {
             Toast.Instance.ShowToast(message, "Error");
@@ -129,18 +125,18 @@ namespace Login.UnityDelivery
             EnableButtons();
         }
 
-        private void DisableButtons()
+        public void DisableButtons()
         {
-            loginButton.interactable = false;
+            openLoginButton.interactable = false;
             registerButton.interactable = false;
             continueButton.interactable = false;
             guestButton.interactable = false;
             backButton.interactable = false;
         }
 
-        private void EnableButtons()
+        public void EnableButtons()
         {
-            loginButton.interactable = true;
+            openLoginButton.interactable = true;
             registerButton.interactable = true;
             continueButton.interactable = true;
             guestButton.interactable = true;

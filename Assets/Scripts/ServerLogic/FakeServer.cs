@@ -1,4 +1,5 @@
-﻿using ServerLogic.Matches.Infrastructure;
+﻿using System;
+using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Matches.Service;
 using UnityEngine;
 
@@ -8,10 +9,15 @@ namespace ServerLogic
     {
         private MatchManager _matchManager;
 
-        private void Start()
+        private void OnEnable()
         {
             _matchManager = new MatchManager(ServerLogicProvider.MatchesRepository());
             _matchManager.Initialize();
+        }
+
+        private void OnDisable()
+        {
+            _matchManager.Dispose();
         }
     }
 }
