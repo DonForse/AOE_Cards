@@ -67,7 +67,7 @@ namespace Home.Scripts.Tests.Editor
         public void StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot()
         {
             _homePresenter.Initialize();
-            _playVersusHardBotSubject.OnNext(Unit.Default);
+            _playVersusEasyBotSubject.OnNext(Unit.Default);
             Received.InOrder(() =>
             {
                 _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
