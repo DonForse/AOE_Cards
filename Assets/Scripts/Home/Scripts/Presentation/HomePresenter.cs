@@ -1,7 +1,7 @@
-using Infrastructure.Services;
 using UnityEngine;
 using UniRx;
 using System;
+using Common;
 using Infrastructure.DTOs;
 using Infrastructure.Services.Exceptions;
 using Match.Domain;
@@ -11,24 +11,34 @@ namespace Home
 {
     public class HomePresenter
     {
+        private readonly IHomeView _view;
         private readonly IMatchService _matchService;
         private readonly ITokenService _tokenService;
+        private readonly IPlayerPrefs _playerPrefs;
         private bool previousPlayVsBot = false;
         private bool previousPlayVsFriend = false;
         private string previousFriendCode = "";
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        private ISubject<Match.Domain.Match> _onMatchFound = new Subject<Match.Domain.Match>();
-        public IObservable<Match.Domain.Match> OnMatchFound => _onMatchFound;
-
-        private ISubject<string> _onError = new Subject<string>();
-        public IObservable<string> OnError => _onError;
-
-        public HomePresenter(IMatchService matchService, ITokenService tokenService)
+        public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService, IPlayerPrefs playerPrefs)
         {
+            _view = view;
             _matchService = matchService;
             _tokenService = tokenService;
+            _playerPrefs = playerPrefs;
         }
+
+        public void Initialize()
+        {
+            _view.OnPlayMatch().Subscribe(_ =>
+                StartSearchingMatch(false, false, string.Empty)).AddTo(_disposables);
+            _view.OnPlayVersusHardBot().Subscribe(_ =>
+                StartSearchingMatch(true, false, string.Empty, 1)).AddTo(_disposables);
+            _view.OnPlayVersusEasyBot().Subscribe(_=>
+                StartSearchingMatch(true, false, string.Empty,0)).AddTo(_disposables);
+        // _view.OnStartSearchingMatch();
+        }
+
 
         public void Unload()
         {
@@ -40,8 +50,8 @@ namespace Home
             previousPlayVsBot = vsBot;
             previousPlayVsFriend = vsFriend;
             previousFriendCode = friendCode;
-            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
-            PlayerPrefs.Save();
+            _playerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
+            _playerPrefs.Save();
             StartMatch(vsBot, vsFriend, friendCode, botDifficulty);
         }
 
@@ -53,7 +63,7 @@ namespace Home
                 {
                     if (startMatch != null)
                     {
-                        _onMatchFound.OnNext(startMatch);
+                        _view.OnMatchFound(startMatch);
                         return;
                     }
 
@@ -66,7 +76,7 @@ namespace Home
                             {
                                 if (match == null) return;
                                 
-                                _onMatchFound.OnNext(match);
+                                _view.OnMatchFound(match);
 
                             }).AddTo(_disposables);
                     })
@@ -79,7 +89,8 @@ namespace Home
         {
             if (exception.Code != 401)
             {
-                _onError.OnNext(exception.Error);
+                _view.OnError(exception.Error);
+                // _onError.OnNext(exception.Error);
                 return;
             }
 

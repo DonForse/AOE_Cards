@@ -1,4 +1,5 @@
 ﻿using System;
+using Common;
 using Common.Utilities;
 using Infrastructure.Services;
 using Sound;
@@ -9,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Home
 {
-    public class HomeView : MonoBehaviour, IView
+    public class HomeView : MonoBehaviour, IView, IHomeView
     {
         [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
@@ -42,22 +43,31 @@ namespace Home
         private bool timerRunning = false;
         private HomePresenter _presenter;
 
+        public IObservable<Unit> OnPlayMatch() =>
+            _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
+
+        public IObservable<Unit> OnPlayVersusHardBot() =>
+            _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
+        
+        public IObservable<Unit> OnPlayVersusEasyBot() =>
+            _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
+        
         public void OnOpening()
         {
             SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, false);
             _matchFoundContainer.SetActive(false);
-            _presenter = new HomePresenter(_servicesProvider.GetMatchService(), _servicesProvider.GetTokenService());
-            _presenter.OnError.Subscribe(error => OnError(error)).AddTo(_disposables);
-            _presenter.OnMatchFound.Subscribe(match => OnMatchFound(match)).AddTo(_disposables);
+            _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService(),
+                new PlayerPrefsWrapper());
+            _presenter.Initialize();
 
             EnableButtons();
 
             _userCodeLabel.text = PlayerPrefs.GetString(PlayerPrefsHelper.FriendCode);
 
-            _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayMatch()).AddTo(_disposables);
+            // _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayMatch()).AddTo(_disposables);
             _openBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenBotMenu());
-            _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBotHard());
-            _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBot());
+            // _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBotHard());
+            // _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBot());
             _closeBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => CloseBotMenu()).AddTo(_disposables);
             _rulesButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenRules()).AddTo(_disposables);
             _playFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusFriend()).AddTo(_disposables);
@@ -173,7 +183,7 @@ namespace Home
 
         }
 
-        private  void OnMatchFound(Match.Domain.Match matchStatus)
+        public void OnMatchFound(Match.Domain.Match matchStatus)
         {
             _matchFoundContainer.SetActive(true);
             StopTimer();
@@ -192,7 +202,7 @@ namespace Home
             StartTimer();
         }
 
-        private void OnError(string message)
+        public void OnError(string message)
         {
             Toast.Instance.ShowToast("An Error Ocurred, please log in again", "Error");
             _navigator.OpenLoginView();
