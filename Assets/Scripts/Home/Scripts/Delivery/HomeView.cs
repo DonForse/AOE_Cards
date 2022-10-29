@@ -57,7 +57,7 @@ namespace Home
             SoundManager.Instance.PlayBackground(mainThemeClip, new AudioClipOptions { loop = true }, false);
             _matchFoundContainer.SetActive(false);
             _presenter = new HomePresenter(this, _servicesProvider.GetMatchService(), _servicesProvider.GetTokenService(),
-                new PlayerPrefsWrapper());
+                new PlayerPrefsWrapper(), new FindMatchInQueue(_servicesProvider.GetMatchService()));
             _presenter.Initialize();
 
             EnableButtons();

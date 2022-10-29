@@ -19,13 +19,16 @@ namespace Home
         private bool previousPlayVsFriend = false;
         private string previousFriendCode = "";
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private IFindMatchInQueue _findMatchInQueue;
 
-        public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService, IPlayerPrefs playerPrefs)
+        public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService,
+            IPlayerPrefs playerPrefs, IFindMatchInQueue findMatchInQueue)
         {
             _view = view;
             _matchService = matchService;
             _tokenService = tokenService;
             _playerPrefs = playerPrefs;
+            _findMatchInQueue = findMatchInQueue;
         }
 
         public void Initialize()
@@ -58,7 +61,7 @@ namespace Home
         private void StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty)
-                .DoOnError(error => HandleError((MatchServiceException)error))
+                // .DoOnError(error => HandleError((MatchServiceException)error))
                 .Subscribe(startMatch =>
                 {
                     if (startMatch != null)
@@ -67,38 +70,14 @@ namespace Home
                         return;
                     }
 
-                    Observable.Interval(TimeSpan.FromSeconds(3))
-                    .Subscribe(_ =>
-                    {
-                        _matchService.GetMatch()
-                            .DoOnError(err => HandleError((MatchServiceException)err))
-                            .Subscribe(match =>
-                            {
-                                if (match == null) return;
-                                
-                                _view.OnMatchFound(match);
-
-                            }).AddTo(_disposables);
-                    })
-                    .AddTo(_disposables);
+                    _findMatchInQueue.Execute()
+                        .Subscribe(match=>_view.OnMatchFound(match))
+                        .AddTo(_disposables);
+                    
                 })
                 .AddTo(_disposables);
         }
 
-        private void HandleError(MatchServiceException exception)
-        {
-            if (exception.Code != 401)
-            {
-                _view.OnError(exception.Error);
-                // _onError.OnNext(exception.Error);
-                return;
-            }
-
-            _tokenService.RefreshToken()
-                .DoOnError(err => OnRefreshTokenError(err.Message))
-                .Subscribe(OnRefreshTokenComplete).AddTo(_disposables);
-            return;
-        }
 
         private void OnRefreshTokenError(string error)
         {
@@ -119,7 +98,7 @@ namespace Home
         internal void LeaveQueue()
         {
             _matchService.RemoveMatch()
-                .DoOnError(err => HandleError((MatchServiceException)err))
+                // .DoOnError(err => HandleError((MatchServiceException)err))
                 .Subscribe()
                 .AddTo(_disposables);
         }

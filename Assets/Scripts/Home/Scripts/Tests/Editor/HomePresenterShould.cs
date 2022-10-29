@@ -19,6 +19,7 @@ namespace Home.Scripts.Tests.Editor
         private ISubject<Unit> _playVersusHardBotSubject;
         private ISubject<Unit> _playVersusEasyBotSubject;
         private IPlayerPrefs _playerPrefs;
+        private IFindMatchInQueue _findMatchInQueue;
 
         [SetUp]
         public void Setup()
@@ -34,8 +35,9 @@ namespace Home.Scripts.Tests.Editor
             _matchService = Substitute.For<IMatchService>();
             _tokenService = Substitute.For<ITokenService>();
             _playerPrefs = Substitute.For<IPlayerPrefs>();
+            _findMatchInQueue = Substitute.For<IFindMatchInQueue>();
 
-            _homePresenter = new HomePresenter(_view, _matchService, _tokenService, _playerPrefs);
+            _homePresenter = new HomePresenter(_view, _matchService, _tokenService, _playerPrefs, _findMatchInQueue);
         }
 
         [Test]
@@ -100,22 +102,37 @@ namespace Home.Scripts.Tests.Editor
         {
             var match = new global::Match.Domain.Match();
             GivenPresenterIsInitialized();
-            GivenStartMatchReturns(match);
+            GivenEnqueueForMatchReturns(match);
             WhenPlayMatch();
             _view.Received(1).OnMatchFound(match);
         }
 
         [Test]
-        public void KeepGettingMatchIfMatchReturnsNull()
+        public void FindMatchInQueueIfEnqueueReturnsNull()
         {
             GivenPresenterIsInitialized();
-            GivenStartMatchReturns(null);
+            GivenEnqueueForMatchReturns(null);
             WhenPlayMatch();
             _view.DidNotReceive().OnMatchFound(Arg.Any<global::Match.Domain.Match>());
-            _matchService.Received(1).GetMatch();
+            _findMatchInQueue.Received(1).Execute();
+        }
+        
+        [Test]
+        public void CallOnMatchFoundWhenFindMatchInQueueReturns()
+        {
+            GivenPresenterIsInitialized();
+            GivenEnqueueForMatchReturns(null);
+            GivenFindMatchInQueueReturns();
+            WhenPlayMatch();
+            _view.Received(1).OnMatchFound(Arg.Any<global::Match.Domain.Match>());
         }
 
-        private void GivenStartMatchReturns(global::Match.Domain.Match match) =>
+        private void GivenFindMatchInQueueReturns()
+        {
+            _findMatchInQueue.Execute().Returns(Observable.Return(new global::Match.Domain.Match()));
+        }
+
+        private void GivenEnqueueForMatchReturns(global::Match.Domain.Match match) =>
             _matchService.StartMatch(Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<int>())
                 .Returns(Observable.Return(match));
 
