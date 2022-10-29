@@ -5,6 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Token;
 using UniRx;
+using Match = Match.Domain.Match;
 
 namespace Home.Scripts.Tests.Editor
 {
@@ -40,40 +41,75 @@ namespace Home.Scripts.Tests.Editor
         [Test]
         public void StartSearchingForMatchWhenPlayMatch()
         {
-            _homePresenter.Initialize();
-            _playMatchSubject.OnNext(Unit.Default);
-            Received.InOrder(() =>
+            GivenPresenterIsInitialized();
+            WhenPlayMatch();
+            ThenSaveEmptyIdAndStartMatch();
+
+            void ThenSaveEmptyIdAndStartMatch()
             {
-                _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
-                _playerPrefs.Received(1).Save();
-                _matchService.Received(1).StartMatch(false, false, string.Empty, 0);
-            });
+                Received.InOrder(() =>
+                {
+                    _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
+                    _playerPrefs.Received(1).Save();
+                    _matchService.Received(1).StartMatch(false, false, string.Empty, 0);
+                });
+            }
         }
         
         [Test]
         public void StartSearchingForMatchVersusHardBotWhenPlayVersusHardBot()
         {
-            _homePresenter.Initialize();
-            _playVersusHardBotSubject.OnNext(Unit.Default);
-            Received.InOrder(() =>
+            GivenPresenterIsInitialized();
+            WhenPlayVersusHardBot();
+            ThenSaveEmptyIdAndStartMatchVersusHardBot();
+
+            void WhenPlayVersusHardBot() => _playVersusHardBotSubject.OnNext(Unit.Default);
+            void ThenSaveEmptyIdAndStartMatchVersusHardBot()
             {
-                _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
-                _playerPrefs.Received(1).Save();
-                _matchService.Received(1).StartMatch(true, false, string.Empty, 1);
-            });
+                Received.InOrder(() =>
+                {
+                    _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
+                    _playerPrefs.Received(1).Save();
+                    _matchService.Received(1).StartMatch(true, false, string.Empty, 1);
+                });
+            }
         }
         
         [Test]
         public void StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot()
         {
-            _homePresenter.Initialize();
-            _playVersusEasyBotSubject.OnNext(Unit.Default);
-            Received.InOrder(() =>
+            GivenPresenterIsInitialized();
+            WhenPlayVersusEasyBot();
+            ThenSaveEmptyIdAndPlayVersusEasyBot();
+
+            void WhenPlayVersusEasyBot() => _playVersusEasyBotSubject.OnNext(Unit.Default);
+
+            void ThenSaveEmptyIdAndPlayVersusEasyBot()
             {
-                _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
-                _playerPrefs.Received(1).Save();
-                _matchService.Received(1).StartMatch(true, false, string.Empty, 0);
-            });
+                Received.InOrder(() =>
+                {
+                    _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
+                    _playerPrefs.Received(1).Save();
+                    _matchService.Received(1).StartMatch(true, false, string.Empty, 0);
+                });
+            }
         }
+
+        [Test]
+        public void CallViewWhenStartMatchReturnsSuccessfully()
+        {
+            var match = new global::Match.Domain.Match();
+            GivenPresenterIsInitialized();
+            GivenStartMatchReturns(match);
+            WhenPlayMatch();
+            _view.Received(1).OnMatchFound(match);
+        }
+
+        private void GivenStartMatchReturns(global::Match.Domain.Match match) =>
+            _matchService.StartMatch(Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<int>())
+                .Returns(Observable.Return(match));
+
+        private void GivenPresenterIsInitialized() => _homePresenter.Initialize();
+        private void WhenPlayMatch() => _playMatchSubject.OnNext(Unit.Default);
     }
 }
