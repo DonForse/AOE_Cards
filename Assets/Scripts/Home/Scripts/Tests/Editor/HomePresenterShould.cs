@@ -105,6 +105,16 @@ namespace Home.Scripts.Tests.Editor
             _view.Received(1).OnMatchFound(match);
         }
 
+        [Test]
+        public void KeepGettingMatchIfMatchReturnsNull()
+        {
+            GivenPresenterIsInitialized();
+            GivenStartMatchReturns(null);
+            WhenPlayMatch();
+            _view.DidNotReceive().OnMatchFound(Arg.Any<global::Match.Domain.Match>());
+            _matchService.Received(1).GetMatch();
+        }
+
         private void GivenStartMatchReturns(global::Match.Domain.Match match) =>
             _matchService.StartMatch(Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<int>())
                 .Returns(Observable.Return(match));
