@@ -37,9 +37,10 @@ namespace Home
                 StartSearchingMatch(false, false, string.Empty)).AddTo(_disposables);
             _view.OnPlayVersusHardBot().Subscribe(_ =>
                 StartSearchingMatch(true, false, string.Empty, 1)).AddTo(_disposables);
-            _view.OnPlayVersusEasyBot().Subscribe(_=>
-                StartSearchingMatch(true, false, string.Empty,0)).AddTo(_disposables);
-        // _view.OnStartSearchingMatch();
+            _view.OnPlayVersusEasyBot().Subscribe(_ =>
+                StartSearchingMatch(true, false, string.Empty, 0)).AddTo(_disposables);
+            _view.OnLeaveQueue().Subscribe(_ => LeaveQueue()).AddTo(_disposables);
+            // _view.OnStartSearchingMatch();
         }
 
 
@@ -66,12 +67,12 @@ namespace Home
                 {
                     if (startMatch != null)
                     {
-                        _view.OnMatchFound(startMatch);
+                        _view.ShowMatchFound(startMatch);
                         return;
                     }
 
                     _findMatchInQueue.Execute()
-                        .Subscribe(match=>_view.OnMatchFound(match))
+                        .Subscribe(match=>_view.ShowMatchFound(match))
                         .AddTo(_disposables);
                     
                 })
@@ -79,27 +80,27 @@ namespace Home
         }
 
 
-        private void OnRefreshTokenError(string error)
-        {
-            GameManager.SessionExpired();
-        }
+        // private void OnRefreshTokenError(string error)
+        // {
+        //     GameManager.SessionExpired();
+        // }
 
-        private void OnRefreshTokenComplete(UserResponseDto response)
-        {
-            PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
-            PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
-            PlayerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
-            PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
-            PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
-            PlayerPrefs.Save();
-            StartSearchingMatch(previousPlayVsBot, previousPlayVsFriend, previousFriendCode);
-        }
+        // private void OnRefreshTokenComplete(UserResponseDto response)
+        // {
+        //     PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
+        //     PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+        //     PlayerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
+        //     PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
+        //     PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
+        //     PlayerPrefs.Save();
+        //     StartSearchingMatch(previousPlayVsBot, previousPlayVsFriend, previousFriendCode);
+        // }
 
-        internal void LeaveQueue()
+        private void LeaveQueue()
         {
             _matchService.RemoveMatch()
                 // .DoOnError(err => HandleError((MatchServiceException)err))
-                .Subscribe()
+                .Subscribe(_=>_view.LeftQueue())
                 .AddTo(_disposables);
         }
     }

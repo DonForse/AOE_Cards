@@ -5,10 +5,12 @@ namespace Home
 {
     public interface IHomeView
     {
-        void OnMatchFound(Match.Domain.Match matchStatus);
-        void OnError(string message);
+        void ShowMatchFound(Match.Domain.Match matchStatus);
+        void ShowError(string message);
+        void LeftQueue();
         IObservable<Unit> OnPlayMatch();
         IObservable<Unit> OnPlayVersusHardBot();
         IObservable<Unit> OnPlayVersusEasyBot();
+        IObservable<Unit> OnLeaveQueue();
     }
 }

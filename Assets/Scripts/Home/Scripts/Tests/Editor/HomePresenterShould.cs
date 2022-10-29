@@ -20,6 +20,7 @@ namespace Home.Scripts.Tests.Editor
         private ISubject<Unit> _playVersusEasyBotSubject;
         private IPlayerPrefs _playerPrefs;
         private IFindMatchInQueue _findMatchInQueue;
+        private ISubject<Unit> _leaveQueueSubject;
 
         [SetUp]
         public void Setup()
@@ -28,10 +29,11 @@ namespace Home.Scripts.Tests.Editor
             _playMatchSubject = new Subject<Unit>();
             _playVersusHardBotSubject = new Subject<Unit>();
             _playVersusEasyBotSubject = new Subject<Unit>();
+            _leaveQueueSubject = new Subject<Unit>();
             _view.OnPlayMatch().Returns(_playMatchSubject);
             _view.OnPlayVersusHardBot().Returns(_playVersusHardBotSubject);
             _view.OnPlayVersusEasyBot().Returns(_playVersusEasyBotSubject);
-
+            _view.OnLeaveQueue().Returns(_leaveQueueSubject);
             _matchService = Substitute.For<IMatchService>();
             _tokenService = Substitute.For<ITokenService>();
             _playerPrefs = Substitute.For<IPlayerPrefs>();
@@ -104,7 +106,7 @@ namespace Home.Scripts.Tests.Editor
             GivenPresenterIsInitialized();
             GivenEnqueueForMatchReturns(match);
             WhenPlayMatch();
-            _view.Received(1).OnMatchFound(match);
+            _view.Received(1).ShowMatchFound(match);
         }
 
         [Test]
@@ -113,7 +115,7 @@ namespace Home.Scripts.Tests.Editor
             GivenPresenterIsInitialized();
             GivenEnqueueForMatchReturns(null);
             WhenPlayMatch();
-            _view.DidNotReceive().OnMatchFound(Arg.Any<global::Match.Domain.Match>());
+            _view.DidNotReceive().ShowMatchFound(Arg.Any<global::Match.Domain.Match>());
             _findMatchInQueue.Received(1).Execute();
         }
         
@@ -124,8 +126,32 @@ namespace Home.Scripts.Tests.Editor
             GivenEnqueueForMatchReturns(null);
             GivenFindMatchInQueueReturns();
             WhenPlayMatch();
-            _view.Received(1).OnMatchFound(Arg.Any<global::Match.Domain.Match>());
+            _view.Received(1).ShowMatchFound(Arg.Any<global::Match.Domain.Match>());
         }
+
+        [Test]
+        public void CallMatchServiceWhenLeavesQueue()
+        {
+            GivenPresenterIsInitialized();
+            WhenLeavesQueue();
+            _matchService.Received(1).RemoveMatch();
+        }
+
+        [Test]
+        public void CallViewWhenLeftQueue()
+        {
+            GivenPresenterIsInitialized();
+            GivenRemoveMatchReturns();
+            WhenLeavesQueue();
+            _view.Received(1).LeftQueue();
+        }
+
+        private void GivenRemoveMatchReturns()
+        {
+            _matchService.RemoveMatch().Returns(Observable.Return(Unit.Default));
+        }
+
+        private void WhenLeavesQueue() => _leaveQueueSubject.OnNext(Unit.Default);
 
         private void GivenFindMatchInQueueReturns()
         {
