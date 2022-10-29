@@ -1,7 +1,6 @@
 ﻿using System;
 using Common;
 using Common.Utilities;
-using Infrastructure.Services;
 using Sound;
 using TMPro;
 using UniRx;
@@ -47,13 +46,20 @@ namespace Home
             _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
 
         public IObservable<Unit> OnPlayVersusHardBot() =>
-            _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
+            _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
+                .DoOnSubscribe(CloseBotMenu);
 
         public IObservable<Unit> OnPlayVersusEasyBot() =>
-            _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
+            _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
+                .DoOnSubscribe(CloseBotMenu);
 
         public IObservable<Unit> OnLeaveQueue() =>
             _leaveQueueButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1));
+
+        public IObservable<string> OnPlayVersusFriend() =>
+            _playFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
+                .DoOnSubscribe(CloseVersusFriend)
+                .Select(_ => _friendCode.text);
 
         public void OnOpening()
         {
@@ -77,8 +83,8 @@ namespace Home
                 .Subscribe(_ => CloseBotMenu()).AddTo(_disposables);
             _rulesButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenRules())
                 .AddTo(_disposables);
-            _playFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
-                .Subscribe(_ => PlayVersusFriend()).AddTo(_disposables);
+            // _playFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
+            //     .Subscribe(_ => PlayVersusFriend()).AddTo(_disposables);
             _openPlayFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => OpenVersusFriend()).AddTo(_disposables);
             _closePlayFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
@@ -112,53 +118,10 @@ namespace Home
             _navigator.OpenTutorialView();
         }
 
-        private void PlayMatch()
-        {
-            DisableButtons();
-            _presenter.StartSearchingMatch(false, false, string.Empty);
-            OnStartLookingForMatch(false);
-
-            //navigator.
-        }
-
-        private void PlayVersusBot()
-        {
-            CloseBotMenu();
-            DisableButtons();
-            _presenter.StartSearchingMatch(true, false, string.Empty, 0);
-            OnStartLookingForMatch(true);
-
-            //navigator.
-        }
-
-        private void PlayVersusBotHard()
-        {
-            CloseBotMenu();
-            DisableButtons();
-            _presenter.StartSearchingMatch(true, false, string.Empty, 1);
-            OnStartLookingForMatch(true);
-        }
-
-        private void OpenBotMenu()
-        {
-            _playBotContainer.SetActive(true);
-        }
-
-        private void CloseBotMenu()
-        {
-            _playBotContainer.SetActive(false);
-        }
-
-
-        private void OpenVersusFriend()
-        {
-            _playFriendContainer.SetActive(true);
-        }
-
-        private void CloseVersusFriend()
-        {
-            _playFriendContainer.SetActive(false);
-        }
+        private void OpenBotMenu() => _playBotContainer.SetActive(true);
+        private void CloseBotMenu() => _playBotContainer.SetActive(false);
+        private void OpenVersusFriend() => _playFriendContainer.SetActive(true);
+        private void CloseVersusFriend() => _playFriendContainer.SetActive(false);
 
         public void LeftQueue()
         {
@@ -166,15 +129,7 @@ namespace Home
             EnableButtons();
             _matchMakingContainer.SetActive(false);
         }
-
-        private void PlayVersusFriend()
-        {
-            CloseVersusFriend();
-            DisableButtons();
-            _presenter.StartSearchingMatch(false, true, _friendCode.text);
-            //navigator.
-        }
-
+        
         private void StartTimer()
         {
             timerStartTime = Time.time;
@@ -196,21 +151,17 @@ namespace Home
             _navigator.OpenGameView(matchStatus);
         }
 
-        private void OnStartLookingForMatch(bool vsBot)
-        {
-            if (vsBot)
-            {
-                _matchFoundContainer.SetActive(true);
-                return;
-            }
-
-            StartTimer();
-        }
-
         public void ShowError(string message)
         {
             Toast.Instance.ShowToast("An Error Ocurred, please log in again", "Error");
             _navigator.OpenLoginView();
+        }
+
+        public void StartSearchingForMatch()
+        {
+            StartTimer();
+
+            DisableButtons();
         }
 
         private void DisableButtons()

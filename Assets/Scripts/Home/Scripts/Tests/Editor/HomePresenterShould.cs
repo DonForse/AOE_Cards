@@ -21,6 +21,7 @@ namespace Home.Scripts.Tests.Editor
         private IPlayerPrefs _playerPrefs;
         private IFindMatchInQueue _findMatchInQueue;
         private ISubject<Unit> _leaveQueueSubject;
+        private ISubject<string> _playMatchVersusFriendSubject;
 
         [SetUp]
         public void Setup()
@@ -30,9 +31,11 @@ namespace Home.Scripts.Tests.Editor
             _playVersusHardBotSubject = new Subject<Unit>();
             _playVersusEasyBotSubject = new Subject<Unit>();
             _leaveQueueSubject = new Subject<Unit>();
+            _playMatchVersusFriendSubject = new Subject<string>();
             _view.OnPlayMatch().Returns(_playMatchSubject);
             _view.OnPlayVersusHardBot().Returns(_playVersusHardBotSubject);
             _view.OnPlayVersusEasyBot().Returns(_playVersusEasyBotSubject);
+            _view.OnPlayVersusFriend().Returns(_playMatchVersusFriendSubject);
             _view.OnLeaveQueue().Returns(_leaveQueueSubject);
             _matchService = Substitute.For<IMatchService>();
             _tokenService = Substitute.For<ITokenService>();
@@ -55,11 +58,37 @@ namespace Home.Scripts.Tests.Editor
                 {
                     _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
                     _playerPrefs.Received(1).Save();
+                    _view.Received(1).StartSearchingForMatch();
                     _matchService.Received(1).StartMatch(false, false, string.Empty, 0);
                 });
             }
         }
         
+        [Test]
+        public void StartSearchingForMatchWhenPlayMatchVersusFriend()
+        {
+            string friendCode = "friend";
+            GivenPresenterIsInitialized();
+            WhenPlayMatchVersusFriend(friendCode);
+            ThenSaveEmptyIdAndStartMatch();
+
+            void ThenSaveEmptyIdAndStartMatch()
+            {
+                Received.InOrder(() =>
+                {
+                    _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
+                    _playerPrefs.Received(1).Save();
+                    _view.Received(1).StartSearchingForMatch();
+                    _matchService.Received(1).StartMatch(false, true, friendCode, 0);
+                });
+            }
+        }
+
+        private void WhenPlayMatchVersusFriend(string friendCode)
+        {
+            _playMatchVersusFriendSubject.OnNext(friendCode);
+        }
+
         [Test]
         public void StartSearchingForMatchVersusHardBotWhenPlayVersusHardBot()
         {
@@ -68,17 +97,19 @@ namespace Home.Scripts.Tests.Editor
             ThenSaveEmptyIdAndStartMatchVersusHardBot();
 
             void WhenPlayVersusHardBot() => _playVersusHardBotSubject.OnNext(Unit.Default);
+
             void ThenSaveEmptyIdAndStartMatchVersusHardBot()
             {
                 Received.InOrder(() =>
                 {
                     _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
                     _playerPrefs.Received(1).Save();
+                    _view.Received(1).StartSearchingForMatch();
                     _matchService.Received(1).StartMatch(true, false, string.Empty, 1);
                 });
             }
         }
-        
+
         [Test]
         public void StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot()
         {
@@ -94,6 +125,7 @@ namespace Home.Scripts.Tests.Editor
                 {
                     _playerPrefs.Received(1).SetString(PlayerPrefsHelper.MatchId, string.Empty);
                     _playerPrefs.Received(1).Save();
+                    _view.Received(1).StartSearchingForMatch();
                     _matchService.Received(1).StartMatch(true, false, string.Empty, 0);
                 });
             }
@@ -118,7 +150,7 @@ namespace Home.Scripts.Tests.Editor
             _view.DidNotReceive().ShowMatchFound(Arg.Any<global::Match.Domain.Match>());
             _findMatchInQueue.Received(1).Execute();
         }
-        
+
         [Test]
         public void CallOnMatchFoundWhenFindMatchInQueueReturns()
         {
@@ -146,22 +178,13 @@ namespace Home.Scripts.Tests.Editor
             _view.Received(1).LeftQueue();
         }
 
-        private void GivenRemoveMatchReturns()
-        {
-            _matchService.RemoveMatch().Returns(Observable.Return(Unit.Default));
-        }
-
+        private void GivenRemoveMatchReturns() => _matchService.RemoveMatch().Returns(Observable.Return(Unit.Default));
         private void WhenLeavesQueue() => _leaveQueueSubject.OnNext(Unit.Default);
-
-        private void GivenFindMatchInQueueReturns()
-        {
+        private void GivenFindMatchInQueueReturns() =>
             _findMatchInQueue.Execute().Returns(Observable.Return(new global::Match.Domain.Match()));
-        }
-
         private void GivenEnqueueForMatchReturns(global::Match.Domain.Match match) =>
             _matchService.StartMatch(Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<int>())
                 .Returns(Observable.Return(match));
-
         private void GivenPresenterIsInitialized() => _homePresenter.Initialize();
         private void WhenPlayMatch() => _playMatchSubject.OnNext(Unit.Default);
     }

@@ -40,6 +40,8 @@ namespace Home
             _view.OnPlayVersusEasyBot().Subscribe(_ =>
                 StartSearchingMatch(true, false, string.Empty, 0)).AddTo(_disposables);
             _view.OnLeaveQueue().Subscribe(_ => LeaveQueue()).AddTo(_disposables);
+            _view.OnPlayVersusFriend().Subscribe(friendCode => StartSearchingMatch(false, true, friendCode))
+                .AddTo(_disposables);
             // _view.OnStartSearchingMatch();
         }
 
@@ -61,6 +63,7 @@ namespace Home
 
         private void StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
+            _view.StartSearchingForMatch();
             _matchService.StartMatch(vsBot, vsFriend, friendCode, botDifficulty)
                 // .DoOnError(error => HandleError((MatchServiceException)error))
                 .Subscribe(startMatch =>
@@ -72,9 +75,8 @@ namespace Home
                     }
 
                     _findMatchInQueue.Execute()
-                        .Subscribe(match=>_view.ShowMatchFound(match))
+                        .Subscribe(match => _view.ShowMatchFound(match))
                         .AddTo(_disposables);
-                    
                 })
                 .AddTo(_disposables);
         }
@@ -100,7 +102,7 @@ namespace Home
         {
             _matchService.RemoveMatch()
                 // .DoOnError(err => HandleError((MatchServiceException)err))
-                .Subscribe(_=>_view.LeftQueue())
+                .Subscribe(_ => _view.LeftQueue())
                 .AddTo(_disposables);
         }
     }
