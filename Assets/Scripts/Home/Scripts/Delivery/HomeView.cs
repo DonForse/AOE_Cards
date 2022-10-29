@@ -74,23 +74,17 @@ namespace Home
 
             _userCodeLabel.text = PlayerPrefs.GetString(PlayerPrefsHelper.FriendCode);
 
-            // _playButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayMatch()).AddTo(_disposables);
             _openBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => OpenBotMenu());
-            // _playhardBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBotHard());
-            // _playBotButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => PlayVersusBot());
             _closeBotMenuButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => CloseBotMenu()).AddTo(_disposables);
             _rulesButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => OpenRules())
                 .AddTo(_disposables);
-            // _playFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
-            //     .Subscribe(_ => PlayVersusFriend()).AddTo(_disposables);
             _openPlayFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => OpenVersusFriend()).AddTo(_disposables);
             _closePlayFriendButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => CloseVersusFriend()).AddTo(_disposables);
-            // _leaveQueueButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(_ => LeaveQueue()).AddTo(_disposables);
-
+           
             if (_exitButton != null)
                 _exitButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(1))
                     .Subscribe(_ => Application.Quit()).AddTo(_disposables);
@@ -147,7 +141,6 @@ namespace Home
         {
             _matchFoundContainer.SetActive(true);
             StopTimer();
-            // _matchMakingContainer.SetActive(false);
             _navigator.OpenGameView(matchStatus);
         }
 
