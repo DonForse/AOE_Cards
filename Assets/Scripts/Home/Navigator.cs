@@ -3,7 +3,7 @@ using Infrastructure.Services;
 using Login;
 using Login.Scripts.Delivery;
 using Result;
-using Tutorial;
+using Rules.Scripts.Delivery;
 using UnityEngine;
 
 namespace Home
@@ -14,7 +14,7 @@ namespace Home
         public GameView gameView;
         public LoginView loginView;
         public ResultView resultView;
-        public TutorialView tutorialView;
+        public RulesView rulesView;
 
         private IView currentActiveView;
 
@@ -68,8 +68,8 @@ namespace Home
         {
             if (currentActiveView != null)
                 currentActiveView.OnClosing();
-            tutorialView.OnOpening();
-            currentActiveView = tutorialView;
+            rulesView.OnOpening();
+            currentActiveView = rulesView;
         }
     }
 }

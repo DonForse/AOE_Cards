@@ -2,11 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tutorial
+namespace Rules.Scripts.Delivery
 {
-    public class TutorialView : MonoBehaviour, IView
+    public class RulesView : MonoBehaviour, IView
     {
-        [SerializeField] private ServicesProvider _servicesProvider;
         [SerializeField] private Navigator _navigator;
         [SerializeField] private Button _backButton;
 
