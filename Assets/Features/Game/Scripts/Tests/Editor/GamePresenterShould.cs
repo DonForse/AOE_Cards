@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Data;
 using Features.Game.Scripts.Domain;
@@ -9,6 +10,7 @@ using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
 using Token;
+using UniRx;
 using UnityEngine;
 
 namespace Features.Game.Scripts.Tests.Editor
@@ -39,25 +41,22 @@ namespace Features.Game.Scripts.Tests.Editor
         public void CallGetRoundWhenInitialize()
         {
             GivenMatchSetupWith(AMatch());
-            _presenter.Initialize();
-            
-            _playService.Received(1).GetRound(0);
+            WhenInitialize();
+            ThenGetRoundIsCalled(0);
         }
 
-        private Match.Domain.Match AMatch(int withUnits = 5,
-            int withUpgrades = 5, 
-            List<Round> withRounds = null,
-            string withMatchId = "MatchId",
-            string[] withUsers = null)
+        [Test]
+        public void CallGetRoundsService()
         {
-            return new Match.Domain.Match
-            {
-                Hand = new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
-                    _cardProvider.GetUpgradeCards().Take(withUpgrades).ToList()),
-                Board = new Board{Rounds = withRounds ?? new List<Round>(){new Round(){RoundNumber = 0}}},
-                Id = withMatchId,
-                Users = withUsers ?? new []{"user-1", "user-2"}
-            };
+            Assert.Fail();
+        }
+
+        [Test]
+        public void CallOnRoundOnViewWhenGetRound()
+        {
+            var expectedRound = new Round();
+            _view.Received(1).OnGetRoundInfo(expectedRound);
+            Assert.Fail();
         }
 
         [Test]
@@ -100,7 +99,22 @@ namespace Features.Game.Scripts.Tests.Editor
             WhenUnitCardIsPlayed();
             ThenPlayUnitCardIsCalledInService();
         }
-        
+        private Match.Domain.Match AMatch(int withUnits = 5,
+            int withUpgrades = 5, 
+            List<Round> withRounds = null,
+            string withMatchId = "MatchId",
+            string[] withUsers = null)
+        {
+            return new Match.Domain.Match
+            {
+                Hand = new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
+                    _cardProvider.GetUpgradeCards().Take(withUpgrades).ToList()),
+                Board = new Board{Rounds = withRounds ?? new List<Round>(){new Round(){RoundNumber = 0}}},
+                Id = withMatchId,
+                Users = withUsers ?? new []{"user-1", "user-2"}
+            };
+        }
+
         private void GivenCardProviderReturnsAListOfUnitsAndUpgrades()
         {
             _cardProvider.GetUnitCards().Returns(new List<UnitCardData>
@@ -149,6 +163,7 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         private void WhenRoundSetup() => _presenter.StartNewRound();
+        private void WhenInitialize() => _presenter.Initialize();
 
         private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards) => Assert.AreEqual(numberOfCards, _cardsInHand.GetUnitCards().Count);
         private void ThenUpgradeCardsInPlayerHandsAreEqualTo(int numberOfCards) => Assert.AreEqual(numberOfCards, _cardsInHand.GetUpgradeCards().Count);
@@ -156,5 +171,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private void ThenPlayUnitCardIsCalledInService() => _playService.Received(1).PlayUnitCard(null);
         private void ThenUnitCardIsRemovedFromHand() => ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
         private void ThenUpgradeCardIsRemovedFromHand() => ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
+        private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
+
     }
 }
