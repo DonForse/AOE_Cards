@@ -15,9 +15,6 @@ namespace Home
         private readonly IMatchService _matchService;
         private readonly ITokenService _tokenService;
         private readonly IPlayerPrefs _playerPrefs;
-        private bool previousPlayVsBot = false;
-        private bool previousPlayVsFriend = false;
-        private string previousFriendCode = "";
         private CompositeDisposable _viewDisposables = new CompositeDisposable();
         private CompositeDisposable _serviceDisposables = new CompositeDisposable();
         private IFindMatchInQueue _findMatchInQueue;
@@ -52,11 +49,8 @@ namespace Home
             _viewDisposables.Clear();
         }
 
-        public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
+        private void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
         {
-            previousPlayVsBot = vsBot;
-            previousPlayVsFriend = vsFriend;
-            previousFriendCode = friendCode;
             _playerPrefs.SetString(PlayerPrefsHelper.MatchId, string.Empty);
             _playerPrefs.Save();
             StartMatch(vsBot, vsFriend, friendCode, botDifficulty);
