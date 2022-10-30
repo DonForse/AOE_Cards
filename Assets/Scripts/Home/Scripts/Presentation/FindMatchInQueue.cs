@@ -34,7 +34,7 @@ namespace Home
                             }).AddTo(_disposables);
                     })
                     .AddTo(_disposables);
-                return Disposable.Empty;
+                return Disposable.Create(()=>_disposables.Clear());
             });
             
         }

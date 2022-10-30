@@ -178,6 +178,10 @@ namespace Home.Scripts.Tests.Editor
             _view.Received(1).LeftQueue();
         }
 
+        [Test]
+
+        public void CancelQueueWhenLeaveQueue() => Assert.Fail("TODO: Fix Leave queue should not remove but cancel");
+
         private void GivenRemoveMatchReturns() => _matchService.RemoveMatch().Returns(Observable.Return(Unit.Default));
         private void WhenLeavesQueue() => _leaveQueueSubject.OnNext(Unit.Default);
         private void GivenFindMatchInQueueReturns() =>

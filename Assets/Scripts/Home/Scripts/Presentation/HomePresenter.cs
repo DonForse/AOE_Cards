@@ -18,7 +18,8 @@ namespace Home
         private bool previousPlayVsBot = false;
         private bool previousPlayVsFriend = false;
         private string previousFriendCode = "";
-        private CompositeDisposable _disposables = new CompositeDisposable();
+        private CompositeDisposable _viewDisposables = new CompositeDisposable();
+        private CompositeDisposable _serviceDisposables = new CompositeDisposable();
         private IFindMatchInQueue _findMatchInQueue;
 
         public HomePresenter(IHomeView view, IMatchService matchService, ITokenService tokenService,
@@ -34,21 +35,21 @@ namespace Home
         public void Initialize()
         {
             _view.OnPlayMatch().Subscribe(_ =>
-                StartSearchingMatch(false, false, string.Empty)).AddTo(_disposables);
+                StartSearchingMatch(false, false, string.Empty)).AddTo(_viewDisposables);
             _view.OnPlayVersusHardBot().Subscribe(_ =>
-                StartSearchingMatch(true, false, string.Empty, 1)).AddTo(_disposables);
+                StartSearchingMatch(true, false, string.Empty, 1)).AddTo(_viewDisposables);
             _view.OnPlayVersusEasyBot().Subscribe(_ =>
-                StartSearchingMatch(true, false, string.Empty, 0)).AddTo(_disposables);
-            _view.OnLeaveQueue().Subscribe(_ => LeaveQueue()).AddTo(_disposables);
+                StartSearchingMatch(true, false, string.Empty, 0)).AddTo(_viewDisposables);
+            _view.OnLeaveQueue().Subscribe(_ => LeaveQueue()).AddTo(_viewDisposables);
             _view.OnPlayVersusFriend().Subscribe(friendCode => StartSearchingMatch(false, true, friendCode))
-                .AddTo(_disposables);
+                .AddTo(_viewDisposables);
             // _view.OnStartSearchingMatch();
         }
 
 
         public void Unload()
         {
-            _disposables.Clear();
+            _viewDisposables.Clear();
         }
 
         public void StartSearchingMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty = 0)
@@ -76,9 +77,9 @@ namespace Home
 
                     _findMatchInQueue.Execute()
                         .Subscribe(match => _view.ShowMatchFound(match))
-                        .AddTo(_disposables);
+                        .AddTo(_serviceDisposables);
                 })
-                .AddTo(_disposables);
+                .AddTo(_serviceDisposables);
         }
 
 
@@ -102,8 +103,10 @@ namespace Home
         {
             _matchService.RemoveMatch()
                 // .DoOnError(err => HandleError((MatchServiceException)err))
+                .DoOnCompleted(()=>_serviceDisposables.Clear())
                 .Subscribe(_ => _view.LeftQueue())
-                .AddTo(_disposables);
+                
+                .AddTo(_serviceDisposables);
         }
     }
 }
