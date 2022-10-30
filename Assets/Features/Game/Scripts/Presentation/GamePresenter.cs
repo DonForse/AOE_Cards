@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 using Infrastructure.DTOs;
 using Infrastructure.Services;
@@ -11,16 +12,15 @@ using UnityEngine;
 
 namespace Game
 {
-    public class GamePresenter : IGamePresenter
+    public class GamePresenter
     {
         private int currentRound;
         //private readonly IGameView _view;
+        private readonly IGameView _view;
         private readonly IPlayService _playService;
         private readonly ITokenService _tokenService;
         private Hand _hand;
 
-        private ISubject<Round> _onGetRoundInfo = new Subject<Round>();
-        public IObservable<Round> OnGetRoundInfo => _onGetRoundInfo;
         private ISubject<string> _onError = new Subject<string>();
         public IObservable<string> OnError=> _onError;
 
@@ -34,10 +34,19 @@ namespace Game
 
         public IObservable<Unit> OnUpgradeCardPlayed => _onUpgradeCardPlayed;
 
-        public GamePresenter( IPlayService playService, ITokenService tokenService)
+        public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService)
         {
+            _view = view;
             _playService = playService;
             _tokenService = tokenService;
+        }
+
+        public void Initialize()
+        {
+            GetRound();
+            Observable.Interval(TimeSpan.FromSeconds(3))
+                .Subscribe(_ => GetRound())
+                .AddTo(_disposables);
         }
 
         public void SetMatch(Match.Domain.Match match)
@@ -69,7 +78,7 @@ namespace Game
                 .Subscribe(OnUnitCardPostComplete);
         }
 
-        public void GetRound()
+        private void GetRound()
         {
             _playService.GetRound(currentRound)
                  .DoOnError(err => HandleError((PlayServiceException)err))
@@ -88,10 +97,7 @@ namespace Game
             _disposables.Clear();
         }
 
-        private void OnGetRoundComplete(Round round)
-        {
-            _onGetRoundInfo.OnNext(round);
-        }
+        private void OnGetRoundComplete(Round round) => _view.OnGetRoundInfo(round);
 
         private void HandleError(PlayServiceException error)
         {

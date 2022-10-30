@@ -100,7 +100,7 @@ namespace Game
             if (_unitWait != null)
                 return;
 
-            var card = Instantiator.Instance.CreateUnitCardGO(null);
+            var card = CardInstantiator.Instance.CreateUnitCardGO(null);
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
             card.transform.localScale = Vector3.one;
@@ -112,7 +112,7 @@ namespace Game
         {
             if (_upgradeWait != null)
                 return;
-            var card = Instantiator.Instance.CreateUpgradeCardGO(null);
+            var card = CardInstantiator.Instance.CreateUpgradeCardGO(null);
             card.transform.SetParent(rivalFieldContainer.transform);
             card.transform.position = (rivalFieldContainer.transform.position);
             card.transform.localScale = Vector3.one;
@@ -166,7 +166,7 @@ namespace Game
             {
                 if (cardPlayed.UpgradeCardData != null)
                 {
-                    var upgrade = Instantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
+                    var upgrade = CardInstantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
                     SetCard(upgrade, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? playerFieldContainer : rivalFieldContainer);
                     //PlayUpgradeCard(upgrade, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
@@ -178,7 +178,7 @@ namespace Game
 
                 if (cardPlayed.UnitCardData != null)
                 {
-                    var unit = Instantiator.Instance.CreateUnitCardGO(cardPlayed.UnitCardData);
+                    var unit = CardInstantiator.Instance.CreateUnitCardGO(cardPlayed.UnitCardData);
                     SetCard(unit, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? playerFieldContainer : rivalFieldContainer);
                     //PlayUnitCard(unit, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }

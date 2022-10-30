@@ -2,21 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
 using Common.Utilities;
 using Data;
+using Features.Game.Scripts.Domain;
 using Home;
 using Infrastructure.Data;
-using Infrastructure.Services;
 using Infrastructure.Services.Exceptions;
 using Sound;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game
 {
-    public class GameView : MonoBehaviour, IView
+    public class GameView : MonoBehaviour, IView, IGameView
     {
         [SerializeField] private Navigator _navigator;
         [SerializeField] private ServicesProvider servicesProvider;
@@ -46,14 +44,14 @@ namespace Game
         {
             ClearView();
             LoadAudio();
-            RegisterToPresenterEvents();
             this.gameObject.SetActive(true);
         }
 
         private void RegisterToPresenterEvents()
         {
-            _presenter = new GamePresenter(servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
-            _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
+            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
+            _presenter.Initialize();
+            // _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
             _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
             _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
             _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
@@ -78,10 +76,8 @@ namespace Game
 
         public void SetGame(Match.Domain.Match match)
         {
+            RegisterToPresenterEvents();
             InitializeGame(match);
-            Observable.Interval(TimeSpan.FromSeconds(3))
-                .Subscribe(_ => _presenter.GetRound())
-                .AddTo(_disposables);
         }
         //bool _wait = false;
 
@@ -220,17 +216,12 @@ namespace Game
             GetOrInstantiateHandCards(_presenter.GetHand());
         }
 
-        private void GetRound()
-        {
-            _presenter.GetRound();
-        }
-
         private void PutCardsInHand()
         {
             _handView.PutCards(_playableCards);
         }
 
-        private void OnGetRoundInfo(Round round)
+        public void OnGetRoundInfo(Round round)
         {
             _timerView.Update(round);
             if (isWorking)
@@ -357,7 +348,7 @@ namespace Game
                 var missingCards = card.Count() - inPlayCards.Count(cuc => cuc.name == card.Key);
                 while (missingCards > 0)
                 {
-                    var go = Instantiator.Instance.CreateUnitCardGO(card.First());
+                    var go = CardInstantiator.Instance.CreateUnitCardGO(card.First());
 
                     go.transform.position = Vector3.down * 2000f;
                     go.transform.localScale = Vector3.one;
@@ -376,7 +367,7 @@ namespace Game
                 var missingCards = card.Count() - inPlayCards.Count(cuc => cuc.name == card.Key);
                 while (missingCards > 0)
                 {
-                    var go = Instantiator.Instance.CreateUpgradeCardGO(card.First());
+                    var go = CardInstantiator.Instance.CreateUpgradeCardGO(card.First());
                     _playableCards.Add(go);
                     go.transform.position = Vector3.down * 2000f;
                     go.transform.localScale = Vector3.one;
@@ -445,7 +436,7 @@ namespace Game
                 if (card.UpgradeCardData == null)
                     return;
                 
-                var upgradeCard = Instantiator.Instance.CreateUpgradeCardGO(card.UpgradeCardData);
+                var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(card.UpgradeCardData);
                 _showdownView.PlayUpgradeCard(upgradeCard, PlayerType.Rival);
             }
 
@@ -475,7 +466,7 @@ namespace Game
                 if (card.UnitCardData == null) //some player didnt play yet
                     return;
                 
-                var unitCard = Instantiator.Instance.CreateUnitCardGO(card.UnitCardData);
+                var unitCard = CardInstantiator.Instance.CreateUnitCardGO(card.UnitCardData);
                 _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
             }
 
@@ -489,7 +480,7 @@ namespace Game
         {
             isWorking = true;
             ClearGameObjectData();
-            var upgradeCard = Instantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
+            var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
             StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
             {
                 ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
@@ -639,6 +630,11 @@ namespace Game
             matchState = state;
             _timerView.ShowState(state);
             _actionView.ShowState(state);
+        }
+
+        public IObservable<string> PlayCard()
+        {
+            throw new NotImplementedException();
         }
     }
 }

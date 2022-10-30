@@ -74,12 +74,12 @@ namespace Game
                 foreach (var cardPlayed in round.CardsPlayed) {
                     if (cardPlayed.UpgradeCardData == null)
                         continue;
-                    var upgrade = Instantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
+                    var upgrade = CardInstantiator.Instance.CreateUpgradeCardGO(cardPlayed.UpgradeCardData);
                     SetUpgrade(upgrade.gameObject, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
             }
             var lastRound = match.Board.Rounds.Last();
-            var upgradeRound = Instantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
+            var upgradeRound = CardInstantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
             SetRoundUpgrade(upgradeRound.gameObject);
         }
     }

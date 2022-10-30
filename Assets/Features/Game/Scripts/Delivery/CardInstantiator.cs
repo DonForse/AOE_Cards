@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Game
 {
-    public class Instantiator : MonoBehaviour
+    public class CardInstantiator : MonoBehaviour
     {
         #region Singleton
-        private static Instantiator _instance;
+        private static CardInstantiator _instance;
 
-        public static Instantiator Instance { get { return _instance; } }
+        public static CardInstantiator Instance { get { return _instance; } }
 
         private void Awake()
         {
