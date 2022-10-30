@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace Token
 {
-    public class TokenService : ITokenService
+    public class TokenGateway : ITokenService
     {
         private string TokenUrl => Configuration.UrlBase + "/api/token";
 

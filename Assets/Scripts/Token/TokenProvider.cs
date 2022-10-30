@@ -1,10 +1,12 @@
-﻿namespace Token
+﻿using Token.Scripts.Infrastructure;
+
+namespace Token
 {
     public static class TokenProvider
     {
         private static ITokenService _tokenService;
-        public static ITokenService TokenService() => _tokenService ??= new TokenService();
+        public static ITokenService TokenGateway() => _tokenService ??= new TokenGateway();
 
-        public static ITokenService OfflineTokenService() => _tokenService??= new OfflineTokenService();
+        public static ITokenService OfflineTokenGateway() => _tokenService??= new OfflineTokenService();
     }
 }

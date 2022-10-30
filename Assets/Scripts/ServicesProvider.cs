@@ -15,7 +15,7 @@ public class ServicesProvider : MonoBehaviour
 
     internal ILoginService GetLoginService() => LoginProvider.OfflineLoginService();
 
-    internal ITokenService GetTokenService() => TokenProvider.OfflineTokenService();
+    internal ITokenService GetTokenService() => TokenProvider.OfflineTokenGateway();
 
     internal IPlayService GetPlayService() => PlayProvider.OfflinePlayService(cardProvider);
 }

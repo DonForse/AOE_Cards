@@ -1,9 +1,8 @@
 ﻿using System;
 using Infrastructure.DTOs;
-using Infrastructure.Services;
 using UniRx;
 
-namespace Token
+namespace Token.Scripts.Infrastructure
 {
     public class OfflineTokenService : ITokenService
     {
