@@ -14,7 +14,7 @@ namespace Game
 {
     public class GamePresenter
     {
-        private int currentRound;
+        // private int currentRound;
         //private readonly IGameView _view;
         private readonly IGameView _view;
         private readonly IPlayService _playService;
@@ -31,35 +31,42 @@ namespace Game
         public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
         private ISubject<Unit> _onUpgradeCardPlayed = new Subject<Unit>();
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
+        private readonly ICurrentMatchRepository _matchRepository;
 
         public IObservable<Unit> OnUpgradeCardPlayed => _onUpgradeCardPlayed;
 
-        public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService)
+        public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService, IGetRoundEvery3Seconds getRoundEvery3Seconds, ICurrentMatchRepository currentMatchRepository
+        )
         {
             _view = view;
             _playService = playService;
             _tokenService = tokenService;
+            _getRoundEvery3Seconds = getRoundEvery3Seconds;
+            _matchRepository = currentMatchRepository;
         }
 
         public void Initialize()
         {
-            GetRound();
-            Observable.Interval(TimeSpan.FromSeconds(3))
-                .Subscribe(_ => GetRound())
-                .AddTo(_disposables);
+            _getRoundEvery3Seconds.Execute().Subscribe(OnGetRoundComplete).AddTo(_disposables);
+
         }
 
         public void SetMatch(Match.Domain.Match match)
         {
             _hand = match.Hand;
-            currentRound = match.Board.Rounds.Count() - 1;
+            _matchRepository.Set(match);
+            // currentRound = match.Board.Rounds.Count() - 1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
             PlayerPrefs.Save();
         }
 
         public void StartNewRound()
         {
-            currentRound++;
+            var match = _matchRepository.Get();
+            match.Board.Rounds.Add(new Round());
+            _matchRepository.Set(match);
+            // currentRound++;
         }
 
         public void PlayUpgradeCard(string cardName)
@@ -77,14 +84,6 @@ namespace Game
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUnitCardPostComplete);
         }
-
-        private void GetRound()
-        {
-            _playService.GetRound(currentRound)
-                 .DoOnError(err => HandleError((PlayServiceException)err))
-                 .Subscribe(OnGetRoundComplete);
-        }
-
         public void SendReroll(IList<string> upgradeCards, IList<string> unitCards)
         {
             _playService.RerollCards(unitCards, upgradeCards)

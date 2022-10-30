@@ -9,6 +9,7 @@ using Infrastructure.Data;
 using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
+using ServerLogic.Matches.Infrastructure;
 using Token;
 using UniRx;
 using UnityEngine;
@@ -24,6 +25,8 @@ namespace Features.Game.Scripts.Tests.Editor
         private IPlayService _playService;
         private ITokenService _tokenService;
         private IGameView _view;
+        private IGetRoundEvery3Seconds _getRoundEvery3Seconds;
+        private ICurrentMatchRepository _matchRepository;
 
         private const int CardsInHand = 5;
 
@@ -34,7 +37,9 @@ namespace Features.Game.Scripts.Tests.Editor
             _playService = Substitute.For<IPlayService>();
             _tokenService = Substitute.For<ITokenService>();
             _view = Substitute.For<IGameView>();
-            _presenter = new GamePresenter(_view, _playService, _tokenService);
+            _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
+            _matchRepository = Substitute.For<ICurrentMatchRepository>();
+            _presenter = new GamePresenter(_view, _playService, _tokenService,_getRoundEvery3Seconds, _matchRepository);
         }
 
         [Test]
@@ -48,15 +53,19 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void CallGetRoundsService()
         {
-            Assert.Fail();
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
+            _getRoundEvery3Seconds.Received(1).Execute();
         }
 
         [Test]
         public void CallOnRoundOnViewWhenGetRound()
         {
             var expectedRound = new Round();
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
             _view.Received(1).OnGetRoundInfo(expectedRound);
-            Assert.Fail();
         }
 
         [Test]

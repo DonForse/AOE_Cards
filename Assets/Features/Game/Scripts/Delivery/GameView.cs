@@ -49,7 +49,9 @@ namespace Game
 
         private void RegisterToPresenterEvents()
         {
-            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService());
+            var repo = new InMemoryCurrentMatchRepository();
+            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(), 
+                new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo);
             _presenter.Initialize();
             // _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
             _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
@@ -70,7 +72,8 @@ namespace Game
         public void OnClosing()
         {
             _disposables.Clear();
-            _presenter.Unload();            ClearView();
+            _presenter.Unload();    
+            ClearView();
             this.gameObject.SetActive(false);
         }
 
