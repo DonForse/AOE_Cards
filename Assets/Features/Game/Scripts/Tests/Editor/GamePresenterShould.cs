@@ -43,15 +43,7 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         [Test]
-        public void CallGetRoundWhenInitialize()
-        {
-            GivenMatchSetupWith(AMatch());
-            WhenInitialize();
-            ThenGetRoundIsCalled(0);
-        }
-
-        [Test]
-        public void CallGetRoundsService()
+        public void CallGetRoundsEvery3Seconds()
         {
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
@@ -66,6 +58,19 @@ namespace Features.Game.Scripts.Tests.Editor
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
             _view.Received(1).OnGetRoundInfo(expectedRound);
+        }
+
+        [Test]
+        public void SendRerollWhenReroll()
+        {
+            var rerollSubject = new Subject<(List<string> upgrades, List<string> units)>();
+            _view.Reroll().Returns(rerollSubject);
+            GivenMatchSetupWith(AMatch());
+             GivenInitialize();
+             var units = new List<string>();
+             var upgrades = new List<string>();
+             rerollSubject.OnNext((upgrades,units));
+             _playService.Received(1).RerollCards(units, upgrades);
         }
 
         [Test]
@@ -108,6 +113,7 @@ namespace Features.Game.Scripts.Tests.Editor
             WhenUnitCardIsPlayed();
             ThenPlayUnitCardIsCalledInService();
         }
+
         private Match.Domain.Match AMatch(int withUnits = 5,
             int withUpgrades = 5, 
             List<Round> withRounds = null,
@@ -161,6 +167,8 @@ namespace Features.Game.Scripts.Tests.Editor
                 ScriptableObject.CreateInstance<UpgradeCardData>(),
             });
         }
+
+        private void GivenInitialize() => WhenInitialize();
 
         private void WhenUnitCardIsPlayed() => _presenter.PlayUnitCard(null);
         private void WhenUpgradeCardIsPlayed() => _presenter.PlayUpgradeCard(null);

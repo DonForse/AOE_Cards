@@ -24,8 +24,8 @@ namespace Game
         private ISubject<string> _onError = new Subject<string>();
         public IObservable<string> OnError=> _onError;
 
-        private ISubject<Hand> _onReroll = new Subject<Hand>();
-        public IObservable<Hand> OnReroll=> _onReroll;
+        // private ISubject<Hand> _onReroll = new Subject<Hand>();
+        // public IObservable<Hand> OnReroll=> _onReroll;
 
         private ISubject<Unit> _onUnitCardPlayed = new Subject<Unit>();
         public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
@@ -48,8 +48,13 @@ namespace Game
 
         public void Initialize()
         {
-            _getRoundEvery3Seconds.Execute().Subscribe(OnGetRoundComplete).AddTo(_disposables);
-
+            _getRoundEvery3Seconds.Execute()
+                .Subscribe(OnGetRoundComplete)
+                .AddTo(_disposables);
+            
+            _view.Reroll()
+                .Subscribe(rerollInfo => SendReroll(rerollInfo.upgrades, rerollInfo.units))
+                .AddTo(_disposables);
         }
 
         public void SetMatch(Match.Domain.Match match)
@@ -84,7 +89,7 @@ namespace Game
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUnitCardPostComplete);
         }
-        public void SendReroll(IList<string> upgradeCards, IList<string> unitCards)
+        private void SendReroll(IList<string> upgradeCards, IList<string> unitCards)
         {
             _playService.RerollCards(unitCards, upgradeCards)
                  .DoOnError(err => HandleError((PlayServiceException)err))
@@ -133,7 +138,7 @@ namespace Game
         private void OnRerollComplete(Hand hand)
         {
             _hand = hand;
-            _onReroll.OnNext(hand);
+            _view.OnRerollComplete(hand);
         }
 
         private void OnUnitCardPostComplete(Hand hand)

@@ -36,6 +36,7 @@ namespace Game
         private bool isWorking = false;
         MatchState matchState = MatchState.InitializeGame;
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private ISubject<(List<string> units, List<string> upgrades)> _rerollSubject = new Subject<(List<string> units, List<string> upgrades)>();
 
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
@@ -55,7 +56,7 @@ namespace Game
             _presenter.Initialize();
             // _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
             _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
-            _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
+            // _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
             _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
             _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
         }
@@ -223,6 +224,8 @@ namespace Game
         {
             _handView.PutCards(_playableCards);
         }
+
+        public IObservable<(List<string> upgrades, List<string> units)> Reroll() => _rerollSubject;
 
         public void OnGetRoundInfo(Round round)
         {
@@ -577,7 +580,7 @@ namespace Game
             _presenter.PlayUpgradeCard(upgradeCard.CardName);
         }
 
-        private void OnRerollComplete(Hand hand)
+        public void OnRerollComplete(Hand hand)
         {
             StartCoroutine(RerollComplete(hand));
         }
@@ -590,7 +593,8 @@ namespace Game
             _rerollView.WithRerollAction((upgrades, units) => 
             {
                 isWorking = true;
-                _presenter.SendReroll(upgrades, units);
+                _rerollSubject.OnNext((upgrades, units));
+                // _presenter.SendReroll(upgrades, units);
             });
             _rerollView.PutCards(cards);
             _rerollView.gameObject.SetActive(true);
