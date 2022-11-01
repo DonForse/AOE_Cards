@@ -36,8 +36,9 @@ namespace Game
         private bool isWorking = false;
         MatchState matchState = MatchState.InitializeGame;
         private CompositeDisposable _disposables = new CompositeDisposable();
-        private ISubject<(List<string> units, List<string> upgrades)> _rerollSubject = new Subject<(List<string> units, List<string> upgrades)>();
-
+        private readonly ISubject<(List<string> units, List<string> upgrades)> _rerollSubject = new Subject<(List<string> units, List<string> upgrades)>();
+        private readonly ISubject<string> _unitCardPlayedSubject = new Subject<string>();
+        public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
@@ -55,9 +56,9 @@ namespace Game
                 new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo);
             _presenter.Initialize();
             // _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
-            _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
+            // _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
             // _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
-            _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
+            // _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
             _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
         }
 
@@ -225,7 +226,7 @@ namespace Game
             _handView.PutCards(_playableCards);
         }
 
-        public IObservable<(List<string> upgrades, List<string> units)> Reroll() => _rerollSubject;
+        public IObservable<(List<string> upgrades, List<string> units)> ReRoll() => _rerollSubject;
 
         public void OnGetRoundInfo(Round round)
         {
@@ -390,7 +391,7 @@ namespace Game
             return _playableCards;
         }
 
-        private void ShowError(string message)
+        public void ShowError(string message)
         {
             RevertLastAction();
             isWorking = false;
@@ -412,7 +413,7 @@ namespace Game
             PutCardsInHand();
         }
 
-        private void UnitCardSentPlay()
+        public void OnUnitCardPlayed()
         {
             MoveUnitCardToShowdown();
             isWorking = false;
@@ -562,7 +563,7 @@ namespace Game
             var unitCard = draggable.GetComponent<UnitCardView>();
             _unitCardPlayed = unitCard;
             _playableCards.Remove(unitCard);
-            _presenter.PlayUnitCard(unitCard.CardName);
+            _unitCardPlayedSubject.OnNext(unitCard.CardName);
         }
 
         private void PlayUpgradeCard(Draggable draggable)

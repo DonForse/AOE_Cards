@@ -10,6 +10,6 @@ namespace Infrastructure.Services
         IObservable<Round> GetRound(int roundNumber);
         IObservable<Hand> PlayUnitCard(string cardName);
         IObservable<Hand> PlayUpgradeCard(string cardName);
-        IObservable<Hand> RerollCards(IList<string> unitCards, IList<string> upgradeCards);
+        IObservable<Hand> ReRollCards(IList<string> unitCards, IList<string> upgradeCards);
     }
 }

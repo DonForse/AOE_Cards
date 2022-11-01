@@ -21,14 +21,14 @@ namespace Game
         private readonly ITokenService _tokenService;
         private Hand _hand;
 
-        private ISubject<string> _onError = new Subject<string>();
-        public IObservable<string> OnError=> _onError;
+        // private ISubject<string> _onError = new Subject<string>();
+        // public IObservable<string> OnError=> _onError;
 
         // private ISubject<Hand> _onReroll = new Subject<Hand>();
         // public IObservable<Hand> OnReroll=> _onReroll;
-
-        private ISubject<Unit> _onUnitCardPlayed = new Subject<Unit>();
-        public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
+        //
+        // private ISubject<Unit> _onUnitCardPlayed = new Subject<Unit>();
+        // public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
         private ISubject<Unit> _onUpgradeCardPlayed = new Subject<Unit>();
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
@@ -52,9 +52,11 @@ namespace Game
                 .Subscribe(OnGetRoundComplete)
                 .AddTo(_disposables);
             
-            _view.Reroll()
-                .Subscribe(rerollInfo => SendReroll(rerollInfo.upgrades, rerollInfo.units))
+            _view.ReRoll()
+                .Subscribe(rerollInfo => SendReRoll(rerollInfo.upgrades, rerollInfo.units))
                 .AddTo(_disposables);
+
+            _view.UnitCardPlayed().Subscribe(PlayUnitCard).AddTo(_disposables);
         }
 
         public void SetMatch(Match.Domain.Match match)
@@ -82,16 +84,16 @@ namespace Game
                 .Subscribe(OnUpgradeCardPostComplete);
         }
 
-        public void PlayUnitCard(string cardName)
+        private void PlayUnitCard(string cardName)
         {
             _hand.TakeUnitCard(cardName);
             _playService.PlayUnitCard(cardName)
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUnitCardPostComplete);
         }
-        private void SendReroll(IList<string> upgradeCards, IList<string> unitCards)
+        private void SendReRoll(IList<string> upgradeCards, IList<string> unitCards)
         {
-            _playService.RerollCards(unitCards, upgradeCards)
+            _playService.ReRollCards(unitCards, upgradeCards)
                  .DoOnError(err => HandleError((PlayServiceException)err))
                  .Subscribe(OnRerollComplete);
         }
@@ -112,7 +114,7 @@ namespace Game
                     .Subscribe(OnRefreshTokenComplete);
                 return;
             }
-            _onError.OnNext(error.Message);
+            _view.ShowError(error.Message);
         }
 
         private void OnRefreshTokenError(string error)
@@ -144,7 +146,7 @@ namespace Game
         private void OnUnitCardPostComplete(Hand hand)
         {
             _hand = hand;
-            _onUnitCardPlayed.OnNext(Unit.Default);
+            _view.OnUnitCardPlayed();
         }
 
         private void OnUpgradeCardPostComplete(Hand hand)

@@ -43,7 +43,7 @@ namespace Infrastructure.Services
             return PlayCard(data);
         }
 
-        public IObservable<Hand> RerollCards(IList<string> unitCards, IList<string> upgradeCards)
+        public IObservable<Hand> ReRollCards(IList<string> unitCards, IList<string> upgradeCards)
         {
             string data = JsonUtility.ToJson(new RerollInfoDto { unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray() });
             return RerollCards(data).Retry(3);

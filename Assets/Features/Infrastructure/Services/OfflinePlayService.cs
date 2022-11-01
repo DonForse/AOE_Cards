@@ -51,7 +51,7 @@ namespace Infrastructure.Services
             return Observable.Return(DtoToHand(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
-        public IObservable<Hand> RerollCards(IList<string> unitCards, IList<string> upgradeCards)
+        public IObservable<Hand> ReRollCards(IList<string> unitCards, IList<string> upgradeCards)
         {
             var responseInfo = _rerollController.Post(UserId(), MatchId(),
                 new ServerLogic.Matches.Infrastructure.DTO.RerollInfoDto {unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray()});

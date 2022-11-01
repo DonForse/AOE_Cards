@@ -9,8 +9,11 @@ namespace Features.Game.Scripts.Domain
     public interface IGameView
     {
         public IObservable<string> PlayCard();
-        public IObservable<(List<string> upgrades, List<string> units)> Reroll();
+        public IObservable<(List<string> upgrades, List<string> units)> ReRoll();
         void OnGetRoundInfo(Round round);
         void OnRerollComplete(Hand hand);
+        void OnUnitCardPlayed();
+        void ShowError(string message);
+        IObservable<string> UnitCardPlayed();
     }
 }

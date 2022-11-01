@@ -39,7 +39,8 @@ namespace Features.Game.Scripts.Tests.Editor
             _view = Substitute.For<IGameView>();
             _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
-            _presenter = new GamePresenter(_view, _playService, _tokenService,_getRoundEvery3Seconds, _matchRepository);
+            _presenter = new GamePresenter(_view, _playService, _tokenService, _getRoundEvery3Seconds,
+                _matchRepository);
         }
 
         [Test]
@@ -61,22 +62,41 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         [Test]
-        public void SendRerollWhenReroll()
+        public void SendReRollWhenReRoll()
         {
-            var rerollSubject = new Subject<(List<string> upgrades, List<string> units)>();
-            _view.Reroll().Returns(rerollSubject);
+            var expectedUnits = new List<string>();
+            var expectedUpgrades = new List<string>();
+            
+            var reRollSubject = GivenReRoll();
             GivenMatchSetupWith(AMatch());
-             GivenInitialize();
-             var units = new List<string>();
-             var upgrades = new List<string>();
-             rerollSubject.OnNext((upgrades,units));
-             _playService.Received(1).RerollCards(units, upgrades);
+            GivenInitialize();
+         
+            WhenReRoll(reRollSubject, expectedUpgrades, expectedUnits);
+            ThenCalledReRoll();
+
+            void ThenCalledReRoll() => _playService.Received(1).ReRollCards(expectedUnits, expectedUpgrades);
+        }
+        
+        [Test]
+        public void CallViewOnReRollCompleteWhenPlayServiceReturns()
+        {
+            var expectedUnits = new List<string>();
+            var expectedUpgrades = new List<string>();
+            var expectedHand = new Hand(new List<UnitCardData>(), new List<UpgradeCardData>());
+            var reRollSubject = GivenReRoll();
+            GivenMatchSetupWith(AMatch());
+            GivenInitialize();
+            GivenReRollCompletes(expectedHand);
+            WhenReRoll(reRollSubject, expectedUpgrades, expectedUnits);
+            ThenCalledReRollCompleteOnView();
+
+            void ThenCalledReRollCompleteOnView() => _view.Received(1).OnRerollComplete(expectedHand);
         }
 
         [Test]
         public void GiveUnitCardsToPlayerOnGameSetup()
         {
-         //   WhenGetPlayerHand();
+            //   WhenGetPlayerHand();
             ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand);
         }
 
@@ -103,19 +123,23 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void RemoveUnitCardFromHandWhenUnitCardIsPlayed()
         {
-            WhenUnitCardIsPlayed();
+            ISubject<string> unitCardPlayedSubject = new Subject<string>();
+            _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
+            unitCardPlayedSubject.OnNext("some card");
             ThenUnitCardIsRemovedFromHand();
         }
 
         [Test]
         public void PlayUnitCardWhenCardIsPlayed()
         {
-            WhenUnitCardIsPlayed();
+            ISubject<string> unitCardPlayedSubject = new Subject<string>();
+            _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
+            unitCardPlayedSubject.OnNext("some card");
             ThenPlayUnitCardIsCalledInService();
         }
 
         private Match.Domain.Match AMatch(int withUnits = 5,
-            int withUpgrades = 5, 
+            int withUpgrades = 5,
             List<Round> withRounds = null,
             string withMatchId = "MatchId",
             string[] withUsers = null)
@@ -124,9 +148,9 @@ namespace Features.Game.Scripts.Tests.Editor
             {
                 Hand = new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
                     _cardProvider.GetUpgradeCards().Take(withUpgrades).ToList()),
-                Board = new Board{Rounds = withRounds ?? new List<Round>(){new Round(){RoundNumber = 0}}},
+                Board = new Board {Rounds = withRounds ?? new List<Round>() {new Round() {RoundNumber = 0}}},
                 Id = withMatchId,
-                Users = withUsers ?? new []{"user-1", "user-2"}
+                Users = withUsers ?? new[] {"user-1", "user-2"}
             };
         }
 
@@ -168,27 +192,42 @@ namespace Features.Game.Scripts.Tests.Editor
             });
         }
 
+
+        private void GivenReRollCompletes(Hand hand) =>
+            _playService.ReRollCards(Arg.Any<IList<string>>(), Arg.Any<IList<string>>())
+                .Returns(Observable.Return(hand));
+
         private void GivenInitialize() => WhenInitialize();
+        
+        private Subject<(List<string> upgrades, List<string> units)> GivenReRoll()
+        {
+            var rerollSubject = new Subject<(List<string> upgrades, List<string> units)>();
+            _view.ReRoll().Returns(rerollSubject);
+            return rerollSubject;
+        }
 
-        private void WhenUnitCardIsPlayed() => _presenter.PlayUnitCard(null);
         private void WhenUpgradeCardIsPlayed() => _presenter.PlayUpgradeCard(null);
-
 
         private void GivenMatchSetupWith(Match.Domain.Match match)
         {
             _presenter.SetMatch(match);
         }
 
+        private static void WhenReRoll(Subject<(List<string> upgrades, List<string> units)> rerollSubject, List<string> expectedUpgrades, List<string> expectedUnits) => rerollSubject.OnNext((expectedUpgrades, expectedUnits));
+
         private void WhenRoundSetup() => _presenter.StartNewRound();
         private void WhenInitialize() => _presenter.Initialize();
 
-        private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards) => Assert.AreEqual(numberOfCards, _cardsInHand.GetUnitCards().Count);
-        private void ThenUpgradeCardsInPlayerHandsAreEqualTo(int numberOfCards) => Assert.AreEqual(numberOfCards, _cardsInHand.GetUpgradeCards().Count);
+        private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards) =>
+            Assert.AreEqual(numberOfCards, _cardsInHand.GetUnitCards().Count);
+
+        private void ThenUpgradeCardsInPlayerHandsAreEqualTo(int numberOfCards) =>
+            Assert.AreEqual(numberOfCards, _cardsInHand.GetUpgradeCards().Count);
+
         private void ThenPlayUpgradeCardIsCalledInService() => _playService.Received(1).PlayUpgradeCard(null);
         private void ThenPlayUnitCardIsCalledInService() => _playService.Received(1).PlayUnitCard(null);
         private void ThenUnitCardIsRemovedFromHand() => ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
         private void ThenUpgradeCardIsRemovedFromHand() => ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
-
     }
 }
