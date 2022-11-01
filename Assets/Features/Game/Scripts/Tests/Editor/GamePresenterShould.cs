@@ -117,36 +117,52 @@ namespace Features.Game.Scripts.Tests.Editor
         public void PlayUpgradeCardWhenCardIsPlayed()
         {
             WhenUpgradeCardIsPlayed();
-            ThenPlayUpgradeCardIsCalledInService();
+            ThenPlayUpgradeCardIsCalledInService("asd");
         }
 
         [Test]
         public void RemoveUnitCardFromHandWhenUnitCardIsPlayed()
         {
+            var cardName = "some card";
+            var unitCard = new UnitCardData() {cardName = cardName};
+            var hand = new Hand(new List<UnitCardData>()
+            {
+                unitCard,
+                new UnitCardData(),
+                new UnitCardData()
+            }, null);
+            
             ISubject<string> unitCardPlayedSubject = new Subject<string>();
             _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
-            unitCardPlayedSubject.OnNext("some card");
-            ThenUnitCardIsRemovedFromHand();
+            GivenMatchSetupWith(AMatch(withHand: hand));
+            GivenInitialize();
+            unitCardPlayedSubject.OnNext(cardName);
+            ThenUnitCardIsRemovedFromHand(hand, unitCard);
         }
 
         [Test]
         public void PlayUnitCardWhenCardIsPlayed()
         {
+
+            var expectedCardName = "some card";
             ISubject<string> unitCardPlayedSubject = new Subject<string>();
             _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
-            unitCardPlayedSubject.OnNext("some card");
-            ThenPlayUnitCardIsCalledInService();
+            GivenMatchSetupWith(AMatch());
+            GivenInitialize();
+            unitCardPlayedSubject.OnNext(expectedCardName);
+            ThenPlayUnitCardIsCalledInService(expectedCardName);
         }
 
         private Match.Domain.Match AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
             string withMatchId = "MatchId",
-            string[] withUsers = null)
+            string[] withUsers = null,
+            Hand withHand = null)
         {
             return new Match.Domain.Match
             {
-                Hand = new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
+                Hand = withHand ?? new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
                     _cardProvider.GetUpgradeCards().Take(withUpgrades).ToList()),
                 Board = new Board {Rounds = withRounds ?? new List<Round>() {new Round() {RoundNumber = 0}}},
                 Id = withMatchId,
@@ -224,9 +240,9 @@ namespace Features.Game.Scripts.Tests.Editor
         private void ThenUpgradeCardsInPlayerHandsAreEqualTo(int numberOfCards) =>
             Assert.AreEqual(numberOfCards, _cardsInHand.GetUpgradeCards().Count);
 
-        private void ThenPlayUpgradeCardIsCalledInService() => _playService.Received(1).PlayUpgradeCard(null);
-        private void ThenPlayUnitCardIsCalledInService() => _playService.Received(1).PlayUnitCard(null);
-        private void ThenUnitCardIsRemovedFromHand() => ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
+        private void ThenPlayUpgradeCardIsCalledInService(string cardName) => _playService.Received(1).PlayUpgradeCard(cardName);
+        private void ThenPlayUnitCardIsCalledInService(string cardName) => _playService.Received(1).PlayUnitCard(cardName);
+        private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData unitCard) => Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(unitCard));
         private void ThenUpgradeCardIsRemovedFromHand() => ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
     }
