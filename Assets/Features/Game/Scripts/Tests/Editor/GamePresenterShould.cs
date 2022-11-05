@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Data;
 using Features.Game.Scripts.Domain;
@@ -9,7 +8,6 @@ using Infrastructure.Data;
 using Infrastructure.Services;
 using NSubstitute;
 using NUnit.Framework;
-using ServerLogic.Matches.Infrastructure;
 using Token;
 using UniRx;
 using UnityEngine;
@@ -109,15 +107,36 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed()
         {
-            WhenUpgradeCardIsPlayed();
-            ThenUpgradeCardIsRemovedFromHand();
+            var cardName = "some card";
+            var upgradeCard = new UpgradeCardData() {cardName = cardName};
+            var hand = new Hand(null, new List<UpgradeCardData>()
+            {
+                new UpgradeCardData(),
+                new UpgradeCardData(),
+                upgradeCard
+            });
+            
+            ISubject<string> upgradeCardPlayedSubject = new Subject<string>();
+            _view.UpgradeCardPlayed().Returns(upgradeCardPlayedSubject);
+            GivenMatchSetupWith(AMatch(withHand: hand));
+            GivenInitialize();
+            upgradeCardPlayedSubject.OnNext(cardName);
+            ThenUpgradeCardIsRemovedFromHand(hand, upgradeCard);
         }
 
         [Test]
         public void PlayUpgradeCardWhenCardIsPlayed()
         {
+            
+            var expectedCardName = "some card";
+            ISubject<string> upgradeCardPlayedSubject = new Subject<string>();
+            _view.UpgradeCardPlayed().Returns(upgradeCardPlayedSubject);
+            GivenMatchSetupWith(AMatch());
+            GivenInitialize();
             WhenUpgradeCardIsPlayed();
-            ThenPlayUpgradeCardIsCalledInService("asd");
+            ThenPlayUpgradeCardIsCalledInService(expectedCardName);
+
+            void WhenUpgradeCardIsPlayed() => upgradeCardPlayedSubject.OnNext(expectedCardName);
         }
 
         [Test]
@@ -221,9 +240,7 @@ namespace Features.Game.Scripts.Tests.Editor
             _view.ReRoll().Returns(rerollSubject);
             return rerollSubject;
         }
-
-        private void WhenUpgradeCardIsPlayed() => _presenter.PlayUpgradeCard(null);
-
+        
         private void GivenMatchSetupWith(Match.Domain.Match match)
         {
             _presenter.SetMatch(match);
@@ -242,8 +259,8 @@ namespace Features.Game.Scripts.Tests.Editor
 
         private void ThenPlayUpgradeCardIsCalledInService(string cardName) => _playService.Received(1).PlayUpgradeCard(cardName);
         private void ThenPlayUnitCardIsCalledInService(string cardName) => _playService.Received(1).PlayUnitCard(cardName);
-        private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData unitCard) => Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(unitCard));
-        private void ThenUpgradeCardIsRemovedFromHand() => ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand - 1);
+        private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData card) => Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(card));
+        private void ThenUpgradeCardIsRemovedFromHand(Hand hand, UpgradeCardData card) =>  Assert.IsTrue(!hand.GetUpgradeCards().ToList().Contains(card));
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
     }
 }

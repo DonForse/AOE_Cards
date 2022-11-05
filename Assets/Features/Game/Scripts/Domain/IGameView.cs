@@ -13,7 +13,9 @@ namespace Features.Game.Scripts.Domain
         void OnGetRoundInfo(Round round);
         void OnRerollComplete(Hand hand);
         void OnUnitCardPlayed();
+        void OnUpgradeCardPlayed();
         void ShowError(string message);
         IObservable<string> UnitCardPlayed();
+        IObservable<string> UpgradeCardPlayed();
     }
 }

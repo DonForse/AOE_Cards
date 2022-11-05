@@ -38,7 +38,10 @@ namespace Game
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly ISubject<(List<string> units, List<string> upgrades)> _rerollSubject = new Subject<(List<string> units, List<string> upgrades)>();
         private readonly ISubject<string> _unitCardPlayedSubject = new Subject<string>();
+        private readonly ISubject<string> _upgradeCardPlayedSubject = new Subject<string>();
         public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
+        public IObservable<string> UpgradeCardPlayed() => _upgradeCardPlayedSubject;
+
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
@@ -59,7 +62,7 @@ namespace Game
             // _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
             // _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
             // _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
-            _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
+            // _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
         }
 
         private void LoadAudio()
@@ -391,19 +394,19 @@ namespace Game
             return _playableCards;
         }
 
+        public void OnUpgradeCardPlayed()
+        {
+            Debug.Log("UpgradeCardSentPlay");
+            MoveUpgradeCardToShowdown();
+            isWorking = false;
+        }
+
         public void ShowError(string message)
         {
             RevertLastAction();
             isWorking = false;
             Toast.Instance.ShowToast(message, "Error");
             Debug.LogError(message);
-        }
-
-        private void UpgradeCardSentPlay()
-        {
-            Debug.Log("UpgradeCardSentPlay");
-            MoveUpgradeCardToShowdown();
-            isWorking = false;
         }
 
         private void MoveUpgradeCardToShowdown()
@@ -578,7 +581,8 @@ namespace Game
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             _upgradeCardPlayed = upgradeCard;
             _playableCards.Remove(upgradeCard);
-            _presenter.PlayUpgradeCard(upgradeCard.CardName);
+            _upgradeCardPlayedSubject.OnNext(upgradeCard.CardName);
+                
         }
 
         public void OnRerollComplete(Hand hand)

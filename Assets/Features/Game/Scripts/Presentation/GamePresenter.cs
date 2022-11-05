@@ -29,12 +29,13 @@ namespace Game
         //
         // private ISubject<Unit> _onUnitCardPlayed = new Subject<Unit>();
         // public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
-        private ISubject<Unit> _onUpgradeCardPlayed = new Subject<Unit>();
+        // private ISubject<Unit> _onUpgradeCardPlayed = new Subject<Unit>();
+        // public IObservable<Unit> OnUpgradeCardPlayed => _onUpgradeCardPlayed;
+
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private readonly ICurrentMatchRepository _matchRepository;
 
-        public IObservable<Unit> OnUpgradeCardPlayed => _onUpgradeCardPlayed;
 
         public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService, IGetRoundEvery3Seconds getRoundEvery3Seconds, ICurrentMatchRepository currentMatchRepository
         )
@@ -57,6 +58,7 @@ namespace Game
                 .AddTo(_disposables);
 
             _view.UnitCardPlayed().Subscribe(PlayUnitCard).AddTo(_disposables);
+            _view.UpgradeCardPlayed().Subscribe(PlayUpgradeCard).AddTo(_disposables);
         }
 
         public void SetMatch(Match.Domain.Match match)
@@ -76,7 +78,7 @@ namespace Game
             // currentRound++;
         }
 
-        public void PlayUpgradeCard(string cardName)
+        private void PlayUpgradeCard(string cardName)
         {
             _hand.TakeUpgradeCard(cardName);
             _playService.PlayUpgradeCard(cardName)
@@ -152,7 +154,7 @@ namespace Game
         private void OnUpgradeCardPostComplete(Hand hand)
         {
             _hand = hand;
-            _onUpgradeCardPlayed.OnNext(Unit.Default);
+            _view.OnUpgradeCardPlayed();
         }
 
         internal void RemoveCard(string cardName, bool upgrade)
