@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 using Infrastructure.DTOs;
@@ -17,7 +15,6 @@ namespace Game
         private readonly IGameView _view;
         private readonly IPlayService _playService;
         private readonly ITokenService _tokenService;
-        private Hand _hand;
         
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
@@ -51,7 +48,6 @@ namespace Game
 
         public void SetMatch(Match.Domain.Match match)
         {
-            _hand = match.Hand;
             _matchRepository.Set(match);
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
             PlayerPrefs.Save();
@@ -66,7 +62,8 @@ namespace Game
 
         private void PlayUpgradeCard(string cardName)
         {
-            _hand.TakeUpgradeCard(cardName);
+            var hand = _matchRepository.Get().Hand;
+            hand.TakeUpgradeCard(cardName);
             _playService.PlayUpgradeCard(cardName)
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUpgradeCardPostComplete);
@@ -74,7 +71,8 @@ namespace Game
 
         private void PlayUnitCard(string cardName)
         {
-            _hand.TakeUnitCard(cardName);
+            var hand = _matchRepository.Get().Hand;
+            hand.TakeUnitCard(cardName);
             _playService.PlayUnitCard(cardName)
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUnitCardPostComplete);
@@ -116,32 +114,32 @@ namespace Game
             PlayerPrefs.Save();
         }
 
-        internal Hand GetHand() => _hand;
+        internal Hand GetHand() => _matchRepository.Get().Hand;
 
         private void OnRerollComplete(Hand hand)
         {
-            _hand = hand;
+            _matchRepository.Set(hand);
             _view.OnRerollComplete(hand);
         }
 
         private void OnUnitCardPostComplete(Hand hand)
         {
-            _hand = hand;
+            _matchRepository.Set(hand);
             _view.OnUnitCardPlayed();
         }
 
         private void OnUpgradeCardPostComplete(Hand hand)
         {
-            _hand = hand;
+            _matchRepository.Set(hand);
             _view.OnUpgradeCardPlayed();
         }
 
         internal void RemoveCard(string cardName, bool upgrade)
         {
             if (upgrade)
-                _hand.TakeUpgradeCard(cardName);
+                _matchRepository.Get().Hand.TakeUpgradeCard(cardName);
             else
-                _hand.TakeUnitCard(cardName);
+                _matchRepository.Get().Hand.TakeUnitCard(cardName);
         }
 
     }
