@@ -10,7 +10,7 @@ namespace ServerLogic.Matches.Action
             _matchesRepository = matchesRepository;
         }
 
-        internal Domain.Match Execute(string matchId)
+        internal Features.ServerLogic.Matches.Domain.ServerMatch Execute(string matchId)
         {
             return _matchesRepository.Get(matchId);
         }

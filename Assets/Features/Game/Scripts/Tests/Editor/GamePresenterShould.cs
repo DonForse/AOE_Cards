@@ -19,7 +19,7 @@ namespace Features.Game.Scripts.Tests.Editor
     {
         private Hand _cardsInHand;
         private GamePresenter _presenter;
-        private Match.Domain.Match _matchStatus;
+        private Match.Domain.GameMatch _gameMatchStatus;
         private ICardProvider _cardProvider;
         private IPlayService _playService;
         private ITokenService _tokenService;
@@ -221,14 +221,14 @@ namespace Features.Game.Scripts.Tests.Editor
             ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand);
         }
 
-        private Match.Domain.Match AMatch(int withUnits = 5,
+        private Match.Domain.GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
             string withMatchId = "MatchId",
             string[] withUsers = null,
             Hand withHand = null)
         {
-            return new Match.Domain.Match
+            return new Match.Domain.GameMatch
             {
                 Hand = withHand ?? new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
                     _cardProvider.GetUpgradeCards().Take(withUpgrades).ToList()),
@@ -276,9 +276,9 @@ namespace Features.Game.Scripts.Tests.Editor
             });
         }
 
-        private void GivenMatchInRepository(Match.Domain.Match match)
+        private void GivenMatchInRepository(Match.Domain.GameMatch gameMatch)
         {
-            _matchRepository.Get().Returns(match);
+            _matchRepository.Get().Returns(gameMatch);
         }
 
 
@@ -296,9 +296,9 @@ namespace Features.Game.Scripts.Tests.Editor
             return rerollSubject;
         }
 
-        private void GivenMatchSetupWith(Match.Domain.Match match)
+        private void GivenMatchSetupWith(Match.Domain.GameMatch gameMatch)
         {
-            _presenter.SetMatch(match);
+            _presenter.SetMatch(gameMatch);
         }
 
 

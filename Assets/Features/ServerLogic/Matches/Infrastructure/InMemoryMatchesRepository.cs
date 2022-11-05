@@ -6,28 +6,28 @@ namespace ServerLogic.Matches.Infrastructure
 {
     public class InMemoryMatchesRepository : IMatchesRepository
     {
-        public ConcurrentDictionary<string, Domain.Match> matches = new ConcurrentDictionary<string, Domain.Match>();
+        public ConcurrentDictionary<string, Features.ServerLogic.Matches.Domain.ServerMatch> matches = new ConcurrentDictionary<string, Features.ServerLogic.Matches.Domain.ServerMatch>();
         public ConcurrentDictionary<string, string> userMatches = new ConcurrentDictionary<string, string>();
-        public bool Add(Domain.Match match)
+        public bool Add(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            matches.AddOrUpdate(match.Guid, match, (key, oldValue) => match);
-            foreach (var user in match.Users)
+            matches.AddOrUpdate(serverMatch.Guid, serverMatch, (key, oldValue) => serverMatch);
+            foreach (var user in serverMatch.Users)
             {
-                userMatches.AddOrUpdate(user.Id, match.Guid, (key, oldValue) => match.Guid);
+                userMatches.AddOrUpdate(user.Id, serverMatch.Guid, (key, oldValue) => serverMatch.Guid);
             }
             return true;
         }
-        public bool Update(Domain.Match match)
+        public bool Update(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (matches.ContainsKey(match.Guid))
+            if (matches.ContainsKey(serverMatch.Guid))
             {
-                matches[match.Guid] = match;
+                matches[serverMatch.Guid] = serverMatch;
                 return true;
             }
             return false;
         }
 
-        public Domain.Match Get(string matchId)
+        public Features.ServerLogic.Matches.Domain.ServerMatch Get(string matchId)
         {
             return matches.ContainsKey(matchId) ? matches[matchId] : null;
 
@@ -54,7 +54,7 @@ namespace ServerLogic.Matches.Infrastructure
                 Remove(matchId);
         }
 
-        public Domain.Match GetByUserId(string userId)
+        public Features.ServerLogic.Matches.Domain.ServerMatch GetByUserId(string userId)
         {
             if (!userMatches.ContainsKey(userId))
                 return null;
@@ -63,7 +63,7 @@ namespace ServerLogic.Matches.Infrastructure
             return matches[matchId];
         }
 
-        public IList<Domain.Match> GetAll()
+        public IList<Features.ServerLogic.Matches.Domain.ServerMatch> GetAll()
         {
             return matches.Values.ToList();
         }

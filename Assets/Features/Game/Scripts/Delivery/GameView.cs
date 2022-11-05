@@ -5,6 +5,7 @@ using System.Linq;
 using Common.Utilities;
 using Data;
 using Features.Game.Scripts.Domain;
+using Features.Match.Domain;
 using Home;
 using Infrastructure.Data;
 using Infrastructure.Services.Exceptions;
@@ -58,11 +59,6 @@ namespace Game
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(), 
                 new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo);
             _presenter.Initialize();
-            // _presenter.OnGetRoundInfo.Subscribe(OnGetRoundInfo).AddTo(_disposables);
-            // _presenter.OnError.Subscribe(ShowError).AddTo(_disposables);
-            // _presenter.OnReroll.Subscribe(OnRerollComplete).AddTo(_disposables);
-            // _presenter.OnUnitCardPlayed.Subscribe(_ => UnitCardSentPlay()).AddTo(_disposables);
-            // _presenter.OnUpgradeCardPlayed.Subscribe(_ => UpgradeCardSentPlay()).AddTo(_disposables);
         }
 
         private void LoadAudio()
@@ -82,10 +78,10 @@ namespace Game
             this.gameObject.SetActive(false);
         }
 
-        public void SetGame(Match.Domain.Match match)
+        public void SetGame(GameMatch gameMatch)
         {
             RegisterToPresenterEvents();
-            InitializeGame(match);
+            InitializeGame(gameMatch);
         }
         //bool _wait = false;
 
@@ -107,12 +103,12 @@ namespace Game
             }
         }
 
-        private void ResetGameState(Match.Domain.Match match)
+        private void ResetGameState(GameMatch gameMatch)
         {
             ClearView();
-            StartGame(match);
-            GetOrInstantiateHandCards(match.Hand);
-            RecoverMatchState(match);
+            StartGame(gameMatch);
+            GetOrInstantiateHandCards(gameMatch.Hand);
+            RecoverMatchState(gameMatch);
             if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
                 _handView.PutCards(_playableCards);
             Debug.Log("Reset");
@@ -120,11 +116,11 @@ namespace Game
             
         }
 
-        private void RecoverMatchState(Match.Domain.Match match)
+        private void RecoverMatchState(GameMatch gameMatch)
         {
-            if (match.Board == null)
+            if (gameMatch.Board == null)
                 _navigator.OpenHomeView();
-            var round = match.Board.Rounds.Last();
+            var round = gameMatch.Board.Rounds.Last();
             switch (round.RoundState)
             {
                 case RoundState.Reroll:
@@ -205,20 +201,20 @@ namespace Game
             }
         }
 
-        public void InitializeGame(Match.Domain.Match match)
+        private void InitializeGame(GameMatch gameMatch)
         {
-            StartGame(match);
+            StartGame(gameMatch);
 
             ChangeMatchState(MatchState.StartRound);
         }
 
-        private void StartGame(Match.Domain.Match match)
+        private void StartGame(GameMatch gameMatch)
         {
-            _presenter.SetMatch(match);
+            _presenter.SetMatch(gameMatch);
             ChangeMatchState(MatchState.InitializeGame);
-            _gameInfoView.SetGame(match);
-            _upgradesView.WithShowDownView(_showdownView).SetGame(match);
-            _showdownView.SetRound(match.Board.Rounds.Last());
+            _gameInfoView.SetGame(gameMatch);
+            _upgradesView.WithShowDownView(_showdownView).SetGame(gameMatch);
+            _showdownView.SetRound(gameMatch.Board.Rounds.Last());
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
             GetOrInstantiateHandCards(_presenter.GetHand());
@@ -436,7 +432,8 @@ namespace Game
             var upgradePlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UpgradeCardData.cardName);
             if (_upgradeCardPlayed == null && upgradePlayed != null) {
                 _playableCards.Remove(upgradePlayed);
-                _presenter.RemoveCard(upgradePlayed.CardName, true);
+                //TODO: This fixes timeout autoplay
+                // _presenter.RemoveCard(upgradePlayed.CardName, true);
                 _upgradeCardPlayed = (UpgradeCardView)upgradePlayed;
 
                 MoveUpgradeCardToShowdown();
@@ -466,7 +463,8 @@ namespace Game
             if (_unitCardPlayed == null & unitPlayed != null)
             {
                 _playableCards.Remove(unitPlayed);
-                _presenter.RemoveCard(unitPlayed.CardName, false);
+                //TODO: This fixes timeout autoplay
+                //_presenter.RemoveCard(unitPlayed.CardName, false);
                 _unitCardPlayed = (UnitCardView)unitPlayed;
                 MoveUnitCardToShowdown();
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Common;
 using Common.Utilities;
+using Features.Match.Domain;
 using Sound;
 using TMPro;
 using UniRx;
@@ -137,11 +138,11 @@ namespace Home
             timerRunning = false;
         }
 
-        public void ShowMatchFound(Match.Domain.Match matchStatus)
+        public void ShowMatchFound(GameMatch gameMatchStatus)
         {
             _matchFoundContainer.SetActive(true);
             StopTimer();
-            _navigator.OpenGameView(matchStatus);
+            _navigator.OpenGameView(gameMatchStatus);
         }
 
         public void ShowError(string message)

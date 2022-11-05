@@ -9,7 +9,7 @@ namespace ServerLogic.Matches.Domain
         public IList<UnitCard> UnitsCards;
         public IList<UpgradeCard> UpgradeCards;
 
-        public void PlayCard(Match match, string userId) {
+        public void PlayCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId) {
 
         }
     }

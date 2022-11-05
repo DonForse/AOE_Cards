@@ -1,3 +1,4 @@
+using Features.Match.Domain;
 using Game;
 using Infrastructure.Services;
 using Login;
@@ -37,7 +38,7 @@ namespace Home
             currentActiveView = loginView;
         }
 
-        public void OpenGameView(Match.Domain.Match ms)
+        public void OpenGameView(GameMatch ms)
         {
             if(currentActiveView != null)
                 currentActiveView.OnClosing();

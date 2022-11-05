@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Features.Match.Domain;
 using Game;
 using Infrastructure;
 using Infrastructure.Data;
@@ -24,18 +25,18 @@ namespace Match
             _matchController = matchController;
         }
 
-        public IObservable<Domain.Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
+        public IObservable<GameMatch> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             var response = _matchController.Post(UserId(),
                 new MatchInfoDto {vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty});
             
             var dto = JsonUtility.FromJson<MatchDto>(response.response);
             if (string.IsNullOrWhiteSpace(dto.matchId))
-                return Observable.Return((Domain.Match)null);
+                return Observable.Return((GameMatch)null);
             return Observable.Return(DtoToMatchStatus(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
-        public IObservable<Domain.Match> GetMatch()
+        public IObservable<GameMatch> GetMatch()
         {
             var response = _matchController.Get(UserId());
             var dto = JsonUtility.FromJson<MatchDto>(response.response);
@@ -50,9 +51,9 @@ namespace Match
 
         public void StopSearch() => Debug.Log("Impossible To Cancel");
 
-        private Domain.Match DtoToMatchStatus(MatchDto dto)
+        private GameMatch DtoToMatchStatus(MatchDto dto)
         {
-            var ms = new Domain.Match();
+            var ms = new GameMatch();
             ms.Id = dto.matchId;
             ms.Board = new Board
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Match.Domain;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using TMPro;
@@ -24,13 +25,13 @@ namespace Game
         private int currentRound;
         private IList<PlayerType> roundWinners = new List<PlayerType>();
 
-        public void SetGame(Match.Domain.Match match)
+        public void SetGame(GameMatch gameMatch)
         {
             Clear();
             SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
-            SetPlayerName(match.Users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
-            SetRoundWinners(match.Board.Rounds);
-            SetRoundNumber(match.Board.Rounds.Count());
+            SetPlayerName(gameMatch.Users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
+            SetRoundWinners(gameMatch.Board.Rounds);
+            SetRoundNumber(gameMatch.Board.Rounds.Count());
         }
 
         private void SetRoundWinners(List<Round> rounds)

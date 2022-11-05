@@ -1,9 +1,9 @@
 ﻿using Game;
 using Infrastructure.Data;
 
-namespace Match.Domain
+namespace Features.Match.Domain
 {
-    public class Match
+    public class GameMatch
     {
         public string Id;
         public Hand Hand;

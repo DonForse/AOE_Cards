@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
+using ServerLogic.Matches.Domain;
 using ServerLogic.Matches.Service;
 using ServerLogic.Users.Domain;
 
-namespace ServerLogic.Matches.Domain
+namespace Features.ServerLogic.Matches.Domain
 {
-    public class Match
+    public class ServerMatch
     {
         private readonly Random random = new Random();
         public string Guid;

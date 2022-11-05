@@ -5,12 +5,12 @@ namespace ServerLogic.Cards.Domain.Upgrades
 {
     public class FurorCelticaUpgradeCard : UpgradeCard
     {
-        public override void ApplicateEffectPostUnit(Matches.Domain.Match match, string userId)
+        public override void ApplicateEffectPostUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            var currentRound = match.Board.RoundsPlayed.Last();
+            var currentRound = serverMatch.Board.RoundsPlayed.Last();
             var unitPlayed = currentRound.PlayerCards[userId].UnitCard;
             if (unitPlayed.Archetypes.Any(upArchetype => upArchetype == Archetype.SiegeUnit))
-                match.Board.PlayersHands[userId].UnitsCards.Add(unitPlayed);
+                serverMatch.Board.PlayersHands[userId].UnitsCards.Add(unitPlayed);
         }
     }
 }

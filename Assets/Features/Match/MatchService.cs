@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using Features.Match.Domain;
 using Game;
 using Infrastructure;
 using Infrastructure.Data;
@@ -34,14 +35,14 @@ namespace Match
             _disposables.Clear();
         }
 
-        public IObservable<Domain.Match> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
+        public IObservable<GameMatch> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
             string data = JsonUtility.ToJson(new MatchPostDto
                 {vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty});
             return Post(data).Retry(3);
         }
 
-        public IObservable<Domain.Match> GetMatch()
+        public IObservable<GameMatch> GetMatch()
         {
             return Get().Retry(3);
         }
@@ -84,9 +85,9 @@ namespace Match
             });
         }
 
-        private IObservable<Domain.Match> Get()
+        private IObservable<GameMatch> Get()
         {
-            return Observable.Create<Domain.Match>(emitter =>
+            return Observable.Create<GameMatch>(emitter =>
             {
                 ResponseInfo responseInfo;
                 var webRequest = UnityWebRequest.Get(MatchUrl);
@@ -124,9 +125,9 @@ namespace Match
             });
         }
 
-        private IObservable<Domain.Match> Post(string data)
+        private IObservable<GameMatch> Post(string data)
         {
-            return Observable.Create<Domain.Match>(emitter =>
+            return Observable.Create<GameMatch>(emitter =>
             {
                 ResponseInfo responseInfo;
                 _postWebRequest = UnityWebRequest.Post(MatchUrl, data);
@@ -169,9 +170,9 @@ namespace Match
             });
         }
 
-        private Domain.Match DtoToMatchStatus(MatchDto dto)
+        private GameMatch DtoToMatchStatus(MatchDto dto)
         {
-            var ms = new Domain.Match();
+            var ms = new GameMatch();
             ms.Id = dto.matchId;
             ms.Board = new Board
             {

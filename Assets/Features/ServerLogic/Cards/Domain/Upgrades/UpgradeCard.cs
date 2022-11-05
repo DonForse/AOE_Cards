@@ -26,37 +26,37 @@ namespace ServerLogic.Cards.Domain.Upgrades
             return BasePower;
         }
 
-        public virtual int ApplyAlternativeEffects(Matches.Domain.Match match)
+        public virtual int ApplyAlternativeEffects(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             return 0;
         }
 
-        public virtual void Play(Matches.Domain.Match match, string userId)
+        public virtual void Play(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            var currentRound = match.Board.RoundsPlayed.Last();
-            var hand = match.Board.PlayersHands[userId];
+            var currentRound = serverMatch.Board.RoundsPlayed.Last();
+            var hand = serverMatch.Board.PlayersHands[userId];
             var upgradeCard = hand.UpgradeCards.FirstOrDefault(u => u.CardName == CardName);
             if (upgradeCard == null || !hand.UpgradeCards.Remove(upgradeCard))
                 throw new ApplicationException("Upgrade card is not in hand");
             currentRound.PlayerCards[userId].UpgradeCard = this;
         }
 
-        public virtual void ApplicateEffectPreUnit(Matches.Domain.Match match, string userId)
+        public virtual void ApplicateEffectPreUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
 
         }
 
-        public virtual void ApplicateEffectPostUnit(Matches.Domain.Match match, string userId)
+        public virtual void ApplicateEffectPostUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
 
         }
 
-        public virtual void ApplicateEffectPreCalculus(Matches.Domain.Match match, string userId)
+        public virtual void ApplicateEffectPreCalculus(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
 
         }
 
-        public virtual void ApplicateEffectPostCalculus(Matches.Domain.Match match, string userId)
+        public virtual void ApplicateEffectPostCalculus(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
         }
     }

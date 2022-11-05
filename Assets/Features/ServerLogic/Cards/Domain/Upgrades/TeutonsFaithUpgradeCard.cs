@@ -4,9 +4,9 @@ using ServerLogic.Matches.Domain;
 namespace ServerLogic.Cards.Domain.Upgrades
 {
     public class TeutonsFaithUpgradeCard : UpgradeCard
-    {        public override void ApplicateEffectPreCalculus(Matches.Domain.Match match, string userId)
+    {        public override void ApplicateEffectPreCalculus(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            var currentRound = match.Board.RoundsPlayed.Last();
+            var currentRound = serverMatch.Board.RoundsPlayed.Last();
             if (currentRound.PlayerCards[userId].UnitCard.Archetypes.All(a => a != Archetype.Cavalry))
             {
                 this.BasePower = 0;

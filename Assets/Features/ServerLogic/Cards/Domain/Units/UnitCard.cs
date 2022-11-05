@@ -13,16 +13,16 @@ namespace ServerLogic.Cards.Domain.Units
         public IList<Archetype> BonusVs;
         public IList<Archetype> Archetypes;
 
-        public virtual int CalculatePower(Matches.Domain.Match match, string userId)
+        public virtual int CalculatePower(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            var round = match.Board.RoundsPlayed.Last();
-            var upgradeCards = match.GetUpgradeCardsByPlayer(round, userId);
-            var vsCards = match.GetVsUnits(round, userId);
+            var round = serverMatch.Board.RoundsPlayed.Last();
+            var upgradeCards = serverMatch.GetUpgradeCardsByPlayer(round, userId);
+            var vsCards = serverMatch.GetVsUnits(round, userId);
 
             var upgradePowers = 0;
             foreach (var upgradeCard in upgradeCards)
             {
-                upgradeCard.ApplicateEffectPreCalculus(match, userId);
+                upgradeCard.ApplicateEffectPreCalculus(serverMatch, userId);
             }
             foreach (var upgradeCard in upgradeCards)
             {
@@ -33,19 +33,19 @@ namespace ServerLogic.Cards.Domain.Units
 
             foreach (var upgradeCard in upgradeCards)
             {
-                upgradeCard.ApplicateEffectPostCalculus(match, userId);
+                upgradeCard.ApplicateEffectPostCalculus(serverMatch, userId);
             }
 
             return BasePower + upgradePowers;
         }
 
-        public virtual void Play(Matches.Domain.Match match, string userId)
+        public virtual void Play(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            var currentRound = match.Board.RoundsPlayed.Last();
+            var currentRound = serverMatch.Board.RoundsPlayed.Last();
             if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
                 throw new ApplicationException("Unit card has already been played");
 
-            var hand = match.Board.PlayersHands[userId];
+            var hand = serverMatch.Board.PlayersHands[userId];
 
             var unitCard = hand.UnitsCards.FirstOrDefault(u => u.CardName == CardName);
             if (unitCard == null || !hand.UnitsCards.Remove(unitCard))

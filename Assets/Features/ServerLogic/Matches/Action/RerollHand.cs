@@ -22,9 +22,9 @@ namespace ServerLogic.Matches.Action
             _getUnitCard = new GetUnitCard(_cardRepository);
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
         }
-        internal void Execute(Domain.Match match, string userId, RerollInfoDto cards)
+        internal void Execute(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, RerollInfoDto cards)
         {
-            var round = match.Board.RoundsPlayed.LastOrDefault();
+            var round = serverMatch.Board.RoundsPlayed.LastOrDefault();
             if (round.RoundState != RoundState.Reroll || round.PlayerReroll.ContainsKey(userId) && round.PlayerReroll[userId] )
                 throw new ApplicationException("Reroll Not Available");
 
@@ -32,50 +32,50 @@ namespace ServerLogic.Matches.Action
                 throw new ApplicationException("Reroll Not Available");
 
             var unitCards = new List<UnitCard>();
-            GetUnitCards(match, userId, cards, unitCards);
+            GetUnitCards(serverMatch, userId, cards, unitCards);
 
             var upgradeCards = new List<UpgradeCard>();
-            GetUpgradeCards(match, userId, cards, upgradeCards);
+            GetUpgradeCards(serverMatch, userId, cards, upgradeCards);
 
             bool revert = false;
-            List<UpgradeCard> upgrades = GetNewHandUpgrades(match, userId, upgradeCards, ref revert);
-            List<UnitCard> units = GetNewHandUnits(match, userId, unitCards, ref revert);
+            List<UpgradeCard> upgrades = GetNewHandUpgrades(serverMatch, userId, upgradeCards, ref revert);
+            List<UnitCard> units = GetNewHandUnits(serverMatch, userId, unitCards, ref revert);
 
             if (revert)
                 throw new ApplicationException("Invalid Reroll");
 
             round.PlayerReroll[userId] = true;
-            AddNewUpgradeCards(match, userId, upgradeCards, upgrades);
-            AddNewUnitCards(match, userId, unitCards, units);
+            AddNewUpgradeCards(serverMatch, userId, upgradeCards, upgrades);
+            AddNewUnitCards(serverMatch, userId, unitCards, units);
 
             if (round.PlayerReroll.Values.Count(v=>v) == 2)
-                match.Board.RoundsPlayed.LastOrDefault().ChangeRoundState(RoundState.Upgrade);
+                serverMatch.Board.RoundsPlayed.LastOrDefault().ChangeRoundState(RoundState.Upgrade);
 
         }
 
-        private static void AddNewUnitCards(Domain.Match match, string userId, List<UnitCard> unitCards, List<UnitCard> units)
+        private static void AddNewUnitCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UnitCard> unitCards, List<UnitCard> units)
         {
-            match.Board.PlayersHands[userId].UnitsCards = units;
+            serverMatch.Board.PlayersHands[userId].UnitsCards = units;
             for (int i = 0; i < unitCards.Count; i++)
             {
-                match.Board.PlayersHands[userId].UnitsCards.Add(match.Board.Deck.TakeUnitCards(1).First());
+                serverMatch.Board.PlayersHands[userId].UnitsCards.Add(serverMatch.Board.Deck.TakeUnitCards(1).First());
             }
-            match.Board.Deck.AddUnitCards(unitCards);
+            serverMatch.Board.Deck.AddUnitCards(unitCards);
         }
 
-        private static void AddNewUpgradeCards(Domain.Match match, string userId, List<UpgradeCard> upgradeCards, List<UpgradeCard> upgrades)
+        private static void AddNewUpgradeCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UpgradeCard> upgradeCards, List<UpgradeCard> upgrades)
         {
-            match.Board.PlayersHands[userId].UpgradeCards = upgrades;
+            serverMatch.Board.PlayersHands[userId].UpgradeCards = upgrades;
             for (int i = 0; i < upgradeCards.Count; i++)
             {
-                match.Board.PlayersHands[userId].UpgradeCards.Add(match.Board.Deck.TakeUpgradeCards(1).First());
+                serverMatch.Board.PlayersHands[userId].UpgradeCards.Add(serverMatch.Board.Deck.TakeUpgradeCards(1).First());
             }
-            match.Board.Deck.AddUpgradeCards(upgradeCards);
+            serverMatch.Board.Deck.AddUpgradeCards(upgradeCards);
         }
 
-        private List<UnitCard> GetNewHandUnits(Domain.Match match, string userId, List<UnitCard> unitCards, ref bool revert)
+        private List<UnitCard> GetNewHandUnits(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UnitCard> unitCards, ref bool revert)
         {
-            var units = match.Board.PlayersHands[userId].UnitsCards.ToList();
+            var units = serverMatch.Board.PlayersHands[userId].UnitsCards.ToList();
             foreach (var card in unitCards)
             {
                 if (!units.Remove(card))
@@ -85,9 +85,9 @@ namespace ServerLogic.Matches.Action
             return units;
         }
 
-        private List<UpgradeCard> GetNewHandUpgrades(Domain.Match match, string userId, List<UpgradeCard> upgradeCards, ref bool revert)
+        private List<UpgradeCard> GetNewHandUpgrades(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UpgradeCard> upgradeCards, ref bool revert)
         {
-            var upgrades = match.Board.PlayersHands[userId].UpgradeCards.ToList();
+            var upgrades = serverMatch.Board.PlayersHands[userId].UpgradeCards.ToList();
             foreach (var card in upgradeCards)
             {
                 if (!upgrades.Remove(card))
@@ -96,20 +96,20 @@ namespace ServerLogic.Matches.Action
             return upgrades;
         }
 
-        private void GetUpgradeCards(Domain.Match match, string userId, RerollInfoDto cards, List<UpgradeCard> upgradeCards)
+        private void GetUpgradeCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, RerollInfoDto cards, List<UpgradeCard> upgradeCards)
         {
             foreach (var cardName in cards.upgradeCards)
             {
                 var card = _getUpgradeCard.Execute(cardName);
                 if (card == null)
                     throw new ApplicationException("Card Not Found");
-                if (!match.Board.PlayersHands[userId].UpgradeCards.Any(c => c.CardName == card.CardName))
+                if (!serverMatch.Board.PlayersHands[userId].UpgradeCards.Any(c => c.CardName == card.CardName))
                     throw new ApplicationException("Card Not Found");
                 upgradeCards.Add(card);
             }
         }
 
-        private void GetUnitCards(Domain.Match match, string userId, RerollInfoDto cards, List<UnitCard> unitCards)
+        private void GetUnitCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, RerollInfoDto cards, List<UnitCard> unitCards)
         {
             foreach (var cardName in cards.unitCards)
             {
@@ -118,7 +118,7 @@ namespace ServerLogic.Matches.Action
                 var card = _getUnitCard.Execute(cardName);
                 if (card == null)
                     throw new ApplicationException("Card Not Found");
-                if (!match.Board.PlayersHands[userId].UnitsCards.Any(c => c.CardName == card.CardName))
+                if (!serverMatch.Board.PlayersHands[userId].UnitsCards.Any(c => c.CardName == card.CardName))
                     throw new ApplicationException("Card Not Found");
 
                 unitCards.Add(card);

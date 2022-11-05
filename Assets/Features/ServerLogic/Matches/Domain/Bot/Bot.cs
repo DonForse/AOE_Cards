@@ -4,47 +4,47 @@ namespace ServerLogic.Matches.Domain.Bot
 {
     public class Bot
     {
-        public void PlayCard(Match match)
+        public void PlayCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            var round = match.Board.RoundsPlayed.Last();
+            var round = serverMatch.Board.RoundsPlayed.Last();
             if (round.RoundState == RoundState.Reroll)
             {
-                PlayReroll(match);
+                PlayReroll(serverMatch);
                 return;
             }
 
             if (round.RoundState == RoundState.Upgrade)
             {
-                PlayUpgrade(match);
+                PlayUpgrade(serverMatch);
                 return;
             }
 
             if (round.RoundState == RoundState.Unit)
             {
-                PlayUnit(match);
+                PlayUnit(serverMatch);
                 return;
             }
         }
 
-        internal virtual void PlayUnit(Match match)
+        internal virtual void PlayUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (match.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
                 return;
-            match.PlayUnitCard("BOT", match.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault());
+            serverMatch.PlayUnitCard("BOT", serverMatch.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault());
         }
 
-        internal virtual void PlayUpgrade(Match match)
+        internal virtual void PlayUpgrade(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (match.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
                 return;
-            match.PlayUpgradeCard("BOT", match.Board.PlayersHands["BOT"].UpgradeCards.FirstOrDefault());
+            serverMatch.PlayUpgradeCard("BOT", serverMatch.Board.PlayersHands["BOT"].UpgradeCards.FirstOrDefault());
         }
 
-        internal virtual void PlayReroll(Match match)
+        internal virtual void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (match.Board.RoundsPlayed.Last().PlayerReroll["BOT"])
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"])
                 return;
-            match.Board.RoundsPlayed.Last().PlayerReroll["BOT"] = true;
+            serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"] = true;
         }
     }
 }

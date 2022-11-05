@@ -1,11 +1,12 @@
 ﻿using System;
+using Features.Match.Domain;
 using UniRx;
 
 namespace Home
 {
     public interface IHomeView
     {
-        void ShowMatchFound(Match.Domain.Match matchStatus);
+        void ShowMatchFound(GameMatch gameMatchStatus);
         void ShowError(string message);
         void LeftQueue();
         void StartSearchingForMatch();

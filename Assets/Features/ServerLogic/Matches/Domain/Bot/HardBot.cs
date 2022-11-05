@@ -9,23 +9,23 @@ namespace ServerLogic.Matches.Domain.Bot
     public class HardBot : Bot
     {
 
-        internal override void PlayUnit(Match match)
+        internal override void PlayUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (match.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
                 return;
-            var card = PickUnitCard(match);
-            match.PlayUnitCard("BOT", card);
+            var card = PickUnitCard(serverMatch);
+            serverMatch.PlayUnitCard("BOT", card);
         }
 
-        private IUnitCard PickUnitCard(Match match)
+        private IUnitCard PickUnitCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            var cards = match.Board.PlayersHands["BOT"].UnitsCards;
+            var cards = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
 
             int maxScore = 0;
             IUnitCard cardToPick = cards.FirstOrDefault();
             foreach (var card in cards)
             {
-                var score = EvaluateUnitCard(card, match);
+                var score = EvaluateUnitCard(card, serverMatch);
                 if (score > maxScore)
                 {
                     cardToPick = card;
@@ -35,22 +35,22 @@ namespace ServerLogic.Matches.Domain.Bot
             return cardToPick;
         }
 
-        private int EvaluateUnitCard(UnitCard card, Match match)
+        private int EvaluateUnitCard(UnitCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             int score = 0;
-            score += EvaluateUnitArchetype(card, match);
-            score += EvaluateUnitPower(card, match);
+            score += EvaluateUnitArchetype(card, serverMatch);
+            score += EvaluateUnitPower(card, serverMatch);
             return score;
         }
 
-        private int EvaluateUnitPower(UnitCard card, Match match)
+        private int EvaluateUnitPower(UnitCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             int score = 0;
-            var round = match.Board.RoundsPlayed.Last();
-            var RivalUpgrades = match.GetUpgradeCardsByPlayer(round, match.Users.First(u => u.Id != "BOT").Id);
+            var round = serverMatch.Board.RoundsPlayed.Last();
+            var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(round, serverMatch.Users.First(u => u.Id != "BOT").Id);
             score += card.BasePower;
 
-            var roundsCount = match.Board.RoundsPlayed.Count;
+            var roundsCount = serverMatch.Board.RoundsPlayed.Count;
 
             if (card.BonusVs.Count > 0 && roundsCount > 2) {
                 if (RivalUpgrades.Count(ru => ru.Archetypes.Any(ruA => card.BonusVs.Any(bvA => bvA == ruA))) > roundsCount / 2)
@@ -59,40 +59,40 @@ namespace ServerLogic.Matches.Domain.Bot
             return score;
         }
 
-        private int EvaluateUnitArchetype(UnitCard card, Match match)
+        private int EvaluateUnitArchetype(UnitCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             int score = 0;
-            var round = match.Board.RoundsPlayed.Last();
-            var upgrades = match.GetUpgradeCardsByPlayer(round,"BOT");
-            var RivalUpgrades = match.GetUpgradeCardsByPlayer(round, match.Users.First(u => u.Id != "BOT").Id);
+            var round = serverMatch.Board.RoundsPlayed.Last();
+            var upgrades = serverMatch.GetUpgradeCardsByPlayer(round,"BOT");
+            var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(round, serverMatch.Users.First(u => u.Id != "BOT").Id);
             foreach (var upgrade in upgrades) {
                 if (upgrade == null)
                     continue;
                 if (card.Archetypes.Any(c=>upgrade.Archetypes.Any(a => a == c)))
                     score += upgrade.BasePower;
                 if (card.BonusVs.Count > 0) 
-                    score -= card.BasePower / 3 - (2* (RivalUpgrades.Count(c => c.Archetypes.Any(a => card.Archetypes.Any(arq => a == arq))) - match.Board.RoundsPlayed.Count));
+                    score -= card.BasePower / 3 - (2* (RivalUpgrades.Count(c => c.Archetypes.Any(a => card.Archetypes.Any(arq => a == arq))) - serverMatch.Board.RoundsPlayed.Count));
             }
             return score;
         }
 
-        internal override void PlayUpgrade(Match match)
+        internal override void PlayUpgrade(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (match.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
                 return;
-            var card = PickUpgradeCard(match);
-            match.PlayUpgradeCard("BOT", card);
+            var card = PickUpgradeCard(serverMatch);
+            serverMatch.PlayUpgradeCard("BOT", card);
         }
 
-        private UpgradeCard PickUpgradeCard(Match match)
+        private UpgradeCard PickUpgradeCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            var cards = match.Board.PlayersHands["BOT"].UpgradeCards;
+            var cards = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
 
             int maxScore = 0;
             UpgradeCard cardToPick = cards.FirstOrDefault();
             foreach (var card in cards)
             {
-                var score = EvaluateUpgradeCard(card, match);
+                var score = EvaluateUpgradeCard(card, serverMatch);
                 if (score > maxScore)
                 {
                     cardToPick = card;
@@ -102,27 +102,27 @@ namespace ServerLogic.Matches.Domain.Bot
             return cardToPick;
         }
 
-        private int EvaluateUpgradeCard(UpgradeCard card, Match match)
+        private int EvaluateUpgradeCard(UpgradeCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             int score = 0;
-            score += EvaluateUpgradeArchetype(card, match);
-            score += EvaluateUpgradePower(card, match);
+            score += EvaluateUpgradeArchetype(card, serverMatch);
+            score += EvaluateUpgradePower(card, serverMatch);
             return score;
         }
 
-        private int EvaluateUpgradeArchetype(UpgradeCard card, Match match)
+        private int EvaluateUpgradeArchetype(UpgradeCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            var units = match.Board.PlayersHands["BOT"].UnitsCards;
-            var upgrades = match.Board.PlayersHands["BOT"].UpgradeCards;
-            var playedUpgrades = match.GetUpgradeCardsByPlayer(match.Board.RoundsPlayed.Last(), "BOT");
+            var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
+            var upgrades = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
+            var playedUpgrades = serverMatch.GetUpgradeCardsByPlayer(serverMatch.Board.RoundsPlayed.Last(), "BOT");
             return units.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(ca => ca == ua))) 
                 + (upgrades.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(ca => ca == ua))) *2)
                 + (playedUpgrades.Count(pu => pu.Archetypes.Any(pua => card.Archetypes.Any(ca => ca == pua))) * 3);
         }
 
-        private int EvaluateUpgradePower(UpgradeCard card, Match match)
+        private int EvaluateUpgradePower(UpgradeCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            var units = match.Board.PlayersHands["BOT"].UnitsCards;
+            var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             int score = 0;
             score += card.BasePower * units.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(c => c == ua)));
             if (card.BonusVs.Count > 0) {
@@ -131,21 +131,21 @@ namespace ServerLogic.Matches.Domain.Bot
             return score;
         }
 
-        internal override void PlayReroll(Match match)
+        internal override void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (match.Board.RoundsPlayed.Last().PlayerReroll["BOT"])
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"])
                 return;
 
 
-            var units = match.Board.PlayersHands["BOT"].UnitsCards;
-            var upgrades = match.Board.PlayersHands["BOT"].UpgradeCards;
+            var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
+            var upgrades = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
 
             List<UnitCard> unitsToReroll = new List<UnitCard>();
             foreach (var card in units)
             {
                 if (card.CardName.ToLower() == "villager")
                     continue;
-                if (EvaluateUnitCard(card, match) < 15)
+                if (EvaluateUnitCard(card, serverMatch) < 15)
                 {
                     unitsToReroll.Add(card);
                 }
@@ -153,40 +153,40 @@ namespace ServerLogic.Matches.Domain.Bot
             List<UpgradeCard> upgradesToReroll = new List<UpgradeCard>();
             foreach (var card in upgrades)
             {
-                if (EvaluateUpgradeCard(card, match) < 15)
+                if (EvaluateUpgradeCard(card, serverMatch) < 15)
                 {
                     upgradesToReroll.Add(card);
                 }
             }
-            RerollUnits(match, unitsToReroll);
-            RerollUpgrades(match, upgradesToReroll);
-            match.Board.RoundsPlayed.Last().PlayerReroll["BOT"] = true;
+            RerollUnits(serverMatch, unitsToReroll);
+            RerollUpgrades(serverMatch, upgradesToReroll);
+            serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"] = true;
         }
 
-        private static void RerollUnits(Match match, List<UnitCard> rerollCards)
+        private static void RerollUnits(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, List<UnitCard> rerollCards)
         {
-            var units = match.Board.PlayersHands["BOT"].UnitsCards;
+            var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             foreach (var card in rerollCards)
                 units.Remove(card);
 
             for (int i = 0; i < rerollCards.Count; i++)
             {
-                match.Board.PlayersHands["BOT"].UnitsCards.Add(match.Board.Deck.TakeUnitCards(1).First());
+                serverMatch.Board.PlayersHands["BOT"].UnitsCards.Add(serverMatch.Board.Deck.TakeUnitCards(1).First());
             }
-            match.Board.Deck.AddUnitCards(rerollCards);
+            serverMatch.Board.Deck.AddUnitCards(rerollCards);
         }
 
-        private static void RerollUpgrades(Match match, List<UpgradeCard> rerollCards)
+        private static void RerollUpgrades(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, List<UpgradeCard> rerollCards)
         {
-            var upgrades = match.Board.PlayersHands["BOT"].UpgradeCards;
+            var upgrades = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
             foreach (var card in rerollCards)
                 upgrades.Remove(card);
 
             for (int i = 0; i < rerollCards.Count; i++)
             {
-                match.Board.PlayersHands["BOT"].UpgradeCards.Add(match.Board.Deck.TakeUpgradeCards(1).First());
+                serverMatch.Board.PlayersHands["BOT"].UpgradeCards.Add(serverMatch.Board.Deck.TakeUpgradeCards(1).First());
             }
-            match.Board.Deck.AddUpgradeCards(rerollCards);
+            serverMatch.Board.Deck.AddUpgradeCards(rerollCards);
         }
     }
 }

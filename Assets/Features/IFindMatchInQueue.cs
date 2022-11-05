@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.Match.Domain;
 
 namespace Home
 {
     public interface IFindMatchInQueue
     {
-        IObservable<Match.Domain.Match> Execute();
+        IObservable<GameMatch> Execute();
     }
 }

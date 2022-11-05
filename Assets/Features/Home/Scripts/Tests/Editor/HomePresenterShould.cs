@@ -5,7 +5,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Token;
 using UniRx;
-using Match = Match.Domain.Match;
 
 namespace Home.Scripts.Tests.Editor
 {
@@ -134,7 +133,7 @@ namespace Home.Scripts.Tests.Editor
         [Test]
         public void CallViewWhenStartMatchReturnsSuccessfully()
         {
-            var match = new global::Match.Domain.Match();
+            var match = new global::Features.Match.Domain.GameMatch();
             GivenPresenterIsInitialized();
             GivenEnqueueForMatchReturns(match);
             WhenPlayMatch();
@@ -147,7 +146,7 @@ namespace Home.Scripts.Tests.Editor
             GivenPresenterIsInitialized();
             GivenEnqueueForMatchReturns(null);
             WhenPlayMatch();
-            _view.DidNotReceive().ShowMatchFound(Arg.Any<global::Match.Domain.Match>());
+            _view.DidNotReceive().ShowMatchFound(Arg.Any<global::Features.Match.Domain.GameMatch>());
             _findMatchInQueue.Received(1).Execute();
         }
 
@@ -158,7 +157,7 @@ namespace Home.Scripts.Tests.Editor
             GivenEnqueueForMatchReturns(null);
             GivenFindMatchInQueueReturns();
             WhenPlayMatch();
-            _view.Received(1).ShowMatchFound(Arg.Any<global::Match.Domain.Match>());
+            _view.Received(1).ShowMatchFound(Arg.Any<global::Features.Match.Domain.GameMatch>());
         }
 
         [Test]
@@ -181,10 +180,10 @@ namespace Home.Scripts.Tests.Editor
         private void GivenRemoveMatchReturns() => _matchService.RemoveMatch().Returns(Observable.Return(Unit.Default));
         private void WhenLeavesQueue() => _leaveQueueSubject.OnNext(Unit.Default);
         private void GivenFindMatchInQueueReturns() =>
-            _findMatchInQueue.Execute().Returns(Observable.Return(new global::Match.Domain.Match()));
-        private void GivenEnqueueForMatchReturns(global::Match.Domain.Match match) =>
+            _findMatchInQueue.Execute().Returns(Observable.Return(new global::Features.Match.Domain.GameMatch()));
+        private void GivenEnqueueForMatchReturns(global::Features.Match.Domain.GameMatch gameMatch) =>
             _matchService.StartMatch(Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<int>())
-                .Returns(Observable.Return(match));
+                .Returns(Observable.Return(gameMatch));
         private void GivenPresenterIsInitialized() => _homePresenter.Initialize();
         private void WhenPlayMatch() => _playMatchSubject.OnNext(Unit.Default);
     }

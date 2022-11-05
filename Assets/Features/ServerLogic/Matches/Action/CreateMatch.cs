@@ -38,12 +38,12 @@ namespace ServerLogic.Matches.Action
             match.BotDifficulty = botDifficulty;
             _matchRepository.Add(match);
         }
-        private Domain.Match CreateMatchInstance(IList<User> users, bool isBotMatch)
+        private Features.ServerLogic.Matches.Domain.ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
         {
             if (isBotMatch)
                 users.Add(_createBot.Execute()); 
             
-            var match = new Domain.Match
+            var match = new Features.ServerLogic.Matches.Domain.ServerMatch
             {
                 Guid = Guid.NewGuid().ToString(),
                 Board = new Board()

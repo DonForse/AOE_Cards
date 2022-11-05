@@ -82,7 +82,7 @@ namespace ServerLogic.Matches.Service
             }
         }
 
-        private void PlayInactiveMatch(Domain.Match match, Round round)
+        private void PlayInactiveMatch(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, Round round)
         {
             foreach (var pc in round.PlayerCards)
             {
@@ -92,7 +92,7 @@ namespace ServerLogic.Matches.Service
                     {
                         if (pc.Value.UnitCard == null)
                         {
-                            match.PlayUnitCard(pc.Key, match.Board.PlayersHands[pc.Key].UnitsCards.First());
+                            serverMatch.PlayUnitCard(pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First());
                             break;
                         }
                     }
@@ -100,7 +100,7 @@ namespace ServerLogic.Matches.Service
                     {
                         if (pc.Value.UpgradeCard == null)
                         {
-                            match.PlayUpgradeCard(pc.Key, match.Board.PlayersHands[pc.Key].UpgradeCards.First());
+                            serverMatch.PlayUpgradeCard(pc.Key, serverMatch.Board.PlayersHands[pc.Key].UpgradeCards.First());
                             break;
                         }
                     }
@@ -147,14 +147,14 @@ namespace ServerLogic.Matches.Service
             }
         }
 
-        private void PlayBotCards(Domain.Match match, Round round)
+        private void PlayBotCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, Round round)
         {
-            if (match.BotDifficulty == 0)
+            if (serverMatch.BotDifficulty == 0)
             {
-                easyBot.PlayCard(match);
+                easyBot.PlayCard(serverMatch);
                 return;
             }
-            hardBot.PlayCard(match);
+            hardBot.PlayCard(serverMatch);
         }
 
         private bool IsLastRoundFinished(Round round)

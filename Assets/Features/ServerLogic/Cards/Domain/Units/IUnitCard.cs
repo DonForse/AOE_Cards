@@ -2,7 +2,7 @@
 {
     public interface IUnitCard
     {
-        int CalculatePower(Matches.Domain.Match match, string userId);
-        void Play(Matches.Domain.Match match, string userId);
+        int CalculatePower(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId);
+        void Play(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId);
     }
 }

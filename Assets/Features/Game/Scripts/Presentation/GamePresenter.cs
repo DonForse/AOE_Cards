@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
+using Features.Match.Domain;
 using Infrastructure.Data;
 using Infrastructure.DTOs;
 using Infrastructure.Services;
@@ -47,10 +48,10 @@ namespace Game
             _view.UpgradeCardPlayed().Subscribe(PlayUpgradeCard).AddTo(_disposables);
         }
 
-        public void SetMatch(Match.Domain.Match match)
+        public void SetMatch(GameMatch gameMatch)
         {
-            _matchRepository.Set(match);
-            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
+            _matchRepository.Set(gameMatch);
+            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
             PlayerPrefs.Save();
         }
 
@@ -134,14 +135,5 @@ namespace Game
             _matchRepository.Set(hand);
             _view.OnUpgradeCardPlayed();
         }
-
-        internal void RemoveCard(string cardName, bool upgrade)
-        {
-            if (upgrade)
-                _matchRepository.Get().Hand.TakeUpgradeCard(cardName);
-            else
-                _matchRepository.Get().Hand.TakeUnitCard(cardName);
-        }
-
     }
 }

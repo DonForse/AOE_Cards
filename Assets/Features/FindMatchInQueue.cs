@@ -1,4 +1,5 @@
 ﻿using System;
+using Features.Match.Domain;
 using Infrastructure.Services.Exceptions;
 using Match.Domain;
 using UniRx;
@@ -15,9 +16,9 @@ namespace Home
             _matchService = matchService;
         }
 
-        public IObservable<Match.Domain.Match> Execute()
+        public IObservable<GameMatch> Execute()
         {
-            return Observable.Create<Match.Domain.Match>(emitter =>
+            return Observable.Create<GameMatch>(emitter =>
             {
                 Observable.Interval(TimeSpan.FromSeconds(3))
                     .Subscribe(_ =>

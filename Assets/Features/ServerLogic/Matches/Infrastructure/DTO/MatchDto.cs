@@ -10,23 +10,23 @@ namespace ServerLogic.Matches.Infrastructure.DTO
         public HandDto hand;
         public List<string> users;
 
-        public MatchDto(Domain.Match match, string userId)
+        public MatchDto(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            if (match == null)
+            if (serverMatch == null)
                 return;
-            matchId = match.Guid;
+            matchId = serverMatch.Guid;
             this.board = new BoardDto
             {
                 rounds = new List<RoundDto>()
             };
-            foreach (var round in match.Board.RoundsPlayed)
+            foreach (var round in serverMatch.Board.RoundsPlayed)
             {
-                this.board.rounds.Add(new RoundDto(round, match.Users, userId));
+                this.board.rounds.Add(new RoundDto(round, serverMatch.Users, userId));
             }
             hand = new HandDto();
-            hand.units = match.Board.PlayersHands[userId].UnitsCards.Select(c => c.CardName).ToList();
-            hand.upgrades = match.Board.PlayersHands[userId].UpgradeCards.Select(c => c.CardName).ToList();
-            users = match.Users.Select(u => u.UserName).ToList();
+            hand.units = serverMatch.Board.PlayersHands[userId].UnitsCards.Select(c => c.CardName).ToList();
+            hand.upgrades = serverMatch.Board.PlayersHands[userId].UpgradeCards.Select(c => c.CardName).ToList();
+            users = serverMatch.Users.Select(u => u.UserName).ToList();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Features.Match.Domain;
 using Infrastructure.Services;
 using UnityEngine;
 
@@ -67,9 +68,9 @@ namespace Game
                 Destroy(upgradeIcon.gameObject);
         }
 
-        internal void SetGame(Match.Domain.Match match)
+        internal void SetGame(GameMatch gameMatch)
         {
-            var rounds = match.Board.Rounds.Take(match.Board.Rounds.Count - 1);
+            var rounds = gameMatch.Board.Rounds.Take(gameMatch.Board.Rounds.Count - 1);
             foreach (var round in rounds) {
                 foreach (var cardPlayed in round.CardsPlayed) {
                     if (cardPlayed.UpgradeCardData == null)
@@ -78,7 +79,7 @@ namespace Game
                     SetUpgrade(upgrade.gameObject, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
             }
-            var lastRound = match.Board.Rounds.Last();
+            var lastRound = gameMatch.Board.Rounds.Last();
             var upgradeRound = CardInstantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
             SetRoundUpgrade(upgradeRound.gameObject);
         }
