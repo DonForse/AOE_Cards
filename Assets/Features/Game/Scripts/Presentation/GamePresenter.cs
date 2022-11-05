@@ -14,27 +14,15 @@ namespace Game
 {
     public class GamePresenter
     {
-        // private int currentRound;
-        //private readonly IGameView _view;
         private readonly IGameView _view;
         private readonly IPlayService _playService;
         private readonly ITokenService _tokenService;
         private Hand _hand;
-
-        // private ISubject<string> _onError = new Subject<string>();
-        // public IObservable<string> OnError=> _onError;
-
-        // private ISubject<Hand> _onReroll = new Subject<Hand>();
-        // public IObservable<Hand> OnReroll=> _onReroll;
-        //
-        // private ISubject<Unit> _onUnitCardPlayed = new Subject<Unit>();
-        // public IObservable<Unit> OnUnitCardPlayed => _onUnitCardPlayed;
-        // private ISubject<Unit> _onUpgradeCardPlayed = new Subject<Unit>();
-        // public IObservable<Unit> OnUpgradeCardPlayed => _onUpgradeCardPlayed;
-
+        
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private readonly ICurrentMatchRepository _matchRepository;
+        public void Unload() => _disposables.Clear();
 
 
         public GamePresenter(IGameView view, IPlayService playService, ITokenService tokenService, IGetRoundEvery3Seconds getRoundEvery3Seconds, ICurrentMatchRepository currentMatchRepository
@@ -65,7 +53,6 @@ namespace Game
         {
             _hand = match.Hand;
             _matchRepository.Set(match);
-            // currentRound = match.Board.Rounds.Count() - 1;
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, match.Id);
             PlayerPrefs.Save();
         }
@@ -75,7 +62,6 @@ namespace Game
             var match = _matchRepository.Get();
             match.Board.Rounds.Add(new Round());
             _matchRepository.Set(match);
-            // currentRound++;
         }
 
         private void PlayUpgradeCard(string cardName)
@@ -93,16 +79,12 @@ namespace Game
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(OnUnitCardPostComplete);
         }
+
         private void SendReRoll(IList<string> upgradeCards, IList<string> unitCards)
         {
             _playService.ReRollCards(unitCards, upgradeCards)
                  .DoOnError(err => HandleError((PlayServiceException)err))
                  .Subscribe(OnRerollComplete);
-        }
-
-        internal void Unload()
-        {
-            _disposables.Clear();
         }
 
         private void OnGetRoundComplete(Round round) => _view.OnGetRoundInfo(round);
@@ -134,10 +116,7 @@ namespace Game
             PlayerPrefs.Save();
         }
 
-        internal Hand GetHand()
-        {
-            return _hand;
-        }
+        internal Hand GetHand() => _hand;
 
         private void OnRerollComplete(Hand hand)
         {
