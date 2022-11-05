@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using Game;
+
+namespace Features.Game.Scripts.Presentation
 {
     public interface ICurrentMatchRepository
     {

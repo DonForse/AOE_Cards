@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using Features.Game.Scripts.Presentation;
+
+namespace Game
 {
     public class InMemoryCurrentMatchRepository : ICurrentMatchRepository
     {
