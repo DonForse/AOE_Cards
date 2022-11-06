@@ -8,7 +8,6 @@ using Features.Game.Scripts.Domain;
 using Features.Match.Domain;
 using Home;
 using Infrastructure.Data;
-using Infrastructure.Services.Exceptions;
 using Sound;
 using UniRx;
 using UnityEngine;
@@ -35,13 +34,15 @@ namespace Game
 
         private IList<CardView> _playableCards;
         private bool isWorking = false;
-        MatchState matchState = MatchState.InitializeGame;
+        // MatchState matchState = MatchState.InitializeGame;
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly ISubject<(List<string> units, List<string> upgrades)> _rerollSubject = new Subject<(List<string> units, List<string> upgrades)>();
         private readonly ISubject<string> _unitCardPlayedSubject = new Subject<string>();
         private readonly ISubject<string> _upgradeCardPlayedSubject = new Subject<string>();
+        private readonly ISubject<Unit> _applicationRestoreFocusSubject = new Subject<Unit>();
         public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
         public IObservable<string> UpgradeCardPlayed() => _upgradeCardPlayedSubject;
+        public IObservable<Unit> ApplicationRestoreFocus() => _applicationRestoreFocusSubject;
 
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
@@ -56,7 +57,8 @@ namespace Game
         private void RegisterToPresenterEvents()
         {
             var repo = new InMemoryCurrentMatchRepository();
-            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(), 
+            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(),
+                servicesProvider.GetMatchService(),
                 new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo);
             _presenter.Initialize();
         }
@@ -83,6 +85,7 @@ namespace Game
             RegisterToPresenterEvents();
             InitializeGame(gameMatch);
         }
+
         //bool _wait = false;
 
         private void OnApplicationFocus(bool focus)
@@ -91,10 +94,7 @@ namespace Game
             {
                 Debug.Log("Focus");
 
-                servicesProvider.GetMatchService().GetMatch().ObserveOn(Scheduler.MainThread)
-                    .DoOnError(error=>SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
-                    .Subscribe(match => ResetGameState(match))
-                    .AddTo(_disposables);
+                _applicationRestoreFocusSubject.OnNext(Unit.Default);
             }
             else {
                 Debug.Log("Pause");
@@ -102,55 +102,10 @@ namespace Game
                 _focusOutGameObject.SetActive(true);
             }
         }
+        
+       
 
-        private void ResetGameState(GameMatch gameMatch)
-        {
-            ClearView();
-            StartGame(gameMatch);
-            GetOrInstantiateHandCards(gameMatch.Hand);
-            RecoverMatchState(gameMatch);
-            if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
-                _handView.PutCards(_playableCards);
-            Debug.Log("Reset");
-            _focusOutGameObject.SetActive(false);
-            
-        }
-
-        private void RecoverMatchState(GameMatch gameMatch)
-        {
-            if (gameMatch.Board == null)
-                _navigator.OpenHomeView();
-            var round = gameMatch.Board.Rounds.Last();
-            switch (round.RoundState)
-            {
-                case RoundState.Reroll:
-                    if (round.HasReroll)
-                        matchState = MatchState.StartReroll;
-                    else
-                        matchState = MatchState.WaitReroll;
-                    break;
-                case RoundState.Upgrade:
-                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName).UpgradeCardData != null)
-                        matchState = MatchState.WaitUpgrade;
-                    else
-                        matchState = MatchState.StartUpgrade;
-                    break;
-                case RoundState.Unit:
-                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName).UnitCardData != null)
-                        matchState = MatchState.WaitUnit;
-                    else
-                        matchState = MatchState.StartUnit;
-                    break;
-                case RoundState.Finished:
-                    matchState = MatchState.StartRound;
-                    break;
-                case RoundState.GameFinished:
-                    EndGame();
-                    break;
-                default:
-                    break;
-            }
-        }
+        public void UpdateTimer(Round round) => _timerView.Update(round);
 
         private void SomeError(long arg1, string arg2)
         {
@@ -159,59 +114,19 @@ namespace Game
             //throw new NotImplementedException();
         }
 
-        private void RevertLastAction()
-        {
-            Debug.Log(string.Format("match state: {0}", matchState));
-            switch (matchState)
-            {
-                case MatchState.InitializeGame:
-                case MatchState.StartRound:
-                case MatchState.StartRoundUpgradeReveal:
-                case MatchState.RoundUpgradeReveal:
-                case MatchState.StartReroll:
-                case MatchState.StartUpgrade:
-                case MatchState.UpgradeReveal:
-                case MatchState.StartUnit:
-                case MatchState.RoundResultReveal:
-                case MatchState.EndRound:
-                case MatchState.EndGame:
-                    break;
-                case MatchState.Reroll:
-                case MatchState.WaitReroll:
-                    GetOrInstantiateHandCards(_presenter.GetHand());
-                    PutCardsInHand();
-                    ShowReroll();
-                    break;
-                case MatchState.SelectUpgrade:
-                case MatchState.WaitUpgrade:
-                    GetOrInstantiateHandCards(_presenter.GetHand());
-                    PutCardsInHand();
-                    _upgradeCardPlayed = null;
-                    ChangeMatchState(MatchState.SelectUpgrade);
-                    break;
-                case MatchState.SelectUnit:
-                case MatchState.WaitUnit:
-                    GetOrInstantiateHandCards(_presenter.GetHand());
-                    PutCardsInHand();
-                    _unitCardPlayed = null;
-                    ChangeMatchState(MatchState.SelectUnit);
-                    break;
-                default:
-                    break;
-            }
-        }
+        
 
         private void InitializeGame(GameMatch gameMatch)
         {
             StartGame(gameMatch);
 
-            ChangeMatchState(MatchState.StartRound);
+            ShowMatchState(MatchState.StartRound);
         }
 
         private void StartGame(GameMatch gameMatch)
         {
             _presenter.SetMatch(gameMatch);
-            ChangeMatchState(MatchState.InitializeGame);
+            ShowMatchState(MatchState.InitializeGame);
             _gameInfoView.SetGame(gameMatch);
             _upgradesView.WithShowDownView(_showdownView).SetGame(gameMatch);
             _showdownView.SetRound(gameMatch.Board.Rounds.Last());
@@ -226,126 +141,21 @@ namespace Game
         }
 
         public IObservable<(List<string> upgrades, List<string> units)> ReRoll() => _rerollSubject;
-
         public void OnGetRoundInfo(Round round)
         {
-            _timerView.Update(round);
-            if (isWorking)
-                return;
-            if (matchState == MatchState.StartRound)
-            {
-                StartRound(round);
-            }
-            
-            if (matchState == MatchState.StartRoundUpgradeReveal)
-            {
-                ShowRoundUpgrade(round);
-                return;
-            }
-            if (matchState == MatchState.StartReroll)
-            {
-                ShowReroll();
-                return;
-            }
-            if (matchState == MatchState.StartUpgrade)
-            {
-                if (round.RoundState == RoundState.Upgrade)
-                    ChangeMatchState(MatchState.SelectUpgrade);
-                GetOrInstantiateHandCards(_presenter.GetHand());
-                PutCardsInHand();
-                _handView.ShowHandUpgrades();
-                return;
-            }
-            if (matchState == MatchState.StartUnit)
-            {
-                //GetOrInstantiateHandCards(_presenter.GetHand());
-                //PutCardsInHand();
-                if (round.RoundState == RoundState.Unit)
-                    ChangeMatchState(MatchState.SelectUnit);
-                _handView.ShowHandUnits();
-                return;
-            }
-            if (round.RoundState == RoundState.Upgrade)
-            {
-                ShowUpgradeTurn(round);
-                return;
-            }
-
-            if (round.RoundState == RoundState.Unit)
-            {
-                ShowUnitTurn(round);
-                return;
-            }
-
-            if (round.RoundState == RoundState.Finished || round.RoundState == RoundState.GameFinished)
-            {
-                ShowRoundEnd(round);
-            }
+            throw new NotImplementedException();
         }
 
-        private void StartRound(Round round)
+        public void StartRound(Round round)
         {
             isWorking = true;
             GetOrInstantiateHandCards(_presenter.GetHand());
-            ChangeMatchState(MatchState.StartRoundUpgradeReveal);
-            isWorking = false;
-        }
-        private void ShowUpgradeTurn(Round round)
-        {
-            isWorking = true;
-            if (matchState == MatchState.Reroll)
-            {
-                HideReroll();
-            };
-
-            if (round.RivalReady)
-            {
-                _showdownView.ShowRivalWaitUpgrade();
-            }
-
-            isWorking = false;
-        }
-
-        private void ShowUnitTurn(Round round)
-        {
-            isWorking = true;
-            if (matchState.IsUpgradePhase())
-            {
-                ChangeMatchState(MatchState.UpgradeReveal);
-                ShowUpgradeCardsPlayedRound(round, () =>
-                {
-                    ChangeMatchState(MatchState.StartUnit);
-                    isWorking = false;
-                });
-                return;
-            }
-
-            if (round.RivalReady)
-            {
-                _showdownView.ShowRivalWaitUnit();
-            }
-
-            isWorking = false;
-        }
-        
-        private void ShowRoundEnd(Round round)
-        {
-            isWorking = true;
-            if (matchState.IsUnitPhase())
-            {
-                ChangeMatchState(MatchState.RoundResultReveal);
-                ShowUnitCardsPlayedRound(round, () =>
-                {
-                    ChangeMatchState(MatchState.EndRound);
-                    isWorking = false;
-                });
-                return;
-            }
-            EndRound(round);
+            ShowMatchState(MatchState.StartRoundUpgradeReveal);
             isWorking = false;
         }
         
 
+      
         private IList<CardView> GetOrInstantiateHandCards(Hand hand)
         {
             var inPlayCards = _playableCards.ToList();
@@ -390,16 +200,16 @@ namespace Game
             return _playableCards;
         }
 
-        public void OnUpgradeCardPlayed()
+        public void OnUpgradeCardPlayed(string cardName)
         {
             Debug.Log("UpgradeCardSentPlay");
+            _playableCards.Remove(_upgradeCardPlayed);
             MoveUpgradeCardToShowdown();
             isWorking = false;
         }
 
         public void ShowError(string message)
         {
-            RevertLastAction();
             isWorking = false;
             Toast.Instance.ShowToast(message, "Error");
             Debug.LogError(message);
@@ -412,8 +222,9 @@ namespace Game
             PutCardsInHand();
         }
 
-        public void OnUnitCardPlayed()
+        public void OnUnitCardPlayed(string cardName)
         {
+            _playableCards.Remove(_unitCardPlayed);
             MoveUnitCardToShowdown();
             isWorking = false;
         }
@@ -484,14 +295,14 @@ namespace Game
             }));
         }
         
-        private void ShowRoundUpgrade(Round round)
+        public void ShowRoundUpgrade(Round round)
         {
             isWorking = true;
             ClearGameObjectData();
             var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
             StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
             {
-                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
+                ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
                 isWorking = false;
             }));
         }
@@ -514,7 +325,7 @@ namespace Game
         private void PrepareNewRound()
         {
             _presenter.StartNewRound();
-            ChangeMatchState(MatchState.StartRound);
+            ShowMatchState(MatchState.StartRound);
         }
 
 
@@ -556,29 +367,25 @@ namespace Game
         private void PlayUnitCard(Draggable draggable)
         {
             Debug.Log("Play Unit");
-            if (matchState != MatchState.SelectUnit)
-                return;
+
             if (_unitCardPlayed != null)
                 return;
             isWorking = true;
             var unitCard = draggable.GetComponent<UnitCardView>();
             _unitCardPlayed = unitCard;
-            _playableCards.Remove(unitCard);
             _unitCardPlayedSubject.OnNext(unitCard.CardName);
         }
 
         private void PlayUpgradeCard(Draggable draggable)
         {
             Debug.Log("Play Upgrade Card");
-            if (matchState != MatchState.SelectUpgrade)
-                return;
+//TODO: This logic should go when play card is confirmed
             if (_upgradeCardPlayed != null)
                 return;
 
             isWorking = true;
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             _upgradeCardPlayed = upgradeCard;
-            _playableCards.Remove(upgradeCard);
             _upgradeCardPlayedSubject.OnNext(upgradeCard.CardName);
                 
         }
@@ -601,7 +408,7 @@ namespace Game
             });
             _rerollView.PutCards(cards);
             _rerollView.gameObject.SetActive(true);
-            ChangeMatchState(MatchState.Reroll);
+            ShowMatchState(MatchState.Reroll);
             isWorking = false;
         }
 
@@ -609,7 +416,7 @@ namespace Game
         {
             _rerollView.Clear();
             _rerollView.gameObject.SetActive(false);
-            ChangeMatchState(MatchState.StartUpgrade);
+            ShowMatchState(MatchState.StartUpgrade);
         }
 
         private IEnumerator RerollComplete(Hand hand)
@@ -635,16 +442,11 @@ namespace Game
             isWorking = false; 
         }
 
-        private void ChangeMatchState(MatchState state)
+        private void ShowMatchState(MatchState state)
         {
-            matchState = state;
             _timerView.ShowState(state);
             _actionView.ShowState(state);
         }
-
-        public IObservable<string> PlayCard()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

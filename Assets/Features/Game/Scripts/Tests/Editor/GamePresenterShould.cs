@@ -7,6 +7,7 @@ using Game;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Services;
+using Match.Domain;
 using NSubstitute;
 using NUnit.Framework;
 using Token;
@@ -26,6 +27,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private IGameView _view;
         private IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private ICurrentMatchRepository _matchRepository;
+        private IMatchService _matchService;
 
         private const int CardsInHand = 5;
 
@@ -35,10 +37,11 @@ namespace Features.Game.Scripts.Tests.Editor
             _cardProvider = Substitute.For<ICardProvider>();
             _playService = Substitute.For<IPlayService>();
             _tokenService = Substitute.For<ITokenService>();
+            _matchService = Substitute.For<IMatchService>();
             _view = Substitute.For<IGameView>();
             _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
-            _presenter = new GamePresenter(_view, _playService, _tokenService, _getRoundEvery3Seconds,
+            _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService, _getRoundEvery3Seconds,
                 _matchRepository);
         }
 
@@ -57,7 +60,7 @@ namespace Features.Game.Scripts.Tests.Editor
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
-            _view.Received(1).OnGetRoundInfo(expectedRound);
+            Received.InOrder(() => { _view.Received(1).UpdateTimer(expectedRound); });
         }
 
         [Test]
@@ -65,17 +68,17 @@ namespace Features.Game.Scripts.Tests.Editor
         {
             var expectedUnits = new List<string>();
             var expectedUpgrades = new List<string>();
-            
+
             var reRollSubject = GivenReRoll();
             GivenMatchSetupWith(AMatch());
             GivenInitialize();
-         
+
             WhenReRoll(reRollSubject, expectedUpgrades, expectedUnits);
             ThenCalledReRoll();
 
             void ThenCalledReRoll() => _playService.Received(1).ReRollCards(expectedUnits, expectedUpgrades);
         }
-        
+
         [Test]
         public void CallViewOnReRollCompleteWhenPlayServiceReturns()
         {
@@ -120,15 +123,14 @@ namespace Features.Game.Scripts.Tests.Editor
 
             _playService.PlayUnitCard(expectedCardName).Returns(Observable.Return(expectedHand));
             unitCardPlayedSubject.OnNext(expectedCardName);
-            
+
             ThenUpdatedHand(expectedHand);
-            _view.Received(1).OnUnitCardPlayed();
+            _view.Received(1).OnUnitCardPlayed(expectedCardName);
         }
 
         [Test]
         public void PlayUpgradeCardWhenCardIsPlayed()
         {
-            
             var expectedCardName = "some card";
             ISubject<string> upgradeCardPlayedSubject = new Subject<string>();
             _view.UpgradeCardPlayed().Returns(upgradeCardPlayedSubject);
@@ -156,9 +158,9 @@ namespace Features.Game.Scripts.Tests.Editor
 
             _playService.PlayUpgradeCard(expectedCardName).Returns(Observable.Return(expectedHand));
             upgradeCardSubject.OnNext(expectedCardName);
-            
+
             ThenUpdatedHand(expectedHand);
-            _view.Received(1).OnUpgradeCardPlayed();
+            _view.Received(1).OnUpgradeCardPlayed(expectedCardName);
         }
 
         [Test]
@@ -172,10 +174,10 @@ namespace Features.Game.Scripts.Tests.Editor
                 new UpgradeCardData(),
                 upgradeCard
             });
-            
+
             ISubject<string> upgradeCardPlayedSubject = new Subject<string>();
             _view.UpgradeCardPlayed().Returns(upgradeCardPlayedSubject);
-            
+
             GivenMatchSetupWith(AMatch(withHand: hand));
             GivenInitialize();
             GivenMatchInRepository(AMatch(withHand: hand));
@@ -195,7 +197,7 @@ namespace Features.Game.Scripts.Tests.Editor
                 new UnitCardData(),
                 new UnitCardData()
             }, null);
-            
+
             ISubject<string> unitCardPlayedSubject = new Subject<string>();
             _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
             GivenMatchSetupWith(AMatch(withHand: hand));
@@ -302,7 +304,9 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
 
-        private static void WhenReRoll(Subject<(List<string> upgrades, List<string> units)> rerollSubject, List<string> expectedUpgrades, List<string> expectedUnits) => rerollSubject.OnNext((expectedUpgrades, expectedUnits));
+        private static void WhenReRoll(Subject<(List<string> upgrades, List<string> units)> rerollSubject,
+            List<string> expectedUpgrades, List<string> expectedUnits) =>
+            rerollSubject.OnNext((expectedUpgrades, expectedUnits));
 
         private void WhenRoundSetup() => _presenter.StartNewRound();
         private void WhenInitialize() => _presenter.Initialize();
@@ -315,10 +319,18 @@ namespace Features.Game.Scripts.Tests.Editor
 
         private void ThenUpdatedHand(Hand hand) => _matchRepository.Received(1).Set(hand);
 
-        private void ThenPlayUpgradeCardIsCalledInService(string cardName) => _playService.Received(1).PlayUpgradeCard(cardName);
-        private void ThenPlayUnitCardIsCalledInService(string cardName) => _playService.Received(1).PlayUnitCard(cardName);
-        private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData card) => Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(card));
-        private void ThenUpgradeCardIsRemovedFromHand(Hand hand, UpgradeCardData card) =>  Assert.IsTrue(!hand.GetUpgradeCards().ToList().Contains(card));
+        private void ThenPlayUpgradeCardIsCalledInService(string cardName) =>
+            _playService.Received(1).PlayUpgradeCard(cardName);
+
+        private void ThenPlayUnitCardIsCalledInService(string cardName) =>
+            _playService.Received(1).PlayUnitCard(cardName);
+
+        private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData card) =>
+            Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(card));
+
+        private void ThenUpgradeCardIsRemovedFromHand(Hand hand, UpgradeCardData card) =>
+            Assert.IsTrue(!hand.GetUpgradeCards().ToList().Contains(card));
+
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
     }
 }

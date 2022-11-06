@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using Data;
 using Game;
 using Infrastructure.Data;
+using UniRx;
 
 namespace Features.Game.Scripts.Domain
 {
     public interface IGameView
     {
-        public IObservable<string> PlayCard();
         public IObservable<(List<string> upgrades, List<string> units)> ReRoll();
-        void OnGetRoundInfo(Round round);
-        void OnRerollComplete(Hand hand);
-        void OnUnitCardPlayed();
-        void OnUpgradeCardPlayed();
-        void ShowError(string message);
+        public IObservable<Unit> ApplicationRestoreFocus();
         IObservable<string> UnitCardPlayed();
         IObservable<string> UpgradeCardPlayed();
+        
+        void OnGetRoundInfo(Round round);
+        void OnRerollComplete(Hand hand);
+        void OnUnitCardPlayed(string cardName);
+        void OnUpgradeCardPlayed(string cardName);
+        void ShowError(string message);
+
+        void UpdateTimer(Round round);
+
+        void StartRound(Round round);
+        void ShowRoundUpgrade(Round round);
     }
 }
