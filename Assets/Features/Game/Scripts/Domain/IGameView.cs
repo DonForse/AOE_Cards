@@ -31,5 +31,6 @@ namespace Features.Game.Scripts.Domain
         void ShowRivalWaitUpgrade();
         void ShowRivalWaitUnit();
         void EndRound(Round round);
+        void Clear();
     }
 }

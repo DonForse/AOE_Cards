@@ -49,7 +49,7 @@ namespace Game
 
         public void OnOpening()
         {
-            ClearView();
+            Clear();
             LoadAudio();
             this.gameObject.SetActive(true);
         }
@@ -76,7 +76,7 @@ namespace Game
         {
             _disposables.Clear();
             _presenter.Unload();    
-            ClearView();
+            Clear();
             this.gameObject.SetActive(false);
         }
 
@@ -335,7 +335,7 @@ namespace Game
             _navigator.OpenResultView(result);
         }
 
-        private void ClearView()
+        public void Clear()
         {
             if (_playableCards != null)
             {

@@ -270,7 +270,7 @@ namespace Game
         }
         private void ResetGameState(GameMatch gameMatch)
         {
-            ClearView();
+            _view.Clear();
             StartGame(gameMatch);
             GetOrInstantiateHandCards(gameMatch.Hand);
             RecoverMatchState(gameMatch);
@@ -356,13 +356,6 @@ namespace Game
                 default:
                     break;
             }
-        }
-
-        private void ShowRoundEnd(Round round)
-        {
-            isWorking = true;
-
-            isWorking = false;
         }
 
         private void ChangeMatchState(MatchState state)
