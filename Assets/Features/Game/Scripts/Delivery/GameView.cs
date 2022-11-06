@@ -307,7 +307,7 @@ namespace Game
             }));
         }
 
-        private void EndRound(Round round)
+        public void EndRound(Round round)
         {
             isWorking = true;
             _showdownView.MoveCards(_upgradesView);
@@ -395,7 +395,7 @@ namespace Game
             StartCoroutine(RerollComplete(hand));
         }
 
-        private void ShowReroll()
+        public void ShowReroll()
         {
             isWorking = true;
 
@@ -410,6 +410,35 @@ namespace Game
             _rerollView.gameObject.SetActive(true);
             ShowMatchState(MatchState.Reroll);
             isWorking = false;
+        }
+
+        public void ShowHand(Hand hand)
+        {
+            GetOrInstantiateHandCards(_presenter.GetHand());
+            PutCardsInHand();
+        }
+
+        public void ToggleView(HandType handType)
+        {
+            if (handType == HandType.Upgrade)
+                _handView.ShowHandUpgrades();
+            else 
+                _handView.ShowHandUnits();
+        }
+
+        void IGameView.HideReroll()
+        {
+            HideReroll();
+        }
+
+        public void ShowRivalWaitUpgrade()
+        {
+            _showdownView.ShowRivalWaitUpgrade();
+        }
+
+        public void ShowRivalWaitUnit()
+        {
+            _showdownView.ShowRivalWaitUnit();
         }
 
         private void HideReroll()

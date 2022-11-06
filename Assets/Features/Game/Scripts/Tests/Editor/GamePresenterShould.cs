@@ -60,7 +60,111 @@ namespace Features.Game.Scripts.Tests.Editor
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
-            Received.InOrder(() => { _view.Received(1).UpdateTimer(expectedRound); });
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+            });
+        }
+        
+        [Test]
+        public void CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound()
+        {
+            var expectedRound = new Round();
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                // ChangeMatchState();
+                Assert.Fail();
+                _view.Received(1).StartRound(expectedRound);
+            });
+        }
+        
+        [Test]
+        public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade()
+        {
+            var expectedRound = new Round();
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                // ChangeMatchState();
+                Assert.Fail();
+                _view.Received(1).ShowHand(Arg.Any<Hand>());
+                _view.Received(1).ToggleView(HandType.Upgrade);
+            });
+        }
+        [Test]
+        public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit()
+        {
+            var expectedRound = new Round();
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                // ChangeMatchState();
+                Assert.Fail();
+                _view.Received(1).ShowHand(Arg.Any<Hand>());
+                _view.Received(1).ToggleView(HandType.Unit);
+            });
+        }
+        
+        [Test]
+        public void HideRerollWhenRoundStatusIsUpgradeButMatchStateIsStillInReroll()
+        {
+            _view.Received(1).HideReroll();
+        }
+        
+                
+        [Test]
+        public void ShowRivalReadyWhenRoundStatusIsUpgradeAndRivalIsReady()
+        {
+            _view.Received(1).ShowRivalWaitUpgrade();
+        }
+
+        [Test]
+        public void WhenRoundStatusIsFinishedOrGameFinished()
+        {
+            _view.Received(1).EndRound(Arg.Any<Round>());
+        }
+
+                
+        [Test]
+        public void ShowRoundUpgradeWhenGetRoundInfoAndMatchStateIsStartRoundUpgradeReveal()
+        {
+            var expectedRound = new Round();
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                // ChangeMatchState();
+                Assert.Fail();
+                _view.Received(1).StartRound(expectedRound);
+            });
+        }
+        
+        [Test]
+        public void ShowRerollWhenGetRoundInfoAndMatchStateIsStartReroll()
+        {
+            var expectedRound = new Round();
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch());
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                // ChangeMatchState();
+                Assert.Fail();
+                _view.Received(1).ShowReroll();
+            });
         }
 
         [Test]

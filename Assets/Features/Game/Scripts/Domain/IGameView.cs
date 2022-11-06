@@ -24,5 +24,12 @@ namespace Features.Game.Scripts.Domain
 
         void StartRound(Round round);
         void ShowRoundUpgrade(Round round);
+        void ShowReroll();
+        void ShowHand(Hand hand);
+        void ToggleView(HandType handType);
+        void HideReroll();
+        void ShowRivalWaitUpgrade();
+        void ShowRivalWaitUnit();
+        void EndRound(Round round);
     }
 }

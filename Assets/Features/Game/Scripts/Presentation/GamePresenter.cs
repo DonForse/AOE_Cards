@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
@@ -184,11 +185,13 @@ namespace Game
             {
                 _view.ShowRoundUpgrade(round);
                 //en callback de coroutina de la vista
-                round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade
+                throw new NotImplementedException();
+                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
                 return;
             }
             if (matchState == MatchState.StartReroll)
             {
+                ChangeMatchState(MatchState.Reroll);
                 _view.ShowReroll();
                 return;
             }
@@ -199,33 +202,70 @@ namespace Game
                 _view.ShowHand(_matchRepository.Get().Hand);// show hand deberia hacer los 2 siguientes metodos:
                 // GetOrInstantiateHandCards(_presenter.GetHand());
                 // PutCardsInHand();
-                _handView.ShowHandUpgrades(); //toggle view a ver upgrades.
+                _view.ToggleView(HandType.Upgrade); //toggle view a ver upgrades.
                 return;
             }
             if (matchState == MatchState.StartUnit)
             {
+                _view.ShowHand(_matchRepository.Get().Hand);
                 //GetOrInstantiateHandCards(_presenter.GetHand());
                 //PutCardsInHand();
                 if (round.RoundState == RoundState.Unit)
                     ChangeMatchState(MatchState.SelectUnit);
-                _handView.ShowHandUnits();
+                _view.ToggleView(HandType.Unit);
                 return;
             }
             if (round.RoundState == RoundState.Upgrade)
             {
-                ShowUpgradeTurn(round);
+                if (matchState == MatchState.Reroll)
+                {
+                    //reroll finished and changed to upgrade?
+                    _view.HideReroll();
+                };
+
+                if (round.RivalReady)
+                {
+                    _view.ShowRivalWaitUpgrade();
+                }
                 return;
             }
 
             if (round.RoundState == RoundState.Unit)
             {
-                ShowUnitTurn(round);
+                if (matchState.IsUpgradePhase())
+                {
+                    ChangeMatchState(MatchState.UpgradeReveal);
+                    throw new NotImplementedException();
+                    //en callback de coroutina de la vista
+                    // ShowUpgradeCardsPlayedRound(round, () =>
+                    // {
+                    //     ChangeMatchState(MatchState.StartUnit);
+                    //     // isWorking = false;
+                    // // });
+                    return;
+                }
+                if (round.RivalReady)
+                {
+                    _view.ShowRivalWaitUnit();
+                }
                 return;
             }
 
             if (round.RoundState == RoundState.Finished || round.RoundState == RoundState.GameFinished)
             {
-                ShowRoundEnd(round);
+                if (matchState.IsUnitPhase())
+                {
+                    ChangeMatchState(MatchState.RoundResultReveal);
+                    throw new NotImplementedException();
+                    //en callback de coroutina de la vista
+                    // ShowUnitCardsPlayedRound(round, () =>
+                    // {
+                    //     ChangeMatchState(MatchState.EndRound);
+                    //     isWorking = false;
+                    // });
+                    return;
+                }
+                _view.EndRound(round);
             }
         }
         private void ResetGameState(GameMatch gameMatch)
@@ -317,61 +357,11 @@ namespace Game
                     break;
             }
         }
-        
-        private void ShowUpgradeTurn(Round round)
-        {
-            isWorking = true;
-            if (matchState == MatchState.Reroll)
-            {
-                HideReroll();
-            };
 
-            if (round.RivalReady)
-            {
-                _showdownView.ShowRivalWaitUpgrade();
-            }
-
-            isWorking = false;
-        }
-        
-        private void ShowUnitTurn(Round round)
-        {
-            isWorking = true;
-            if (matchState.IsUpgradePhase())
-            {
-                ChangeMatchState(MatchState.UpgradeReveal);
-                ShowUpgradeCardsPlayedRound(round, () =>
-                {
-                    ChangeMatchState(MatchState.StartUnit);
-                    isWorking = false;
-                });
-                return;
-            }
-
-            if (round.RivalReady)
-            {
-                _showdownView.ShowRivalWaitUnit();
-            }
-
-            isWorking = false;
-        }
-        
-        
-        
         private void ShowRoundEnd(Round round)
         {
             isWorking = true;
-            if (matchState.IsUnitPhase())
-            {
-                ChangeMatchState(MatchState.RoundResultReveal);
-                ShowUnitCardsPlayedRound(round, () =>
-                {
-                    ChangeMatchState(MatchState.EndRound);
-                    isWorking = false;
-                });
-                return;
-            }
-            EndRound(round);
+
             isWorking = false;
         }
 
@@ -380,5 +370,11 @@ namespace Game
             matchState = state;
         }
 
+    }
+
+    public enum HandType
+    {
+        Upgrade,
+        Unit
     }
 }
