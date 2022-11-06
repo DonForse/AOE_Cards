@@ -53,6 +53,8 @@ namespace Match
 
         private GameMatch DtoToMatchStatus(MatchDto dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.matchId))
+                return null;
             var ms = new GameMatch();
             ms.Id = dto.matchId;
             ms.Board = new Board

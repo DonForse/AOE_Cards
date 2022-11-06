@@ -44,7 +44,7 @@ namespace ServerLogic.Cards.Infrastructure
             var cards = new List<UpgradeCard>();
             var ta = Resources.Load<TextAsset>("upgrades");
 
-            foreach (var line in ta.text.Split('\r'))
+            foreach (var line in ta.text.Split('\n'))
             {
                 var data = line.Split(',');
                 UpgradeCard card = LoadUpgradeCard(data);
@@ -144,7 +144,7 @@ namespace ServerLogic.Cards.Infrastructure
         {
             var cards = new List<UnitCard>();
             var ta = Resources.Load<TextAsset>("units");
-            foreach (var line in ta.text.Split('\r'))
+            foreach (var line in ta.text.Split('\n')) //'\n' en mac
             {
                 var data = line.Split(',');
                 UnitCard card = LoadUnitCard(data);
