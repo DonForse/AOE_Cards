@@ -118,6 +118,7 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void HideRerollWhenRoundStatusIsUpgradeButMatchStateIsStillInReroll()
         {
+            // ChangeMatchState(MatchState.StartUpgrade);
             _view.Received(1).HideReroll();
         }
         
@@ -129,9 +130,29 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         [Test]
+        public void ShowRivalReadyWhenRoundStatusIsUnitAndMatchStateIsUpgrade()
+        {
+            //ChangeMatchState(MatchState.UpgradeReveal);
+//                        ChangeMatchState(MatchState.StartUnit);
+            _view.Received(1).ShowUpgradeCardsPlayedRound(Arg.Any<Round>(), () => { });
+        }
+
+        [Test]
+        public void ShowRivalReadyWhenRoundStatusIsUnitAndRivalIsReady()
+        {
+            _view.Received(1).ShowRivalWaitUnit();
+        }
+
+        [Test]
         public void WhenRoundStatusIsFinishedOrGameFinished()
         {
             _view.Received(1).EndRound(Arg.Any<Round>());
+            //change state
+            // ChangeMatchState(MatchState.RoundResultReveal);
+
+            _view.Received(1).ShowUnitCardsPlayedRound(Arg.Any<Round>(), () => { });
+            //ChangeMatchState(MatchState.EndRound);
+
         }
 
                 

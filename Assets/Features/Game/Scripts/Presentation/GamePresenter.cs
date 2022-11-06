@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
@@ -164,6 +165,7 @@ namespace Game
         
         
         MatchState matchState = MatchState.InitializeGame;
+        private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,
         //that way the match could be recreated, and its easier to know where is the user
@@ -171,10 +173,9 @@ namespace Game
         public void OnGetRoundInfo(Round round)
         {
             _view.UpdateTimer(round);
-            //_timerView.Update(round);
             
-            if (isWorking) //todo: ignore? i guess is working means its doing some animation or anything, because it will ask again its done so it ignores requests...
-                return;
+            // if (isWorking) //todo: ignore? i guess is working means its doing some animation or anything, because it will ask again its done so it ignores requests...
+            //     return;
             if (matchState == MatchState.StartRound) //where does match state comes from (I think it initializes on the view and then gets updated puaj
             {
                 ChangeMatchState(MatchState.StartRoundUpgradeReveal);
@@ -185,7 +186,7 @@ namespace Game
             {
                 _view.ShowRoundUpgrade(round);
                 //en callback de coroutina de la vista
-                throw new NotImplementedException();
+                // throw new NotImplementedException();
                 ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
                 return;
             }
@@ -199,17 +200,13 @@ namespace Game
             {
                 if (round.RoundState == RoundState.Upgrade)
                     ChangeMatchState(MatchState.SelectUpgrade);
-                _view.ShowHand(_matchRepository.Get().Hand);// show hand deberia hacer los 2 siguientes metodos:
-                // GetOrInstantiateHandCards(_presenter.GetHand());
-                // PutCardsInHand();
-                _view.ToggleView(HandType.Upgrade); //toggle view a ver upgrades.
+                _view.ShowHand(_matchRepository.Get().Hand);
+                _view.ToggleView(HandType.Upgrade);
                 return;
             }
             if (matchState == MatchState.StartUnit)
             {
                 _view.ShowHand(_matchRepository.Get().Hand);
-                //GetOrInstantiateHandCards(_presenter.GetHand());
-                //PutCardsInHand();
                 if (round.RoundState == RoundState.Unit)
                     ChangeMatchState(MatchState.SelectUnit);
                 _view.ToggleView(HandType.Unit);
@@ -221,6 +218,8 @@ namespace Game
                 {
                     //reroll finished and changed to upgrade?
                     _view.HideReroll();
+                    ChangeMatchState(MatchState.StartUpgrade);
+
                 };
 
                 if (round.RivalReady)
@@ -235,13 +234,12 @@ namespace Game
                 if (matchState.IsUpgradePhase())
                 {
                     ChangeMatchState(MatchState.UpgradeReveal);
-                    throw new NotImplementedException();
                     //en callback de coroutina de la vista
-                    // ShowUpgradeCardsPlayedRound(round, () =>
-                    // {
-                    //     ChangeMatchState(MatchState.StartUnit);
-                    //     // isWorking = false;
-                    // // });
+                    _view.ShowUpgradeCardsPlayedRound(round, () =>
+                    {
+                        ChangeMatchState(MatchState.StartUnit);
+                        // isWorking = false;
+                    });
                     return;
                 }
                 if (round.RivalReady)
@@ -256,13 +254,10 @@ namespace Game
                 if (matchState.IsUnitPhase())
                 {
                     ChangeMatchState(MatchState.RoundResultReveal);
-                    throw new NotImplementedException();
-                    //en callback de coroutina de la vista
-                    // ShowUnitCardsPlayedRound(round, () =>
-                    // {
-                    //     ChangeMatchState(MatchState.EndRound);
-                    //     isWorking = false;
-                    // });
+                    _view.ShowUnitCardsPlayedRound(round,() =>
+                    {
+                        ChangeMatchState(MatchState.EndRound);
+                    } );
                     return;
                 }
                 _view.EndRound(round);
@@ -271,20 +266,21 @@ namespace Game
         private void ResetGameState(GameMatch gameMatch)
         {
             _view.Clear();
-            StartGame(gameMatch);
-            GetOrInstantiateHandCards(gameMatch.Hand);
+            _view.StartGame(gameMatch);
+            _view.ShowHand(_matchRepository.Get().Hand);
             RecoverMatchState(gameMatch);
-            if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
-                _handView.PutCards(_playableCards);
-            Debug.Log("Reset");
-            _focusOutGameObject.SetActive(false);
+            // if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
+            //     _handView.PutCards(_playableCards);
             
+            if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
+                _view.ShowReroll();
+            Debug.Log("Reset");
         }
         
         private void RecoverMatchState(GameMatch gameMatch)
         {
             if (gameMatch.Board == null)
-                _navigator.OpenHomeView();
+                throw new ApplicationException("Match already finished");
             var round = gameMatch.Board.Rounds.Last();
             switch (round.RoundState)
             {
@@ -295,13 +291,13 @@ namespace Game
                         matchState = MatchState.WaitReroll;
                     break;
                 case RoundState.Upgrade:
-                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName).UpgradeCardData != null)
+                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName)?.UpgradeCardData != null)
                         matchState = MatchState.WaitUpgrade;
                     else
                         matchState = MatchState.StartUpgrade;
                     break;
                 case RoundState.Unit:
-                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName).UnitCardData != null)
+                    if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName)?.UnitCardData != null)
                         matchState = MatchState.WaitUnit;
                     else
                         matchState = MatchState.StartUnit;
@@ -310,7 +306,7 @@ namespace Game
                     matchState = MatchState.StartRound;
                     break;
                 case RoundState.GameFinished:
-                    EndGame();
+                    _view.EndGame();
                     break;
                 default:
                     break;
@@ -335,22 +331,19 @@ namespace Game
                     break;
                 case MatchState.Reroll:
                 case MatchState.WaitReroll:
-                    GetOrInstantiateHandCards(_presenter.GetHand());
-                    PutCardsInHand();
-                    ShowReroll();
+                    _view.ShowHand(_matchRepository.Get().Hand);
+                    _view.ShowReroll();
                     break;
                 case MatchState.SelectUpgrade:
                 case MatchState.WaitUpgrade:
-                    GetOrInstantiateHandCards(_presenter.GetHand());
-                    PutCardsInHand();
-                    _upgradeCardPlayed = null;
+                    _view.ShowHand(_matchRepository.Get().Hand);
+                    _view.ClearRound();
                     ChangeMatchState(MatchState.SelectUpgrade);
                     break;
                 case MatchState.SelectUnit:
                 case MatchState.WaitUnit:
-                    GetOrInstantiateHandCards(_presenter.GetHand());
-                    PutCardsInHand();
-                    _unitCardPlayed = null;
+                    _view.ShowHand(_matchRepository.Get().Hand);
+                    _view.ClearRound();
                     ChangeMatchState(MatchState.SelectUnit);
                     break;
                 default:

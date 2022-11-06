@@ -123,7 +123,7 @@ namespace Game
             ShowMatchState(MatchState.StartRound);
         }
 
-        private void StartGame(GameMatch gameMatch)
+        public void StartGame(GameMatch gameMatch)
         {
             _presenter.SetMatch(gameMatch);
             ShowMatchState(MatchState.InitializeGame);
@@ -265,7 +265,7 @@ namespace Game
             }));
         }
 
-        private void ShowUnitCardsPlayedRound(Round round, Action callbackComplete)
+        public void ShowUnitCardsPlayedRound(Round round, Action callbackComplete)
         {
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
 
@@ -294,7 +294,12 @@ namespace Game
                 callbackComplete?.Invoke();
             }));
         }
-        
+
+        void IGameView.ShowUpgradeCardsPlayedRound(Round round, Action action)
+        {
+            ShowUpgradeCardsPlayedRound(round, action);
+        }
+
         public void ShowRoundUpgrade(Round round)
         {
             isWorking = true;
@@ -329,10 +334,16 @@ namespace Game
         }
 
 
-        private void EndGame()
+        public void EndGame()
         {
             var result = _gameInfoView.GetWinnerPlayer();
             _navigator.OpenResultView(result);
+        }
+
+        public void ClearRound()
+        {
+            _upgradeCardPlayed = null;
+            _unitCardPlayed = null;
         }
 
         public void Clear()
@@ -356,6 +367,7 @@ namespace Game
             _rerollView.gameObject.SetActive(false);
             isWorking = false;
             _timerView.StopTimer();
+            _focusOutGameObject.SetActive(false);
         }
 
         private void ClearGameObjectData()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Data;
+using Features.Match.Domain;
 using Game;
 using Infrastructure.Data;
 using UniRx;
@@ -32,5 +33,10 @@ namespace Features.Game.Scripts.Domain
         void ShowRivalWaitUnit();
         void EndRound(Round round);
         void Clear();
+        void StartGame(GameMatch gameMatch);
+        void ShowUnitCardsPlayedRound(Round round, Action callbackComplete);
+        void ShowUpgradeCardsPlayedRound(Round round, Action action);
+        void EndGame();
+        void ClearRound();
     }
 }
