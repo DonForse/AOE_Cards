@@ -220,7 +220,7 @@ namespace Game
             }
             if (round.RoundState == RoundState.Upgrade)
             {
-                if (matchState == MatchState.Reroll)
+                if (matchState == MatchState.Reroll || matchState == MatchState.WaitReroll)
                 {
                     //reroll finished and changed to upgrade?
                     _view.HideReroll();
