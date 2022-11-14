@@ -47,6 +47,7 @@
         RoundResultReveal,
         EndRound,
         EndGame,
+        WaitRoundUpgradeReveal
     }
 
     public static class MatchStateExtensions {

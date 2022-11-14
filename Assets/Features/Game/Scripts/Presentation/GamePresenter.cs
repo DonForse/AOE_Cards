@@ -63,6 +63,12 @@ namespace Game
                     .Subscribe(ResetGameState)
                     .AddTo(_disposables);
             }).AddTo(_disposables);
+
+            _view.ShowRoundUpgradeCompleted().Subscribe(_ =>
+            {
+                var round = _matchRepository.Get().Board.Rounds.Last();
+                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
+            }).AddTo(_disposables);
         }
 
         public void SetMatch(GameMatch gameMatch)
@@ -70,6 +76,7 @@ namespace Game
             _matchRepository.Set(gameMatch);
             PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
             PlayerPrefs.Save();
+            ChangeMatchState(MatchState.StartRound);
         }
 
         public void StartNewRound()
@@ -107,6 +114,7 @@ namespace Game
             _playService.ReRollCards(unitCards, upgradeCards)
                  .DoOnError(err => HandleError((PlayServiceException)err))
                  .Subscribe(OnRerollComplete);
+            ChangeMatchState(MatchState.WaitReroll);
         }
 
         private void OnGetRoundComplete(Round round)
@@ -185,9 +193,7 @@ namespace Game
             if (matchState == MatchState.StartRoundUpgradeReveal)
             {
                 _view.ShowRoundUpgrade(round);
-                //en callback de coroutina de la vista
-                // throw new NotImplementedException();
-                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
+                ChangeMatchState(MatchState.WaitRoundUpgradeReveal);
                 return;
             }
             if (matchState == MatchState.StartReroll)

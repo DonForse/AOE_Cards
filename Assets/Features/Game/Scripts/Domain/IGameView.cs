@@ -14,6 +14,7 @@ namespace Features.Game.Scripts.Domain
         public IObservable<Unit> ApplicationRestoreFocus();
         IObservable<string> UnitCardPlayed();
         IObservable<string> UpgradeCardPlayed();
+        IObservable<Unit> ShowRoundUpgradeCompleted();
         
         void OnGetRoundInfo(Round round);
         void OnRerollComplete(Hand hand);

@@ -40,10 +40,11 @@ namespace Game
         private readonly ISubject<string> _unitCardPlayedSubject = new Subject<string>();
         private readonly ISubject<string> _upgradeCardPlayedSubject = new Subject<string>();
         private readonly ISubject<Unit> _applicationRestoreFocusSubject = new Subject<Unit>();
+        private readonly ISubject<Unit> _showRoundUpgradeCompletedSubject = new Subject<Unit>();
         public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
         public IObservable<string> UpgradeCardPlayed() => _upgradeCardPlayedSubject;
         public IObservable<Unit> ApplicationRestoreFocus() => _applicationRestoreFocusSubject;
-
+        public IObservable<Unit> ShowRoundUpgradeCompleted() => _showRoundUpgradeCompletedSubject;
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
@@ -303,11 +304,14 @@ namespace Game
         public void ShowRoundUpgrade(Round round)
         {
             isWorking = true;
+            Debug.Log("ShowRoundUpgrade");
             ClearGameObjectData();
             var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
             StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
             {
+                Debug.Log("ShowRoundUpgrade-Completed");
                 ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
+                _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
                 isWorking = false;
             }));
         }
@@ -378,7 +382,7 @@ namespace Game
 
         private void PlayUnitCard(Draggable draggable)
         {
-            Debug.Log("Play Unit");
+            Debug.Log("PlayUnitCard");
 
             if (_unitCardPlayed != null)
                 return;
@@ -390,7 +394,7 @@ namespace Game
 
         private void PlayUpgradeCard(Draggable draggable)
         {
-            Debug.Log("Play Upgrade Card");
+            Debug.Log("PlayUpgradeCard");
 //TODO: This logic should go when play card is confirmed
             if (_upgradeCardPlayed != null)
                 return;
@@ -404,11 +408,14 @@ namespace Game
 
         public void OnRerollComplete(Hand hand)
         {
+            Debug.Log("OnRerollComplete");
+
             StartCoroutine(RerollComplete(hand));
         }
 
         public void ShowReroll()
         {
+            Debug.Log("ShowReroll");
             isWorking = true;
 
             var cards = _playableCards.Where(c => c.CardName.ToLower() != "villager");
