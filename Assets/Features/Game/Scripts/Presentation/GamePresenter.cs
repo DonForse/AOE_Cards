@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.Game.Scripts.Domain;
-using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
+using Game;
 using Infrastructure.Data;
 using Infrastructure.DTOs;
 using Infrastructure.Services;
@@ -13,7 +13,7 @@ using Token;
 using UniRx;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Presentation
 {
     public class GamePresenter
     {
@@ -178,7 +178,7 @@ namespace Game
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,
         //that way the match could be recreated, and its easier to know where is the user
         //also if random seed can be applied (so the orders of shuffles remains) it could be used to save lots of issues
-        public void OnGetRoundInfo(Round round)
+        private void OnGetRoundInfo(Round round)
         {
             _view.UpdateTimer(round);
             
@@ -189,7 +189,6 @@ namespace Game
                 ChangeMatchState(MatchState.StartRoundUpgradeReveal);
                 _view.StartRound(round);
             }
-            
             if (matchState == MatchState.StartRoundUpgradeReveal)
             {
                 _view.ShowRoundUpgrade(round);
@@ -222,19 +221,15 @@ namespace Game
             {
                 if (matchState == MatchState.Reroll || matchState == MatchState.WaitReroll)
                 {
-                    //reroll finished and changed to upgrade?
                     _view.HideReroll();
                     ChangeMatchState(MatchState.StartUpgrade);
-
-                };
-
+                }
                 if (round.RivalReady)
                 {
                     _view.ShowRivalWaitUpgrade();
                 }
                 return;
             }
-
             if (round.RoundState == RoundState.Unit)
             {
                 if (matchState.IsUpgradePhase())
@@ -254,7 +249,6 @@ namespace Game
                 }
                 return;
             }
-
             if (round.RoundState == RoundState.Finished || round.RoundState == RoundState.GameFinished)
             {
                 if (matchState.IsUnitPhase())

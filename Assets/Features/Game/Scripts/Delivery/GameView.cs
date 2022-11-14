@@ -5,6 +5,7 @@ using System.Linq;
 using Common.Utilities;
 using Data;
 using Features.Game.Scripts.Domain;
+using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
 using Home;
 using Infrastructure.Data;
@@ -87,14 +88,11 @@ namespace Game
             InitializeGame(gameMatch);
         }
 
-        //bool _wait = false;
-
         private void OnApplicationFocus(bool focus)
         {
             if (focus)
             {
                 Debug.Log("Focus");
-
                 _applicationRestoreFocusSubject.OnNext(Unit.Default);
             }
             else {
@@ -104,29 +102,16 @@ namespace Game
             }
         }
         
-       
-
         public void UpdateTimer(Round round) => _timerView.Update(round);
-
-        private void SomeError(long arg1, string arg2)
-        {
-            
-            Debug.LogError(arg2);
-            //throw new NotImplementedException();
-        }
-
-        
-
         private void InitializeGame(GameMatch gameMatch)
         {
             StartGame(gameMatch);
-
+            _presenter.SetMatch(gameMatch);
             ShowMatchState(MatchState.StartRound);
         }
 
         public void StartGame(GameMatch gameMatch)
         {
-            _presenter.SetMatch(gameMatch);
             ShowMatchState(MatchState.InitializeGame);
             _gameInfoView.SetGame(gameMatch);
             _upgradesView.WithShowDownView(_showdownView).SetGame(gameMatch);
@@ -136,16 +121,9 @@ namespace Game
             GetOrInstantiateHandCards(_presenter.GetHand());
         }
 
-        private void PutCardsInHand()
-        {
-            _handView.PutCards(_playableCards);
-        }
+        private void PutCardsInHand() => _handView.PutCards(_playableCards);
 
         public IObservable<(List<string> upgrades, List<string> units)> ReRoll() => _rerollSubject;
-        public void OnGetRoundInfo(Round round)
-        {
-            throw new NotImplementedException();
-        }
 
         public void StartRound(Round round)
         {
@@ -155,8 +133,6 @@ namespace Game
             isWorking = false;
         }
         
-
-      
         private IList<CardView> GetOrInstantiateHandCards(Hand hand)
         {
             var inPlayCards = _playableCards.ToList();
@@ -296,10 +272,7 @@ namespace Game
             }));
         }
 
-        void IGameView.ShowUpgradeCardsPlayedRound(Round round, Action action)
-        {
-            ShowUpgradeCardsPlayedRound(round, action);
-        }
+        void IGameView.ShowUpgradeCardsPlayedRound(Round round, Action action) => ShowUpgradeCardsPlayedRound(round, action);
 
         public void ShowRoundUpgrade(Round round)
         {
@@ -403,7 +376,6 @@ namespace Game
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             _upgradeCardPlayed = upgradeCard;
             _upgradeCardPlayedSubject.OnNext(upgradeCard.CardName);
-                
         }
 
         public void OnRerollComplete(Hand hand)
@@ -444,22 +416,9 @@ namespace Game
             else 
                 _handView.ShowHandUnits();
         }
-
-        void IGameView.HideReroll()
-        {
-            HideReroll();
-        }
-
-        public void ShowRivalWaitUpgrade()
-        {
-            _showdownView.ShowRivalWaitUpgrade();
-        }
-
-        public void ShowRivalWaitUnit()
-        {
-            _showdownView.ShowRivalWaitUnit();
-        }
-
+        void IGameView.HideReroll() => HideReroll();
+        public void ShowRivalWaitUpgrade() => _showdownView.ShowRivalWaitUpgrade();
+        public void ShowRivalWaitUnit() => _showdownView.ShowRivalWaitUnit();
         private void HideReroll()
         {
             _rerollView.Clear();
@@ -489,12 +448,10 @@ namespace Game
             HideReroll();
             isWorking = false; 
         }
-
         private void ShowMatchState(MatchState state)
         {
             _timerView.ShowState(state);
             _actionView.ShowState(state);
         }
-        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Data;
+using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
 using Game;
 using Infrastructure.Data;
@@ -15,8 +16,6 @@ namespace Features.Game.Scripts.Domain
         IObservable<string> UnitCardPlayed();
         IObservable<string> UpgradeCardPlayed();
         IObservable<Unit> ShowRoundUpgradeCompleted();
-        
-        void OnGetRoundInfo(Round round);
         void OnRerollComplete(Hand hand);
         void OnUnitCardPlayed(string cardName);
         void OnUpgradeCardPlayed(string cardName);
