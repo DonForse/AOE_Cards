@@ -4,6 +4,7 @@ using System.Linq;
 using Data;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
+using Features.Match.Domain;
 using Game;
 using Infrastructure;
 using Infrastructure.Data;
@@ -516,6 +517,55 @@ namespace Features.Game.Scripts.Tests.Editor
 
         }
 
+        [Test]
+        public void ResetGameStateWhenApplicationRestoreFocus()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade, HasReroll = false};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(AMatch(withRounds: new List<Round> {expectedRound}));
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            
+            Received.InOrder(() =>
+            {
+                _view.Received(1).Clear();
+                _view.Received(1).StartGame(game);
+                _view.Received(1).ShowHand(_matchRepository.Get().Hand);
+            });
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+
+        
+        [Test]
+        [Ignore("Extract to class")]
+        public void StartRerollWhenRoundInReroll()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade, HasReroll = false};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(AMatch(withRounds: new List<Round> {expectedRound}));
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+           
+           _matchStateRepository.Received(1).Set(MatchState.StartReroll);
+           
+           void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+           
+            // var matchState = _matchStateRepository.Get();
+            //
+            // if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
+            //     _view.ShowReroll();
+            // Debug.Log("Reset");
+            //
+            
+        }
+
         private Match.Domain.GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
@@ -531,6 +581,15 @@ namespace Features.Game.Scripts.Tests.Editor
                 Id = withMatchId,
                 Users = withUsers ?? new[] {"user-1", "user-2"}
             };
+        }
+
+        private void GivenMatchServiceReturns(GameMatch match) => _matchService.GetMatch().Returns(Observable.Return(match));
+
+        private Subject<Unit> GivenApplicationRestoreFocusSubject()
+        {
+            var applicationRestoreFocusSubject = new Subject<Unit>();
+            _view.ApplicationRestoreFocus().Returns(applicationRestoreFocusSubject);
+            return applicationRestoreFocusSubject;
         }
 
         private void GivenGetRoundEvery3SecondsReturns(Round expectedRound) => _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));

@@ -62,7 +62,6 @@ namespace Features.Game.Scripts.Presentation
             _view.ApplicationRestoreFocus().Subscribe(_ =>
             {
                 _matchService.GetMatch().ObserveOn(Scheduler.MainThread)
-                    // .DoOnError(error=>SomeError(((MatchServiceException)error).Code, ((MatchServiceException)error).Message))
                     .Subscribe(ResetGameState)
                     .AddTo(_disposables);
             }).AddTo(_disposables);
@@ -270,10 +269,8 @@ namespace Features.Game.Scripts.Presentation
             _view.StartGame(gameMatch);
             _view.ShowHand(_matchRepository.Get().Hand);
             RecoverMatchState(gameMatch);
-            // if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
-            //     _handView.PutCards(_playableCards);
-            var matchState = _matchStateRepository.Get();
 
+            var matchState = _matchStateRepository.Get();
             if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
                 _view.ShowReroll();
             Debug.Log("Reset");
@@ -281,7 +278,6 @@ namespace Features.Game.Scripts.Presentation
         
         private void RecoverMatchState(GameMatch gameMatch)
         {
-            var matchState = _matchStateRepository.Get();
             if (gameMatch.Board == null)
                 throw new ApplicationException("Match already finished");
             var round = gameMatch.Board.Rounds.Last();
@@ -289,24 +285,24 @@ namespace Features.Game.Scripts.Presentation
             {
                 case RoundState.Reroll:
                     if (round.HasReroll)
-                        matchState = MatchState.StartReroll;
+                        ChangeMatchState(MatchState.StartReroll);
                     else
-                        matchState = MatchState.WaitReroll;
+                        ChangeMatchState( MatchState.WaitReroll);
                     break;
                 case RoundState.Upgrade:
                     if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName)?.UpgradeCardData != null)
-                        matchState = MatchState.WaitUpgrade;
+                        ChangeMatchState( MatchState.WaitUpgrade);
                     else
-                        matchState = MatchState.StartUpgrade;
+                        ChangeMatchState( MatchState.StartUpgrade);
                     break;
                 case RoundState.Unit:
                     if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName)?.UnitCardData != null)
-                        matchState = MatchState.WaitUnit;
+                        ChangeMatchState( MatchState.WaitUnit);
                     else
-                        matchState = MatchState.StartUnit;
+                        ChangeMatchState( MatchState.StartUnit);
                     break;
                 case RoundState.Finished:
-                    matchState = MatchState.StartRound;
+                    ChangeMatchState( MatchState.StartRound);
                     break;
                 case RoundState.GameFinished:
                     _view.EndGame();
