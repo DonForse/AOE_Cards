@@ -19,7 +19,6 @@ namespace Features.Game.Scripts.Tests.Editor
 {
     public class GamePresenterShould
     {
-        private Hand _cardsInHand;
         private GamePresenter _presenter;
         private Match.Domain.GameMatch _gameMatchStatus;
         private ICardProvider _cardProvider;
@@ -489,22 +488,7 @@ namespace Features.Game.Scripts.Tests.Editor
 
             void WhenUnitCardIsPlayed() => unitCardPlayedSubject.OnNext(cardName);
         }
-
-        [Test]
-        public void GiveUnitCardsToPlayerOnGameSetup()
-        {
-            Assert.Fail();
-            //   WhenGetPlayerHand();
-            ThenUnitCardsInPlayerHandsAreEqualTo(CardsInHand);
-        }
-
-        [Test]
-        public void GiveUpgradeCardsToPlayerOnGameSetup()
-        {
-            Assert.Fail();
-            ThenUpgradeCardsInPlayerHandsAreEqualTo(CardsInHand);
-        }
-
+        
         private Match.Domain.GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
@@ -585,11 +569,7 @@ namespace Features.Game.Scripts.Tests.Editor
             rerollSubject.OnNext((expectedUpgrades, expectedUnits));
         private void WhenRoundSetup() => _presenter.StartNewRound();
         private void WhenInitialize() => _presenter.Initialize();
-
-        private void ThenUnitCardsInPlayerHandsAreEqualTo(int numberOfCards) =>
-            Assert.AreEqual(numberOfCards, _cardsInHand.GetUnitCards().Count);
-        private void ThenUpgradeCardsInPlayerHandsAreEqualTo(int numberOfCards) =>
-            Assert.AreEqual(numberOfCards, _cardsInHand.GetUpgradeCards().Count);
+        
         private void ThenShowUpgradeCardsPlayedInCurrentRound(Round expectedRound) => _view.Received(1).ShowUpgradeCardsPlayedRound(expectedRound, Arg.Any<Action>());
         private void ThenUpdatedHand(Hand hand) => _matchRepository.Received(1).Set(hand);
         private void ThenPlayUpgradeCardIsCalledInService(string cardName) =>
