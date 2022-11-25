@@ -488,7 +488,34 @@ namespace Features.Game.Scripts.Tests.Editor
 
             void WhenUnitCardIsPlayed() => unitCardPlayedSubject.OnNext(cardName);
         }
-        
+
+        [Test]
+        public void WhenShowRoundUpgradeCompletedAndRoundIsInRerollThenChangeMatchStateToStartReroll()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = true};
+            GivenMatchInRepository(AMatch(withRounds: new List<Round> {expectedRound}));
+            var roundUpgradeCompletedSubject = GivenRoundUpgradeCompletedSubject();
+            GivenInitialize();
+            WhenRoundUpgradeCompletesBeingShown();
+            _matchStateRepository.Received(1).Set(MatchState.StartReroll);
+
+            void WhenRoundUpgradeCompletesBeingShown() => roundUpgradeCompletedSubject.OnNext(Unit.Default);
+        }
+
+        [Test]
+        public void WhenShowRoundUpgradeCompletedAndRoundIsNotInRerollThenChangeMatchStateToStartUpgrade()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade, HasReroll = false};
+            GivenMatchInRepository(AMatch(withRounds: new List<Round> {expectedRound}));
+            var roundUpgradeCompletedSubject = GivenRoundUpgradeCompletedSubject();
+            GivenInitialize();
+            WhenRoundUpgradeCompletesBeingShown();
+            _matchStateRepository.Received(1).Set(MatchState.StartUpgrade);
+            
+            void WhenRoundUpgradeCompletesBeingShown() => roundUpgradeCompletedSubject.OnNext(Unit.Default);
+
+        }
+
         private Match.Domain.GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
@@ -505,7 +532,15 @@ namespace Features.Game.Scripts.Tests.Editor
                 Users = withUsers ?? new[] {"user-1", "user-2"}
             };
         }
+
         private void GivenGetRoundEvery3SecondsReturns(Round expectedRound) => _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+
+        private Subject<Unit> GivenRoundUpgradeCompletedSubject()
+        {
+            var showRoundUpgradeCompletedSubject = new Subject<Unit>();
+            _view.ShowRoundUpgradeCompleted().Returns(showRoundUpgradeCompletedSubject);
+            return showRoundUpgradeCompletedSubject;
+        }
 
         private void GivenCardProviderReturnsAListOfUnitsAndUpgrades()
         {

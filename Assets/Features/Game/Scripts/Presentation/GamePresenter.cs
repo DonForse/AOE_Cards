@@ -22,12 +22,12 @@ namespace Features.Game.Scripts.Presentation
         private readonly ITokenService _tokenService;
         private readonly IMatchService _matchService;
 
-        private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private readonly ICurrentMatchRepository _matchRepository;
         private readonly IMatchStateRepository _matchStateRepository;
+        private CompositeDisposable _disposables = new CompositeDisposable();
+        
         public void Unload() => _disposables.Clear();
-
 
         public GamePresenter(IGameView view, 
             IPlayService playService,
@@ -50,7 +50,7 @@ namespace Features.Game.Scripts.Presentation
         public void Initialize()
         {
             _getRoundEvery3Seconds.Execute()
-                .Subscribe(OnGetRoundComplete)
+                .Subscribe(OnGetRoundInfo)
                 .AddTo(_disposables);
             
             _view.ReRoll()
@@ -123,12 +123,7 @@ namespace Features.Game.Scripts.Presentation
                  .Subscribe(OnRerollComplete);
             ChangeMatchState(MatchState.WaitReroll);
         }
-
-        private void OnGetRoundComplete(Round round)
-        {
-            OnGetRoundInfo(round);
-        }
-
+        
         private void HandleError(PlayServiceException error)
         {
             if (error.Code == 401)
