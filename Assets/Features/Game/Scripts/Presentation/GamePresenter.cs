@@ -25,6 +25,7 @@ namespace Features.Game.Scripts.Presentation
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private readonly ICurrentMatchRepository _matchRepository;
+        private readonly IMatchStateRepository _matchStateRepository;
         public void Unload() => _disposables.Clear();
 
 
@@ -33,7 +34,8 @@ namespace Features.Game.Scripts.Presentation
             ITokenService tokenService,
             IMatchService matchService,
             IGetRoundEvery3Seconds getRoundEvery3Seconds,
-            ICurrentMatchRepository currentMatchRepository
+            ICurrentMatchRepository currentMatchRepository,
+            IMatchStateRepository matchStateRepository
         )
         {
             _view = view;
@@ -42,6 +44,7 @@ namespace Features.Game.Scripts.Presentation
             _matchService = matchService;
             _getRoundEvery3Seconds = getRoundEvery3Seconds;
             _matchRepository = currentMatchRepository;
+            _matchStateRepository = matchStateRepository;
         }
 
         public void Initialize()
@@ -88,6 +91,8 @@ namespace Features.Game.Scripts.Presentation
 
         private void PlayUpgradeCard(string cardName)
         {
+            var matchState = _matchStateRepository.Get();
+
             if (matchState != MatchState.SelectUpgrade)
                 return;
             var hand = _matchRepository.Get().Hand;
@@ -99,6 +104,8 @@ namespace Features.Game.Scripts.Presentation
 
         private void PlayUnitCard(string cardName)
         {
+            var matchState = _matchStateRepository.Get();
+
             if (matchState != MatchState.SelectUnit)
                 return;
             
@@ -170,9 +177,7 @@ namespace Features.Game.Scripts.Presentation
             _matchRepository.Set(hand);
             _view.OnUpgradeCardPlayed(cardName);
         }
-        
-        
-        MatchState matchState = MatchState.InitializeGame;
+
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,
@@ -180,6 +185,7 @@ namespace Features.Game.Scripts.Presentation
         //also if random seed can be applied (so the orders of shuffles remains) it could be used to save lots of issues
         private void OnGetRoundInfo(Round round)
         {
+            var matchState = _matchStateRepository.Get();
             _view.UpdateTimer(round);
             
             // if (isWorking) //todo: ignore? i guess is working means its doing some animation or anything, because it will ask again its done so it ignores requests...
@@ -203,9 +209,9 @@ namespace Features.Game.Scripts.Presentation
             }
             if (matchState == MatchState.StartUpgrade)
             {
+                _view.ShowHand(_matchRepository.Get().Hand);
                 if (round.RoundState == RoundState.Upgrade)
                     ChangeMatchState(MatchState.SelectUpgrade);
-                _view.ShowHand(_matchRepository.Get().Hand);
                 _view.ToggleView(HandType.Upgrade);
                 return;
             }
@@ -271,7 +277,8 @@ namespace Features.Game.Scripts.Presentation
             RecoverMatchState(gameMatch);
             // if (matchState != MatchState.StartReroll && matchState != MatchState.Reroll)
             //     _handView.PutCards(_playableCards);
-            
+            var matchState = _matchStateRepository.Get();
+
             if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
                 _view.ShowReroll();
             Debug.Log("Reset");
@@ -279,6 +286,7 @@ namespace Features.Game.Scripts.Presentation
         
         private void RecoverMatchState(GameMatch gameMatch)
         {
+            var matchState = _matchStateRepository.Get();
             if (gameMatch.Board == null)
                 throw new ApplicationException("Match already finished");
             var round = gameMatch.Board.Rounds.Last();
@@ -314,6 +322,8 @@ namespace Features.Game.Scripts.Presentation
         }
         private void RevertLastAction()
         {
+            var matchState = _matchStateRepository.Get();
+
             Debug.Log(string.Format("match state: {0}", matchState));
             switch (matchState)
             {
@@ -353,7 +363,7 @@ namespace Features.Game.Scripts.Presentation
 
         private void ChangeMatchState(MatchState state)
         {
-            matchState = state;
+            _matchStateRepository.Set(state);
         }
 
     }

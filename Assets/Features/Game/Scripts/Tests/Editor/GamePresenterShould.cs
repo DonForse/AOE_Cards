@@ -28,6 +28,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private ICurrentMatchRepository _matchRepository;
         private IMatchService _matchService;
+        private IMatchStateRepository _matchStateRepository;
 
         private const int CardsInHand = 5;
 
@@ -41,8 +42,9 @@ namespace Features.Game.Scripts.Tests.Editor
             _view = Substitute.For<IGameView>();
             _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
+            _matchStateRepository = Substitute.For<IMatchStateRepository>();
             _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService, _getRoundEvery3Seconds,
-                _matchRepository);
+                _matchRepository, _matchStateRepository);
         }
 
         [Test]
@@ -71,13 +73,13 @@ namespace Features.Game.Scripts.Tests.Editor
         {
             var expectedRound = new Round();
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchStateRepository(MatchState.StartRound);
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                // ChangeMatchState();
-                Assert.Fail();
+                _matchStateRepository.Received(1).Set(MatchState.StartRoundUpgradeReveal);
                 _view.Received(1).StartRound(expectedRound);
             });
         }
@@ -88,41 +90,74 @@ namespace Features.Game.Scripts.Tests.Editor
             var expectedRound = new Round();
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             GivenMatchSetupWith(AMatch());
+            GivenMatchStateRepository(MatchState.StartUpgrade);
             WhenInitialize();
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                // ChangeMatchState();
-                Assert.Fail();
                 _view.Received(1).ShowHand(Arg.Any<Hand>());
                 _view.Received(1).ToggleView(HandType.Upgrade);
             });
         }
+        
+        [Test]
+        public void ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade};
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch(withRounds: new List<Round>() {expectedRound}));
+            GivenMatchStateRepository(MatchState.StartUpgrade);
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                _view.Received(1).ShowHand(Arg.Any<Hand>());
+                _matchStateRepository.Received(1).Set(MatchState.SelectUpgrade);
+                _view.Received(1).ToggleView(HandType.Upgrade);
+            });
+        }
+        
         [Test]
         public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit()
         {
             var expectedRound = new Round();
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             GivenMatchSetupWith(AMatch());
+            GivenMatchStateRepository(MatchState.StartUnit);
             WhenInitialize();
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                // ChangeMatchState();
-                Assert.Fail();
                 _view.Received(1).ShowHand(Arg.Any<Hand>());
                 _view.Received(1).ToggleView(HandType.Unit);
             });
         }
         
         [Test]
+        public void ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Unit};
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenMatchSetupWith(AMatch(withRounds: new List<Round>() {expectedRound}));
+            GivenMatchStateRepository(MatchState.StartUnit);
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).UpdateTimer(expectedRound);
+                _view.Received(1).ShowHand(Arg.Any<Hand>());
+                _matchStateRepository.Received(1).Set(MatchState.SelectUnit);
+                _view.Received(1).ToggleView(HandType.Unit);
+            });
+        }
+
+        [Test]
         public void HideRerollWhenRoundStatusIsUpgradeButMatchStateIsStillInReroll()
         {
             // ChangeMatchState(MatchState.StartUpgrade);
             _view.Received(1).HideReroll();
         }
-        
-                
+
+
         [Test]
         public void ShowRivalReadyWhenRoundStatusIsUpgradeAndRivalIsReady()
         {
@@ -155,7 +190,7 @@ namespace Features.Game.Scripts.Tests.Editor
 
         }
 
-                
+
         [Test]
         public void ShowRoundUpgradeWhenGetRoundInfoAndMatchStateIsStartRoundUpgradeReveal()
         {
@@ -171,7 +206,7 @@ namespace Features.Game.Scripts.Tests.Editor
                 _view.Received(1).StartRound(expectedRound);
             });
         }
-        
+
         [Test]
         public void ShowRerollWhenGetRoundInfoAndMatchStateIsStartReroll()
         {
@@ -364,6 +399,8 @@ namespace Features.Game.Scripts.Tests.Editor
                 Users = withUsers ?? new[] {"user-1", "user-2"}
             };
         }
+
+        private void GivenMatchStateRepository(MatchState matchState) => _matchStateRepository.Get().Returns(matchState);
 
         private void GivenCardProviderReturnsAListOfUnitsAndUpgrades()
         {

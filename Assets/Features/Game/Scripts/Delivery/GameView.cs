@@ -61,7 +61,8 @@ namespace Game
             var repo = new InMemoryCurrentMatchRepository();
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(),
                 servicesProvider.GetMatchService(),
-                new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo);
+                new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo,
+                new InMemoryMatchStateRepository());
             _presenter.Initialize();
         }
 
@@ -107,6 +108,7 @@ namespace Game
         {
             StartGame(gameMatch);
             _presenter.SetMatch(gameMatch);
+            GetOrInstantiateHandCards(_presenter.GetHand());
             ShowMatchState(MatchState.StartRound);
         }
 
@@ -118,7 +120,6 @@ namespace Game
             _showdownView.SetRound(gameMatch.Board.Rounds.Last());
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
-            GetOrInstantiateHandCards(_presenter.GetHand());
         }
 
         private void PutCardsInHand() => _handView.PutCards(_playableCards);
