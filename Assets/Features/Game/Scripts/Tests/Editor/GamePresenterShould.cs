@@ -59,20 +59,17 @@ namespace Features.Game.Scripts.Tests.Editor
         public void CallOnRoundOnViewWhenGetRound()
         {
             var expectedRound = new Round();
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
-            Received.InOrder(() =>
-            {
-                _view.Received(1).UpdateTimer(expectedRound);
-            });
+            Received.InOrder(() => { _view.Received(1).UpdateTimer(expectedRound); });
         }
-        
+
         [Test]
         public void CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound()
         {
             var expectedRound = new Round();
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchStateRepository(MatchState.StartRound);
             GivenMatchSetupWith(AMatch());
             WhenInitialize();
@@ -83,12 +80,12 @@ namespace Features.Game.Scripts.Tests.Editor
                 _view.Received(1).StartRound(expectedRound);
             });
         }
-        
+
         [Test]
         public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade()
         {
             var expectedRound = new Round();
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchSetupWith(AMatch());
             GivenMatchStateRepository(MatchState.StartUpgrade);
             WhenInitialize();
@@ -99,12 +96,12 @@ namespace Features.Game.Scripts.Tests.Editor
                 _view.Received(1).ToggleView(HandType.Upgrade);
             });
         }
-        
+
         [Test]
         public void ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade()
         {
             var expectedRound = new Round() {RoundState = RoundState.Upgrade};
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchSetupWith(AMatch(withRounds: new List<Round>() {expectedRound}));
             GivenMatchStateRepository(MatchState.StartUpgrade);
             WhenInitialize();
@@ -116,12 +113,12 @@ namespace Features.Game.Scripts.Tests.Editor
                 _view.Received(1).ToggleView(HandType.Upgrade);
             });
         }
-        
+
         [Test]
         public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit()
         {
             var expectedRound = new Round();
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchSetupWith(AMatch());
             GivenMatchStateRepository(MatchState.StartUnit);
             WhenInitialize();
@@ -132,12 +129,12 @@ namespace Features.Game.Scripts.Tests.Editor
                 _view.Received(1).ToggleView(HandType.Unit);
             });
         }
-        
+
         [Test]
         public void ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit()
         {
             var expectedRound = new Round() {RoundState = RoundState.Unit};
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchSetupWith(AMatch(withRounds: new List<Round>() {expectedRound}));
             GivenMatchStateRepository(MatchState.StartUnit);
             WhenInitialize();
@@ -150,11 +147,42 @@ namespace Features.Game.Scripts.Tests.Editor
             });
         }
 
-        [Test]
-        public void HideRerollWhenRoundStatusIsUpgradeButMatchStateIsStillInReroll()
+        [TestCase(MatchState.Reroll)]
+        [TestCase(MatchState.WaitReroll)]
+        public void HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(MatchState matchState)
         {
-            // ChangeMatchState(MatchState.StartUpgrade);
-            _view.Received(1).HideReroll();
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade};
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
+            GivenMatchInRepository(AMatch(withRounds: new List<Round>() {expectedRound}));
+            GivenMatchStateRepository(matchState);
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).HideReroll();
+                _matchStateRepository.Received(1).Set(MatchState.StartUpgrade);
+            });
+        }
+
+        [TestCase(MatchState.Reroll)]
+        [TestCase(MatchState.WaitReroll)]
+        public void ShowShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(MatchState matchState)
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade, RivalReady = true};
+            GivenGetRoundEvery3SecondsReturns(expectedRound);
+            GivenMatchInRepository(AMatch(withRounds: new List<Round>() {expectedRound}));
+            GivenMatchStateRepository(matchState);
+            WhenInitialize();
+            Received.InOrder(() =>
+            {
+                _view.Received(1).HideReroll();
+                _matchStateRepository.Received(1).Set(MatchState.StartUpgrade);
+                _view.Received(1).ShowRivalWaitUpgrade();
+            });
+        }
+
+        private void GivenGetRoundEvery3SecondsReturns(Round expectedRound)
+        {
+            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
         }
 
 
@@ -187,7 +215,6 @@ namespace Features.Game.Scripts.Tests.Editor
 
             _view.Received(1).ShowUnitCardsPlayedRound(Arg.Any<Round>(), () => { });
             //ChangeMatchState(MatchState.EndRound);
-
         }
 
 
@@ -265,8 +292,27 @@ namespace Features.Game.Scripts.Tests.Editor
             GivenMatchSetupWith(AMatch());
             GivenInitialize();
             GivenMatchInRepository(AMatch());
-            unitCardPlayedSubject.OnNext(expectedCardName);
+            GivenMatchStateRepository(MatchState.SelectUnit);
+            WhenPlayUnit();
             ThenPlayUnitCardIsCalledInService(expectedCardName);
+
+            void WhenPlayUnit() => unitCardPlayedSubject.OnNext(expectedCardName);
+        }
+
+        [Test]
+        public void NotPlayUnitCardWhenCardIsPlayedAndNotInSelectUnitState()
+        {
+            var expectedCardName = "some card";
+            ISubject<string> unitCardPlayedSubject = new Subject<string>();
+            _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
+            GivenMatchSetupWith(AMatch());
+            GivenInitialize();
+            GivenMatchInRepository(AMatch());
+            GivenMatchStateRepository(MatchState.SelectUpgrade);
+            WhenPlayUnit();
+            ThenNotPlayUnitCardIsCalledInService(expectedCardName);
+
+            void WhenPlayUnit() => unitCardPlayedSubject.OnNext(expectedCardName);
         }
 
         [Test]
@@ -280,13 +326,19 @@ namespace Features.Game.Scripts.Tests.Editor
             GivenMatchSetupWith(AMatch());
             GivenInitialize();
             GivenMatchInRepository(AMatch());
+            GivenPlayServicePlayUnitCardReturns(expectedCardName, expectedHand);
+            GivenMatchStateRepository(MatchState.SelectUnit);
+            WhenPlayUnitCard();
 
-            _playService.PlayUnitCard(expectedCardName).Returns(Observable.Return(expectedHand));
-            unitCardPlayedSubject.OnNext(expectedCardName);
+            Received.InOrder(() =>
+            {
+                ThenUpdatedHand(expectedHand);
+                ThenViewReceivedOnUnitCardPlayed(expectedCardName);
+            });
 
-            ThenUpdatedHand(expectedHand);
-            _view.Received(1).OnUnitCardPlayed(expectedCardName);
+            void WhenPlayUnitCard() => unitCardPlayedSubject.OnNext(expectedCardName);
         }
+
 
         [Test]
         public void PlayUpgradeCardWhenCardIsPlayed()
@@ -297,7 +349,7 @@ namespace Features.Game.Scripts.Tests.Editor
             GivenMatchSetupWith(AMatch());
             GivenInitialize();
             GivenMatchInRepository(AMatch());
-
+            GivenMatchStateRepository(MatchState.SelectUpgrade);
             WhenUpgradeCardIsPlayed();
             ThenPlayUpgradeCardIsCalledInService(expectedCardName);
 
@@ -315,8 +367,8 @@ namespace Features.Game.Scripts.Tests.Editor
             GivenMatchSetupWith(AMatch());
             GivenInitialize();
             GivenMatchInRepository(AMatch());
-
-            _playService.PlayUpgradeCard(expectedCardName).Returns(Observable.Return(expectedHand));
+            GivenMatchStateRepository(MatchState.SelectUpgrade);
+            GivenPlayServicePlayUpgradeCardReturns(expectedCardName, expectedHand);
             upgradeCardSubject.OnNext(expectedCardName);
 
             ThenUpdatedHand(expectedHand);
@@ -400,8 +452,6 @@ namespace Features.Game.Scripts.Tests.Editor
             };
         }
 
-        private void GivenMatchStateRepository(MatchState matchState) => _matchStateRepository.Get().Returns(matchState);
-
         private void GivenCardProviderReturnsAListOfUnitsAndUpgrades()
         {
             _cardProvider.GetUnitCards().Returns(new List<UnitCardData>
@@ -440,17 +490,15 @@ namespace Features.Game.Scripts.Tests.Editor
             });
         }
 
-        private void GivenMatchInRepository(Match.Domain.GameMatch gameMatch)
-        {
+        private void GivenMatchStateRepository(MatchState matchState) =>
+            _matchStateRepository.Get().Returns(matchState);
+
+        private void GivenMatchInRepository(Match.Domain.GameMatch gameMatch) =>
             _matchRepository.Get().Returns(gameMatch);
-        }
-
-
         private void GivenReRollCompletes(Hand hand) =>
             _playService.ReRollCards(Arg.Any<IList<string>>(), Arg.Any<IList<string>>())
                 .Returns(Observable.Return(hand));
-
-
+        private void GivenPlayServicePlayUpgradeCardReturns(string expectedCardName, Hand expectedHand) => _playService.PlayUpgradeCard(expectedCardName).Returns(Observable.Return(expectedHand));
         private void GivenInitialize() => WhenInitialize();
 
         private Subject<(List<string> upgrades, List<string> units)> GivenReRoll()
@@ -460,11 +508,10 @@ namespace Features.Game.Scripts.Tests.Editor
             return rerollSubject;
         }
 
-        private void GivenMatchSetupWith(Match.Domain.GameMatch gameMatch)
-        {
-            _presenter.SetMatch(gameMatch);
-        }
+        private void GivenMatchSetupWith(Match.Domain.GameMatch gameMatch) => _presenter.SetMatch(gameMatch);
 
+        private void GivenPlayServicePlayUnitCardReturns(string expectedCardName, Hand expectedHand) =>
+            _playService.PlayUnitCard(expectedCardName).Returns(Observable.Return(expectedHand));
 
         private static void WhenReRoll(Subject<(List<string> upgrades, List<string> units)> rerollSubject,
             List<string> expectedUpgrades, List<string> expectedUnits) =>
@@ -487,6 +534,9 @@ namespace Features.Game.Scripts.Tests.Editor
         private void ThenPlayUnitCardIsCalledInService(string cardName) =>
             _playService.Received(1).PlayUnitCard(cardName);
 
+        private void ThenNotPlayUnitCardIsCalledInService(string cardName) =>
+            _playService.DidNotReceive().PlayUnitCard(cardName);
+
         private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData card) =>
             Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(card));
 
@@ -494,5 +544,8 @@ namespace Features.Game.Scripts.Tests.Editor
             Assert.IsTrue(!hand.GetUpgradeCards().ToList().Contains(card));
 
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
+
+        private void ThenViewReceivedOnUnitCardPlayed(string expectedCardName) =>
+            _view.Received(1).OnUnitCardPlayed(expectedCardName);
     }
 }
