@@ -520,7 +520,7 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         [Test]
-        public void ResetGameStateWhenApplicationRestoreFocus()
+        public void OnRecoverFocusResetGameState()
         {
             var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = true};
             var game = AMatch(withRounds: new List<Round> {expectedRound});
@@ -543,7 +543,7 @@ namespace Features.Game.Scripts.Tests.Editor
 
         
         [Test]
-        public void WhenRecoverFocusStartRerollWhenRoundInReroll()
+        public void OnRecoverFocusStartRerollWhenRoundInReroll()
         {
             var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = true};
             var game = AMatch(withRounds: new List<Round> {expectedRound});
@@ -559,7 +559,7 @@ namespace Features.Game.Scripts.Tests.Editor
         }
         
         [Test]
-        public void WhenRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll()
+        public void OnRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll()
         {
             var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = false};
             var game = AMatch(withRounds: new List<Round> {expectedRound});
@@ -575,7 +575,7 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         [Test]
-        public void WhenRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser()
+        public void OnRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser()
         {
             var username = "user";
             _playerPrefs.GetString(PlayerPrefsHelper.UserName).Returns(username);
@@ -597,7 +597,7 @@ namespace Features.Game.Scripts.Tests.Editor
         }
         
         [Test]
-        public void WhenRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser()
+        public void OnRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser()
         {
             var username = "user";
             _playerPrefs.GetString(PlayerPrefsHelper.UserName).Returns(username);
@@ -613,8 +613,81 @@ namespace Features.Game.Scripts.Tests.Editor
             
             void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
         }
-
         
+        [Test]
+        public void OnRecoverFocusWaitUnitWhenRoundInUnitAndCardPlayedFromUser()
+        {
+            var username = "user";
+            _playerPrefs.GetString(PlayerPrefsHelper.UserName).Returns(username);
+            var expectedRound = new Round() {RoundState = RoundState.Unit, 
+                CardsPlayed = new List<PlayerCard>(){ new PlayerCard()
+            {
+                Player = username,
+                UnitCardData = new UnitCardData()
+            }, }};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenChangeMatchStateTo(MatchState.WaitUnit);
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+        
+        [Test]
+        public void OnRecoverFocusStartUnitWhenRoundInUnitAndCardNotPlayedFromUser()
+        {
+            var username = "user";
+            _playerPrefs.GetString(PlayerPrefsHelper.UserName).Returns(username);
+            var expectedRound = new Round() {RoundState = RoundState.Unit, CardsPlayed = new List<PlayerCard>()};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenChangeMatchStateTo(MatchState.StartUnit);
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+        
+        [Test]
+        public void OnRecoverFocusStartRoundWhenRoundFinished()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Finished};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenChangeMatchStateTo(MatchState.StartRound);
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+        
+        [Test]
+        public void OnRecoverFocusEndWhenGameFinished()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.GameFinished};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenEndGame();
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+
+
         private GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
@@ -662,6 +735,7 @@ namespace Features.Game.Scripts.Tests.Editor
             _playService.ReRollCards(Arg.Any<IList<string>>(), Arg.Any<IList<string>>())
                 .Returns(Observable.Return(hand));
 
+
         private void GivenPlayServicePlayUpgradeCardReturns(string expectedCardName, Hand expectedHand) => _playService.PlayUpgradeCard(expectedCardName).Returns(Observable.Return(expectedHand));
         private void GivenInitialize() => WhenInitialize();
 
@@ -672,6 +746,7 @@ namespace Features.Game.Scripts.Tests.Editor
             return rerollSubject;
         }
 
+
         private void GivenMatchSetupWith(Match.Domain.GameMatch gameMatch) => _presenter.SetMatch(gameMatch);
 
         private void GivenPlayServicePlayUnitCardReturns(string expectedCardName, Hand expectedHand) =>
@@ -680,6 +755,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private static void WhenReRoll(Subject<(List<string> upgrades, List<string> units)> rerollSubject,
             List<string> expectedUpgrades, List<string> expectedUnits) =>
             rerollSubject.OnNext((expectedUpgrades, expectedUnits));
+
 
         private void WhenRoundSetup() => _presenter.StartNewRound();
         private void WhenInitialize() => _presenter.Initialize();
@@ -702,6 +778,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private void ThenUpgradeCardIsRemovedFromHand(Hand hand, UpgradeCardData card) =>
             Assert.IsTrue(!hand.GetUpgradeCards().ToList().Contains(card));
 
+
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
         private void ThenShowRivalWaitUnit() => _view.Received(1).ShowRivalWaitUnit();
         private void ThenShowRivalWaitUpgrade() => _view.Received(1).ShowRivalWaitUpgrade();
@@ -709,6 +786,8 @@ namespace Features.Game.Scripts.Tests.Editor
         private void ThenViewReceivedOnUnitCardPlayed(string expectedCardName) =>
             _view.Received(1).OnUnitCardPlayed(expectedCardName);
 
+
         private void ThenChangeMatchStateTo(MatchState state) => _matchStateRepository.Received(1).Set(state);
+        private void ThenEndGame() => _view.Received(1).EndGame();
     }
 }
