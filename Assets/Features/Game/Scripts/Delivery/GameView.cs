@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Common.Utilities;
 using Data;
 using Features.Game.Scripts.Domain;
@@ -62,7 +63,8 @@ namespace Game
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(),
                 servicesProvider.GetMatchService(),
                 new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo,
-                new InMemoryMatchStateRepository());
+                new InMemoryMatchStateRepository(),
+                new PlayerPrefsWrapper());
             _presenter.Initialize();
         }
 

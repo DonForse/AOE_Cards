@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Features.Game.Scripts.Domain;
 using Features.Match.Domain;
 using Game;
@@ -21,6 +22,7 @@ namespace Features.Game.Scripts.Presentation
         private readonly IPlayService _playService;
         private readonly ITokenService _tokenService;
         private readonly IMatchService _matchService;
+        private readonly IPlayerPrefs _playerPrefs;
 
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private readonly ICurrentMatchRepository _matchRepository;
@@ -35,7 +37,7 @@ namespace Features.Game.Scripts.Presentation
             IMatchService matchService,
             IGetRoundEvery3Seconds getRoundEvery3Seconds,
             ICurrentMatchRepository currentMatchRepository,
-            IMatchStateRepository matchStateRepository
+            IMatchStateRepository matchStateRepository, IPlayerPrefs playerPrefs
         )
         {
             _view = view;
@@ -45,6 +47,7 @@ namespace Features.Game.Scripts.Presentation
             _getRoundEvery3Seconds = getRoundEvery3Seconds;
             _matchRepository = currentMatchRepository;
             _matchStateRepository = matchStateRepository;
+            _playerPrefs = playerPrefs;
         }
 
         public void Initialize()
@@ -61,7 +64,7 @@ namespace Features.Game.Scripts.Presentation
             _view.UpgradeCardPlayed().Subscribe(PlayUpgradeCard).AddTo(_disposables);
             _view.ApplicationRestoreFocus().Subscribe(_ =>
             {
-                _matchService.GetMatch().ObserveOn(Scheduler.MainThread)
+                _matchService.GetMatch()
                     .Subscribe(ResetGameState)
                     .AddTo(_disposables);
             }).AddTo(_disposables);
@@ -76,8 +79,8 @@ namespace Features.Game.Scripts.Presentation
         public void SetMatch(GameMatch gameMatch)
         {
             _matchRepository.Set(gameMatch);
-            PlayerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
-            PlayerPrefs.Save();
+            _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
+            _playerPrefs.Save();
             ChangeMatchState(MatchState.StartRound);
         }
 
@@ -144,12 +147,12 @@ namespace Features.Game.Scripts.Presentation
 
         private void OnRefreshTokenComplete(UserResponseDto response)
         {
-            PlayerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
-            PlayerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
-            PlayerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
-            PlayerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
-            PlayerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
-            PlayerPrefs.Save();
+            _playerPrefs.SetString(PlayerPrefsHelper.UserId, response.guid);
+            _playerPrefs.SetString(PlayerPrefsHelper.UserName, response.username);
+            _playerPrefs.SetString(PlayerPrefsHelper.FriendCode, response.friendCode);
+            _playerPrefs.SetString(PlayerPrefsHelper.AccessToken, response.accessToken);
+            _playerPrefs.SetString(PlayerPrefsHelper.RefreshToken, response.refreshToken);
+            _playerPrefs.Save();
         }
 
         internal Hand GetHand() => _matchRepository.Get().Hand;
@@ -172,7 +175,7 @@ namespace Features.Game.Scripts.Presentation
             _view.OnUpgradeCardPlayed(cardName);
         }
 
-        private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
+        private string UserName => _playerPrefs.GetString(PlayerPrefsHelper.UserName);
 
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,
         //that way the match could be recreated, and its easier to know where is the user
@@ -315,7 +318,7 @@ namespace Features.Game.Scripts.Presentation
         {
             var matchState = _matchStateRepository.Get();
 
-            Debug.Log(string.Format("match state: {0}", matchState));
+            Debug.Log($"match state: {matchState}");
             switch (matchState)
             {
                 case MatchState.InitializeGame:

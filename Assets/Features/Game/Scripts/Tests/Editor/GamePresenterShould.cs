@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Data;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
@@ -14,7 +15,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Token;
 using UniRx;
-using UnityEngine;
 
 namespace Features.Game.Scripts.Tests.Editor
 {
@@ -30,6 +30,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private ICurrentMatchRepository _matchRepository;
         private IMatchService _matchService;
         private IMatchStateRepository _matchStateRepository;
+        private IPlayerPrefs _playerPrefs;
 
         private const int CardsInHand = 5;
 
@@ -44,8 +45,9 @@ namespace Features.Game.Scripts.Tests.Editor
             _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
             _matchStateRepository = Substitute.For<IMatchStateRepository>();
+            _playerPrefs = Substitute.For<IPlayerPrefs>();
             _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService, _getRoundEvery3Seconds,
-                _matchRepository, _matchStateRepository);
+                _matchRepository, _matchStateRepository, _playerPrefs);
         }
 
         [Test]
@@ -520,10 +522,10 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void ResetGameStateWhenApplicationRestoreFocus()
         {
-            var expectedRound = new Round() {RoundState = RoundState.Upgrade, HasReroll = false};
+            var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = true};
             var game = AMatch(withRounds: new List<Round> {expectedRound});
             GivenMatchInRepository(game);
-            GivenMatchServiceReturns(AMatch(withRounds: new List<Round> {expectedRound}));
+            GivenMatchServiceReturns(game);
 
             var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
             GivenInitialize();
@@ -533,7 +535,7 @@ namespace Features.Game.Scripts.Tests.Editor
             {
                 _view.Received(1).Clear();
                 _view.Received(1).StartGame(game);
-                _view.Received(1).ShowHand(_matchRepository.Get().Hand);
+                _view.Received(1).ShowHand(game.Hand);
             });
             
             void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
@@ -541,39 +543,67 @@ namespace Features.Game.Scripts.Tests.Editor
 
         
         [Test]
-        [Ignore("Extract to class")]
-        public void StartRerollWhenRoundInReroll()
+        public void WhenRecoverFocusStartRerollWhenRoundInReroll()
         {
-            var expectedRound = new Round() {RoundState = RoundState.Upgrade, HasReroll = false};
+            var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = true};
             var game = AMatch(withRounds: new List<Round> {expectedRound});
             GivenMatchInRepository(game);
-            GivenMatchServiceReturns(AMatch(withRounds: new List<Round> {expectedRound}));
+            GivenMatchServiceReturns(game);
 
             var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
             GivenInitialize();
             WhenRestoreFocus();
-           
-           _matchStateRepository.Received(1).Set(MatchState.StartReroll);
-           
-           void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
-           
-            // var matchState = _matchStateRepository.Get();
-            //
-            // if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
-            //     _view.ShowReroll();
-            // Debug.Log("Reset");
-            //
+            ThenChangeMatchStateTo(MatchState.StartReroll);
             
+           void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+        
+        [Test]
+        public void WhenRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll()
+        {
+            var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = false};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenChangeMatchStateTo(MatchState.WaitReroll);
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
         }
 
-        private Match.Domain.GameMatch AMatch(int withUnits = 5,
+        [Test]
+        public void WhenRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser()
+        {
+            var username = "user";
+            _playerPrefs.GetString(PlayerPrefsHelper.UserName).Returns(username);
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade, CardsPlayed = new List<PlayerCard>(){ new PlayerCard()
+            {
+                Player = username,
+                UpgradeCardData = new UpgradeCardData()
+            } }};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenChangeMatchStateTo(MatchState.WaitUpgrade);
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+        
+        private GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
             string withMatchId = "MatchId",
             string[] withUsers = null,
             Hand withHand = null)
         {
-            return new Match.Domain.GameMatch
+            return new GameMatch
             {
                 Hand = withHand ?? new Hand(_cardProvider.GetUnitCards().Take(withUnits).ToList(),
                     _cardProvider.GetUpgradeCards().Take(withUpgrades).ToList()),
@@ -582,6 +612,7 @@ namespace Features.Game.Scripts.Tests.Editor
                 Users = withUsers ?? new[] {"user-1", "user-2"}
             };
         }
+
 
         private void GivenMatchServiceReturns(GameMatch match) => _matchService.GetMatch().Returns(Observable.Return(match));
 
@@ -592,6 +623,7 @@ namespace Features.Game.Scripts.Tests.Editor
             return applicationRestoreFocusSubject;
         }
 
+
         private void GivenGetRoundEvery3SecondsReturns(Round expectedRound) => _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
 
         private Subject<Unit> GivenRoundUpgradeCompletedSubject()
@@ -601,85 +633,63 @@ namespace Features.Game.Scripts.Tests.Editor
             return showRoundUpgradeCompletedSubject;
         }
 
-        private void GivenCardProviderReturnsAListOfUnitsAndUpgrades()
-        {
-            _cardProvider.GetUnitCards().Returns(new List<UnitCardData>
-            {
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-                ScriptableObject.CreateInstance<UnitCardData>(),
-            });
-            _cardProvider.GetUpgradeCards().Returns(new List<UpgradeCardData>
-            {
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-                ScriptableObject.CreateInstance<UpgradeCardData>(),
-            });
-        }
-
         private void GivenMatchStateRepository(MatchState matchState) =>
             _matchStateRepository.Get().Returns(matchState);
-        private void GivenMatchInRepository(Match.Domain.GameMatch gameMatch) =>
+
+        private void GivenMatchInRepository(GameMatch gameMatch) =>
             _matchRepository.Get().Returns(gameMatch);
+
         private void GivenReRollCompletes(Hand hand) =>
             _playService.ReRollCards(Arg.Any<IList<string>>(), Arg.Any<IList<string>>())
                 .Returns(Observable.Return(hand));
+
         private void GivenPlayServicePlayUpgradeCardReturns(string expectedCardName, Hand expectedHand) => _playService.PlayUpgradeCard(expectedCardName).Returns(Observable.Return(expectedHand));
         private void GivenInitialize() => WhenInitialize();
+
         private Subject<(List<string> upgrades, List<string> units)> GivenReRoll()
         {
             var rerollSubject = new Subject<(List<string> upgrades, List<string> units)>();
             _view.ReRoll().Returns(rerollSubject);
             return rerollSubject;
         }
+
         private void GivenMatchSetupWith(Match.Domain.GameMatch gameMatch) => _presenter.SetMatch(gameMatch);
+
         private void GivenPlayServicePlayUnitCardReturns(string expectedCardName, Hand expectedHand) =>
             _playService.PlayUnitCard(expectedCardName).Returns(Observable.Return(expectedHand));
 
         private static void WhenReRoll(Subject<(List<string> upgrades, List<string> units)> rerollSubject,
             List<string> expectedUpgrades, List<string> expectedUnits) =>
             rerollSubject.OnNext((expectedUpgrades, expectedUnits));
+
         private void WhenRoundSetup() => _presenter.StartNewRound();
         private void WhenInitialize() => _presenter.Initialize();
-        
+
         private void ThenShowUpgradeCardsPlayedInCurrentRound(Round expectedRound) => _view.Received(1).ShowUpgradeCardsPlayedRound(expectedRound, Arg.Any<Action>());
         private void ThenUpdatedHand(Hand hand) => _matchRepository.Received(1).Set(hand);
+
         private void ThenPlayUpgradeCardIsCalledInService(string cardName) =>
             _playService.Received(1).PlayUpgradeCard(cardName);
+
         private void ThenPlayUnitCardIsCalledInService(string cardName) =>
             _playService.Received(1).PlayUnitCard(cardName);
+
         private void ThenNotPlayUnitCardIsCalledInService(string cardName) =>
             _playService.DidNotReceive().PlayUnitCard(cardName);
+
         private void ThenUnitCardIsRemovedFromHand(Hand hand, UnitCardData card) =>
             Assert.IsTrue(!hand.GetUnitCards().ToList().Contains(card));
+
         private void ThenUpgradeCardIsRemovedFromHand(Hand hand, UpgradeCardData card) =>
             Assert.IsTrue(!hand.GetUpgradeCards().ToList().Contains(card));
+
         private void ThenGetRoundIsCalled(int round) => _playService.Received(1).GetRound(round);
         private void ThenShowRivalWaitUnit() => _view.Received(1).ShowRivalWaitUnit();
         private void ThenShowRivalWaitUpgrade() => _view.Received(1).ShowRivalWaitUpgrade();
+
         private void ThenViewReceivedOnUnitCardPlayed(string expectedCardName) =>
             _view.Received(1).OnUnitCardPlayed(expectedCardName);
+
+        private void ThenChangeMatchStateTo(MatchState state) => _matchStateRepository.Received(1).Set(state);
     }
 }
