@@ -596,6 +596,25 @@ namespace Features.Game.Scripts.Tests.Editor
             void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
         }
         
+        [Test]
+        public void WhenRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser()
+        {
+            var username = "user";
+            _playerPrefs.GetString(PlayerPrefsHelper.UserName).Returns(username);
+            var expectedRound = new Round() {RoundState = RoundState.Upgrade, CardsPlayed = new List<PlayerCard>()};
+            var game = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(game);
+            GivenMatchServiceReturns(game);
+
+            var applicationRestoreFocusSubject = GivenApplicationRestoreFocusSubject();
+            GivenInitialize();
+            WhenRestoreFocus();
+            ThenChangeMatchStateTo(MatchState.StartUpgrade);
+            
+            void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
+        }
+
+        
         private GameMatch AMatch(int withUnits = 5,
             int withUpgrades = 5,
             List<Round> withRounds = null,
