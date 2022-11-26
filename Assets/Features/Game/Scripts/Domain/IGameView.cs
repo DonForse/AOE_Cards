@@ -38,5 +38,6 @@ namespace Features.Game.Scripts.Domain
         void ShowUpgradeCardsPlayedRound(Round round, Action action);
         void EndGame();
         void ClearRound();
+        void Log(string s);
     }
 }

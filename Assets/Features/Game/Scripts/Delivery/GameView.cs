@@ -18,6 +18,8 @@ namespace Game
 {
     public class GameView : MonoBehaviour, IView, IGameView
     {
+        public void Log(string m) => Debug.Log($"<color='red'>{m}</color>");
+        
         [SerializeField] private Navigator _navigator;
         [SerializeField] private ServicesProvider servicesProvider;
         [SerializeField] private RerollView _rerollView;
@@ -297,21 +299,10 @@ namespace Game
             isWorking = true;
             _showdownView.MoveCards(_upgradesView);
             _gameInfoView.WinRound(round.WinnerPlayers);
-
-            if (round.RoundState == RoundState.GameFinished)
-            {
-                EndGame();
-                return;
-            }
-            PrepareNewRound();
+            ShowMatchState(MatchState.StartRound);
             isWorking = false;
         }
-
-        private void PrepareNewRound()
-        {
-            _presenter.StartNewRound();
-            ShowMatchState(MatchState.StartRound);
-        }
+        
 
 
         public void EndGame()
@@ -358,7 +349,7 @@ namespace Game
 
         private void PlayUnitCard(Draggable draggable)
         {
-            Debug.Log("PlayUnitCard");
+            Debug.Log($"PlayUnitCard: {_unitCardPlayed}");
 
             if (_unitCardPlayed != null)
                 return;
@@ -370,8 +361,8 @@ namespace Game
 
         private void PlayUpgradeCard(Draggable draggable)
         {
-            Debug.Log("PlayUpgradeCard");
-//TODO: This logic should go when play card is confirmed
+            Debug.Log($"PlayUpgradeCard: {_upgradeCardPlayed}");
+            //TODO: This logic should go when play card is confirmed
             if (_upgradeCardPlayed != null)
                 return;
 

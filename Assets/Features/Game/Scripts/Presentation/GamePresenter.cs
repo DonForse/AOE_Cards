@@ -12,7 +12,6 @@ using Infrastructure.Services.Exceptions;
 using Match.Domain;
 using Token;
 using UniRx;
-using UnityEngine;
 
 namespace Features.Game.Scripts.Presentation
 {
@@ -86,6 +85,7 @@ namespace Features.Game.Scripts.Presentation
 
         public void StartNewRound()
         {
+            ChangeMatchState(MatchState.StartRound);
             var match = _matchRepository.Get();
             match.Board.Rounds.Add(new Round());
             _matchRepository.Set(match);
@@ -93,27 +93,46 @@ namespace Features.Game.Scripts.Presentation
 
         private void PlayUpgradeCard(string cardName)
         {
+            _view.Log($"Presenter Play Unit");
+            
             var matchState = _matchStateRepository.Get();
 
             if (matchState != MatchState.SelectUpgrade)
+            {
+                _view.Log($"Upgrade: {matchState}");
                 return;
+            }
+
             var hand = _matchRepository.Get().Hand;
+            _view.Log($"TakeCard: {hand}");
+
             hand.TakeUpgradeCard(cardName);
+            _view.Log($"TakeCard2: {cardName}");
+
             _playService.PlayUpgradeCard(cardName)
+                .DoOnSubscribe(()=>ChangeMatchState(MatchState.WaitUpgrade))
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(newHand=>OnUpgradeCardPostComplete(cardName, newHand));
         }
 
         private void PlayUnitCard(string cardName)
         {
+            _view.Log($"Presenter Play Unit");
+
             var matchState = _matchStateRepository.Get();
 
             if (matchState != MatchState.SelectUnit)
+            {
+                _view.Log($"Unit: {matchState}");
                 return;
+            }
             
             var hand = _matchRepository.Get().Hand;
+            _view.Log($"TakeCard: {hand}");
             hand.TakeUnitCard(cardName);
+            _view.Log($"TakeCard2: {cardName}");
             _playService.PlayUnitCard(cardName)
+                .DoOnSubscribe(()=>ChangeMatchState(MatchState.WaitUnit))
                 .DoOnError(err => HandleError((PlayServiceException)err))
                 .Subscribe(newHand=>OnUnitCardPostComplete(cardName,newHand));
         }
@@ -259,11 +278,18 @@ namespace Features.Game.Scripts.Presentation
                     ChangeMatchState(MatchState.RoundResultReveal);
                     _view.ShowUnitCardsPlayedRound(round,() =>
                     {
-                        ChangeMatchState(MatchState.EndRound);
+                        ChangeMatchState(MatchState.StartRound);
                     } );
                     return;
                 }
                 _view.EndRound(round);
+                if (round.RoundState == RoundState.GameFinished)
+                {
+                    _view.EndGame();
+                }
+                else
+                    StartNewRound();
+
             }
         }
         private void ResetGameState(GameMatch gameMatch)
@@ -276,7 +302,7 @@ namespace Features.Game.Scripts.Presentation
             var matchState = _matchStateRepository.Get();
             if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
                 _view.ShowReroll();
-            Debug.Log("Reset");
+            _view.Log("Reset");
         }
         
         private void RecoverMatchState(GameMatch gameMatch)
@@ -318,7 +344,7 @@ namespace Features.Game.Scripts.Presentation
         {
             var matchState = _matchStateRepository.Get();
 
-            Debug.Log($"match state: {matchState}");
+            _view.Log($"match state: {matchState}");
             switch (matchState)
             {
                 case MatchState.InitializeGame:
@@ -357,9 +383,9 @@ namespace Features.Game.Scripts.Presentation
 
         private void ChangeMatchState(MatchState state)
         {
+            _view.Log($"{_matchStateRepository.Get()}->{state}");
             _matchStateRepository.Set(state);
         }
-
     }
 
     public enum HandType
