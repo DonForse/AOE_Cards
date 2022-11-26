@@ -104,11 +104,7 @@ namespace Features.Game.Scripts.Presentation
             }
 
             var hand = _matchRepository.Get().Hand;
-            _view.Log($"TakeCard: {hand}");
-
             hand.TakeUpgradeCard(cardName);
-            _view.Log($"TakeCard2: {cardName}");
-
             _playService.PlayUpgradeCard(cardName)
                 .DoOnSubscribe(()=>ChangeMatchState(MatchState.WaitUpgrade))
                 .DoOnError(err => HandleError((PlayServiceException)err))
@@ -128,9 +124,7 @@ namespace Features.Game.Scripts.Presentation
             }
             
             var hand = _matchRepository.Get().Hand;
-            _view.Log($"TakeCard: {hand}");
             hand.TakeUnitCard(cardName);
-            _view.Log($"TakeCard2: {cardName}");
             _playService.PlayUnitCard(cardName)
                 .DoOnSubscribe(()=>ChangeMatchState(MatchState.WaitUnit))
                 .DoOnError(err => HandleError((PlayServiceException)err))
