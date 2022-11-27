@@ -190,6 +190,8 @@ namespace Features.Game.Scripts.Presentation
 
         private string UserName => _playerPrefs.GetString(PlayerPrefsHelper.UserName);
 
+        
+        
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,
         //that way the match could be recreated, and its easier to know where is the user
         //also if random seed can be applied (so the orders of shuffles remains) it could be used to save lots of issues
@@ -386,5 +388,31 @@ namespace Features.Game.Scripts.Presentation
     {
         Upgrade,
         Unit
+    }
+
+    public class StartRoundStateStrategy : IRoundStateStrategy
+    {
+        private readonly IMatchStateRepository _matchStateRepository;
+        private readonly IGameView _view;
+
+        public StartRoundStateStrategy(IGameView view, IMatchStateRepository matchStateRepository)
+        {
+            _view = view;
+            _matchStateRepository = matchStateRepository;
+        }
+
+        public bool IsValid() => _matchStateRepository.Get() == MatchState.StartRound;
+
+        public void Execute(Round round)
+        {
+            _view.StartRound(round);
+            _matchStateRepository.Set(MatchState.StartRoundUpgradeReveal);
+        }
+    }
+
+    public interface IRoundStateStrategy
+    {
+        bool IsValid();
+        void Execute(Round round);
     }
 }
