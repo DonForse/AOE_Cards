@@ -1,6 +1,6 @@
 ﻿namespace Features.Game.Scripts.Domain
 {
-    public enum MatchState
+    public enum GameState
     {
         InitializeGame,
         StartRound,
@@ -23,53 +23,53 @@
 
     public static class MatchStateExtensions
     {
-        public static bool IsWaiting(this MatchState matchState)
+        public static bool IsWaiting(this GameState gameState)
         {
-            switch (matchState)
+            switch (gameState)
             {
-                case MatchState.WaitReroll:
-                case MatchState.WaitUnit:
-                case MatchState.WaitUpgrade:
-                case MatchState.WaitRoundUpgradeReveal:
+                case GameState.WaitReroll:
+                case GameState.WaitUnit:
+                case GameState.WaitUpgrade:
+                case GameState.WaitRoundUpgradeReveal:
                     return true;
                 default:
                     return false;
             }
         }
 
-        public static bool IsUpgradePhase(this MatchState matchState)
+        public static bool IsUpgradePhase(this GameState gameState)
         {
-            switch (matchState)
+            switch (gameState)
             {
-                case MatchState.StartUpgrade:
-                case MatchState.SelectUpgrade:
-                case MatchState.WaitUpgrade:
+                case GameState.StartUpgrade:
+                case GameState.SelectUpgrade:
+                case GameState.WaitUpgrade:
                     return true;
                 default:
                     return false;
             }
         }
 
-        public static bool IsUnitPhase(this MatchState matchState)
+        public static bool IsUnitPhase(this GameState gameState)
         {
-            switch (matchState)
+            switch (gameState)
             {
-                case MatchState.StartUnit:
-                case MatchState.SelectUnit:
-                case MatchState.WaitUnit:
+                case GameState.StartUnit:
+                case GameState.SelectUnit:
+                case GameState.WaitUnit:
                     return true;
                 default:
                     return false;
             }
         }
 
-        public static bool IsRerollPhase(this MatchState matchState)
+        public static bool IsRerollPhase(this GameState gameState)
         {
-            switch (matchState)
+            switch (gameState)
             {
-                case MatchState.StartReroll:
-                case MatchState.SelectReroll:
-                case MatchState.WaitReroll:
+                case GameState.StartReroll:
+                case GameState.SelectReroll:
+                case GameState.WaitReroll:
                     return true;
                 default:
                     return false;

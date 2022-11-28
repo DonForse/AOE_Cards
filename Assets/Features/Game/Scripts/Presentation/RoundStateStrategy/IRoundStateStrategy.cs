@@ -4,7 +4,7 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 {
     public interface IRoundStateStrategy
     {
-        bool IsValid();
+        bool IsValid(Round round);
         void Execute(Round round);
     }
 }

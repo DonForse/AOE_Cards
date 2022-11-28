@@ -40,29 +40,29 @@ namespace Features.Game.Scripts.Delivery
             lowtimer = lowTime;
             return this;
         }
-        public void ShowState(MatchState state)
+        public void ShowState(GameState state)
         {
             switch (state)
             {
-                case MatchState.WaitReroll:
-                case MatchState.WaitUnit:
-                case MatchState.WaitUpgrade:
-                case MatchState.SelectReroll:
-                case MatchState.SelectUpgrade:
-                case MatchState.StartUnit:
-                case MatchState.SelectUnit:
+                case GameState.WaitReroll:
+                case GameState.WaitUnit:
+                case GameState.WaitUpgrade:
+                case GameState.SelectReroll:
+                case GameState.SelectUpgrade:
+                case GameState.StartUnit:
+                case GameState.SelectUnit:
                     StartTimer();
                     break;
 
-                case MatchState.StartRound:
-                case MatchState.StartUpgrade:
-                case MatchState.StartReroll:
-                case MatchState.InitializeGame:
-                case MatchState.EndRound:
-                case MatchState.EndGame:
-                case MatchState.RoundResultReveal:
-                case MatchState.UpgradeReveal:
-                case MatchState.StartRoundUpgradeReveal:
+                case GameState.StartRound:
+                case GameState.StartUpgrade:
+                case GameState.StartReroll:
+                case GameState.InitializeGame:
+                case GameState.EndRound:
+                case GameState.EndGame:
+                case GameState.RoundResultReveal:
+                case GameState.UpgradeReveal:
+                case GameState.StartRoundUpgradeReveal:
                     StopTimer();
                     break;
                 default:

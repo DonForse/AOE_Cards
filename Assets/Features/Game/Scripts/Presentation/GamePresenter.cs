@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Features.Game.Scripts.Domain;
+using Features.Game.Scripts.Presentation.GameStateStrategy;
 using Features.Game.Scripts.Presentation.RoundStateStrategy;
 using Features.Match.Domain;
 using Infrastructure.Data;
@@ -28,6 +29,7 @@ namespace Features.Game.Scripts.Presentation
         private readonly IMatchStateRepository _matchStateRepository;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
+        private readonly IList<IGameStateStrategy> _gameStateStrategies;
         private readonly IList<IRoundStateStrategy> _roundStateStrategies;
 
         public void Unload() => _disposables.Clear();
@@ -50,13 +52,20 @@ namespace Features.Game.Scripts.Presentation
             _matchStateRepository = matchStateRepository;
             _playerPrefs = playerPrefs;
 
-            _roundStateStrategies = new List<IRoundStateStrategy>()
+            _gameStateStrategies = new List<IGameStateStrategy>()
             {
-                new StartRoundStateStrategy(_view, _matchStateRepository),
-                new StartRoundUpgradeRevealStateStrategy(_view, _matchStateRepository),
+                new StartGameStateStrategy(_view, _matchStateRepository),
+                new StartGameUpgradeRevealStateStrategy(_view, _matchStateRepository),
                 new StartRerollStateStrategy(_view, _matchStateRepository),
                 new StartUpgradeStateStrategy(_view, _matchStateRepository, _matchRepository),
                 new StartUnitStateStrategy(_view, _matchStateRepository, _matchRepository)
+            };
+            _roundStateStrategies = new List<IRoundStateStrategy>()
+            {
+                new UpgradeRoundStateStrategy(_view, _matchStateRepository),
+                new UnitRoundStateStrategy(_view, _matchStateRepository),
+                new FinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
+                new GameFinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository)
             };
         }
 
@@ -86,8 +95,8 @@ namespace Features.Game.Scripts.Presentation
                 _view.Log($"{round.RoundState} : {round.HasReroll}");
                 //TODO: Why Has Reroll False???
                 ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
-                    ? MatchState.StartReroll
-                    : MatchState.StartUpgrade);
+                    ? GameState.StartReroll
+                    : GameState.StartUpgrade);
             }).AddTo(_disposables);
         }
 
@@ -96,12 +105,12 @@ namespace Features.Game.Scripts.Presentation
             _matchRepository.Set(gameMatch);
             _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
             _playerPrefs.Save();
-            ChangeMatchState(MatchState.StartRound);
+            ChangeMatchState(GameState.StartRound);
         }
 
         public void StartNewRound()
         {
-            ChangeMatchState(MatchState.StartRound);
+            ChangeMatchState(GameState.StartRound);
             var match = _matchRepository.Get();
             match.Board.Rounds.Add(new Round());
             _matchRepository.Set(match);
@@ -113,7 +122,7 @@ namespace Features.Game.Scripts.Presentation
 
             var matchState = _matchStateRepository.Get();
 
-            if (matchState != MatchState.SelectUpgrade)
+            if (matchState != GameState.SelectUpgrade)
             {
                 _view.Log($"Upgrade: {matchState}");
                 return;
@@ -124,7 +133,7 @@ namespace Features.Game.Scripts.Presentation
             if (card == null)
                 return;
             _playService.PlayUpgradeCard(cardName)
-                .DoOnSubscribe(() => ChangeMatchState(MatchState.WaitUpgrade))
+                .DoOnSubscribe(() => ChangeMatchState(GameState.WaitUpgrade))
                 .DoOnError(err => HandleError((PlayServiceException) err))
                 .Subscribe(newHand => OnUpgradeCardPostComplete(cardName, newHand));
         }
@@ -135,7 +144,7 @@ namespace Features.Game.Scripts.Presentation
 
             var matchState = _matchStateRepository.Get();
 
-            if (matchState != MatchState.SelectUnit)
+            if (matchState != GameState.SelectUnit)
             {
                 _view.Log($"Unit: {matchState}");
                 return;
@@ -146,7 +155,7 @@ namespace Features.Game.Scripts.Presentation
             if (card == null)
                 return;
             _playService.PlayUnitCard(cardName)
-                .DoOnSubscribe(() => ChangeMatchState(MatchState.WaitUnit))
+                .DoOnSubscribe(() => ChangeMatchState(GameState.WaitUnit))
                 .DoOnError(err => HandleError((PlayServiceException) err))
                 .Subscribe(newHand => OnUnitCardPostComplete(cardName, newHand));
         }
@@ -156,7 +165,7 @@ namespace Features.Game.Scripts.Presentation
             _playService.ReRollCards(unitCards, upgradeCards)
                 .DoOnError(err => HandleError((PlayServiceException) err))
                 .Subscribe(OnRerollComplete);
-            ChangeMatchState(MatchState.WaitReroll);
+            ChangeMatchState(GameState.WaitReroll);
         }
 
         private void HandleError(PlayServiceException error)
@@ -221,96 +230,18 @@ namespace Features.Game.Scripts.Presentation
             var matchState = _matchStateRepository.Get();
             _view.UpdateTimer(round);
             
-            foreach (var strategy in _roundStateStrategies)
+            foreach (var strategy in _gameStateStrategies)
             {
                 if (!strategy.IsValid()) continue;
                 strategy.Execute(round);
                 break;
             }
-/* 
-        Reroll,
-        Upgrade,
-        Unit,
-        Finished,
-        GameFinished,
- */
-//Todos los Wait -> ignore
-//Todos los Select -> ignore
-//Todos los reveal -> ignore?
-/*
-        InitializeGame,
-        StartRound,
-        StartRoundUpgradeReveal,
-        RoundUpgradeReveal,
-        StartReroll,
-        Reroll,
-        WaitReroll, 
-        StartUpgrade,
-        SelectUpgrade,
-        WaitUpgrade,
-        UpgradeReveal,
-        StartUnit,
-        SelectUnit,
-        WaitUnit,
-        RoundResultReveal,
-        EndRound,
-        EndGame,
-        WaitRoundUpgradeReveal
- */
-            if (round.RoundState == RoundState.Upgrade)
+
+            foreach (var strategy in _roundStateStrategies)
             {
-                if (matchState is MatchState.SelectReroll or MatchState.WaitReroll)
-                {
-                    _view.HideReroll();
-                    ChangeMatchState(MatchState.StartUpgrade);
-                }
-
-                if (round.RivalReady)
-                {
-                    _view.ShowRivalWaitUpgrade();
-                }
-
-                return;
-            }
-
-            if (round.RoundState == RoundState.Unit)
-            {
-                if (matchState.IsUpgradePhase())
-                {
-                    ChangeMatchState(MatchState.UpgradeReveal);
-                    //en callback de coroutina de la vista
-                    _view.ShowUpgradeCardsPlayedRound(round, () =>
-                    {
-                        ChangeMatchState(MatchState.StartUnit);
-                        // isWorking = false;
-                    });
-                    return;
-                }
-
-                if (round.RivalReady)
-                {
-                    _view.ShowRivalWaitUnit();
-                }
-
-                return;
-            }
-
-            if (round.RoundState == RoundState.Finished || round.RoundState == RoundState.GameFinished)
-            {
-                if (matchState.IsUnitPhase())
-                {
-                    ChangeMatchState(MatchState.RoundResultReveal);
-                    _view.ShowUnitCardsPlayedRound(round, () => { ChangeMatchState(MatchState.StartRound); });
-                    return;
-                }
-
-                _view.EndRound(round);
-                if (round.RoundState == RoundState.GameFinished)
-                {
-                    _view.EndGame();
-                }
-                else
-                    StartNewRound();
+                if (!strategy.IsValid(round)) continue;
+                strategy.Execute(round);
+                break;
             }
         }
 
@@ -322,7 +253,9 @@ namespace Features.Game.Scripts.Presentation
             RecoverMatchState(gameMatch);
 
             var matchState = _matchStateRepository.Get();
-            if (matchState == MatchState.StartReroll || matchState == MatchState.SelectReroll)
+            //TODO: deberia ser esto? tiene mas sentido que se refreshee con info del server:
+            //gameMatch.Board.Rounds.Last().RoundState == RoundState.Reroll;
+            if (matchState == GameState.StartReroll || matchState == GameState.SelectReroll)
                 _view.ShowReroll();
             _view.Log("Reset");
         }
@@ -336,24 +269,24 @@ namespace Features.Game.Scripts.Presentation
             {
                 case RoundState.Reroll:
                     if (round.HasReroll)
-                        ChangeMatchState(MatchState.StartReroll);
+                        ChangeMatchState(GameState.StartReroll);
                     else
-                        ChangeMatchState(MatchState.WaitReroll);
+                        ChangeMatchState(GameState.WaitReroll);
                     break;
                 case RoundState.Upgrade:
                     if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName)?.UpgradeCardData != null)
-                        ChangeMatchState(MatchState.WaitUpgrade);
+                        ChangeMatchState(GameState.WaitUpgrade);
                     else
-                        ChangeMatchState(MatchState.StartUpgrade);
+                        ChangeMatchState(GameState.StartUpgrade);
                     break;
                 case RoundState.Unit:
                     if (round.CardsPlayed.FirstOrDefault(c => c.Player == UserName)?.UnitCardData != null)
-                        ChangeMatchState(MatchState.WaitUnit);
+                        ChangeMatchState(GameState.WaitUnit);
                     else
-                        ChangeMatchState(MatchState.StartUnit);
+                        ChangeMatchState(GameState.StartUnit);
                     break;
                 case RoundState.Finished:
-                    ChangeMatchState(MatchState.StartRound);
+                    ChangeMatchState(GameState.StartRound);
                     break;
                 case RoundState.GameFinished:
                     _view.EndGame();
@@ -370,40 +303,40 @@ namespace Features.Game.Scripts.Presentation
             _view.Log($"match state: {matchState}");
             switch (matchState)
             {
-                case MatchState.InitializeGame:
-                case MatchState.StartRound:
-                case MatchState.StartRoundUpgradeReveal:
-                case MatchState.StartReroll:
-                case MatchState.StartUpgrade:
-                case MatchState.UpgradeReveal:
-                case MatchState.StartUnit:
-                case MatchState.RoundResultReveal:
-                case MatchState.EndRound:
-                case MatchState.EndGame:
+                case GameState.InitializeGame:
+                case GameState.StartRound:
+                case GameState.StartRoundUpgradeReveal:
+                case GameState.StartReroll:
+                case GameState.StartUpgrade:
+                case GameState.UpgradeReveal:
+                case GameState.StartUnit:
+                case GameState.RoundResultReveal:
+                case GameState.EndRound:
+                case GameState.EndGame:
                     break;
-                case MatchState.SelectReroll:
-                case MatchState.WaitReroll:
+                case GameState.SelectReroll:
+                case GameState.WaitReroll:
                     _view.ShowHand(_matchRepository.Get().Hand);
                     _view.ShowReroll();
                     break;
-                case MatchState.SelectUpgrade:
-                case MatchState.WaitUpgrade:
+                case GameState.SelectUpgrade:
+                case GameState.WaitUpgrade:
                     _view.ShowHand(_matchRepository.Get().Hand);
                     _view.ClearRound();
-                    ChangeMatchState(MatchState.SelectUpgrade);
+                    ChangeMatchState(GameState.SelectUpgrade);
                     break;
-                case MatchState.SelectUnit:
-                case MatchState.WaitUnit:
+                case GameState.SelectUnit:
+                case GameState.WaitUnit:
                     _view.ShowHand(_matchRepository.Get().Hand);
                     _view.ClearRound();
-                    ChangeMatchState(MatchState.SelectUnit);
+                    ChangeMatchState(GameState.SelectUnit);
                     break;
                 default:
                     break;
             }
         }
 
-        private void ChangeMatchState(MatchState state)
+        private void ChangeMatchState(GameState state)
         {
             _view.Log($"{_matchStateRepository.Get()}->{state}");
             _matchStateRepository.Set(state);

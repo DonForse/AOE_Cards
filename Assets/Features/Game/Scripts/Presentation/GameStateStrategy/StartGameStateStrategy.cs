@@ -1,24 +1,24 @@
 ﻿using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 
-namespace Features.Game.Scripts.Presentation.RoundStateStrategy
+namespace Features.Game.Scripts.Presentation.GameStateStrategy
 {
-    public class StartRoundStateStrategy : IRoundStateStrategy
+    public class StartGameStateStrategy : IGameStateStrategy
     {
         private readonly IMatchStateRepository _matchStateRepository;
         private readonly IGameView _view;
 
-        public StartRoundStateStrategy(IGameView view, IMatchStateRepository matchStateRepository)
+        public StartGameStateStrategy(IGameView view, IMatchStateRepository matchStateRepository)
         {
             _view = view;
             _matchStateRepository = matchStateRepository;
         }
 
-        public bool IsValid() => _matchStateRepository.Get() == MatchState.StartRound;
+        public bool IsValid() => _matchStateRepository.Get() == GameState.StartRound;
 
         public void Execute(Round round)
         {
-            _matchStateRepository.Set(MatchState.StartRoundUpgradeReveal);
+            _matchStateRepository.Set(GameState.StartRoundUpgradeReveal);
             _view.StartRound(round);
         }
     }

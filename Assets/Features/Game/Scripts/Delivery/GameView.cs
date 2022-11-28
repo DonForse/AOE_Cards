@@ -113,12 +113,12 @@ namespace Features.Game.Scripts.Delivery
             StartGame(gameMatch);
             _presenter.SetMatch(gameMatch);
             GetOrInstantiateHandCards(_presenter.GetHand());
-            ShowMatchState(MatchState.StartRound);
+            ShowMatchState(GameState.StartRound);
         }
 
         public void StartGame(GameMatch gameMatch)
         {
-            ShowMatchState(MatchState.InitializeGame);
+            ShowMatchState(GameState.InitializeGame);
             _gameInfoView.SetGame(gameMatch);
             _upgradesView.WithShowDownView(_showdownView).SetGame(gameMatch);
             _showdownView.SetRound(gameMatch.Board.Rounds.Last());
@@ -133,7 +133,7 @@ namespace Features.Game.Scripts.Delivery
         public void StartRound(Round round)
         {
             GetOrInstantiateHandCards(_presenter.GetHand());
-            ShowMatchState(MatchState.StartRoundUpgradeReveal);
+            ShowMatchState(GameState.StartRoundUpgradeReveal);
         }
         
         private IList<CardView> GetOrInstantiateHandCards(Hand hand)
@@ -282,7 +282,7 @@ namespace Features.Game.Scripts.Delivery
             StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
             {
                 Debug.Log("ShowRoundUpgrade-Completed");
-                ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
+                ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? GameState.StartReroll : GameState.StartUpgrade);
                 _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
             }));
         }
@@ -291,7 +291,7 @@ namespace Features.Game.Scripts.Delivery
         {
             _showdownView.MoveCards(_upgradesView);
             _gameInfoView.WinRound(round.WinnerPlayers);
-            ShowMatchState(MatchState.StartRound);
+            ShowMatchState(GameState.StartRound);
         }
 
         public void EndGame()
@@ -378,7 +378,7 @@ namespace Features.Game.Scripts.Delivery
             });
             _rerollView.PutCards(cards);
             _rerollView.gameObject.SetActive(true);
-            ShowMatchState(MatchState.SelectReroll);
+            ShowMatchState(GameState.SelectReroll);
         }
 
         public void ShowHand(Hand hand)
@@ -401,7 +401,7 @@ namespace Features.Game.Scripts.Delivery
         {
             _rerollView.Clear();
             _rerollView.gameObject.SetActive(false);
-            ShowMatchState(MatchState.StartUpgrade);
+            ShowMatchState(GameState.StartUpgrade);
         }
 
         private IEnumerator RerollComplete(Hand hand)
@@ -424,7 +424,7 @@ namespace Features.Game.Scripts.Delivery
             yield return _rerollView.SwapCards(newCards);
             HideReroll();
         }
-        private void ShowMatchState(MatchState state)
+        private void ShowMatchState(GameState state)
         {
             _timerView.ShowState(state);
             _actionView.ShowState(state);

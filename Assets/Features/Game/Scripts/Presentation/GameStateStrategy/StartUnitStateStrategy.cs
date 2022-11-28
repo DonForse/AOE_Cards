@@ -1,9 +1,9 @@
 ﻿using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 
-namespace Features.Game.Scripts.Presentation.RoundStateStrategy
+namespace Features.Game.Scripts.Presentation.GameStateStrategy
 {
-    public class StartUnitStateStrategy : IRoundStateStrategy
+    public class StartUnitStateStrategy : IGameStateStrategy
     {
         private readonly IMatchStateRepository _matchStateRepository;
         private readonly IGameView _view;
@@ -16,12 +16,12 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
             _matchRepository = matchRepository;
         }
 
-        public bool IsValid() => _matchStateRepository.Get() == MatchState.StartUnit;
+        public bool IsValid() => _matchStateRepository.Get() == GameState.StartUnit;
 
         public void Execute(Round round)
         {
             if (round.RoundState == RoundState.Unit)
-                _matchStateRepository.Set(MatchState.SelectUnit);
+                _matchStateRepository.Set(GameState.SelectUnit);
             _view.ShowHand(_matchRepository.Get().Hand);
             _view.ToggleView(HandType.Unit);
         }

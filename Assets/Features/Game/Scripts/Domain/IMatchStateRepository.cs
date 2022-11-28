@@ -2,7 +2,7 @@
 {
     public interface IMatchStateRepository
     {
-        MatchState Get();
-        void Set(MatchState matchState);
+        GameState Get();
+        void Set(GameState gameState);
     }
 }

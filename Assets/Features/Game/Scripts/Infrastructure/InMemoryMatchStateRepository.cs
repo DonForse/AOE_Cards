@@ -4,10 +4,10 @@ namespace Features.Game.Scripts.Infrastructure
 {
     public class InMemoryMatchStateRepository : IMatchStateRepository
     {
-        private MatchState _matchState;
+        private GameState _gameState;
 
-        public MatchState Get() => _matchState;
+        public GameState Get() => _gameState;
 
-        public void Set(MatchState matchState) => _matchState = matchState;
+        public void Set(GameState gameState) => _gameState = gameState;
     }
 }

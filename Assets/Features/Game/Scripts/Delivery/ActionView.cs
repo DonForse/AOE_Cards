@@ -8,38 +8,38 @@ namespace Features.Game.Scripts.Delivery
     {
         [SerializeField] private TextMeshProUGUI textPhase;
 
-        public void ShowState(MatchState state)
+        public void ShowState(GameState state)
         {
             switch (state)
             {
-                case MatchState.SelectReroll:
+                case GameState.SelectReroll:
                     textPhase.text = "Rerolling Cards";
                     break;
-                case MatchState.SelectUpgrade:
+                case GameState.SelectUpgrade:
                     textPhase.text = "Select Upgrade";
                     break;
-                case MatchState.UpgradeReveal:
-                case MatchState.StartUnit:
+                case GameState.UpgradeReveal:
+                case GameState.StartUnit:
                     textPhase.text = "Revealing Upgrade";
                     break;
-                case MatchState.SelectUnit:
+                case GameState.SelectUnit:
                     textPhase.text = "Select Unit";
                     break;
-                case MatchState.StartRound:
-                case MatchState.StartUpgrade:
-                case MatchState.StartReroll:
-                case MatchState.WaitReroll:
-                case MatchState.WaitUnit:
-                case MatchState.WaitUpgrade:
-                case MatchState.InitializeGame:
+                case GameState.StartRound:
+                case GameState.StartUpgrade:
+                case GameState.StartReroll:
+                case GameState.WaitReroll:
+                case GameState.WaitUnit:
+                case GameState.WaitUpgrade:
+                case GameState.InitializeGame:
                     textPhase.text = "Wait Opponent";
                     break;
-                case MatchState.EndRound:
-                case MatchState.EndGame:
-                case MatchState.RoundResultReveal:
+                case GameState.EndRound:
+                case GameState.EndGame:
+                case GameState.RoundResultReveal:
                     textPhase.text = "Revealing Winner";
                     break;
-                case MatchState.StartRoundUpgradeReveal:
+                case GameState.StartRoundUpgradeReveal:
                     textPhase.text = "Revealing Round Upgrade";
                     break;
                 default:
