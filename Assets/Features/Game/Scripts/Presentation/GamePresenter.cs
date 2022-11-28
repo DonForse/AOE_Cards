@@ -56,7 +56,7 @@ namespace Features.Game.Scripts.Presentation
             {
                 new StartGameStateStrategy(_view, _matchStateRepository),
                 new StartGameUpgradeRevealStateStrategy(_view, _matchStateRepository),
-                new StartRerollStateStrategy(_view, _matchStateRepository),
+                // new StartRerollStateStrategy(_view, _matchStateRepository),
                 new StartUpgradeStateStrategy(_view, _matchStateRepository, _matchRepository),
                 new StartUnitStateStrategy(_view, _matchStateRepository, _matchRepository)
             };
@@ -66,7 +66,7 @@ namespace Features.Game.Scripts.Presentation
                 new UnitRoundStateStrategy(_view, _matchStateRepository),
                 new FinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
                 new GameFinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
-                // new RerollRoundStateStrategy(_view, _matchStateRepository)
+                new RerollRoundStateStrategy(_view, _matchStateRepository)
             };
         }
 
@@ -96,17 +96,17 @@ namespace Features.Game.Scripts.Presentation
 
             _view.ShowRoundUpgradeCompleted().Subscribe(_ =>
             {
-                var round = _matchRepository.Get().Board.Rounds
-                    .Last(); //revisar si es lo mismo que round.getround info o quedo desactualizado.
-                _view.Log($"{round.RoundState} : {round.HasReroll}");
-                //TODO: Why Has Reroll False???
-                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
-                    ? GameState.StartReroll
-                    : GameState.StartUpgrade);
+                // var round = _matchRepository.Get().Board.Rounds
+                //     .Last(); //revisar si es lo mismo que round.getround info o quedo desactualizado.
+                // _view.Log($"{round.RoundState} : {round.HasReroll}");
+                // //TODO: Why Has Reroll False???
+                // ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
+                //     ? GameState.StartReroll
+                //     : GameState.StartUpgrade);
             }).AddTo(_disposables);
 
             _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
-            _view.UpgradeCardPlayed().Subscribe(_ => ChangeMatchState(GameState.StartUnit)).AddTo(_disposables);
+            _view.UpgradeShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartUnit)).AddTo(_disposables);
         }
 
         private void PlayUpgradeCard(string cardName)
@@ -203,13 +203,13 @@ namespace Features.Game.Scripts.Presentation
         private void OnUnitCardPostComplete(string cardName, Hand hand)
         {
             _matchRepository.Set(hand);
-            _view.OnUnitCardPlayed(cardName);
+            _view.PlayUnitCard(cardName);
         }
 
         private void OnUpgradeCardPostComplete(string cardName, Hand hand)
         {
             _matchRepository.Set(hand);
-            _view.OnUpgradeCardPlayed(cardName);
+            _view.PlayUpgradeCard(cardName);
         }
 
         private string UserName => _playerPrefs.GetString(PlayerPrefsHelper.UserName);

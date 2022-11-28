@@ -18,8 +18,16 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public void Execute(Round round)
         {
-            _matchStateRepository.Set(GameState.SelectReroll);
-            _gameView.ShowReroll();
+            _gameView.Log($"HasReroll:{round.HasReroll}");
+            if (round.HasReroll)
+            {
+                _matchStateRepository.Set(GameState.SelectReroll);
+                _gameView.ShowReroll();
+            }
+            else
+            {
+                _matchStateRepository.Set(GameState.StartUpgrade);
+            }
         }
     }
 }

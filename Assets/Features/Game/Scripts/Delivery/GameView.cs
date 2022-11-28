@@ -182,7 +182,7 @@ namespace Features.Game.Scripts.Delivery
             return _playableCards;
         }
 
-        public void OnUpgradeCardPlayed(string cardName)
+        public void PlayUpgradeCard(string cardName)
         {
             Debug.Log("UpgradeCardSentPlay");
             _playableCards.Remove(_upgradeCardPlayed);
@@ -202,7 +202,7 @@ namespace Features.Game.Scripts.Delivery
             PutCardsInHand();
         }
 
-        public void OnUnitCardPlayed(string cardName)
+        public void PlayUnitCard(string cardName)
         {
             _playableCards.Remove(_unitCardPlayed);
             MoveUnitCardToShowdown();
@@ -337,24 +337,16 @@ namespace Features.Game.Scripts.Delivery
 
         private void PlayUnitCard(Draggable draggable)
         {
-            Debug.Log($"PlayUnitCard: {_unitCardPlayed}");
-
-            if (_unitCardPlayed != null)
-                return;
             var unitCard = draggable.GetComponent<UnitCardView>();
-            _unitCardPlayed = unitCard;
             Debug.Log($"PlayUnitCard: {unitCard.CardName}");
+            _unitCardPlayed = unitCard;
             _unitCardPlayedSubject.OnNext(unitCard.CardName);
         }
 
         private void PlayUpgradeCard(Draggable draggable)
         {
-            Debug.Log($"PlayUpgradeCard: {_upgradeCardPlayed}");
-            //TODO: This logic should go when play card is confirmed
-            if (_upgradeCardPlayed != null)
-                return;
-
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
+            Debug.Log($"PlayUnitCard: {upgradeCard.CardName}");
             _upgradeCardPlayed = upgradeCard;
             _upgradeCardPlayedSubject.OnNext(upgradeCard.CardName);
         }
@@ -368,6 +360,8 @@ namespace Features.Game.Scripts.Delivery
 
         public void ShowReroll()
         {
+            if (_rerollView.isActiveAndEnabled)
+                return;
             Debug.Log("ShowReroll");
 
             var cards = _playableCards.Where(c => c.CardName.ToLower() != "villager");

@@ -304,7 +304,7 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void ShowRerollWhenGetRoundInfoAndMatchStateIsStartReroll()
         {
-            var expectedRound = new Round();
+            var expectedRound = new Round(){RoundState = RoundState.Reroll};
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             GivenMatchStateRepository(GameState.StartReroll);
             WhenInitialize(AMatch());
@@ -451,7 +451,7 @@ namespace Features.Game.Scripts.Tests.Editor
             upgradeCardSubject.OnNext(expectedCardName);
 
             ThenUpdatedHand(expectedHand);
-            _view.Received(1).OnUpgradeCardPlayed(expectedCardName);
+            _view.Received(1).PlayUpgradeCard(expectedCardName);
         }
 
         [Test]
@@ -695,6 +695,26 @@ namespace Features.Game.Scripts.Tests.Editor
             
             void WhenRestoreFocus() => applicationRestoreFocusSubject.OnNext(Unit.Default);
         }
+        
+        [Test]
+        public void ChangeMatchStateWhenUnitsFinishBeingRevealed()
+        {
+            ISubject<Unit> unitShowdownCompletedSubject = new Subject<Unit>();
+            _view.UnitShowDownCompleted().Returns(unitShowdownCompletedSubject);
+            GivenInitialize(AMatch());
+            unitShowdownCompletedSubject.OnNext(Unit.Default);
+            _matchStateRepository.Received(1).Set(GameState.StartRound);
+        }
+        
+        [Test]
+        public void ChangeMatchStateWhenUpgradesFinishBeingRevealed() 
+        {
+            ISubject<Unit> upgradeShowdownCompletedSubject = new Subject<Unit>();
+            _view.UpgradeShowDownCompleted().Returns(upgradeShowdownCompletedSubject);
+            GivenInitialize(AMatch());
+            upgradeShowdownCompletedSubject.OnNext(Unit.Default);
+            _matchStateRepository.Received(1).Set(GameState.StartUnit);
+        }
 
 
         private GameMatch AMatch(int withUnits = 5,
@@ -785,7 +805,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private void ThenShowRivalWaitUpgrade() => _view.Received(1).ShowRivalWaitUpgrade();
 
         private void ThenViewReceivedOnUnitCardPlayed(string expectedCardName) =>
-            _view.Received(1).OnUnitCardPlayed(expectedCardName);
+            _view.Received(1).PlayUnitCard(expectedCardName);
 
 
         private void ThenChangeMatchStateTo(GameState state) => _matchStateRepository.Received(1).Set(state);

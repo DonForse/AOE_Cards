@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data;
-using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
 using Infrastructure.Data;
 using UniRx;
@@ -17,11 +15,11 @@ namespace Features.Game.Scripts.Domain
         IObservable<Unit> ShowRoundUpgradeCompleted();
         IObservable<Unit> UnitShowDownCompleted();
         IObservable<Unit> UpgradeShowDownCompleted();
-        void OnRerollComplete(Hand hand);
-        void OnUnitCardPlayed(string cardName);
-        void OnUpgradeCardPlayed(string cardName);
-        void ShowError(string message);
         void UpdateTimer(Round round);
+        void OnRerollComplete(Hand hand);
+        void PlayUnitCard(string cardName);
+        void PlayUpgradeCard(string cardName);
+        void ShowError(string message);
         void StartRound(Round round);
         void ShowRoundUpgrade(Round round);
         void ShowReroll();
