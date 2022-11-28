@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using Features.Game.Scripts.Domain;
 using Features.Match.Domain;
+using UniRx;
 using UnityEngine;
 
 namespace Features.Game.Scripts.Delivery
@@ -15,6 +16,8 @@ namespace Features.Game.Scripts.Delivery
         [SerializeField] private GameObject roundCardContainer;
 
         private ShowdownView _showdownView;
+        private ISubject<Unit> _showRoundUpgradesSubject = new Subject<Unit>();
+        public IObservable<Unit> OnShowRoundUpgradeCompletes() => _showRoundUpgradesSubject;
 
         public UpgradesView WithShowDownView(ShowdownView view)
         {
@@ -22,19 +25,26 @@ namespace Features.Game.Scripts.Delivery
             return this;
         }
 
-        internal IEnumerator SetRoundUpgradeCard(GameObject go, Action callback)
+        public void SetRoundUpgradeCard(GameObject go)
         {
             foreach (Transform child in roundCardContainer.transform)
             {
                 child.gameObject.SetActive(false);
             }
+
+            StartCoroutine(nameof(SetUpgradeCardAnimation),go);
+        }
+
+        private IEnumerator SetUpgradeCardAnimation(GameObject go)
+        {
             _showdownView.SetRoundUpgradeCard(go);
+
             yield return new WaitForSeconds(3f);
 
             SetRoundUpgrade(go);
             yield return new WaitForSeconds(2f);
 
-            callback();
+            _showRoundUpgradesSubject.OnNext(Unit.Default);
         }
 
         private void SetRoundUpgrade(GameObject go)

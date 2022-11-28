@@ -96,13 +96,13 @@ namespace Features.Game.Scripts.Presentation
 
             _view.ShowRoundUpgradeCompleted().Subscribe(_ =>
             {
-                // var round = _matchRepository.Get().Board.Rounds
-                //     .Last(); //revisar si es lo mismo que round.getround info o quedo desactualizado.
-                // _view.Log($"{round.RoundState} : {round.HasReroll}");
-                // //TODO: Why Has Reroll False???
-                // ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
-                //     ? GameState.StartReroll
-                //     : GameState.StartUpgrade);
+                var round = _matchRepository.Get().Board.Rounds
+                    .Last(); //revisar si es lo mismo que round.getround info o quedo desactualizado.
+                _view.Log($"{round.RoundState} : {round.HasReroll}");
+                //TODO: Why Has Reroll False???
+                ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
+                    ? GameState.StartReroll
+                    : GameState.StartUpgrade);
             }).AddTo(_disposables);
 
             _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
@@ -221,7 +221,7 @@ namespace Features.Game.Scripts.Presentation
         private void OnGetRoundInfo(Round round)
         {
             _view.UpdateTimer(round);
-            
+            _matchRepository.SetRounds(round);
             foreach (var strategy in _gameStateStrategies)
             {
                 if (!strategy.IsValid()) continue;

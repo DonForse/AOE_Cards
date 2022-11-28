@@ -126,6 +126,15 @@ namespace Features.Game.Scripts.Delivery
             _showdownView.SetRound(gameMatch.Board.Rounds.Last());
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
+            
+            _upgradesView.OnShowRoundUpgradeCompletes().Subscribe(_ =>
+            {
+                Debug.Log("ShowRoundUpgrade-Completed");
+                // ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
+                //     ? GameState.StartReroll
+                //     : GameState.StartUpgrade);
+                _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
+            });
         }
 
         private void PutCardsInHand() => _handView.PutCards(_playableCards);
@@ -279,12 +288,7 @@ namespace Features.Game.Scripts.Delivery
             Debug.Log("ShowRoundUpgrade");
             ClearGameObjectData();
             var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
-            StartCoroutine(_upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject, () => 
-            {
-                Debug.Log("ShowRoundUpgrade-Completed");
-                ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? GameState.StartReroll : GameState.StartUpgrade);
-                _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
-            }));
+            _upgradesView.SetRoundUpgradeCard(upgradeCard.gameObject);
         }
 
         public void EndRound(Round round)

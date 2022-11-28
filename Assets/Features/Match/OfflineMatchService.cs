@@ -68,6 +68,7 @@ namespace Match
                         HasReroll = r.hasReroll,
                         Timer = r.roundTimer,
                         RoundState = r.roundState,
+                        RoundNumber = r.roundnumber,
                         CardsPlayed = r.cardsplayed?.Select(cp =>
                             new PlayerCard
                             {

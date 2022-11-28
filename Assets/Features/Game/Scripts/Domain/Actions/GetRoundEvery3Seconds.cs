@@ -25,7 +25,6 @@ namespace Features.Game.Scripts.Domain.Actions
                     .Subscribe(_ =>
                     {
                         _playService.GetRound(_currentMatchRepository.Get().Board.Rounds.Count -1)
-                            // .DoOnError(err => HandleError((PlayServiceException)err))
                             .Subscribe(emitter.OnNext)
                             .AddTo(_disposables);
                     }).AddTo(_disposables);

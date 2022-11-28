@@ -1,5 +1,7 @@
-﻿using Features.Game.Scripts.Domain;
+﻿using System.Linq;
+using Features.Game.Scripts.Domain;
 using Features.Match.Domain;
+using Infrastructure.Data;
 
 namespace Features.Game.Scripts.Infrastructure
 {
@@ -12,6 +14,18 @@ namespace Features.Game.Scripts.Infrastructure
         public void Set(Hand hand)
         {
             _gameMatch.Hand = hand;
+        }
+
+        public void SetRounds(Round round)
+        {
+            var rounds = _gameMatch.Board.Rounds;
+            var savedRound = rounds.FirstOrDefault(x => x.RoundNumber == round.RoundNumber);
+            if (round.RoundNumber == 0)
+                return;
+            rounds.Remove(savedRound);
+            
+            rounds.Add( round);
+            _gameMatch.Board.Rounds = rounds.OrderBy(x => x.RoundNumber).ToList();
         }
     }
 }

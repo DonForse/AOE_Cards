@@ -1,4 +1,5 @@
-﻿using Features.Game.Scripts.Domain;
+﻿using System.Linq;
+using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 
 namespace Features.Game.Scripts.Presentation.RoundStateStrategy
@@ -34,7 +35,8 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
             _matchStateRepository.Set(GameState.StartRound);
             //TODO: need to manually add round, because of how the get round works
             var match = _currentMatchRepository.Get();
-            match.Board.Rounds.Add(new Round());
+            var rn = match.Board.Rounds.Last().RoundNumber;
+            match.Board.Rounds.Add(new Round() {RoundNumber = rn + 1});
             _currentMatchRepository.Set(match);
         }
     }
