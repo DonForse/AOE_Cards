@@ -37,7 +37,6 @@ namespace Game
         private UpgradeCardView _upgradeCardPlayed;
 
         private IList<CardView> _playableCards;
-        private bool isWorking = false;
         // MatchState matchState = MatchState.InitializeGame;
         private CompositeDisposable _disposables = new CompositeDisposable();
         private readonly ISubject<(List<string> units, List<string> upgrades)> _rerollSubject = new Subject<(List<string> units, List<string> upgrades)>();
@@ -102,7 +101,6 @@ namespace Game
             }
             else {
                 Debug.Log("Pause");
-                isWorking = true;
                 _focusOutGameObject.SetActive(true);
             }
         }
@@ -132,10 +130,8 @@ namespace Game
 
         public void StartRound(Round round)
         {
-            isWorking = true;
             GetOrInstantiateHandCards(_presenter.GetHand());
             ShowMatchState(MatchState.StartRoundUpgradeReveal);
-            isWorking = false;
         }
         
         private IList<CardView> GetOrInstantiateHandCards(Hand hand)
@@ -187,12 +183,10 @@ namespace Game
             Debug.Log("UpgradeCardSentPlay");
             _playableCards.Remove(_upgradeCardPlayed);
             MoveUpgradeCardToShowdown();
-            isWorking = false;
         }
 
         public void ShowError(string message)
         {
-            isWorking = false;
             Toast.Instance.ShowToast(message, "Error");
             Debug.LogError(message);
         }
@@ -208,7 +202,6 @@ namespace Game
         {
             _playableCards.Remove(_unitCardPlayed);
             MoveUnitCardToShowdown();
-            isWorking = false;
         }
 
         private void MoveUnitCardToShowdown()
@@ -281,7 +274,6 @@ namespace Game
 
         public void ShowRoundUpgrade(Round round)
         {
-            isWorking = true;
             Debug.Log("ShowRoundUpgrade");
             ClearGameObjectData();
             var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(round.UpgradeCardRound);
@@ -290,20 +282,15 @@ namespace Game
                 Debug.Log("ShowRoundUpgrade-Completed");
                 ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll ? MatchState.StartReroll : MatchState.StartUpgrade);
                 _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
-                isWorking = false;
             }));
         }
 
         public void EndRound(Round round)
         {
-            isWorking = true;
             _showdownView.MoveCards(_upgradesView);
             _gameInfoView.WinRound(round.WinnerPlayers);
             ShowMatchState(MatchState.StartRound);
-            isWorking = false;
         }
-        
-
 
         public void EndGame()
         {
@@ -336,7 +323,6 @@ namespace Game
             _upgradesView.Clear();
             _rerollView.Clear();
             _rerollView.gameObject.SetActive(false);
-            isWorking = false;
             _timerView.StopTimer();
             _focusOutGameObject.SetActive(false);
         }
@@ -353,9 +339,9 @@ namespace Game
 
             if (_unitCardPlayed != null)
                 return;
-            isWorking = true;
             var unitCard = draggable.GetComponent<UnitCardView>();
             _unitCardPlayed = unitCard;
+            Debug.Log($"PlayUnitCard: {unitCard.CardName}");
             _unitCardPlayedSubject.OnNext(unitCard.CardName);
         }
 
@@ -366,7 +352,6 @@ namespace Game
             if (_upgradeCardPlayed != null)
                 return;
 
-            isWorking = true;
             var upgradeCard = draggable.GetComponent<UpgradeCardView>();
             _upgradeCardPlayed = upgradeCard;
             _upgradeCardPlayedSubject.OnNext(upgradeCard.CardName);
@@ -382,24 +367,21 @@ namespace Game
         public void ShowReroll()
         {
             Debug.Log("ShowReroll");
-            isWorking = true;
 
             var cards = _playableCards.Where(c => c.CardName.ToLower() != "villager");
             _rerollView.WithRerollAction((upgrades, units) => 
             {
-                isWorking = true;
                 _rerollSubject.OnNext((upgrades, units));
                 // _presenter.SendReroll(upgrades, units);
             });
             _rerollView.PutCards(cards);
             _rerollView.gameObject.SetActive(true);
             ShowMatchState(MatchState.Reroll);
-            isWorking = false;
         }
 
         public void ShowHand(Hand hand)
         {
-            GetOrInstantiateHandCards(_presenter.GetHand());
+            GetOrInstantiateHandCards(hand);
             PutCardsInHand();
         }
 
@@ -422,7 +404,6 @@ namespace Game
 
         private IEnumerator RerollComplete(Hand hand)
         {
-            isWorking = true;
             /*IEnumerable<CardView> */
             var cardsBefore = _playableCards.Select(c => c.CardName).ToList();
             GetOrInstantiateHandCards(hand);
@@ -440,7 +421,6 @@ namespace Game
 
             yield return _rerollView.SwapCards(newCards);
             HideReroll();
-            isWorking = false; 
         }
         private void ShowMatchState(MatchState state)
         {
