@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
 using Data;
+using Features.Game.Scripts.Domain;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class UnitCardView : CardView
     {

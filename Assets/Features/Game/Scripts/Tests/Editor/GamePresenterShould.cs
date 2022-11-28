@@ -6,7 +6,6 @@ using Data;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
-using Game;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Services;
@@ -150,7 +149,7 @@ namespace Features.Game.Scripts.Tests.Editor
             });
         }
 
-        [TestCase(MatchState.Reroll)]
+        [TestCase(MatchState.SelectReroll)]
         [TestCase(MatchState.WaitReroll)]
         public void HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(MatchState matchState)
         {
@@ -166,7 +165,7 @@ namespace Features.Game.Scripts.Tests.Editor
             });
         }
 
-        [TestCase(MatchState.Reroll)]
+        [TestCase(MatchState.SelectReroll)]
         [TestCase(MatchState.WaitReroll)]
         public void ShowShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(MatchState matchState)
         {
@@ -313,7 +312,7 @@ namespace Features.Game.Scripts.Tests.Editor
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                _matchStateRepository.Received(1).Set(MatchState.Reroll);
+                _matchStateRepository.Received(1).Set(MatchState.SelectReroll);
                 _view.Received(1).ShowReroll();
             });
         }

@@ -1,9 +1,8 @@
-﻿using System;
-using Infrastructure.Services;
+﻿using Features.Game.Scripts.Domain;
 using TMPro;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class ActionView : MonoBehaviour
     {
@@ -13,14 +12,13 @@ namespace Game
         {
             switch (state)
             {
-                case MatchState.Reroll:
+                case MatchState.SelectReroll:
                     textPhase.text = "Rerolling Cards";
                     break;
                 case MatchState.SelectUpgrade:
                     textPhase.text = "Select Upgrade";
                     break;
                 case MatchState.UpgradeReveal:
-                case MatchState.RoundUpgradeReveal:
                 case MatchState.StartUnit:
                     textPhase.text = "Revealing Upgrade";
                     break;

@@ -1,17 +1,16 @@
-﻿using Common;
-using Infrastructure.Services;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Common.Utilities;
+using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 using Sound;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class ShowdownView : MonoBehaviour
     {

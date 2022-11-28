@@ -6,6 +6,8 @@ using Common;
 using Common.Utilities;
 using Data;
 using Features.Game.Scripts.Domain;
+using Features.Game.Scripts.Domain.Actions;
+using Features.Game.Scripts.Infrastructure;
 using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
 using Home;
@@ -14,7 +16,7 @@ using Sound;
 using UniRx;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class GameView : MonoBehaviour, IView, IGameView
     {
@@ -376,7 +378,7 @@ namespace Game
             });
             _rerollView.PutCards(cards);
             _rerollView.gameObject.SetActive(true);
-            ShowMatchState(MatchState.Reroll);
+            ShowMatchState(MatchState.SelectReroll);
         }
 
         public void ShowHand(Hand hand)

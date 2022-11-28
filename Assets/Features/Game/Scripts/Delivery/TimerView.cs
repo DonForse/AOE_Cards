@@ -1,10 +1,10 @@
 ﻿using System;
+using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
-using Infrastructure.Services;
 using TMPro;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class TimerView : MonoBehaviour
     {
@@ -47,9 +47,8 @@ namespace Game
                 case MatchState.WaitReroll:
                 case MatchState.WaitUnit:
                 case MatchState.WaitUpgrade:
-                case MatchState.Reroll:
+                case MatchState.SelectReroll:
                 case MatchState.SelectUpgrade:
-                case MatchState.RoundUpgradeReveal:
                 case MatchState.StartUnit:
                 case MatchState.SelectUnit:
                     StartTimer();

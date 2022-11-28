@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Features.Game.Scripts.Domain;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class CardArchetypeView : MonoBehaviour
     {

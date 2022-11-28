@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Features.Game.Scripts.Domain;
 using Sound;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UniRx;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public abstract class CardView : MonoBehaviour, ICardView, IPointerEnterHandler, IPointerExitHandler
     {

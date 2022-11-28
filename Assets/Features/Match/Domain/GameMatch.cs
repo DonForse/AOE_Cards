@@ -1,4 +1,4 @@
-﻿using Game;
+﻿using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 
 namespace Features.Match.Domain

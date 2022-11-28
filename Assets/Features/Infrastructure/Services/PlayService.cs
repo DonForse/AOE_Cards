@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Game;
+using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 using Infrastructure.DTOs;
 using Infrastructure.Services.Exceptions;

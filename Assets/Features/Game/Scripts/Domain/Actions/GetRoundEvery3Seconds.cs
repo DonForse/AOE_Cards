@@ -1,10 +1,9 @@
 ﻿using System;
-using Features.Game.Scripts.Presentation;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using UniRx;
 
-namespace Game
+namespace Features.Game.Scripts.Domain.Actions
 {
     public class GetRoundEvery3Seconds : IGetRoundEvery3Seconds
     {

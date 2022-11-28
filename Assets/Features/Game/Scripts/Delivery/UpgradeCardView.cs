@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Common;
+﻿using System.Collections.Generic;
 using Data;
+using Features.Game.Scripts.Domain;
 using TMPro;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class UpgradeCardView : CardView
     {

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Features.Game.Scripts.Domain;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class UpgradeIconView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

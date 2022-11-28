@@ -1,7 +1,7 @@
-﻿using Features.Game.Scripts.Presentation;
+﻿using Features.Game.Scripts.Domain;
 using Features.Match.Domain;
 
-namespace Game
+namespace Features.Game.Scripts.Infrastructure
 {
     public class InMemoryCurrentMatchRepository : ICurrentMatchRepository
     {

@@ -5,7 +5,6 @@ using Common;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation.RoundStateStrategy;
 using Features.Match.Domain;
-using Game;
 using Infrastructure.Data;
 using Infrastructure.DTOs;
 using Infrastructure.Services;
@@ -221,19 +220,46 @@ namespace Features.Game.Scripts.Presentation
         {
             var matchState = _matchStateRepository.Get();
             _view.UpdateTimer(round);
-
-            // if (isWorking) //todo: ignore? i guess is working means its doing some animation or anything, because it will ask again its done so it ignores requests...
-            //     return;
+            
             foreach (var strategy in _roundStateStrategies)
             {
                 if (!strategy.IsValid()) continue;
                 strategy.Execute(round);
                 break;
             }
-
+/* 
+        Reroll,
+        Upgrade,
+        Unit,
+        Finished,
+        GameFinished,
+ */
+//Todos los Wait -> ignore
+//Todos los Select -> ignore
+//Todos los reveal -> ignore?
+/*
+        InitializeGame,
+        StartRound,
+        StartRoundUpgradeReveal,
+        RoundUpgradeReveal,
+        StartReroll,
+        Reroll,
+        WaitReroll, 
+        StartUpgrade,
+        SelectUpgrade,
+        WaitUpgrade,
+        UpgradeReveal,
+        StartUnit,
+        SelectUnit,
+        WaitUnit,
+        RoundResultReveal,
+        EndRound,
+        EndGame,
+        WaitRoundUpgradeReveal
+ */
             if (round.RoundState == RoundState.Upgrade)
             {
-                if (matchState == MatchState.Reroll || matchState == MatchState.WaitReroll)
+                if (matchState is MatchState.SelectReroll or MatchState.WaitReroll)
                 {
                     _view.HideReroll();
                     ChangeMatchState(MatchState.StartUpgrade);
@@ -296,7 +322,7 @@ namespace Features.Game.Scripts.Presentation
             RecoverMatchState(gameMatch);
 
             var matchState = _matchStateRepository.Get();
-            if (matchState == MatchState.StartReroll || matchState == MatchState.Reroll)
+            if (matchState == MatchState.StartReroll || matchState == MatchState.SelectReroll)
                 _view.ShowReroll();
             _view.Log("Reset");
         }
@@ -347,7 +373,6 @@ namespace Features.Game.Scripts.Presentation
                 case MatchState.InitializeGame:
                 case MatchState.StartRound:
                 case MatchState.StartRoundUpgradeReveal:
-                case MatchState.RoundUpgradeReveal:
                 case MatchState.StartReroll:
                 case MatchState.StartUpgrade:
                 case MatchState.UpgradeReveal:
@@ -356,7 +381,7 @@ namespace Features.Game.Scripts.Presentation
                 case MatchState.EndRound:
                 case MatchState.EndGame:
                     break;
-                case MatchState.Reroll:
+                case MatchState.SelectReroll:
                 case MatchState.WaitReroll:
                     _view.ShowHand(_matchRepository.Get().Hand);
                     _view.ShowReroll();

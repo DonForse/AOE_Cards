@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Data;
 using Features.Game.Scripts.Presentation;
 using Features.Match.Domain;
-using Game;
 using Infrastructure.Data;
 using UniRx;
 

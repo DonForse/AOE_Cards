@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Domain
 {
     internal interface ICardView
     {

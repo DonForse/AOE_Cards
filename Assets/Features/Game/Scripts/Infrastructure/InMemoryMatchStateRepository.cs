@@ -1,6 +1,6 @@
-﻿using Game;
+﻿using Features.Game.Scripts.Domain;
 
-namespace Features.Game.Scripts.Presentation
+namespace Features.Game.Scripts.Infrastructure
 {
     public class InMemoryMatchStateRepository : IMatchStateRepository
     {

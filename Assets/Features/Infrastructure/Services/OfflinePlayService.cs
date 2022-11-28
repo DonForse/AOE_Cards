@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AoeCards.Controllers;
-using Game;
+using Features.Game.Scripts.Domain;
 using Infrastructure.Data;
 using ServerLogic.Controllers;
 using ServerLogic.Matches.Infrastructure.DTO;

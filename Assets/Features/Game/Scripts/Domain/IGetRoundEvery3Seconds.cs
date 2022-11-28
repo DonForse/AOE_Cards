@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Infrastructure.Data;
-using Infrastructure.Services.Exceptions;
-using ServerLogic.Matches.Infrastructure;
 
-namespace Game
+namespace Features.Game.Scripts.Domain
 {
     public interface IGetRoundEvery3Seconds
     {

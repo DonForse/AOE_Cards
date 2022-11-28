@@ -2,7 +2,7 @@
 using System.Linq;
 using Data;
 
-namespace Game
+namespace Features.Game.Scripts.Domain
 {
     public class Hand
     {

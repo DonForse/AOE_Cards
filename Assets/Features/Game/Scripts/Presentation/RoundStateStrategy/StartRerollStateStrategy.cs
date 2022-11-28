@@ -1,5 +1,4 @@
 ﻿using Features.Game.Scripts.Domain;
-using Game;
 using Infrastructure.Data;
 
 namespace Features.Game.Scripts.Presentation.RoundStateStrategy
@@ -19,7 +18,7 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public void Execute(Round round)
         {
-            _matchStateRepository.Set(MatchState.Reroll);
+            _matchStateRepository.Set(MatchState.SelectReroll);
             _view.ShowReroll();
         }
     }

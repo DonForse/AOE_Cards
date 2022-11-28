@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Game;
+using Features.Game.Scripts.Domain;
 using UnityEngine;
 
 namespace Data

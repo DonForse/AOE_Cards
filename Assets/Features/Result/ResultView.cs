@@ -1,4 +1,4 @@
-﻿using Game;
+﻿using Features.Game.Scripts.Domain;
 using Home;
 using Sound;
 using TMPro;

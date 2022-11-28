@@ -1,7 +1,7 @@
 ﻿using Data;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class CardInstantiator : MonoBehaviour
     {

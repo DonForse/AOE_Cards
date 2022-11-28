@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Features.Game.Scripts.Domain;
 using Features.Match.Domain;
-using Infrastructure.Services;
 using UnityEngine;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class UpgradesView : MonoBehaviour
     {

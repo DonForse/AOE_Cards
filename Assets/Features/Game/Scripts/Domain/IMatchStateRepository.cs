@@ -1,6 +1,4 @@
-﻿using Game;
-
-namespace Features.Game.Scripts.Presentation
+﻿namespace Features.Game.Scripts.Domain
 {
     public interface IMatchStateRepository
     {

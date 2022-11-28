@@ -1,12 +1,12 @@
-﻿using Common;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Common.Utilities;
+using Features.Game.Scripts.Domain;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Features.Game.Scripts.Delivery
 {
     public class HandView : MonoBehaviour
     {

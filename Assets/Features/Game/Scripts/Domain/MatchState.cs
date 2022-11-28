@@ -1,41 +1,13 @@
-﻿namespace Game
+﻿namespace Features.Game.Scripts.Domain
 {
-    public enum PlayerType
-    {
-        Player,Rival
-    }
-
-    public enum CardType {
-        Unit,Upgrade
-    }
-
-    public enum Archetype {
-        Villager,
-        Eagle,
-        Camel,
-        Elephant,
-        Cavalry,
-        Archer,
-        CavalryArcher,
-        Militia,
-        Infantry,
-        CounterUnit,
-        Siege,
-        Monk
-    }
-
-    public enum MatchResult {
-        Win,Lose,Tie,NotFinished
-    }
-    
     public enum MatchState
     {
         InitializeGame,
         StartRound,
         StartRoundUpgradeReveal,
-        RoundUpgradeReveal,
+        WaitRoundUpgradeReveal,
         StartReroll,
-        Reroll,
+        SelectReroll,
         WaitReroll,
         StartUpgrade,
         SelectUpgrade,
@@ -47,11 +19,26 @@
         RoundResultReveal,
         EndRound,
         EndGame,
-        WaitRoundUpgradeReveal
     }
 
-    public static class MatchStateExtensions {
-        public static bool IsUpgradePhase(this MatchState matchState) {
+    public static class MatchStateExtensions
+    {
+        public static bool IsWaiting(this MatchState matchState)
+        {
+            switch (matchState)
+            {
+                case MatchState.WaitReroll:
+                case MatchState.WaitUnit:
+                case MatchState.WaitUpgrade:
+                case MatchState.WaitRoundUpgradeReveal:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsUpgradePhase(this MatchState matchState)
+        {
             switch (matchState)
             {
                 case MatchState.StartUpgrade:
@@ -62,6 +49,7 @@
                     return false;
             }
         }
+
         public static bool IsUnitPhase(this MatchState matchState)
         {
             switch (matchState)
@@ -74,12 +62,13 @@
                     return false;
             }
         }
+
         public static bool IsRerollPhase(this MatchState matchState)
         {
             switch (matchState)
             {
                 case MatchState.StartReroll:
-                case MatchState.Reroll:
+                case MatchState.SelectReroll:
                 case MatchState.WaitReroll:
                     return true;
                 default:
