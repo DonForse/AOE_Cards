@@ -19,9 +19,7 @@ namespace Features.Game.Scripts.Domain
         void OnUnitCardPlayed(string cardName);
         void OnUpgradeCardPlayed(string cardName);
         void ShowError(string message);
-
         void UpdateTimer(Round round);
-
         void StartRound(Round round);
         void ShowRoundUpgrade(Round round);
         void ShowReroll();
