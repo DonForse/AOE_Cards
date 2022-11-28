@@ -25,7 +25,7 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
             if (matchState.IsUnitPhase())
             {
                 _matchStateRepository.Set(GameState.RoundResultReveal);
-                _gameView.ShowUnitCardsPlayedRound(round, () => { _matchStateRepository.Set(GameState.StartRound); });
+                _gameView.ShowUnitCardsPlayedRound(round);
                 return;
             }
 

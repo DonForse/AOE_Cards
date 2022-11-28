@@ -15,6 +15,8 @@ namespace Features.Game.Scripts.Domain
         IObservable<string> UnitCardPlayed();
         IObservable<string> UpgradeCardPlayed();
         IObservable<Unit> ShowRoundUpgradeCompleted();
+        IObservable<Unit> UnitShowDownCompleted();
+        IObservable<Unit> UpgradeShowDownCompleted();
         void OnRerollComplete(Hand hand);
         void OnUnitCardPlayed(string cardName);
         void OnUpgradeCardPlayed(string cardName);
@@ -30,9 +32,9 @@ namespace Features.Game.Scripts.Domain
         void ShowRivalWaitUnit();
         void EndRound(Round round);
         void Clear();
-        void StartGame(GameMatch gameMatch);
-        void ShowUnitCardsPlayedRound(Round round, Action callbackComplete);
-        void ShowUpgradeCardsPlayedRound(Round round, Action action);
+        void SetupViews(GameMatch gameMatch);
+        void ShowUnitCardsPlayedRound(Round round);
+        void ShowUpgradeCardsPlayedRound(Round round);
         void EndGame();
         void ClearRound();
         void Log(string s);

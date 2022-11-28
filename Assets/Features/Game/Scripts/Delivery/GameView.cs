@@ -46,10 +46,14 @@ namespace Features.Game.Scripts.Delivery
         private readonly ISubject<string> _upgradeCardPlayedSubject = new Subject<string>();
         private readonly ISubject<Unit> _applicationRestoreFocusSubject = new Subject<Unit>();
         private readonly ISubject<Unit> _showRoundUpgradeCompletedSubject = new Subject<Unit>();
+        private readonly ISubject<Unit> _unitShowDownCompleteSubject = new Subject<Unit>();
+        private readonly ISubject<Unit> _upgradeShowDownCompleteSubject = new Subject<Unit>();
         public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
         public IObservable<string> UpgradeCardPlayed() => _upgradeCardPlayedSubject;
         public IObservable<Unit> ApplicationRestoreFocus() => _applicationRestoreFocusSubject;
         public IObservable<Unit> ShowRoundUpgradeCompleted() => _showRoundUpgradeCompletedSubject;
+        public IObservable<Unit> UnitShowDownCompleted() => _unitShowDownCompleteSubject;
+        public IObservable<Unit> UpgradeShowDownCompleted() => _upgradeShowDownCompleteSubject;
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
@@ -60,7 +64,7 @@ namespace Features.Game.Scripts.Delivery
             this.gameObject.SetActive(true);
         }
 
-        private void RegisterToPresenterEvents()
+        private void InitializePresenter(GameMatch gameMatch)
         {
             var repo = new InMemoryCurrentMatchRepository();
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(),
@@ -68,7 +72,7 @@ namespace Features.Game.Scripts.Delivery
                 new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo,
                 new InMemoryMatchStateRepository(),
                 new PlayerPrefsWrapper());
-            _presenter.Initialize();
+            _presenter.Initialize(gameMatch);
         }
 
         private void LoadAudio()
@@ -90,7 +94,7 @@ namespace Features.Game.Scripts.Delivery
 
         public void SetGame(GameMatch gameMatch)
         {
-            RegisterToPresenterEvents();
+            InitializePresenter(gameMatch);
             InitializeGame(gameMatch);
         }
 
@@ -110,13 +114,11 @@ namespace Features.Game.Scripts.Delivery
         public void UpdateTimer(Round round) => _timerView.Update(round);
         private void InitializeGame(GameMatch gameMatch)
         {
-            StartGame(gameMatch);
-            _presenter.SetMatch(gameMatch);
-            GetOrInstantiateHandCards(_presenter.GetHand());
+            SetupViews(gameMatch);
             ShowMatchState(GameState.StartRound);
         }
 
-        public void StartGame(GameMatch gameMatch)
+        public void SetupViews(GameMatch gameMatch)
         {
             ShowMatchState(GameState.InitializeGame);
             _gameInfoView.SetGame(gameMatch);
@@ -213,7 +215,7 @@ namespace Features.Game.Scripts.Delivery
             PutCardsInHand();
         }
 
-        private void ShowUpgradeCardsPlayedRound(Round round, Action callbackComplete)
+        public void ShowUpgradeCardsPlayedRound(Round round)
         {
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
             var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
@@ -238,11 +240,11 @@ namespace Features.Game.Scripts.Delivery
             StartCoroutine(_showdownView.RevealCards(() =>
             {
                 _handView.ShowHandUnits();
-                callbackComplete?.Invoke();
+                _upgradeShowDownCompleteSubject.OnNext(Unit.Default);
             }));
         }
 
-        public void ShowUnitCardsPlayedRound(Round round, Action callbackComplete)
+        public void ShowUnitCardsPlayedRound(Round round)
         {
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
 
@@ -268,11 +270,9 @@ namespace Features.Game.Scripts.Delivery
 
             StartCoroutine(_showdownView.UnitShowdown(round, () =>
             {
-                callbackComplete?.Invoke();
+                _unitShowDownCompleteSubject.OnNext(Unit.Default);
             }));
         }
-
-        void IGameView.ShowUpgradeCardsPlayedRound(Round round, Action action) => ShowUpgradeCardsPlayedRound(round, action);
 
         public void ShowRoundUpgrade(Round round)
         {

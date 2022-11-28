@@ -65,12 +65,18 @@ namespace Features.Game.Scripts.Presentation
                 new UpgradeRoundStateStrategy(_view, _matchStateRepository),
                 new UnitRoundStateStrategy(_view, _matchStateRepository),
                 new FinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
-                new GameFinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository)
+                new GameFinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
+                // new RerollRoundStateStrategy(_view, _matchStateRepository)
             };
         }
 
-        public void Initialize()
+        public void Initialize(GameMatch gameMatch)
         {
+            _matchRepository.Set(gameMatch);
+            _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
+            _playerPrefs.Save();
+            ChangeMatchState(GameState.StartRound);
+            
             _getRoundEvery3Seconds.Execute()
                 .Subscribe(OnGetRoundInfo)
                 .AddTo(_disposables);
@@ -98,22 +104,9 @@ namespace Features.Game.Scripts.Presentation
                     ? GameState.StartReroll
                     : GameState.StartUpgrade);
             }).AddTo(_disposables);
-        }
 
-        public void SetMatch(GameMatch gameMatch)
-        {
-            _matchRepository.Set(gameMatch);
-            _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
-            _playerPrefs.Save();
-            ChangeMatchState(GameState.StartRound);
-        }
-
-        public void StartNewRound()
-        {
-            ChangeMatchState(GameState.StartRound);
-            var match = _matchRepository.Get();
-            match.Board.Rounds.Add(new Round());
-            _matchRepository.Set(match);
+            _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
+            _view.UpgradeCardPlayed().Subscribe(_ => ChangeMatchState(GameState.StartUnit)).AddTo(_disposables);
         }
 
         private void PlayUpgradeCard(string cardName)
@@ -227,7 +220,6 @@ namespace Features.Game.Scripts.Presentation
         //also if random seed can be applied (so the orders of shuffles remains) it could be used to save lots of issues
         private void OnGetRoundInfo(Round round)
         {
-            var matchState = _matchStateRepository.Get();
             _view.UpdateTimer(round);
             
             foreach (var strategy in _gameStateStrategies)
@@ -248,7 +240,7 @@ namespace Features.Game.Scripts.Presentation
         private void ResetGameState(GameMatch gameMatch)
         {
             _view.Clear();
-            _view.StartGame(gameMatch);
+            _view.SetupViews(gameMatch);
             _view.ShowHand(_matchRepository.Get().Hand);
             RecoverMatchState(gameMatch);
 

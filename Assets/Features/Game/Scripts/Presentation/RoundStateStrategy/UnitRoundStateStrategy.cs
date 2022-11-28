@@ -23,11 +23,7 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
             {
                 _matchStateRepository.Set(GameState.UpgradeReveal);
                 //en callback de coroutina de la vista
-                _gameView.ShowUpgradeCardsPlayedRound(round, () =>
-                {
-                    _matchStateRepository.Set(GameState.StartUnit);
-                    // isWorking = false;
-                });
+                _gameView.ShowUpgradeCardsPlayedRound(round);
                 return;
             }
 
