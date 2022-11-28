@@ -110,7 +110,7 @@ namespace Features.Game.Scripts.Presentation
 
         private void PlayUpgradeCard(string cardName)
         {
-            _view.Log($"Presenter Play Unit");
+            _view.Log($"Presenter Play Upgrade");
 
             var matchState = _matchStateRepository.Get();
 

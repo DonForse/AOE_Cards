@@ -19,8 +19,8 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public void Execute(Round round)
         {
-            _view.StartRound(round);
             _matchStateRepository.Set(MatchState.StartRoundUpgradeReveal);
+            _view.StartRound(round);
         }
     }
 }

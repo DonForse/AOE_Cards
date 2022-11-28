@@ -111,8 +111,8 @@ namespace Features.Game.Scripts.Tests.Editor
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                _view.Received(1).ShowHand(Arg.Any<Hand>());
                 _matchStateRepository.Received(1).Set(MatchState.SelectUpgrade);
+                _view.Received(1).ShowHand(Arg.Any<Hand>());
                 _view.Received(1).ToggleView(HandType.Upgrade);
             });
         }
@@ -144,8 +144,8 @@ namespace Features.Game.Scripts.Tests.Editor
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                _view.Received(1).ShowHand(Arg.Any<Hand>());
                 _matchStateRepository.Received(1).Set(MatchState.SelectUnit);
+                _view.Received(1).ShowHand(Arg.Any<Hand>());
                 _view.Received(1).ToggleView(HandType.Unit);
             });
         }
@@ -281,8 +281,8 @@ namespace Features.Game.Scripts.Tests.Editor
             Received.InOrder(() =>
             {
                 _view.Received(1).UpdateTimer(expectedRound);
-                _view.ShowRoundUpgrade(expectedRound);
                 _matchStateRepository.Received(1).Set(MatchState.WaitRoundUpgradeReveal);
+                _view.ShowRoundUpgrade(expectedRound);
             });
         }
         
@@ -355,11 +355,14 @@ namespace Features.Game.Scripts.Tests.Editor
         public void PlayUnitCardWhenCardIsPlayed()
         {
             var expectedCardName = "some card";
+            var card = new UnitCardData() {cardName = expectedCardName};
+            var match = AMatch(
+                withHand: new Hand(new List<UnitCardData> {card}, null));
             ISubject<string> unitCardPlayedSubject = new Subject<string>();
             _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
-            GivenMatchSetupWith(AMatch());
+            GivenMatchSetupWith(match);
             GivenInitialize();
-            GivenMatchInRepository(AMatch());
+            GivenMatchInRepository(match);
             GivenMatchStateRepository(MatchState.SelectUnit);
             WhenPlayUnit();
             ThenPlayUnitCardIsCalledInService(expectedCardName);
@@ -371,11 +374,14 @@ namespace Features.Game.Scripts.Tests.Editor
         public void NotPlayUnitCardWhenCardIsPlayedAndNotInSelectUnitState()
         {
             var expectedCardName = "some card";
+            var card = new UnitCardData() {cardName = expectedCardName};
+            var match = AMatch(
+                withHand: new Hand(new List<UnitCardData> {card}, null));       
             ISubject<string> unitCardPlayedSubject = new Subject<string>();
             _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
-            GivenMatchSetupWith(AMatch());
+            GivenMatchSetupWith(match);
             GivenInitialize();
-            GivenMatchInRepository(AMatch());
+            GivenMatchInRepository(match);
             GivenMatchStateRepository(MatchState.SelectUpgrade);
             WhenPlayUnit();
             ThenNotPlayUnitCardIsCalledInService(expectedCardName);
@@ -387,13 +393,17 @@ namespace Features.Game.Scripts.Tests.Editor
         public void PlayUnitCardWhenPlayServiceReturns()
         {
             var expectedCardName = "some card";
+            var card = new UnitCardData() {cardName = expectedCardName};
+            var match = AMatch(
+                withHand: new Hand(new List<UnitCardData> {card}, null));
+            
             ISubject<string> unitCardPlayedSubject = new Subject<string>();
             var expectedHand = new Hand(new List<UnitCardData>(), new List<UpgradeCardData>());
 
             _view.UnitCardPlayed().Returns(unitCardPlayedSubject);
-            GivenMatchSetupWith(AMatch());
+            GivenMatchSetupWith(match);
             GivenInitialize();
-            GivenMatchInRepository(AMatch());
+            GivenMatchInRepository(match);
             GivenPlayServicePlayUnitCardReturns(expectedCardName, expectedHand);
             GivenMatchStateRepository(MatchState.SelectUnit);
             WhenPlayUnitCard();
@@ -412,11 +422,14 @@ namespace Features.Game.Scripts.Tests.Editor
         public void PlayUpgradeCardWhenCardIsPlayed()
         {
             var expectedCardName = "some card";
+            var card = new UpgradeCardData() {cardName = expectedCardName};
+            var match = AMatch(
+                withHand: new Hand(null,new List<UpgradeCardData> {card}));     
             ISubject<string> upgradeCardPlayedSubject = new Subject<string>();
             _view.UpgradeCardPlayed().Returns(upgradeCardPlayedSubject);
-            GivenMatchSetupWith(AMatch());
+            GivenMatchSetupWith(match);
             GivenInitialize();
-            GivenMatchInRepository(AMatch());
+            GivenMatchInRepository(match);
             GivenMatchStateRepository(MatchState.SelectUpgrade);
             WhenUpgradeCardIsPlayed();
             ThenPlayUpgradeCardIsCalledInService(expectedCardName);
@@ -428,13 +441,17 @@ namespace Features.Game.Scripts.Tests.Editor
         public void PlayUpgradeCardWhenPlayServiceReturns()
         {
             var expectedCardName = "some card";
+            var card = new UpgradeCardData() {cardName = expectedCardName};
+            var match = AMatch(
+                withHand: new Hand(null,new List<UpgradeCardData> {card}));     
+            
             ISubject<string> upgradeCardSubject = new Subject<string>();
             var expectedHand = new Hand(new List<UnitCardData>(), new List<UpgradeCardData>());
 
             _view.UpgradeCardPlayed().Returns(upgradeCardSubject);
-            GivenMatchSetupWith(AMatch());
+            GivenMatchSetupWith(match);
             GivenInitialize();
-            GivenMatchInRepository(AMatch());
+            GivenMatchInRepository(match);
             GivenMatchStateRepository(MatchState.SelectUpgrade);
             GivenPlayServicePlayUpgradeCardReturns(expectedCardName, expectedHand);
             upgradeCardSubject.OnNext(expectedCardName);

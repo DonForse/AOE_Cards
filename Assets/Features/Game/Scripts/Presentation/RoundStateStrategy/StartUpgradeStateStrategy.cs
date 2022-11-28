@@ -24,8 +24,8 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
             //TODO: this is necessary to change it being valid so it only calls once... change. 
             if (round.RoundState == RoundState.Upgrade)
                 _matchStateRepository.Set(MatchState.SelectUpgrade);
-            _view.ToggleView(HandType.Upgrade);
             _view.ShowHand(_matchRepository.Get().Hand);
+            _view.ToggleView(HandType.Upgrade);
         }
     }
 }
