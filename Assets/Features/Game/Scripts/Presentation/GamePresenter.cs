@@ -231,45 +231,6 @@ namespace Features.Game.Scripts.Presentation
                 break;
             }
 
-            // if (matchState == MatchState.StartRound) //where does match state comes from (I think it initializes on the view and then gets updated puaj
-            // {
-            //     ChangeMatchState(MatchState.StartRoundUpgradeReveal);
-            //     _view.StartRound(round);
-            //     return;
-            // }
-
-            // if (matchState == MatchState.StartRoundUpgradeReveal)
-            // {
-            //     _view.ShowRoundUpgrade(round);
-            //     ChangeMatchState(MatchState.WaitRoundUpgradeReveal);
-            //     return;
-            // }
-            //
-            // if (matchState == MatchState.StartReroll)
-            // {
-            //     ChangeMatchState(MatchState.Reroll);
-            //     _view.ShowReroll();
-            //     return;
-            // }
-
-            // if (matchState == MatchState.StartUpgrade)
-            // {
-            //     _view.ShowHand(_matchRepository.Get().Hand);
-            //     if (round.RoundState == RoundState.Upgrade)
-            //         ChangeMatchState(MatchState.SelectUpgrade);
-            //     _view.ToggleView(HandType.Upgrade);
-            //     return;
-            // }
-
-            // if (matchState == MatchState.StartUnit)
-            // {
-            //     _view.ShowHand(_matchRepository.Get().Hand);
-            //     if (round.RoundState == RoundState.Unit)
-            //         ChangeMatchState(MatchState.SelectUnit);
-            //     _view.ToggleView(HandType.Unit);
-            //     return;
-            // }
-
             if (round.RoundState == RoundState.Upgrade)
             {
                 if (matchState == MatchState.Reroll || matchState == MatchState.WaitReroll)
