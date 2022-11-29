@@ -75,7 +75,6 @@ namespace Features.Game.Scripts.Presentation
             _matchRepository.Set(gameMatch);
             _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
             _playerPrefs.Save();
-            ChangeMatchState(GameState.StartRound);
             
             _getRoundEvery3Seconds.Execute()
                 .Subscribe(OnGetRoundInfo)
@@ -107,6 +106,8 @@ namespace Features.Game.Scripts.Presentation
 
             _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
             _view.UpgradeShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartUnit)).AddTo(_disposables);
+            ChangeMatchState(GameState.StartRound);
+
         }
 
         private void PlayUpgradeCard(string cardName)

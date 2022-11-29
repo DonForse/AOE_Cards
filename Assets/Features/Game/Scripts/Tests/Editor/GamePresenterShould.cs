@@ -302,9 +302,9 @@ namespace Features.Game.Scripts.Tests.Editor
         }
 
         [Test]
-        public void ShowRerollWhenGetRoundInfoAndMatchStateIsStartReroll()
+        public void ShowRerollWhenGetRoundInfoAndRoundStateIsRerollAndHasReroll()
         {
-            var expectedRound = new Round(){RoundState = RoundState.Reroll};
+            var expectedRound = new Round(){RoundState = RoundState.Reroll, HasReroll = true};
             _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             GivenMatchStateRepository(GameState.StartReroll);
             WhenInitialize(AMatch());
@@ -504,9 +504,10 @@ namespace Features.Game.Scripts.Tests.Editor
         public void WhenShowRoundUpgradeCompletedAndRoundIsInRerollThenChangeMatchStateToStartReroll()
         {
             var expectedRound = new Round() {RoundState = RoundState.Reroll, HasReroll = true};
-            GivenMatchInRepository(AMatch(withRounds: new List<Round> {expectedRound}));
+            var match = AMatch(withRounds: new List<Round> {expectedRound});
+            GivenMatchInRepository(match);
             var roundUpgradeCompletedSubject = GivenRoundUpgradeCompletedSubject();
-            GivenInitialize(AMatch(withRounds: new List<Round> {expectedRound}));
+            GivenInitialize(match);
             WhenRoundUpgradeCompletesBeingShown();
             _matchStateRepository.Received(1).Set(GameState.StartReroll);
 
@@ -702,6 +703,7 @@ namespace Features.Game.Scripts.Tests.Editor
             ISubject<Unit> unitShowdownCompletedSubject = new Subject<Unit>();
             _view.UnitShowDownCompleted().Returns(unitShowdownCompletedSubject);
             GivenInitialize(AMatch());
+            _matchStateRepository.ClearReceivedCalls();
             unitShowdownCompletedSubject.OnNext(Unit.Default);
             _matchStateRepository.Received(1).Set(GameState.StartRound);
         }
