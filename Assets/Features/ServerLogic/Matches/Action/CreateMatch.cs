@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Matches.Service;
 using ServerLogic.Cards.Actions;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
@@ -22,12 +23,13 @@ namespace Features.ServerLogic.Matches.Action
         private readonly CreateBotUser _createBot;
         private readonly GetUnitCard _getUnitCard;
         private readonly GetUpgradeCard _getUpgradeCard;
-
+        private readonly IServerConfiguration _serverConfiguration;
         public CreateMatch(IMatchesRepository matchRepository,
-            ICardRepository cardRepository)
+            ICardRepository cardRepository, IServerConfiguration serverConfiguration)
         {
             _matchRepository = matchRepository;
             _cardRepository = cardRepository;
+            _serverConfiguration = serverConfiguration;
             _createBot = new CreateBotUser();
             _getUnitCard = new GetUnitCard(_cardRepository);
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
@@ -63,8 +65,8 @@ namespace Features.ServerLogic.Matches.Action
             {
                 match.Board.PlayersHands.Add(user.Id, new Hand
                 {
-                    UnitsCards = match.Board.Deck.TakeUnitCards(ServerConfiguration.GetAmountUnitCardsForPlayers()),
-                    UpgradeCards = match.Board.Deck.TakeUpgradeCards(ServerConfiguration.GetAmountUpgradeCardForPlayers())
+                    UnitsCards = match.Board.Deck.TakeUnitCards(_serverConfiguration.GetAmountUnitCardsForPlayers()),
+                    UpgradeCards = match.Board.Deck.TakeUpgradeCards(_serverConfiguration.GetAmountUpgradeCardForPlayers())
                 });
 
                 match.Board.PlayersHands[user.Id].UnitsCards.Add(_cardRepository.GetUnitCard("villager"));

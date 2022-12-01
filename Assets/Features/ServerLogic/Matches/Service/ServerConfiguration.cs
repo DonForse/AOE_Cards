@@ -1,30 +1,30 @@
 ﻿using System;
 
-namespace ServerLogic.Matches.Service
+namespace Features.ServerLogic.Matches.Service
 {
-    public static class ServerConfiguration
+    public class ServerConfiguration : IServerConfiguration
     {
-        internal static int GetAmountUnitCardsForPlayers()
+        public int GetAmountUnitCardsForPlayers()
         {
             return 7;
         }
 
-        internal static int GetAmountUpgradeCardForPlayers()
+        public int GetAmountUpgradeCardForPlayers()
         {
             return 7;
         }
 
-        internal static int GetRoundTimerDurationInSeconds()
+        public int GetRoundTimerDurationInSeconds()
         {
             return 40;
         }
 
-        internal static int GetMaxBotWaitForPlayRoundTimeInSeconds()
+        public int GetMaxBotWaitForPlayRoundTimeInSeconds()
         {
             return 38;
         }
 
-        internal static TimeSpan GetDurationInTimerForBotMatch()
+        public TimeSpan GetDurationInTimerForBotMatch()
         {
             return TimeSpan.FromSeconds(30);
         }

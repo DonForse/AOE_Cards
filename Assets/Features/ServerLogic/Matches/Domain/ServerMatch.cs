@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Matches.Service;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Matches.Domain;
@@ -115,7 +116,7 @@ namespace Features.ServerLogic.Matches.Domain
                 RoundUpgradeCard = Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
                 PlayerWinner = null,
                 roundNumber = this.Board.RoundsPlayed.Count + 1,
-                NextAction = new Random().Next( ServerConfiguration.GetMaxBotWaitForPlayRoundTimeInSeconds(), ServerConfiguration.GetRoundTimerDurationInSeconds())
+                NextAction = new Random().Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds())
             };
             if (round.roundNumber == 3 || round.roundNumber == 6)
                 round.ChangeRoundState(RoundState.Reroll);

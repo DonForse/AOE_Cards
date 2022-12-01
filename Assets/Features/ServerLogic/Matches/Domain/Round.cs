@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.ServerLogic.Matches.Service;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Matches.Service;
 using ServerLogic.Users.Domain;
@@ -19,7 +20,7 @@ namespace ServerLogic.Matches.Domain
         public IDictionary<string, bool> PlayerReroll;
 
         public int NextAction;
-        public int Timer { get { return (int)(RoundPlayStartTime - DateTime.Now).TotalSeconds + ServerConfiguration.GetRoundTimerDurationInSeconds(); } }
+        public int Timer { get { return (int)(RoundPlayStartTime - DateTime.Now).TotalSeconds + new ServerConfiguration().GetRoundTimerDurationInSeconds(); } }
 
         public Round(IEnumerable<string> users)
         {
@@ -30,7 +31,7 @@ namespace ServerLogic.Matches.Domain
                 PlayerReroll.Add(user, false);
             }
             RoundPlayStartTime = DateTime.Now;
-            NextAction = new Random().Next(ServerConfiguration.GetMaxBotWaitForPlayRoundTimeInSeconds(), ServerConfiguration.GetRoundTimerDurationInSeconds());
+            NextAction = new Random().Next(new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds());
         }
 
         public void ChangeRoundState(RoundState roundState) {

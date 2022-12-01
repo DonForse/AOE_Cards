@@ -1,8 +1,9 @@
-﻿using ServerLogic.Cards.Infrastructure;
+﻿using Features.ServerLogic.Matches.Service;
+using ServerLogic.Cards.Infrastructure;
 using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Users.Infrastructure;
 
-namespace ServerLogic
+namespace Features.ServerLogic
 {
     public static class ServerLogicProvider
     {
@@ -17,5 +18,8 @@ namespace ServerLogic
         public static IMatchesRepository MatchesRepository() => _matchesRepository ??= new InMemoryMatchesRepository();
         public static IUsersRepository UsersRepository() => _usersRepository ??= new InMemoryUsersRepository();
         public static ICardRepository CardRepository() => _cardRepository ??= new InMemoryCardRepository();
+
+        public static IServerConfiguration ServerConfiguration() => new ServerConfiguration();
+
     }
 }

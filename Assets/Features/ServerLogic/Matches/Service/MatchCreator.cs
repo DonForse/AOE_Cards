@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Service;
 using ServerLogic.Cards.Infrastructure;
 using ServerLogic.Matches.Action;
 using ServerLogic.Matches.Infrastructure;
@@ -27,7 +28,8 @@ namespace ServerLogic.Matches.Service
         public MatchCreator(IMatchesRepository matchRepository,
             ICardRepository cardRepository, 
             IUsersQueuedRepository usersQueuedRepository,
-            IFriendsUsersQueuedRepository friendsUsersQueuedRepository)
+            IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
+            IServerConfiguration serverConfiguration)
         {
             _matchRepository = matchRepository;
             _cardRepository = cardRepository;
@@ -37,7 +39,7 @@ namespace ServerLogic.Matches.Service
             _enqueueUser = new EnqueueUser(_usersQueuedRepository);
             _dequeueFriendUser = new DequeueFriendUser(_friendsQueuedRepository);
             _enqueueFriendUser = new EnqueueFriendUser(_friendsQueuedRepository);
-            _createMatch = new CreateMatch(_matchRepository, _cardRepository);
+            _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration);
         }
 
         public void CreateMatches()

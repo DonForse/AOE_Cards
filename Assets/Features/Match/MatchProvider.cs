@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Features.ServerLogic;
+using Infrastructure;
 using Match.Domain;
 using ServerLogic;
 using ServerLogic.Controllers;
@@ -12,6 +13,6 @@ namespace Match
         public static IMatchService MatchService(ICardProvider cardProvider) => _matchService ??= new MatchService(cardProvider);
         public static IMatchService OfflineMatchService(ICardProvider cardProvider) => _matchService ??= new OfflineMatchService(cardProvider,
             new MatchController(ServerLogicProvider.UsersQueuedRepository(), ServerLogicProvider.FriendsUserQueuedRepository(),
-                ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository(),ServerLogicProvider.UsersRepository()));
+                ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository(),ServerLogicProvider.UsersRepository(), ServerLogicProvider.ServerConfiguration()));
     }
 }

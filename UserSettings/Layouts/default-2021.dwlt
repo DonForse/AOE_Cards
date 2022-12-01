@@ -41,7 +41,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 267
     y: 0
-    width: 294
+    width: 505
     height: 709
   m_MinSize: {x: 102, y: 121}
   m_MaxSize: {x: 4002, y: 4021}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 82
+  controlID: 42
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 83
+  controlID: 160
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 84
+  controlID: 161
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -239,9 +239,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 561
+    x: 772
     y: 0
-    width: 871
+    width: 660
     height: 709
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
@@ -296,8 +296,8 @@ MonoBehaviour:
     y: 0
     width: 472
     height: 931
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 20}
@@ -327,7 +327,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 275
     y: 81
-    width: 292
+    width: 503
     height: 688
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -340,11 +340,11 @@ MonoBehaviour:
     - e00: 0.6867347
       e01: 0
       e02: 0
-      e03: -185.48978
+      e03: -92.48977
       e10: 0
       e11: 0.6867347
       e12: 0
-      e13: 218.05615
+      e13: 210.05615
       e20: 0
       e21: 0
       e22: 1
@@ -400,7 +400,7 @@ MonoBehaviour:
     m_LastAppliedPresetName: Default
     m_SaveData: []
   m_Spl:
-    ID: 167
+    ID: 183
     splitterInitialOffset: 0
     currentActiveSplitter: -1
     realSizes:
@@ -467,7 +467,7 @@ MonoBehaviour:
       name: AoE Cards
       fullName: AoE Cards
       resultStatus: 2
-      duration: 0.6706286
+      duration: 0.0367169
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -483,7 +483,7 @@ MonoBehaviour:
       name: Assembly-CSharp-Editor.dll
       fullName: D:/Unity/AOE_Cards/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
       resultStatus: 2
-      duration: 0.6359272
+      duration: 0.0166504
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -499,7 +499,7 @@ MonoBehaviour:
       name: Features
       fullName: Features
       resultStatus: 2
-      duration: 0.5410138
+      duration: 0.0162586
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -515,7 +515,7 @@ MonoBehaviour:
       name: Game
       fullName: Features.Game
       resultStatus: 1
-      duration: 0.5199374
+      duration: 0.565976
       messages: 
       output: 
       stacktrace: 
@@ -531,7 +531,7 @@ MonoBehaviour:
       name: Scripts
       fullName: Features.Game.Scripts
       resultStatus: 1
-      duration: 0.5169565
+      duration: 0.563153
       messages: 
       output: 
       stacktrace: 
@@ -547,7 +547,7 @@ MonoBehaviour:
       name: Tests
       fullName: Features.Game.Scripts.Tests
       resultStatus: 1
-      duration: 0.5134037
+      duration: 0.5600865
       messages: 
       output: 
       stacktrace: 
@@ -563,7 +563,7 @@ MonoBehaviour:
       name: Editor
       fullName: Features.Game.Scripts.Tests.Editor
       resultStatus: 1
-      duration: 0.5100618
+      duration: 0.556929
       messages: 
       output: 
       stacktrace: 
@@ -579,7 +579,7 @@ MonoBehaviour:
       name: GamePresenterShould
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould
       resultStatus: 1
-      duration: 0.5059128
+      duration: 0.5528279
       messages: 
       output: 
       stacktrace: 
@@ -595,7 +595,7 @@ MonoBehaviour:
       name: CallGetRoundsEvery3Seconds
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallGetRoundsEvery3Seconds
       resultStatus: 1
-      duration: 0.2451303
+      duration: 0.2774518
       messages: 
       output: 
       stacktrace: 
@@ -612,7 +612,7 @@ MonoBehaviour:
       name: CallOnRoundOnViewWhenGetRound
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallOnRoundOnViewWhenGetRound
       resultStatus: 1
-      duration: 0.0095256
+      duration: 0.0092513
       messages: 
       output: 
       stacktrace: 
@@ -629,7 +629,7 @@ MonoBehaviour:
       name: CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit
       resultStatus: 1
-      duration: 0.0043999
+      duration: 0.0044529
       messages: 
       output: 
       stacktrace: 
@@ -646,7 +646,7 @@ MonoBehaviour:
       name: CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade
       resultStatus: 1
-      duration: 0.0031137
+      duration: 0.0037456
       messages: 
       output: 
       stacktrace: 
@@ -663,7 +663,7 @@ MonoBehaviour:
       name: CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound
       resultStatus: 1
-      duration: 0.0034705
+      duration: 0.0042081
       messages: 
       output: 
       stacktrace: 
@@ -680,7 +680,7 @@ MonoBehaviour:
       name: CallViewOnReRollCompleteWhenPlayServiceReturns
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallViewOnReRollCompleteWhenPlayServiceReturns
       resultStatus: 1
-      duration: 0.0091884
+      duration: 0.0083147
       messages: 
       output: 
       stacktrace: 
@@ -697,7 +697,7 @@ MonoBehaviour:
       name: ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit
       resultStatus: 1
-      duration: 0.0033868
+      duration: 0.0032066
       messages: 
       output: 
       stacktrace: 
@@ -714,7 +714,7 @@ MonoBehaviour:
       name: ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade
       resultStatus: 1
-      duration: 0.003019
+      duration: 0.0030689
       messages: 
       output: 
       stacktrace: 
@@ -731,7 +731,7 @@ MonoBehaviour:
       name: ChangeMatchStateWhenUnitsFinishBeingRevealed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateWhenUnitsFinishBeingRevealed
       resultStatus: 1
-      duration: 0.003442
+      duration: 0.0034677
       messages: 
       output: 
       stacktrace: 
@@ -748,7 +748,7 @@ MonoBehaviour:
       name: ChangeMatchStateWhenUpgradesFinishBeingRevealed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateWhenUpgradesFinishBeingRevealed
       resultStatus: 1
-      duration: 0.0023744
+      duration: 0.002398
       messages: 
       output: 
       stacktrace: 
@@ -765,7 +765,7 @@ MonoBehaviour:
       name: HideRerollWhenRoundStatusIsUpgradeButMatchStateIs
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.HideRerollWhenRoundStatusIsUpgradeButMatchStateIs
       resultStatus: 1
-      duration: 0.0178292
+      duration: 0.0186743
       messages: 
       output: 
       stacktrace: 
@@ -781,7 +781,7 @@ MonoBehaviour:
       name: HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       resultStatus: 1
-      duration: 0.0033547
+      duration: 0.0034258
       messages: 
       output: 
       stacktrace: 
@@ -798,7 +798,7 @@ MonoBehaviour:
       name: HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       resultStatus: 1
-      duration: 0.0025849
+      duration: 0.0025741
       messages: 
       output: 
       stacktrace: 
@@ -815,7 +815,7 @@ MonoBehaviour:
       name: NotPlayUnitCardWhenCardIsPlayedAndNotInSelectUnitState
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotPlayUnitCardWhenCardIsPlayedAndNotInSelectUnitState
       resultStatus: 1
-      duration: 0.0068135
+      duration: 0.0066009
       messages: 
       output: 'Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -835,7 +835,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       resultStatus: 1
-      duration: 0.0277798
+      duration: 0.0385452
       messages: 
       output: 
       stacktrace: 
@@ -851,7 +851,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       resultStatus: 1
-      duration: 0.0035524
+      duration: 0.0035587
       messages: 
       output: 
       stacktrace: 
@@ -868,7 +868,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,StartUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,StartUnit)
       resultStatus: 1
-      duration: 0.0025975
+      duration: 0.0026637
       messages: 
       output: 
       stacktrace: 
@@ -885,7 +885,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       resultStatus: 1
-      duration: 0.0025134
+      duration: 0.0026272
       messages: 
       output: 
       stacktrace: 
@@ -902,7 +902,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       resultStatus: 1
-      duration: 0.0026588
+      duration: 0.0026098
       messages: 
       output: 
       stacktrace: 
@@ -919,7 +919,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,StartUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,StartUnit)
       resultStatus: 1
-      duration: 0.0025782
+      duration: 0.0025626
       messages: 
       output: 
       stacktrace: 
@@ -936,7 +936,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       resultStatus: 1
-      duration: 0.0025113
+      duration: 0.0024936
       messages: 
       output: 
       stacktrace: 
@@ -953,7 +953,7 @@ MonoBehaviour:
       name: OnRecoverFocusEndWhenGameFinished
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusEndWhenGameFinished
       resultStatus: 1
-      duration: 0.0049882
+      duration: 0.0053897
       messages: 
       output: 
       stacktrace: 
@@ -970,7 +970,7 @@ MonoBehaviour:
       name: OnRecoverFocusResetGameState
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusResetGameState
       resultStatus: 1
-      duration: 0.0030004
+      duration: 0.0030205
       messages: 
       output: 
       stacktrace: 
@@ -987,7 +987,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartRerollWhenRoundInReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartRerollWhenRoundInReroll
       resultStatus: 1
-      duration: 0.0027652
+      duration: 0.002757
       messages: 
       output: 
       stacktrace: 
@@ -1004,7 +1004,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartRoundWhenRoundFinished
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartRoundWhenRoundFinished
       resultStatus: 1
-      duration: 0.0027249
+      duration: 0.0027636
       messages: 
       output: 
       stacktrace: 
@@ -1021,7 +1021,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartUnitWhenRoundInUnitAndCardNotPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartUnitWhenRoundInUnitAndCardNotPlayedFromUser
       resultStatus: 1
-      duration: 0.0031262
+      duration: 0.0031377
       messages: 
       output: 
       stacktrace: 
@@ -1038,7 +1038,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser
       resultStatus: 1
-      duration: 0.0027945
+      duration: 0.0028105
       messages: 
       output: 
       stacktrace: 
@@ -1055,7 +1055,7 @@ MonoBehaviour:
       name: OnRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll
       resultStatus: 1
-      duration: 0.0027242
+      duration: 0.0027324
       messages: 
       output: 
       stacktrace: 
@@ -1072,7 +1072,7 @@ MonoBehaviour:
       name: OnRecoverFocusWaitUnitWhenRoundInUnitAndCardPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusWaitUnitWhenRoundInUnitAndCardPlayedFromUser
       resultStatus: 1
-      duration: 0.0037287
+      duration: 0.0036964
       messages: 
       output: 'Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1092,7 +1092,7 @@ MonoBehaviour:
       name: OnRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser
       resultStatus: 1
-      duration: 0.0037224
+      duration: 0.0038038
       messages: 
       output: 'Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1112,7 +1112,7 @@ MonoBehaviour:
       name: PlayUnitCardWhenCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUnitCardWhenCardIsPlayed
       resultStatus: 1
-      duration: 0.0064335
+      duration: 0.0065093
       messages: 
       output: 'Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1132,7 +1132,7 @@ MonoBehaviour:
       name: PlayUnitCardWhenPlayServiceReturns
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUnitCardWhenPlayServiceReturns
       resultStatus: 1
-      duration: 0.0037433
+      duration: 0.0037628
       messages: 
       output: 'Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1152,7 +1152,7 @@ MonoBehaviour:
       name: PlayUpgradeCardWhenCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUpgradeCardWhenCardIsPlayed
       resultStatus: 1
-      duration: 0.0039839
+      duration: 0.0039371
       messages: 
       output: 'Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1172,7 +1172,7 @@ MonoBehaviour:
       name: PlayUpgradeCardWhenPlayServiceReturns
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUpgradeCardWhenPlayServiceReturns
       resultStatus: 1
-      duration: 0.0033565
+      duration: 0.0032791
       messages: 
       output: 'Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1192,7 +1192,7 @@ MonoBehaviour:
       name: RemoveUnitCardFromHandWhenUnitCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.RemoveUnitCardFromHandWhenUnitCardIsPlayed
       resultStatus: 1
-      duration: 0.0077197
+      duration: 0.0074498
       messages: 
       output: 'Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1219,7 +1219,7 @@ MonoBehaviour:
       name: RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed
       resultStatus: 1
-      duration: 0.0146924
+      duration: 0.0041816
       messages: 
       output: 'Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1246,7 +1246,7 @@ MonoBehaviour:
       name: SendReRollWhenReRoll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.SendReRollWhenReRoll
       resultStatus: 1
-      duration: 0.0027936
+      duration: 0.0025878
       messages: 
       output: 
       stacktrace: 
@@ -1263,7 +1263,7 @@ MonoBehaviour:
       name: ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase
       resultStatus: 1
-      duration: 0.0148202
+      duration: 0.014595
       messages: 
       output: 
       stacktrace: 
@@ -1279,7 +1279,7 @@ MonoBehaviour:
       name: ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(Finished,RoundResultReveal)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(Finished,RoundResultReveal)
       resultStatus: 1
-      duration: 0.003157
+      duration: 0.003101
       messages: 
       output: 
       stacktrace: 
@@ -1296,7 +1296,7 @@ MonoBehaviour:
       name: ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(GameFinished,RoundResultReveal)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(GameFinished,RoundResultReveal)
       resultStatus: 1
-      duration: 0.0026144
+      duration: 0.0025251
       messages: 
       output: 
       stacktrace: 
@@ -1313,7 +1313,7 @@ MonoBehaviour:
       name: ShowRerollWhenGetRoundInfoAndRoundStateIsRerollAndHasReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRerollWhenGetRoundInfoAndRoundStateIsRerollAndHasReroll
       resultStatus: 1
-      duration: 0.0029876
+      duration: 0.0028958
       messages: 
       output: 
       stacktrace: 
@@ -1330,7 +1330,7 @@ MonoBehaviour:
       name: ShowRivalReadyWhenRoundStatusIsUnitAndMatchStateIsUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalReadyWhenRoundStatusIsUnitAndMatchStateIsUpgrade
       resultStatus: 1
-      duration: 0.0028776
+      duration: 0.0137714
       messages: 
       output: 
       stacktrace: 
@@ -1347,7 +1347,7 @@ MonoBehaviour:
       name: ShowRivalReadyWhenRoundStatusIsUnitAndRivalIsReady
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalReadyWhenRoundStatusIsUnitAndRivalIsReady
       resultStatus: 1
-      duration: 0.002809
+      duration: 0.0031628
       messages: 
       output: 
       stacktrace: 
@@ -1364,7 +1364,7 @@ MonoBehaviour:
       name: ShowRivalReadyWhenRoundStatusIsUpgradeAndRivalIsReady
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalReadyWhenRoundStatusIsUpgradeAndRivalIsReady
       resultStatus: 1
-      duration: 0.0027715
+      duration: 0.0028538
       messages: 
       output: 
       stacktrace: 
@@ -1381,7 +1381,7 @@ MonoBehaviour:
       name: ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs
       resultStatus: 1
-      duration: 0.0156822
+      duration: 0.01588
       messages: 
       output: 
       stacktrace: 
@@ -1397,7 +1397,7 @@ MonoBehaviour:
       name: ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       resultStatus: 1
-      duration: 0.0032317
+      duration: 0.0033994
       messages: 
       output: 
       stacktrace: 
@@ -1414,7 +1414,7 @@ MonoBehaviour:
       name: ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       resultStatus: 1
-      duration: 0.00263
+      duration: 0.0026657
       messages: 
       output: 
       stacktrace: 
@@ -1431,7 +1431,7 @@ MonoBehaviour:
       name: ShowRoundUpgradeWhenMatchStateIsStartRoundUpgradeReveal
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRoundUpgradeWhenMatchStateIsStartRoundUpgradeReveal
       resultStatus: 1
-      duration: 0.0030671
+      duration: 0.0030498
       messages: 
       output: 
       stacktrace: 
@@ -1448,7 +1448,7 @@ MonoBehaviour:
       name: ShowStartRoundWhenMatchStateIsStartRound
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowStartRoundWhenMatchStateIsStartRound
       resultStatus: 1
-      duration: 0.0028855
+      duration: 0.0028073
       messages: 
       output: 
       stacktrace: 
@@ -1465,7 +1465,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       resultStatus: 1
-      duration: 0.0195393
+      duration: 0.022058
       messages: 
       output: 
       stacktrace: 
@@ -1481,7 +1481,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       resultStatus: 1
-      duration: 0.003196
+      duration: 0.0033268
       messages: 
       output: 
       stacktrace: 
@@ -1498,7 +1498,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       resultStatus: 1
-      duration: 0.0026351
+      duration: 0.0026242
       messages: 
       output: 
       stacktrace: 
@@ -1515,7 +1515,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       resultStatus: 1
-      duration: 0.0027598
+      duration: 0.0025825
       messages: 
       output: 
       stacktrace: 
@@ -1532,7 +1532,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       resultStatus: 1
-      duration: 0.0027925
+      duration: 0.0026967
       messages: 
       output: 
       stacktrace: 
@@ -1549,7 +1549,7 @@ MonoBehaviour:
       name: WhenShowRoundUpgradeCompletedAndRoundIsInRerollThenChangeMatchStateToStartReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.WhenShowRoundUpgradeCompletedAndRoundIsInRerollThenChangeMatchStateToStartReroll
       resultStatus: 1
-      duration: 0.0029352
+      duration: 0.0031757
       messages: 
       output: 
       stacktrace: 
@@ -1566,7 +1566,7 @@ MonoBehaviour:
       name: WhenShowRoundUpgradeCompletedAndRoundIsNotInRerollThenChangeMatchStateToStartUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.WhenShowRoundUpgradeCompletedAndRoundIsNotInRerollThenChangeMatchStateToStartUpgrade
       resultStatus: 1
-      duration: 0.0026642
+      duration: 0.0027495
       messages: 
       output: 
       stacktrace: 
@@ -1583,7 +1583,7 @@ MonoBehaviour:
       name: ServerLogic
       fullName: Features.ServerLogic
       resultStatus: 2
-      duration: 0.0207899
+      duration: 0.013181
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -1599,7 +1599,7 @@ MonoBehaviour:
       name: Editor
       fullName: Features.ServerLogic.Editor
       resultStatus: 2
-      duration: 0.0123486
+      duration: 0.0100094
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -1615,7 +1615,7 @@ MonoBehaviour:
       name: Tests
       fullName: Features.ServerLogic.Editor.Tests
       resultStatus: 2
-      duration: 0.0075626
+      duration: 0.006913
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -1631,7 +1631,7 @@ MonoBehaviour:
       name: CreateMatchShould
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould
       resultStatus: 2
-      duration: 0.0072324
+      duration: 0.003784
       messages: One or more child tests had errors
       output: 
       stacktrace: 
@@ -1646,8 +1646,8 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CreateMatchShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchToMatchRepository]
       name: AddMatchToMatchRepository
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchToMatchRepository
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.1297909
       messages: 
       output: 
       stacktrace: 
@@ -1663,11 +1663,14 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CreateMatchShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUnitCards]
       name: AddMatchWithUnitCards
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUnitCards
-      resultStatus: 0
-      duration: 0
+      resultStatus: 2
+      duration: 0.0005004
       messages: 
       output: 
-      stacktrace: 
+      stacktrace: 'at Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUnitCards
+        () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\CreateMatchShould.cs:46
+
+'
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1680,8 +1683,28 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CreateMatchShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUpgradeCards]
       name: AddMatchWithUpgradeCards
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUpgradeCards
-      resultStatus: 0
-      duration: 0
+      resultStatus: 2
+      duration: 0.0005351
+      messages: 
+      output: 
+      stacktrace: 'at Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUpgradeCards
+        () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\CreateMatchShould.cs:52
+
+'
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1022
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateMatchShould][suite]
+    - id: 1024
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CreateMatchShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUsers]
+      name: AddMatchWithUsers
+      fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUsers
+      resultStatus: 1
+      duration: 0.0394088
       messages: 
       output: 
       stacktrace: 
@@ -1698,7 +1721,7 @@ MonoBehaviour:
       name: Home
       fullName: Home
       resultStatus: 1
-      duration: 0.0400539
+      duration: 0.0496668
       messages: 
       output: 
       stacktrace: 
@@ -1714,7 +1737,7 @@ MonoBehaviour:
       name: Scripts
       fullName: Home.Scripts
       resultStatus: 1
-      duration: 0.0320275
+      duration: 0.041841
       messages: 
       output: 
       stacktrace: 
@@ -1730,7 +1753,7 @@ MonoBehaviour:
       name: Tests
       fullName: Home.Scripts.Tests
       resultStatus: 1
-      duration: 0.0318009
+      duration: 0.0292082
       messages: 
       output: 
       stacktrace: 
@@ -1746,7 +1769,7 @@ MonoBehaviour:
       name: Editor
       fullName: Home.Scripts.Tests.Editor
       resultStatus: 1
-      duration: 0.0281642
+      duration: 0.0289204
       messages: 
       output: 
       stacktrace: 
@@ -1762,7 +1785,7 @@ MonoBehaviour:
       name: HomePresenterShould
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould
       resultStatus: 1
-      duration: 0.0248873
+      duration: 0.0253865
       messages: 
       output: 
       stacktrace: 
@@ -1778,7 +1801,7 @@ MonoBehaviour:
       name: CallMatchServiceWhenLeavesQueue
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.CallMatchServiceWhenLeavesQueue
       resultStatus: 1
-      duration: 0.00647
+      duration: 0.0065573
       messages: 
       output: 
       stacktrace: 
@@ -1795,7 +1818,7 @@ MonoBehaviour:
       name: CallOnMatchFoundWhenFindMatchInQueueReturns
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.CallOnMatchFoundWhenFindMatchInQueueReturns
       resultStatus: 1
-      duration: 0.0026224
+      duration: 0.0025641
       messages: 
       output: 
       stacktrace: 
@@ -1812,7 +1835,7 @@ MonoBehaviour:
       name: CallViewWhenLeftQueue
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.CallViewWhenLeftQueue
       resultStatus: 1
-      duration: 0.0020041
+      duration: 0.0019816
       messages: 
       output: 
       stacktrace: 
@@ -1829,7 +1852,7 @@ MonoBehaviour:
       name: CallViewWhenStartMatchReturnsSuccessfully
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.CallViewWhenStartMatchReturnsSuccessfully
       resultStatus: 1
-      duration: 0.0012822
+      duration: 0.0012599
       messages: 
       output: 
       stacktrace: 
@@ -1846,7 +1869,7 @@ MonoBehaviour:
       name: FindMatchInQueueIfEnqueueReturnsNull
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.FindMatchInQueueIfEnqueueReturnsNull
       resultStatus: 1
-      duration: 0.0016737
+      duration: 0.0016859
       messages: 
       output: 
       stacktrace: 
@@ -1863,7 +1886,7 @@ MonoBehaviour:
       name: StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot
       resultStatus: 1
-      duration: 0.0017235
+      duration: 0.0016994
       messages: 
       output: 
       stacktrace: 
@@ -1880,7 +1903,7 @@ MonoBehaviour:
       name: StartSearchingForMatchVersusHardBotWhenPlayVersusHardBot
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchVersusHardBotWhenPlayVersusHardBot
       resultStatus: 1
-      duration: 0.0015595
+      duration: 0.0015264
       messages: 
       output: 
       stacktrace: 
@@ -1897,7 +1920,7 @@ MonoBehaviour:
       name: StartSearchingForMatchWhenPlayMatch
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchWhenPlayMatch
       resultStatus: 1
-      duration: 0.0014471
+      duration: 0.0014283
       messages: 
       output: 
       stacktrace: 
@@ -1914,7 +1937,7 @@ MonoBehaviour:
       name: StartSearchingForMatchWhenPlayMatchVersusFriend
       fullName: Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchWhenPlayMatchVersusFriend
       resultStatus: 1
-      duration: 0.0015535
+      duration: 0.0015563
       messages: 
       output: 
       stacktrace: 
@@ -1931,7 +1954,7 @@ MonoBehaviour:
       name: Login
       fullName: Login
       resultStatus: 1
-      duration: 0.0541655
+      duration: 0.0542081
       messages: 
       output: 
       stacktrace: 
@@ -1947,7 +1970,7 @@ MonoBehaviour:
       name: Scripts
       fullName: Login.Scripts
       resultStatus: 1
-      duration: 0.0467233
+      duration: 0.0471505
       messages: 
       output: 
       stacktrace: 
@@ -1963,7 +1986,7 @@ MonoBehaviour:
       name: Tests
       fullName: Login.Scripts.Tests
       resultStatus: 1
-      duration: 0.0334522
+      duration: 0.0469252
       messages: 
       output: 
       stacktrace: 
@@ -1979,7 +2002,7 @@ MonoBehaviour:
       name: Editor
       fullName: Login.Scripts.Tests.Editor
       resultStatus: 1
-      duration: 0.0331587
+      duration: 0.0435932
       messages: 
       output: 
       stacktrace: 
@@ -1995,7 +2018,7 @@ MonoBehaviour:
       name: LoginPresenterShould
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould
       resultStatus: 1
-      duration: 0.0297332
+      duration: 0.0404389
       messages: 
       output: 
       stacktrace: 
@@ -2011,7 +2034,7 @@ MonoBehaviour:
       name: CallLoginServiceWhenLogin
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.CallLoginServiceWhenLogin
       resultStatus: 1
-      duration: 0.0122504
+      duration: 0.0232006
       messages: 
       output: 
       stacktrace: 
@@ -2028,7 +2051,7 @@ MonoBehaviour:
       name: CallRegisterWhenGuestLogin
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.CallRegisterWhenGuestLogin
       resultStatus: 1
-      duration: 0.0019337
+      duration: 0.0019238
       messages: 
       output: 
       stacktrace: 
@@ -2045,7 +2068,7 @@ MonoBehaviour:
       name: CallRegisterWhenRegisterIsPressed
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.CallRegisterWhenRegisterIsPressed
       resultStatus: 1
-      duration: 0.0018429
+      duration: 0.0018714
       messages: 
       output: 
       stacktrace: 
@@ -2062,7 +2085,7 @@ MonoBehaviour:
       name: ShowErrorMessageWhenServiceLoginFails
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorMessageWhenServiceLoginFails
       resultStatus: 1
-      duration: 0.0028836
+      duration: 0.0027185
       messages: 
       output: 
       stacktrace: 
@@ -2079,7 +2102,7 @@ MonoBehaviour:
       name: ShowErrorMessageWhenServiceRegisterFailsOnGuest
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorMessageWhenServiceRegisterFailsOnGuest
       resultStatus: 1
-      duration: 0.0012941
+      duration: 0.001231
       messages: 
       output: 
       stacktrace: 
@@ -2096,7 +2119,7 @@ MonoBehaviour:
       name: ShowErrorMessageWhenServiceRegisterFailsOnRegistration
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorMessageWhenServiceRegisterFailsOnRegistration
       resultStatus: 1
-      duration: 0.0011521
+      duration: 0.0011454
       messages: 
       output: 
       stacktrace: 
@@ -2113,7 +2136,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallLoginWithEmptyPassword
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallLoginWithEmptyPassword
       resultStatus: 1
-      duration: 0.0011065
+      duration: 0.0010813
       messages: 
       output: 
       stacktrace: 
@@ -2130,7 +2153,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallLoginWithEmptyUsername
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallLoginWithEmptyUsername
       resultStatus: 1
-      duration: 0.0007194
+      duration: 0.0007576
       messages: 
       output: 
       stacktrace: 
@@ -2147,7 +2170,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallRegisterWithEmptyPassword
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallRegisterWithEmptyPassword
       resultStatus: 1
-      duration: 0.0008732
+      duration: 0.000866
       messages: 
       output: 
       stacktrace: 
@@ -2164,7 +2187,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallRegisterWithEmptyUsername
       fullName: Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallRegisterWithEmptyUsername
       resultStatus: 1
-      duration: 0.000807
+      duration: 0.0008007
       messages: 
       output: 
       stacktrace: 
@@ -2176,13 +2199,21 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1001
       parentUniqueId: Assembly-CSharp-Editor.dll/Login/Scripts/Tests/Editor/[Assembly-CSharp-Editor][Login.Scripts.Tests.Editor.LoginPresenterShould][suite]
-    m_ResultText: CallGetRoundsEvery3Seconds (0,245s)
-    m_ResultStacktrace: 
+    m_ResultText: 'AddMatchWithUnitCards (0,001s)
+
+      ---
+
+      at Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUnitCards
+      () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\CreateMatchShould.cs:46'
+    m_ResultStacktrace: 'at Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUnitCards
+      () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\CreateMatchShould.cs:46
+
+'
     m_TestListState:
-      scrollPos: {x: 0, y: 60}
-      m_SelectedIDs: b9e0864e
-      m_LastClickedID: 1317462201
-      m_ExpandedIDs: b96ff4922d07019a6229baaa4ca074abdc3f88d4a8882bd9373bbcda579ffef41d2c48f5efe83b13ff1cac1730c03a188cf0ac21b7d97e24c44aba32e02a303bd7f06f3ef87aab437b02834e4ae2885004c0e7511b8c07562d6eec58a2fc0559bd366b6dffffff7f
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 85c3834b
+      m_LastClickedID: 1266926469
+      m_ExpandedIDs: b96ff4922d07019a6229baaa4ca074abb5aa78b9dc3f88d4a8882bd9373bbcda579ffef41d2c48f5efe83b13ff1cac1730c03a188cf0ac21b7d97e245223c22c9829462ec44aba32e02a303bef2f8a3dd7f06f3ef87aab437b02834e4ae2885004c0e7511b8c07562d6eec58a2fc0559ffffff7f
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -2229,9 +2260,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 569
+    x: 780
     y: 81
-    width: 869
+    width: 658
     height: 688
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -2243,7 +2274,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 869, y: 667}
+  m_TargetSize: {x: 658, y: 667}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -2258,8 +2289,8 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -434.5
-    m_HBaseRangeMax: 434.5
+    m_HBaseRangeMin: -329
+    m_HBaseRangeMax: 329
     m_VBaseRangeMin: -333.5
     m_VBaseRangeMax: 333.5
     m_HAllowExceedBaseRangeMin: 1
@@ -2279,23 +2310,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 869
+      width: 658
       height: 667
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 434.5, y: 333.5}
+    m_Translation: {x: 329, y: 333.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -434.5
+      x: -329
       y: -333.5
-      width: 869
+      width: 658
       height: 667
     m_MinimalGUI: 1
   m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 869, y: 688}
+  m_LastWindowPixelSize: {x: 658, y: 688}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -2333,9 +2364,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: da630000
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 4ef0ffff26fbffff
+      m_ExpandedIDs: aef1ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -2742,9 +2773,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 507}
-    m_SelectedIDs: d6630000
-    m_LastClickedID: 25558
-    m_ExpandedIDs: 00000000126300001463000016630000186300001a6300001c6300001e63000020630000226300002463000026630000286300002a6300002c6300002e630000306300003263000034630000366300003863000080630000d263000000ca9a3bffffff7f
+    m_SelectedIDs: 206b0000
+    m_LastClickedID: 27424
+    m_ExpandedIDs: 00000000846a0000866a0000886a00008a6a00008c6a00008e6a0000906a0000926a0000946a0000966a0000986a00009a6a00009c6a00009e6a0000a06a0000a26a0000a46a0000a66a0000a86a0000aa6a0000e26a0000226b000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2772,7 +2803,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000126300001463000016630000186300001a6300001c6300001e63000020630000226300002463000026630000286300002a6300002c6300002e6300003063000032630000346300003663000038630000
+    m_ExpandedIDs: 00000000846a0000866a0000886a00008a6a00008c6a00008e6a0000906a0000926a0000946a0000966a0000986a00009a6a00009c6a00009e6a0000a06a0000a26a0000a46a0000a66a0000a86a0000aa6a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2892,7 +2923,7 @@ MonoBehaviour:
     m_CachedPref: 160
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: 25562
+  m_LastInspectedObjectInstanceID: -1
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Service;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ServerLogic.Cards.Infrastructure;
@@ -23,24 +24,27 @@ namespace ServerLogic.Controllers
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
         private readonly IUsersRepository _usersRepository;
+        private readonly IServerConfiguration _serverConfiguration;
         public MatchController(IUsersQueuedRepository usersQueuedRepository, 
             IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
             IMatchesRepository matchesRepository,
             ICardRepository cardRepository,
-            IUsersRepository usersRepository)
+            IUsersRepository usersRepository, 
+            IServerConfiguration serverConfiguration)
         {
             _usersQueuedRepository = usersQueuedRepository;
             _friendsQueueRepository = friendsUsersQueuedRepository;
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
             _usersRepository = usersRepository;
+            _serverConfiguration = serverConfiguration;
         }
         // GET api/matches/guid-guid-guid-guid
         /// <returns> no match available</returns> (retry after a few secs) -> remember to clear from memory if unused or used
         /// <returns>matchId + matchstatus</returns>
         public ResponseDto Get(string userId)
         {
-            var matchCreator = new MatchCreator(_matchesRepository, _cardRepository, _usersQueuedRepository, _friendsQueueRepository);
+            var matchCreator = new MatchCreator(_matchesRepository, _cardRepository, _usersQueuedRepository, _friendsQueueRepository, _serverConfiguration);
             matchCreator.CreateMatches();
             
             try
@@ -102,7 +106,7 @@ namespace ServerLogic.Controllers
 
         private ResponseDto PlayBot(User user, int botDifficulty)
         {
-            var createMatch = new CreateMatch(_matchesRepository, _cardRepository);
+            var createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration);
             createMatch.Execute(new List<User> { user }, true, botDifficulty);
             var response = new ResponseDto
             {
