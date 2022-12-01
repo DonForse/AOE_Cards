@@ -11,9 +11,24 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
         [Test]
-        public void asd()
+        public void AddMatchToMatchRepository()
         {
             Assert.Fail();
         }
+        
+        [Test]
+        public void AddMatchWithUnitCards()
+        {
+            Assert.Fail();
+        }
+        
+        [Test]
+        public void AddMatchWithUpgradeCards()
+        {
+            Assert.Fail();
+        }
+        //with users
+        //bot
+        //etc
     }
 }
