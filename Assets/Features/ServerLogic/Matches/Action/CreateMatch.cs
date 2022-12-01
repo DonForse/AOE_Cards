@@ -6,13 +6,14 @@ using ServerLogic.Cards.Actions;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Cards.Infrastructure;
+using ServerLogic.Matches.Action;
 using ServerLogic.Matches.Domain;
 using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Matches.Service;
 using ServerLogic.Users.Actions;
 using ServerLogic.Users.Domain;
 
-namespace ServerLogic.Matches.Action
+namespace Features.ServerLogic.Matches.Action
 {
     public class CreateMatch
     {
@@ -38,12 +39,12 @@ namespace ServerLogic.Matches.Action
             match.BotDifficulty = botDifficulty;
             _matchRepository.Add(match);
         }
-        private Features.ServerLogic.Matches.Domain.ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
+        private Domain.ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
         {
             if (isBotMatch)
                 users.Add(_createBot.Execute()); 
             
-            var match = new Features.ServerLogic.Matches.Domain.ServerMatch
+            var match = new Domain.ServerMatch
             {
                 Guid = Guid.NewGuid().ToString(),
                 Board = new Board()
