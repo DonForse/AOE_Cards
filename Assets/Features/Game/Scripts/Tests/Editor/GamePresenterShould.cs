@@ -20,7 +20,7 @@ namespace Features.Game.Scripts.Tests.Editor
     public class GamePresenterShould
     {
         private GamePresenter _presenter;
-        private Match.Domain.GameMatch _gameMatchStatus;
+        private GameMatch _gameMatchStatus;
         private ICardProvider _cardProvider;
         private IPlayService _playService;
         private ITokenService _tokenService;
