@@ -39,7 +39,10 @@ namespace Features.ServerLogic.Matches.Action
             if (currentRound.RoundState != RoundState.Upgrade)
                 throw new ApplicationException("Upgrade card sent but not expecting it");
 
-            upgradeCard.Play(match, userId);
+            var hand = match.Board.PlayersHands[userId];
+            if (upgradeCard == null || !hand.UpgradeCards.Remove(upgradeCard))
+                throw new ApplicationException("Upgrade card is not in hand");
+            currentRound.PlayerCards[userId].UpgradeCard = upgradeCard;
 
             if (IsUpgradePhaseOver(currentRound, match))
             {

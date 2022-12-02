@@ -161,11 +161,11 @@ namespace ServerLogic.Cards.Infrastructure
             return SetDefaultUnitCard(data);
         }
 
-        private VillagerUnitCard SetVillagerUnitCard(string[] data)
+        private UnitCard SetVillagerUnitCard(string[] data)
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesvs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new VillagerUnitCard()
+            var card = new UnitCard()
             {
                 CardName = data[0],
                 BasePower = int.Parse(data[3]),
