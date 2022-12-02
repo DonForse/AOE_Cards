@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using ServerLogic.Users.Domain;
 
-namespace ServerLogic.Users.Actions
+namespace Features.ServerLogic.Users.Actions
 {
-    internal class CreateBotUser
+    internal class CreateBotUser : ICreateBotUser
     {
         private Random random;
         public CreateBotUser()
@@ -12,7 +12,7 @@ namespace ServerLogic.Users.Actions
             random = new Random();
         }
 
-        internal User Execute()
+        public User Execute()
         {
            return new User
             {

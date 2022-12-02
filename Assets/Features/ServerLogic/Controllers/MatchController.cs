@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Service;
+using Features.ServerLogic.Users.Actions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ServerLogic.Cards.Infrastructure;
@@ -106,7 +107,7 @@ namespace ServerLogic.Controllers
 
         private ResponseDto PlayBot(User user, int botDifficulty)
         {
-            var createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration);
+            var createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration, new CreateBotUser());
             createMatch.Execute(new List<User> { user }, true, botDifficulty);
             var response = new ResponseDto
             {

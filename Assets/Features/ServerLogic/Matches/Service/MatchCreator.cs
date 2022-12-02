@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Matches.Action;
-using Features.ServerLogic.Matches.Service;
+using Features.ServerLogic.Users.Actions;
 using ServerLogic.Cards.Infrastructure;
-using ServerLogic.Matches.Action;
 using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Users.Actions;
 using ServerLogic.Users.Domain;
 
-namespace ServerLogic.Matches.Service
+namespace Features.ServerLogic.Matches.Service
 {
     public class MatchCreator
     {
@@ -39,7 +38,7 @@ namespace ServerLogic.Matches.Service
             _enqueueUser = new EnqueueUser(_usersQueuedRepository);
             _dequeueFriendUser = new DequeueFriendUser(_friendsQueuedRepository);
             _enqueueFriendUser = new EnqueueFriendUser(_friendsQueuedRepository);
-            _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration);
+            _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration, new CreateBotUser());
         }
 
         public void CreateMatches()

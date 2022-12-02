@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Matches.Service;
+using Features.ServerLogic.Users.Actions;
 using ServerLogic.Cards.Actions;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
@@ -20,17 +21,17 @@ namespace Features.ServerLogic.Matches.Action
     {
         private readonly IMatchesRepository _matchRepository;
         private readonly ICardRepository _cardRepository;
-        private readonly CreateBotUser _createBot;
+        private readonly ICreateBotUser _createBot;
         private readonly GetUnitCard _getUnitCard;
         private readonly GetUpgradeCard _getUpgradeCard;
         private readonly IServerConfiguration _serverConfiguration;
         public CreateMatch(IMatchesRepository matchRepository,
-            ICardRepository cardRepository, IServerConfiguration serverConfiguration)
+            ICardRepository cardRepository, IServerConfiguration serverConfiguration, ICreateBotUser createBotUser)
         {
             _matchRepository = matchRepository;
             _cardRepository = cardRepository;
             _serverConfiguration = serverConfiguration;
-            _createBot = new CreateBotUser();
+            _createBot = createBotUser;
             _getUnitCard = new GetUnitCard(_cardRepository);
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
         }
@@ -44,7 +45,9 @@ namespace Features.ServerLogic.Matches.Action
         private Domain.ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
         {
             if (isBotMatch)
-                users.Add(_createBot.Execute()); 
+                users.Add(_createBot.Execute());
+            if (users.Count > 2)
+                throw new ApplicationException("Match only allowed of two users");
             
             var match = new Domain.ServerMatch
             {
