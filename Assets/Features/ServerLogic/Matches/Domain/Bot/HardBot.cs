@@ -10,8 +10,9 @@ namespace ServerLogic.Matches.Domain.Bot
     public class HardBot : Bot
     {
         private readonly IPlayUpgradeCard _playUpgradeCard;
+        private readonly IPlayUnitCard _playUnitCard;
 
-        public HardBot(IPlayUpgradeCard playUpgradeCard) : base(playUpgradeCard)
+        public HardBot(IPlayUpgradeCard playUpgradeCard, IPlayUnitCard playUnitCard) : base(playUpgradeCard, playUnitCard)
         {
             _playUpgradeCard = playUpgradeCard;
         }
@@ -21,15 +22,15 @@ namespace ServerLogic.Matches.Domain.Bot
             if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
                 return;
             var card = PickUnitCard(serverMatch);
-            serverMatch.PlayUnitCard("BOT", card);
+            _playUnitCard.Execute(serverMatch.Guid, "BOT", card.CardName);
         }
 
-        private IUnitCard PickUnitCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
+        private UnitCard PickUnitCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             var cards = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
 
             int maxScore = 0;
-            IUnitCard cardToPick = cards.FirstOrDefault();
+            UnitCard cardToPick = cards.FirstOrDefault();
             foreach (var card in cards)
             {
                 var score = EvaluateUnitCard(card, serverMatch);

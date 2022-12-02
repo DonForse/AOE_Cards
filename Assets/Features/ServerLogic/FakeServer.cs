@@ -1,8 +1,8 @@
 ﻿using System;
 using Features.ServerLogic;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Service;
 using ServerLogic.Matches.Infrastructure;
-using ServerLogic.Matches.Service;
 using UnityEngine;
 
 namespace ServerLogic

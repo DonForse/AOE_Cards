@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Features.ServerLogic;
 using Features.ServerLogic.Matches.Action;
 using ServerLogic.Matches.Domain;
 using ServerLogic.Matches.Domain.Bot;
 using ServerLogic.Matches.Infrastructure;
 
-namespace ServerLogic.Matches.Service
+namespace Features.ServerLogic.Matches.Service
 {
     public class MatchManager : IDisposable
     {
@@ -23,12 +22,13 @@ namespace ServerLogic.Matches.Service
         private static Timer Timer;
         private static HardBot hardBot;
         private static Bot easyBot;
+        private IPlayUnitCard _playUnitCard;
 
         public void Initialize()
         {
             Timer = new Timer(PlayMatches, null, 3000, 3000);
-            hardBot = new HardBot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
-            easyBot = new Bot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
+            hardBot = new HardBot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()), new PlayUnitCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
+            easyBot = new Bot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()), new PlayUnitCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
         }
 
         public void Dispose()
@@ -86,7 +86,7 @@ namespace ServerLogic.Matches.Service
             }
         }
 
-        private void PlayInactiveMatch(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, Round round)
+        private void PlayInactiveMatch(Domain.ServerMatch serverMatch, Round round)
         {
             foreach (var pc in round.PlayerCards)
             {
@@ -96,7 +96,7 @@ namespace ServerLogic.Matches.Service
                     {
                         if (pc.Value.UnitCard == null)
                         {
-                            serverMatch.PlayUnitCard(pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First());
+                            _playUnitCard.Execute(serverMatch.Guid, pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First().CardName);
                             break;
                         }
                     }

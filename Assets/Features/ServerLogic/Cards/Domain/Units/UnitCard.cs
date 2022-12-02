@@ -5,7 +5,7 @@ using ServerLogic.Matches.Domain;
 
 namespace ServerLogic.Cards.Domain.Units
 {
-    public class UnitCard : IUnitCard
+    public class UnitCard
     {
         public string CardName;
         public int BasePower;

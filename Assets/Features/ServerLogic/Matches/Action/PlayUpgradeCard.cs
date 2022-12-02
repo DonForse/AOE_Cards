@@ -23,7 +23,6 @@ namespace Features.ServerLogic.Matches.Action
             //get type of card.
             var upgradeCard = _cardRepository.GetUpgradeCard(cardname);
             
-            
             PlayCard(userId, upgradeCard, match);
             _matchesRepository.Update(match);
         }

@@ -10,7 +10,6 @@ using ServerLogic.Cards.Infrastructure;
 using ServerLogic.Matches.Action;
 using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Matches.Infrastructure.DTO;
-using ServerLogic.Matches.Service;
 using ServerLogic.Users.Actions;
 using ServerLogic.Users.Domain;
 using ServerLogic.Users.Infrastructure;

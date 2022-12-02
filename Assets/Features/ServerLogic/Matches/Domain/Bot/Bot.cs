@@ -6,10 +6,11 @@ namespace ServerLogic.Matches.Domain.Bot
     public class Bot
     {
         private readonly IPlayUpgradeCard _playUpgradeCard;
-
-        public Bot(IPlayUpgradeCard playUpgradeCard)
+        private readonly IPlayUnitCard _playUnitCard;
+        public Bot(IPlayUpgradeCard playUpgradeCard, IPlayUnitCard playUnitCard)
         {
             _playUpgradeCard = playUpgradeCard;
+            _playUnitCard = playUnitCard;
         }
 
         public void PlayCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
@@ -38,7 +39,7 @@ namespace ServerLogic.Matches.Domain.Bot
         {
             if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
                 return;
-            serverMatch.PlayUnitCard("BOT", serverMatch.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault());
+            _playUnitCard.Execute(serverMatch.Guid, "BOT", serverMatch.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault()?.CardName);
         }
 
         internal virtual void PlayUpgrade(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)

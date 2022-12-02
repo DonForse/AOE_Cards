@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Features.ServerLogic.Matches.Service;
 using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Matches.Service;
 using ServerLogic.Users.Domain;
 
 namespace ServerLogic.Matches.Domain
