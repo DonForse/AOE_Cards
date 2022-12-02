@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Features.ServerLogic;
+using Features.ServerLogic.Matches.Action;
 using ServerLogic.Matches.Domain;
 using ServerLogic.Matches.Domain.Bot;
 using ServerLogic.Matches.Infrastructure;
@@ -10,10 +12,12 @@ namespace ServerLogic.Matches.Service
     public class MatchManager : IDisposable
     {
         private readonly IMatchesRepository _matchesRepository;
+        private readonly IPlayUpgradeCard _playUpgradeCard;
 
-        public MatchManager(IMatchesRepository matchesRepository)
+        public MatchManager(IMatchesRepository matchesRepository, IPlayUpgradeCard playUpgradeCard)
         {
             _matchesRepository = matchesRepository;
+            _playUpgradeCard = playUpgradeCard;
         }
 
         private static Timer Timer;
@@ -23,8 +27,8 @@ namespace ServerLogic.Matches.Service
         public void Initialize()
         {
             Timer = new Timer(PlayMatches, null, 3000, 3000);
-            hardBot = new HardBot();
-            easyBot = new Bot();
+            hardBot = new HardBot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
+            easyBot = new Bot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
         }
 
         public void Dispose()
@@ -100,7 +104,7 @@ namespace ServerLogic.Matches.Service
                     {
                         if (pc.Value.UpgradeCard == null)
                         {
-                            serverMatch.PlayUpgradeCard(pc.Key, serverMatch.Board.PlayersHands[pc.Key].UpgradeCards.First());
+                            _playUpgradeCard.Execute(serverMatch.Guid,pc.Key, serverMatch.Board.PlayersHands[pc.Key].UpgradeCards.First().CardName);
                             break;
                         }
                     }

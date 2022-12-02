@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Service;
 using Features.ServerLogic.Users.Actions;
 using ServerLogic.Cards.Actions;
@@ -11,8 +12,6 @@ using ServerLogic.Cards.Infrastructure;
 using ServerLogic.Matches.Action;
 using ServerLogic.Matches.Domain;
 using ServerLogic.Matches.Infrastructure;
-using ServerLogic.Matches.Service;
-using ServerLogic.Users.Actions;
 using ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Action

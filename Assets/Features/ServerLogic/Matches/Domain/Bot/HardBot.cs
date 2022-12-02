@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Matches.Action;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
 
@@ -8,6 +9,12 @@ namespace ServerLogic.Matches.Domain.Bot
 {
     public class HardBot : Bot
     {
+        private readonly IPlayUpgradeCard _playUpgradeCard;
+
+        public HardBot(IPlayUpgradeCard playUpgradeCard) : base(playUpgradeCard)
+        {
+            _playUpgradeCard = playUpgradeCard;
+        }
 
         internal override void PlayUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
@@ -81,7 +88,7 @@ namespace ServerLogic.Matches.Domain.Bot
             if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
                 return;
             var card = PickUpgradeCard(serverMatch);
-            serverMatch.PlayUpgradeCard("BOT", card);
+            _playUpgradeCard.Execute(serverMatch.Guid, "BOT", card.CardName);
         }
 
         private UpgradeCard PickUpgradeCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)

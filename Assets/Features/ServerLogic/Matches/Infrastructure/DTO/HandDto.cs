@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Domain;
 
-namespace ServerLogic.Matches.Infrastructure.DTO
+namespace Features.ServerLogic.Matches.Infrastructure.DTO
 {
     public class HandDto
     {

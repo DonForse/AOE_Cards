@@ -21,32 +21,7 @@ namespace Features.ServerLogic.Matches.Domain
         public bool IsFinished;
         public bool IsBot;
         public int BotDifficulty;
-
-        public void PlayUpgradeCard(string userId, UpgradeCard upgradeCard)
-        {
-            var currentRound = Board.RoundsPlayed.Last();
-
-            if (!currentRound.PlayerCards.ContainsKey(userId))
-                throw new ApplicationException("Player is not in Match");
-            if (currentRound.PlayerCards[userId].UpgradeCard != null)
-                throw new ApplicationException("Upgrade card has already been played");
-
-            if (currentRound.RoundState != RoundState.Upgrade)
-                throw new ApplicationException("Upgrade card sent but not expecting it");
-
-            upgradeCard.Play(this, userId);
-
-            if (IsUpgradePhaseOver(currentRound))
-            {
-                currentRound.ChangeRoundState(RoundState.Unit);
-            }
-        }
-
-        private bool IsUpgradePhaseOver(Round currentRound)
-        {
-            return currentRound.PlayerCards.Where(c => c.Value.UpgradeCard != null).Count() >= Users.Count();
-        }
-
+        
         public void PlayUnitCard(string userId, IUnitCard unitCard)
         {
             var currentRound = Board.RoundsPlayed.Last();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ServerLogic.Cards.Infrastructure;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
 
 namespace ServerLogic.Matches.Infrastructure.DTO
 {
