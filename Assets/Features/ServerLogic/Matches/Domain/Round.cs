@@ -18,7 +18,7 @@ namespace ServerLogic.Matches.Domain
         //public bool HasReroll;
         public IDictionary<string, bool> PlayerReroll;
 
-        public int NextAction;
+        public int NextBotActionTimeInSeconds;
         public int Timer { get { return (int)(RoundPlayStartTime - DateTime.Now).TotalSeconds + new ServerConfiguration().GetRoundTimerDurationInSeconds(); } }
 
         public Round(IEnumerable<string> users)
@@ -30,7 +30,7 @@ namespace ServerLogic.Matches.Domain
                 PlayerReroll.Add(user, false);
             }
             RoundPlayStartTime = DateTime.Now;
-            NextAction = new Random().Next(new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds());
+            NextBotActionTimeInSeconds = new Random().Next(new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds());
         }
 
         public void ChangeRoundState(RoundState roundState) {

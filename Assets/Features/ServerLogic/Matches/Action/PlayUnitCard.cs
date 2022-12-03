@@ -190,7 +190,7 @@ namespace Features.ServerLogic.Matches.Action
                 RoundUpgradeCard = serverMatch.Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
                 PlayerWinner = null,
                 roundNumber = serverMatch.Board.RoundsPlayed.Count + 1,
-                NextAction = new Random().Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds())
+                NextBotActionTimeInSeconds = new Random().Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds())
             };
             if (round.roundNumber == 3 || round.roundNumber == 6)
                 round.ChangeRoundState(RoundState.Reroll);

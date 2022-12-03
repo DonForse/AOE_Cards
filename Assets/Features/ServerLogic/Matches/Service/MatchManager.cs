@@ -138,7 +138,7 @@ namespace Features.ServerLogic.Matches.Service
                 if (IsLastRoundFinished(round))
                     continue;
 
-                if (round.NextAction > round.Timer)
+                if (round.NextBotActionTimeInSeconds > round.Timer)
                 {
                     try
                     {
