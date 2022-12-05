@@ -1,19 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
-using Features.ServerLogic.Matches.Service;
-using Features.ServerLogic.Users.Actions;
-using NSubstitute;
 using NUnit.Framework;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Cards.Infrastructure;
 using ServerLogic.Matches.Domain;
-using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Users.Domain;
-using UniRx;
 
 namespace Features.ServerLogic.Editor.Tests
 {
@@ -21,8 +14,6 @@ namespace Features.ServerLogic.Editor.Tests
     {
         private const string UserIdOne = "Id";
         private const string UserIdTwo = "Id-2";
-        private const string UserNameOne = "userName";
-        private const string UserNameTwo = "userName-2";
         private CalculateRoundResult _calculateRoundResultShould;
 
 
@@ -32,33 +23,48 @@ namespace Features.ServerLogic.Editor.Tests
             _calculateRoundResultShould = new CalculateRoundResult();
         }
         
-        static RoundResultTestCaseSource[] _roundsCases =
+        static IRoundResultTestCaseSource[] _roundsCases =
         {
-            new RoundResultTestCaseSource {IsTie = false, ExpectedWinner = UserIdOne},
-            new RoundResultTestCaseSource {IsTie = false, ExpectedWinner = UserIdTwo}
+            new EqualCardsTieRoundResult(),
+            new UserOneWinRoundResult(),
+            new UserTwoWinRoundResult(),
+            new UserOneWinRoundResultUpgradeCard(),
+            new UserTwoWinRoundResultUpgradeCard(),
+            new RoundUpgradeChangeResult(),
+            new UserOneWinRoundResultUpgradeWithBonusCard(),
+            new UserOneWinWithPreviousUpgrades()
         };
-
         [TestCaseSource(nameof(_roundsCases))]
-        [Test]
-        public void Test(RoundResultTestCaseSource roundCase)
+        public void GetCorrectWinner(IRoundResultTestCaseSource roundCase)
         {
-            var users = new List<string>()
-            {
-                UserIdOne,
-                UserNameTwo
-            };
-            var round = ARound(users);
-            
-            WhenExecute(round);
+            var round = ARound(roundCase.Users, roundCase.PlayerCards, roundCase.RoundUpgrade);
+            ServerMatch sm = new ServerMatch(){
+                Users = AUsers(roundCase.Users), 
+                Board = new Board
+                {
+                    RoundsPlayed = roundCase.PreviousRounds
+                }};
+            WhenExecute(round, sm);
             ThenRoundWinnerIs();
             void ThenRoundWinnerIs()
             {
-                Assert.AreEqual(1,round.PlayerWinner.Count);
-                Assert.IsTrue(round.PlayerWinner.Any(x=>x.UserName == roundCase.ExpectedWinner));
+                Assert.AreEqual(roundCase.RoundWinners.Count,round.PlayerWinner.Count);
+                Assert.IsTrue(roundCase.RoundWinners.All(rw=>round.PlayerWinner.Any(x=>x.Id == rw)));
             }
         }
+        
+        private void WhenExecute(Round round, ServerMatch serverMatch) => _calculateRoundResultShould.Execute(round, serverMatch);
 
-        private void WhenExecute(Round round) => _calculateRoundResultShould.Execute(round);
+        private IList<User> AUsers(IList<string> roundCaseUsers)
+        {
+            var users = new List<User>();
+            foreach (var player in roundCaseUsers)
+            {
+                users.Add(new User(){ Id = player});
+            }
+
+            return users;
+        }
 
         private KeyValuePair<string, PlayerCard> APlayerOneInfo(PlayerCard withPlayerCard=null) =>
             new(UserIdOne,withPlayerCard ?? 
@@ -83,7 +89,7 @@ namespace Features.ServerLogic.Editor.Tests
                 {withPlayerTwo.Key, withPlayerTwo.Value},
             };
 
-        private  Round ARound(List<string> withUsers, Dictionary<string, PlayerCard> withPlayerCards = null,UpgradeCard withRoundUpgradeCard = null )
+        private  Round ARound(IList<string> withUsers, Dictionary<string, PlayerCard> withPlayerCards = null,UpgradeCard withRoundUpgradeCard = null )
         {
             return new Round(withUsers)
             {
@@ -92,11 +98,276 @@ namespace Features.ServerLogic.Editor.Tests
             };
         }
     }
-
-    public class RoundResultTestCaseSource
+    
+    public interface IRoundResultTestCaseSource
     {
-        internal bool IsTie;
-        internal string ExpectedWinner;
-        internal Round round;
+        IList<string> Users { get; }
+        Dictionary<string, PlayerCard> PlayerCards { get; }
+        IList<string> RoundWinners { get; }
+        UpgradeCard RoundUpgrade { get; }
+        IList<Round> PreviousRounds { get; }
+    }
+    
+    public class EqualCardsTieRoundResult : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 4),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 4),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+    public class UserOneWinRoundResult : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 4),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+    public class UserTwoWinRoundResult : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id-2",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 4),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+    public class UserOneWinRoundResultUpgradeCard : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 4),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:10)
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:3)
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+    public class UserTwoWinRoundResultUpgradeCard : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id-2",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 4),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:10, withArchetypes: new List<Archetype>() {Archetype.Archer})
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:10)
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+    public class UserOneWinRoundResultUpgradeWithBonusCard : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:15, withBonusVs: new List<Archetype>() {Archetype.Monk})
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:15, withBonusVs: new List<Archetype>() {Archetype.Archer})
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+
+    public class RoundUpgradeChangeResult : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5, withArchetypes: new List<Archetype>() {Archetype.Archer});
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 4, withArchetypes: new List<Archetype>() {Archetype.Archer}),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:0)
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 5),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:0)
+            }}
+        };
+
+        public IList<Round> PreviousRounds => new List<Round>();
+    }
+
+    public class UserOneWinWithPreviousUpgrades : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 5);
+        public IList<Round> PreviousRounds => new List<Round>()
+        {
+            new Round(Users)
+            {
+                PlayerCards = new Dictionary<string, PlayerCard>
+                {
+                    {"Id", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:10)}},
+                    {"Id-2", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:0)}}
+                }
+            },
+            new Round(Users)
+            {
+                PlayerCards = new Dictionary<string, PlayerCard>
+                {
+                    {"Id", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:50)}},
+                    {"Id-2", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:0)}}
+                }
+            }
+        };
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create(withBasePower: 0),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:10)
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create(withBasePower: 30),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:10)
+            }}
+        };
     }
 }
