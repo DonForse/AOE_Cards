@@ -1,4 +1,4 @@
-﻿namespace ServerLogic.Matches.Domain
+﻿namespace Features.ServerLogic.Matches.Domain
 {
     public enum Archetype {
         Villager,

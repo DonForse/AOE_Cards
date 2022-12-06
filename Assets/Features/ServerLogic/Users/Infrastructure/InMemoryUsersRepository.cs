@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Users.Domain;
 
-namespace ServerLogic.Users.Infrastructure
+namespace Features.ServerLogic.Users.Infrastructure
 {
     public class InMemoryUsersRepository : IUsersRepository
     {

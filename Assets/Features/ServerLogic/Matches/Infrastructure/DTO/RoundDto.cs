@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Matches.Domain;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Users.Domain;
 
-namespace ServerLogic.Matches.Infrastructure.DTO
+namespace Features.ServerLogic.Matches.Infrastructure.DTO
 {
     public class RoundDto
     {

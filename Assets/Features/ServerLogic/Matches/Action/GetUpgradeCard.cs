@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Infrastructure;
 
-namespace ServerLogic.Matches.Action
+namespace Features.ServerLogic.Matches.Action
 {
     internal class GetUpgradeCard
     {

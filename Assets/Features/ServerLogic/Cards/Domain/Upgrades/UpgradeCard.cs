@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Cards.Domain.Units;
-using ServerLogic.Matches.Domain;
+using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Matches.Domain;
 
-namespace ServerLogic.Cards.Domain.Upgrades
+namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
     public class UpgradeCard
     {

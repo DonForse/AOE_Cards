@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Domain;
 
-namespace ServerLogic.Cards.Domain.Upgrades
+namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
     public class MadrasahUpgradeCard : UpgradeCard
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Cards.Domain.Units;
-using ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Infrastructure;
 
-namespace ServerLogic.Cards.Actions
+namespace Features.ServerLogic.Cards.Actions
 {
     public class GetUnitCard
     {

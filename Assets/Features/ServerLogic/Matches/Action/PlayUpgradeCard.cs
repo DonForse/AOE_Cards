@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Cards.Infrastructure;
-using ServerLogic.Matches.Domain;
-using ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Action
 {

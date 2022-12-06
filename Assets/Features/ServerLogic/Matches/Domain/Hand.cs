@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using ServerLogic.Cards.Domain.Units;
-using ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 
 namespace Features.ServerLogic.Matches.Domain
 {

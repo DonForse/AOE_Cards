@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Matches.Action;
-using ServerLogic.Cards.Domain.Units;
-using ServerLogic.Cards.Domain.Upgrades;
 
-namespace ServerLogic.Matches.Domain.Bot
+namespace Features.ServerLogic.Matches.Domain.Bot
 {
     public class HardBot : Bot
     {

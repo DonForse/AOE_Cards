@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Cards.Actions;
-using ServerLogic.Cards.Domain.Units;
-using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Cards.Infrastructure;
-using ServerLogic.Matches.Domain;
-using ServerLogic.Matches.Infrastructure.DTO;
+using Features.ServerLogic.Cards.Actions;
+using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
 
-namespace ServerLogic.Matches.Action
+namespace Features.ServerLogic.Matches.Action
 {
     internal class RerollHand
     {

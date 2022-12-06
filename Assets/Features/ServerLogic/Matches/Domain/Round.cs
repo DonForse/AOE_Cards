@@ -4,7 +4,7 @@ using Features.ServerLogic.Matches.Service;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Users.Domain;
 
-namespace ServerLogic.Matches.Domain
+namespace Features.ServerLogic.Matches.Domain
 {
     public class Round
     {

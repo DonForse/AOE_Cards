@@ -1,6 +1,6 @@
-﻿using ServerLogic.Matches.Infrastructure;
+﻿using Features.ServerLogic.Matches.Infrastructure;
 
-namespace ServerLogic.Matches.Action
+namespace Features.ServerLogic.Matches.Action
 {
     public class GetMatch
     {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Features.ServerLogic.Matches.Action;
 
-namespace ServerLogic.Matches.Domain.Bot
+namespace Features.ServerLogic.Matches.Domain.Bot
 {
     public class Bot
     {

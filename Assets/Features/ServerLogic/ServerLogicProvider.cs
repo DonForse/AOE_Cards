@@ -1,7 +1,7 @@
-﻿using Features.ServerLogic.Matches.Service;
-using ServerLogic.Cards.Infrastructure;
-using ServerLogic.Matches.Infrastructure;
-using ServerLogic.Users.Infrastructure;
+﻿using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Matches.Service;
+using Features.ServerLogic.Users.Infrastructure;
 
 namespace Features.ServerLogic
 {

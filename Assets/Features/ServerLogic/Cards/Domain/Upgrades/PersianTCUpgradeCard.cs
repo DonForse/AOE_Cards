@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace ServerLogic.Cards.Domain.Upgrades
+namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
     public class PersianTCUpgradeCard : UpgradeCard
     {

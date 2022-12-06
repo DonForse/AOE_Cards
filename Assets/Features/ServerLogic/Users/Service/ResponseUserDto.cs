@@ -1,6 +1,6 @@
-﻿using ServerLogic.Users.Domain;
+﻿using Features.ServerLogic.Users.Domain;
 
-namespace ServerLogic.Users.Service
+namespace Features.ServerLogic.Users.Service
 {
     public class ResponseUserDto{
         public string guid;

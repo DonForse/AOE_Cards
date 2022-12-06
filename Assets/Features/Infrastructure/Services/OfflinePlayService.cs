@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AoeCards.Controllers;
 using Features.Game.Scripts.Domain;
+using Features.ServerLogic.Controllers;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Infrastructure.Data;
-using ServerLogic.Controllers;
-using ServerLogic.Matches.Infrastructure.DTO;
 using UniRx;
 using UnityEngine;
 using HandDto = Infrastructure.DTOs.HandDto;
@@ -54,7 +53,7 @@ namespace Infrastructure.Services
         public IObservable<Hand> ReRollCards(IList<string> unitCards, IList<string> upgradeCards)
         {
             var responseInfo = _rerollController.Post(UserId(), MatchId(),
-                new ServerLogic.Matches.Infrastructure.DTO.RerollInfoDto {unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray()});
+                new RerollInfoDto {unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray()});
             var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
             return Observable.Return(DtoToHand(dto)).Delay(TimeSpan.FromSeconds(1));
         }

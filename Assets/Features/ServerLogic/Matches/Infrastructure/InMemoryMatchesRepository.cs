@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerLogic.Matches.Infrastructure
+namespace Features.ServerLogic.Matches.Infrastructure
 {
     public class InMemoryMatchesRepository : IMatchesRepository
     {

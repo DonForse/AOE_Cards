@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
-using ServerLogic.Cards.Infrastructure;
-using ServerLogic.Matches.Action;
-using ServerLogic.Matches.Infrastructure;
-using ServerLogic.Matches.Infrastructure.DTO;
+﻿using System;
+using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
+using Newtonsoft.Json;
 
-namespace AoeCards.Controllers
+namespace Features.ServerLogic.Controllers
 {
     public class RoundController
     {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Matches.Domain;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Extensions;
 using Features.ServerLogic.Matches.Domain;
-using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Matches.Infrastructure;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {

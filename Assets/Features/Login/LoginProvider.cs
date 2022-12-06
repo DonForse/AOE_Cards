@@ -1,8 +1,7 @@
 ﻿using Features.ServerLogic;
+using Features.ServerLogic.Controllers;
 using Login.Scripts.Domain;
 using Login.Scripts.Infrastructure;
-using ServerLogic;
-using ServerLogic.Controllers;
 
 namespace Login
 {

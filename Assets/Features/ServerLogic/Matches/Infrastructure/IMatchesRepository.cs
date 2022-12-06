@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ServerLogic.Matches.Infrastructure
+namespace Features.ServerLogic.Matches.Infrastructure
 {
     public interface IMatchesRepository
     {

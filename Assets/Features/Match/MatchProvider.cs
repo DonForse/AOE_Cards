@@ -1,8 +1,7 @@
 ﻿using Features.ServerLogic;
+using Features.ServerLogic.Controllers;
 using Infrastructure;
 using Match.Domain;
-using ServerLogic;
-using ServerLogic.Controllers;
 
 namespace Match
 {

@@ -1,12 +1,11 @@
 ﻿using System;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
+using Features.ServerLogic.Users.Actions;
+using Features.ServerLogic.Users.Infrastructure;
+using Features.ServerLogic.Users.Service;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using ServerLogic.Matches.Infrastructure.DTO;
-using ServerLogic.Users.Actions;
-using ServerLogic.Users.Infrastructure;
-using ServerLogic.Users.Service;
 
-namespace ServerLogic.Controllers
+namespace Features.ServerLogic.Controllers
 {
     
     public class UserController

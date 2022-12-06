@@ -1,4 +1,4 @@
-﻿namespace ServerLogic.Users.Service
+﻿namespace Features.ServerLogic.Users.Service
 {
     public class UserRequestDto
     {

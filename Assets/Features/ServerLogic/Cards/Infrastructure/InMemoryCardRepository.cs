@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Cards.Domain.Units;
-using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Matches.Domain;
+using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Matches.Domain;
 using UnityEngine;
 
-namespace ServerLogic.Cards.Infrastructure
+namespace Features.ServerLogic.Cards.Infrastructure
 {
     public class InMemoryCardRepository : ICardRepository
     {

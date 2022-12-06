@@ -2,18 +2,18 @@
 using System.Linq;
 using System.Threading;
 using Features.ServerLogic.Matches.Action;
-using ServerLogic.Matches.Domain;
-using ServerLogic.Matches.Domain.Bot;
-using ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Domain.Bot;
+using Features.ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Service
 {
-    public class MatchManager : IDisposable
+    public class BotPlayService : IDisposable
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly IPlayUpgradeCard _playUpgradeCard;
 
-        public MatchManager(IMatchesRepository matchesRepository, IPlayUpgradeCard playUpgradeCard)
+        public BotPlayService(IMatchesRepository matchesRepository, IPlayUpgradeCard playUpgradeCard)
         {
             _matchesRepository = matchesRepository;
             _playUpgradeCard = playUpgradeCard;

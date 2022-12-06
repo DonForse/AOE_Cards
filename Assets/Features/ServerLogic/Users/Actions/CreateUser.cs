@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
-using ServerLogic.Users.Domain;
-using ServerLogic.Users.Infrastructure;
+using Features.ServerLogic.Users.Domain;
+using Features.ServerLogic.Users.Infrastructure;
 
-namespace ServerLogic.Users.Actions
+namespace Features.ServerLogic.Users.Actions
 {
     internal class CreateUser
     {

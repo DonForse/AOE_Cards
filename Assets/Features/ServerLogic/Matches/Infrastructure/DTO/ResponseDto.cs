@@ -1,4 +1,4 @@
-﻿namespace ServerLogic.Matches.Infrastructure.DTO
+﻿namespace Features.ServerLogic.Matches.Infrastructure.DTO
 {
     public class ResponseDto {
         public string error;

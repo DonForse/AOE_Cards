@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace ServerLogic.Users.Domain
+namespace Features.ServerLogic.Users.Domain
 {
     public class User
     {

@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Users.Domain;
 
-namespace ServerLogic.Matches.Infrastructure
+namespace Features.ServerLogic.Matches.Infrastructure
 {
     public class InMemoryUsersQueuedRepository : IUsersQueuedRepository
     {

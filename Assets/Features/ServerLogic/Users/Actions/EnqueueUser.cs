@@ -1,8 +1,8 @@
 ﻿using System;
-using ServerLogic.Matches.Infrastructure;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Users.Domain;
 
-namespace ServerLogic.Users.Actions
+namespace Features.ServerLogic.Users.Actions
 {
     internal class EnqueueUser
     {

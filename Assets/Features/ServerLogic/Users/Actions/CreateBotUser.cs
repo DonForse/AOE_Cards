@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Users.Actions
 {

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Cards.Infrastructure;
-using ServerLogic.Matches.Domain;
-using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Editor.Tests
