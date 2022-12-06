@@ -95,18 +95,16 @@ namespace Features.ServerLogic.Matches.Action
             if (unitCard == null)
                 throw new ApplicationException("Unit card is not in hand");
             
+            
+            if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
+                throw new ApplicationException("Unit card has already been played");
+            
             if (card.CardName.ToLowerInvariant() == "villager") //TODO: Move to strategy
             {
-                if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
-                    throw new ApplicationException("Unit card has already been played");
-
                 currentRound.PlayerCards[userId].UnitCard = card;
                 return;
             }
 
-            if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
-                throw new ApplicationException("Unit card has already been played");
-            
             if(!hand.UnitsCards.Remove(unitCard))
                 throw new ApplicationException("Unit card is not in hand");
 
