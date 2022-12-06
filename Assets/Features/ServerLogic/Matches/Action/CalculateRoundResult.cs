@@ -4,14 +4,24 @@ using ServerLogic.Matches.Domain;
 using Features.ServerLogic.Extensions;
 using Features.ServerLogic.Matches.Domain;
 using ServerLogic.Cards.Domain.Upgrades;
+using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {
     public class CalculateRoundResult
     {
-        public void Execute(Round round, ServerMatch match)
+        private readonly IMatchesRepository _matchesRepository;
+
+        public CalculateRoundResult(IMatchesRepository matchesRepository)
         {
+            _matchesRepository = matchesRepository;
+        }
+
+        public void Execute(string matchId)
+        {
+            var match = _matchesRepository.Get(matchId);
+            var round = match.Board.CurrentRound;
             var playerOnePower = GetPower(round, round.PlayerCards.Keys.First(), match.Board.RoundsPlayed);
             var playerTwoPower = GetPower(round, round.PlayerCards.Keys.Last(), match.Board.RoundsPlayed);
             round.PlayerWinner = new List<User>();

@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using NSubstitute;
 using NUnit.Framework;
 using ServerLogic.Cards.Domain.Units;
 using ServerLogic.Cards.Domain.Upgrades;
 using ServerLogic.Matches.Domain;
+using ServerLogic.Matches.Infrastructure;
 using ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Editor.Tests
@@ -14,15 +17,17 @@ namespace Features.ServerLogic.Editor.Tests
     {
         private const string UserIdOne = "Id";
         private const string UserIdTwo = "Id-2";
+        private const string MatchId = "MATCH-ID";
         private CalculateRoundResult _calculateRoundResultShould;
-
+        private IMatchesRepository _matchesRepository;
 
         [SetUp]
         public void Setup()
         {
-            _calculateRoundResultShould = new CalculateRoundResult();
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _calculateRoundResultShould = new CalculateRoundResult(_matchesRepository);
         }
-        
+
         static IRoundResultTestCaseSource[] _roundsCases =
         {
             new EqualCardsTieRoundResult(),
@@ -34,6 +39,7 @@ namespace Features.ServerLogic.Editor.Tests
             new UserOneWinRoundResultUpgradeWithBonusCard(),
             new UserOneWinWithPreviousUpgrades()
         };
+        
         [TestCaseSource(nameof(_roundsCases))]
         public void GetCorrectWinner(IRoundResultTestCaseSource roundCase)
         {
@@ -42,9 +48,11 @@ namespace Features.ServerLogic.Editor.Tests
                 Users = AUsers(roundCase.Users), 
                 Board = new Board
                 {
-                    RoundsPlayed = roundCase.PreviousRounds
+                    RoundsPlayed = roundCase.PreviousRounds,
+                    CurrentRound = round
                 }};
-            WhenExecute(round, sm);
+            GivenMatchRepositoryReturns(sm);
+            WhenExecute();
             ThenRoundWinnerIs();
             void ThenRoundWinnerIs()
             {
@@ -52,43 +60,29 @@ namespace Features.ServerLogic.Editor.Tests
                 Assert.IsTrue(roundCase.RoundWinners.All(rw=>round.PlayerWinner.Any(x=>x.Id == rw)));
             }
         }
-        
-        private void WhenExecute(Round round, ServerMatch serverMatch) => _calculateRoundResultShould.Execute(round, serverMatch);
-
-        private IList<User> AUsers(IList<string> roundCaseUsers)
-        {
-            var users = new List<User>();
-            foreach (var player in roundCaseUsers)
-            {
-                users.Add(new User(){ Id = player});
-            }
-
-            return users;
-        }
-
+        private void GivenMatchRepositoryReturns(ServerMatch sm) => _matchesRepository.Get(MatchId).Returns(sm);
+        private void WhenExecute() => _calculateRoundResultShould.Execute(MatchId);
+        private IList<User> AUsers(IList<string> roundCaseUsers) => roundCaseUsers.Select(player => new User() {Id = player}).ToList();
         private KeyValuePair<string, PlayerCard> APlayerOneInfo(PlayerCard withPlayerCard=null) =>
             new(UserIdOne,withPlayerCard ?? 
-                new PlayerCard()
-                {
-                    UpgradeCard = new UpgradeCard(),
-                    UnitCard = new UnitCard(),
-                });
-        
+                          new PlayerCard()
+                          {
+                              UpgradeCard = new UpgradeCard(),
+                              UnitCard = new UnitCard(),
+                          });
         private KeyValuePair<string, PlayerCard> APlayerTwoInfo(PlayerCard withPlayerCard=null) =>
             new(UserIdTwo,withPlayerCard??
-                new PlayerCard()
-                {
-                    UpgradeCard = new UpgradeCard(),
-                    UnitCard = new UnitCard(),
-                });
-
+                          new PlayerCard()
+                          {
+                              UpgradeCard = new UpgradeCard(),
+                              UnitCard = new UnitCard(),
+                          });
         private Dictionary<string, PlayerCard> APlayerCards(KeyValuePair<string, PlayerCard> withPlayerOne, KeyValuePair<string, PlayerCard> withPlayerTwo) =>
             new()
             {
                 {withPlayerOne.Key, withPlayerOne.Value},
                 {withPlayerTwo.Key, withPlayerTwo.Value},
             };
-
         private  Round ARound(IList<string> withUsers, Dictionary<string, PlayerCard> withPlayerCards = null,UpgradeCard withRoundUpgradeCard = null )
         {
             return new Round(withUsers)
@@ -99,6 +93,7 @@ namespace Features.ServerLogic.Editor.Tests
         }
     }
     
+    #region TestCaseSources
     public interface IRoundResultTestCaseSource
     {
         IList<string> Users { get; }
@@ -370,4 +365,5 @@ namespace Features.ServerLogic.Editor.Tests
             }}
         };
     }
+    #endregion
 }
