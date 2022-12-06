@@ -1,10 +1,8 @@
-﻿using System;
-using Features.ServerLogic;
-using Features.ServerLogic.Matches.Action;
+﻿using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Service;
 using UnityEngine;
 
-namespace ServerLogic
+namespace Features.ServerLogic
 {
     public class FakeServer : MonoBehaviour
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Matches.Service;
-using ServerLogic.Cards.Domain.Upgrades;
-using ServerLogic.Users.Domain;
+using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Domain
 {
