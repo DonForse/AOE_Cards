@@ -31,25 +31,31 @@ namespace Features.ServerLogic.Matches.Action
         {
             var currentRound = match.Board.RoundsPlayed.Last();
 
-            if (!currentRound.PlayerCards.ContainsKey(userId))
+            if (!PlayerExists(userId, currentRound))
                 throw new ApplicationException("Player is not in Match");
-            if (currentRound.PlayerCards[userId].UpgradeCard != null)
+            if (PlayerHaveAlreadyPlayedUpgradeCard(userId, currentRound))
                 throw new ApplicationException("Upgrade card has already been played");
-
-            if (currentRound.RoundState != RoundState.Upgrade)
+            if (!RoundIsInUpgrade(currentRound))
                 throw new ApplicationException("Upgrade card sent but not expecting it");
-
             var hand = match.Board.PlayersHands[userId];
-            if (upgradeCard == null || !hand.UpgradeCards.Remove(upgradeCard))
+            if (IsUpgradeCardNull(upgradeCard))
                 throw new ApplicationException("Upgrade card is not in hand");
+            if(!RemoveCardFromHand(upgradeCard, hand))
+                throw new ApplicationException("Upgrade card is not in hand");
+            
             currentRound.PlayerCards[userId].UpgradeCard = upgradeCard;
 
-            if (IsUpgradePhaseOver(currentRound, match))
-            {
-                currentRound.ChangeRoundState(RoundState.Unit);
-            }
+            if (!IsUpgradePhaseOver(currentRound, match))
+                return;
+            
+            currentRound.ChangeRoundState(RoundState.Unit);
         }
-        
+
+        private static bool RemoveCardFromHand(UpgradeCard upgradeCard, Hand hand) => hand.UpgradeCards.Remove(upgradeCard);
+        private static bool IsUpgradeCardNull(UpgradeCard upgradeCard) => upgradeCard == null;
+        private static bool RoundIsInUpgrade(Round currentRound) => currentRound.RoundState == RoundState.Upgrade;
+        private static bool PlayerHaveAlreadyPlayedUpgradeCard(string userId, Round currentRound) => currentRound.PlayerCards[userId].UpgradeCard != null;
+        private static bool PlayerExists(string userId, Round currentRound) => currentRound.PlayerCards.ContainsKey(userId);
         private bool IsUpgradePhaseOver(Round currentRound, ServerMatch sm) => 
             currentRound.PlayerCards.Count(c => c.Value.UpgradeCard != null) >= sm.Users.Count;
     }
