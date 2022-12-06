@@ -143,13 +143,32 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ThrowsWhenIsUpgradeCardNull()
         {
-            Assert.Fail();
+            var users = new List<string>(){ UserId, UserIdTwo};
+            var round = GivenRoundInUpgradeState(users);
+            var upgradeCard = UpgradeCardMother.Create(CardName);
+            var hand = AHand(upgradeCard);
+            var match = AMatch(round, hand);
+            
+            GivenMatchRepositoryReturns(match);
+            ThenThrowsException(WhenExecute);
+
+            void ThenThrowsException(TestDelegate func) => Assert.Throws<ApplicationException>(func, "Invalid Upgrade card");
         }
 
         [Test]
         public void ThrowsWhenCantRemoveCardFromHand()
         {
-            Assert.Fail();
+            var users = new List<string>(){ UserId, UserIdTwo};
+            var round = GivenRoundInUpgradeState(users);
+            var upgradeCard = UpgradeCardMother.Create(CardName);
+            var hand = AHand(UpgradeCardMother.Create("Another Card"));
+            var match = AMatch(round, hand);
+            
+            GivenUpgradeCardInCardRepository(upgradeCard);
+            GivenMatchRepositoryReturns(match);
+            ThenThrowsException(WhenExecute);
+
+            void ThenThrowsException(TestDelegate func) => Assert.Throws<ApplicationException>(func, "Upgrade card is not in hand");
         }
 
         private static Hand AHand(UpgradeCard withUpgradeCard) => new() {UpgradeCards = new List<UpgradeCard> {withUpgradeCard}};

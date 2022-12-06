@@ -39,7 +39,7 @@ namespace Features.ServerLogic.Matches.Action
                 throw new ApplicationException("Upgrade card sent but not expecting it");
             var hand = match.Board.PlayersHands[userId];
             if (IsUpgradeCardNull(upgradeCard))
-                throw new ApplicationException("Upgrade card is not in hand");
+                throw new ApplicationException("Invalid Upgrade card");
             if(!RemoveCardFromHand(upgradeCard, hand))
                 throw new ApplicationException("Upgrade card is not in hand");
             
