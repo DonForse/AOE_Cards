@@ -6,17 +6,19 @@ namespace Features.ServerLogic
 {
     public class FakeServer : MonoBehaviour
     {
-        private BotPlayService _botPlayService;
+        private PlayMatchService _playMatchService;
 
         private void OnEnable()
         {
-            _botPlayService = new BotPlayService(ServerLogicProvider.MatchesRepository(), new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
-            _botPlayService.Initialize();
+            _playMatchService = new PlayMatchService(
+                ServerLogicProvider.MatchesRepository(),
+                new PlayInactiveMatches());
+            _playMatchService.Initialize();
         }
 
         private void OnDisable()
         {
-            _botPlayService.Dispose();
+            _playMatchService.Dispose();
         }
     }
 }

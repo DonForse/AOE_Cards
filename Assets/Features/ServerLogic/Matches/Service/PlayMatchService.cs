@@ -8,15 +8,15 @@ using Features.ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Service
 {
-    public class BotPlayService : IDisposable
+    public class PlayMatchService : IDisposable
     {
         private readonly IMatchesRepository _matchesRepository;
-        private readonly IPlayUpgradeCard _playUpgradeCard;
+        private readonly IPlayInactiveMatches _playInactiveMatches;
 
-        public BotPlayService(IMatchesRepository matchesRepository, IPlayUpgradeCard playUpgradeCard)
+        public PlayMatchService(IMatchesRepository matchesRepository, IPlayInactiveMatches playInactiveMatches)
         {
             _matchesRepository = matchesRepository;
-            _playUpgradeCard = playUpgradeCard;
+            _playInactiveMatches = playInactiveMatches;
         }
 
         private static Timer Timer;
@@ -45,7 +45,7 @@ namespace Features.ServerLogic.Matches.Service
                 if (matchService == null)
                     return;
                 PlayBotMatches(matchService);
-                PlayInactiveMatches(matchService);
+                ProcessInactiveMatches(matchService);
             }
             finally
             {
@@ -54,72 +54,41 @@ namespace Features.ServerLogic.Matches.Service
 
         }
 
-        private void PlayInactiveMatches(IMatchesRepository matchesRepository)
+        private void ProcessInactiveMatches(IMatchesRepository matchesRepository)
         {
             var matches = matchesRepository.GetAll();
             foreach (var match in matches)
             {
                 var round = match.Board.RoundsPlayed.LastOrDefault();
-                if (match.IsFinished) {
-                    if (round.Timer < -300) //5 minutes 
-                    {
-                        foreach (var user in match.Users)
-                        {
-                            matchesRepository.RemoveByUserId(user.Id);
-                        }
-                    }
+                if (match.IsFinished)
+                {
+                    RemoveFinishedMatchesAfterDelay(matchesRepository, round, match);
                     continue;
                 }
-                    
                 
                 if (IsLastRoundFinished(round))
                     continue;
-                if (0 > round.Timer)
+                if (!RoundPhaseTimedOut(round)) continue;
+                try
                 {
-                    try
-                    {
-                        PlayInactiveMatch(match, round);
-                    }
-                    catch { }
+                    _playInactiveMatches.Execute(match, round);
                 }
+                catch { }
 
             }
         }
 
-        private void PlayInactiveMatch(Domain.ServerMatch serverMatch, Round round)
-        {
-            foreach (var pc in round.PlayerCards)
-            {
-                try
-                {
-                    if (round.RoundState == RoundState.Unit)
-                    {
-                        if (pc.Value.UnitCard == null)
-                        {
-                            _playUnitCard.Execute(serverMatch.Guid, pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First().CardName);
-                            break;
-                        }
-                    }
-                    if (round.RoundState == RoundState.Upgrade)
-                    {
-                        if (pc.Value.UpgradeCard == null)
-                        {
-                            _playUpgradeCard.Execute(serverMatch.Guid,pc.Key, serverMatch.Board.PlayersHands[pc.Key].UpgradeCards.First().CardName);
-                            break;
-                        }
-                    }
-                    if (round.RoundState == RoundState.Reroll)
-                    {
-                        round.PlayerReroll[pc.Key] = true;
-                        if (round.PlayerReroll.Values.All(rerolled => rerolled))
-                        {
-                            round.ChangeRoundState(RoundState.Upgrade);
-                            break;
-                        }
-                    }
-                }
+        private static bool RoundPhaseTimedOut(Round round) => 0 > round.Timer;
 
-                catch { }
+        private static void RemoveFinishedMatchesAfterDelay(IMatchesRepository matchesRepository, Round round,
+            ServerMatch match)
+        {
+            if (round.Timer < -300) //5 minutes 
+            {
+                foreach (var user in match.Users)
+                {
+                    matchesRepository.RemoveByUserId(user.Id);
+                }
             }
         }
 

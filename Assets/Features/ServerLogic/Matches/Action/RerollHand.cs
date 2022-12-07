@@ -22,7 +22,7 @@ namespace Features.ServerLogic.Matches.Action
             _getUnitCard = new GetUnitCard(_cardRepository);
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
         }
-        internal void Execute(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, RerollInfoDto cards)
+        internal void Execute(ServerMatch serverMatch, string userId, RerollInfoDto cards)
         {
             var round = serverMatch.Board.RoundsPlayed.LastOrDefault();
             if (round.RoundState != RoundState.Reroll || round.PlayerReroll.ContainsKey(userId) && round.PlayerReroll[userId] )

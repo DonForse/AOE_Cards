@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Matches.Domain;
 
@@ -13,7 +12,7 @@ namespace Features.ServerLogic.Cards.Domain.Units
         public IList<Archetype> BonusVs;
         public IList<Archetype> Archetypes;
 
-        public virtual int CalculatePower(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
+        public virtual int CalculatePower(ServerMatch serverMatch, string userId)
         {
             var round = serverMatch.Board.RoundsPlayed.Last();
             var upgradeCards = serverMatch.GetUpgradeCardsByPlayer(round, userId);
@@ -37,21 +36,6 @@ namespace Features.ServerLogic.Cards.Domain.Units
             }
 
             return BasePower + upgradePowers;
-        }
-
-        public virtual void Play(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
-        {
-            var currentRound = serverMatch.Board.RoundsPlayed.Last();
-            if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
-                throw new ApplicationException("Unit card has already been played");
-
-            var hand = serverMatch.Board.PlayersHands[userId];
-
-            var unitCard = hand.UnitsCards.FirstOrDefault(u => u.CardName == CardName);
-            if (unitCard == null || !hand.UnitsCards.Remove(unitCard))
-                throw new ApplicationException("Unit card is not in hand");
-
-            currentRound.PlayerCards[userId].UnitCard = this;
         }
     }
 }
