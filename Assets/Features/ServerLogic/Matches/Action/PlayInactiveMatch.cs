@@ -46,12 +46,6 @@ namespace Features.ServerLogic.Matches.Action
                             _playReroll.Execute(serverMatch, pc.Key,
                                 new RerollInfoDto()
                                     {unitCards = new List<string>(), upgradeCards = new List<string>()});
-                        // round.PlayerReroll[pc.Key] = true;
-                        // if (round.PlayerReroll.Values.All(rerolled => rerolled))
-                        // {
-                        //     round.ChangeRoundState(RoundState.Upgrade);
-                        //     break;
-                        // }
                     }
                 }
 
