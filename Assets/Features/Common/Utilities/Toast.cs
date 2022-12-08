@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Common.Utilities
+namespace Features.Common.Utilities
 {
     public class Toast : MonoBehaviour
     {

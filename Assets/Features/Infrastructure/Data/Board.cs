@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Infrastructure.Data
+namespace Features.Infrastructure.Data
 {
     public class Board
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using Infrastructure.DTOs;
+using Features.Infrastructure.DTOs;
 
-namespace Token
+namespace Features.Token.Scripts.Domain
 {
     public  interface ITokenService
     {

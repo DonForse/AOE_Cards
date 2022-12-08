@@ -1,5 +1,8 @@
-public interface IView
+namespace Features
 {
-    void OnOpening();
-    void OnClosing();
+    public interface IView
+    {
+        void OnOpening();
+        void OnClosing();
+    }
 }

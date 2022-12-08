@@ -1,11 +1,12 @@
 using System;
-using Infrastructure.DTOs;
-using Infrastructure.Services;
+using Features.Infrastructure.DTOs;
+using Features.Infrastructure.Services;
+using Features.Token.Scripts.Domain;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Token
+namespace Features.Token.Scripts.Infrastructure
 {
     public class TokenGateway : ITokenService
     {

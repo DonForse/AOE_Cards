@@ -1,6 +1,7 @@
-﻿using Token.Scripts.Infrastructure;
+﻿using Features.Token.Scripts.Domain;
+using Features.Token.Scripts.Infrastructure;
 
-namespace Token
+namespace Features.Token
 {
     public static class TokenProvider
     {

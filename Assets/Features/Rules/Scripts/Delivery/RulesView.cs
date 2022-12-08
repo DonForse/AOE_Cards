@@ -1,8 +1,8 @@
-﻿using Home;
+﻿using Features.Home;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Rules.Scripts.Delivery
+namespace Features.Rules.Scripts.Delivery
 {
     public class RulesView : MonoBehaviour, IView
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Data
+namespace Features.Data
 {
     [CreateAssetMenu(fileName ="Unit Card",menuName ="Cards/Unit")]
     public class UnitCardData : CardData

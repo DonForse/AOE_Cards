@@ -1,7 +1,7 @@
 ﻿using System;
 using UniRx;
 
-namespace Login.Scripts.Domain
+namespace Features.Login.Scripts.Domain
 {
     public interface ILoginView
     {

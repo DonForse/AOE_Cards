@@ -1,11 +1,14 @@
-﻿using System;
-using UnityEngine;
-internal class GameManager
-{
-    internal static void SessionExpired()
-    {
-        PlayerPrefs.DeleteAll();
+﻿using UnityEngine;
 
-        Application.Quit();
+namespace Features
+{
+    internal class GameManager
+    {
+        internal static void SessionExpired()
+        {
+            PlayerPrefs.DeleteAll();
+
+            Application.Quit();
+        }
     }
 }

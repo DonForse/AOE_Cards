@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Data;
+using Features.Data;
 using Features.Game.Scripts.Domain;
 using TMPro;
 using UnityEngine;

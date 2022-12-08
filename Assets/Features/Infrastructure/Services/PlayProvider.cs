@@ -1,7 +1,7 @@
 ﻿using Features.ServerLogic;
 using Features.ServerLogic.Controllers;
 
-namespace Infrastructure.Services
+namespace Features.Infrastructure.Services
 {
     public static class PlayProvider
     {

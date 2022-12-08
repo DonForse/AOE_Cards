@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.DTOs
+﻿namespace Features.Infrastructure.DTOs
 {
     public class RerollInfoDto
     {

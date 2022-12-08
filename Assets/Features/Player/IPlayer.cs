@@ -1,4 +1,4 @@
-﻿namespace Player
+﻿namespace Features.Player
 {
     public interface IPlayer
     {

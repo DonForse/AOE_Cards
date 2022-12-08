@@ -1,5 +1,5 @@
 ﻿using Features.Game.Scripts.Domain;
-using Infrastructure.Data;
+using Features.Infrastructure.Data;
 
 namespace Features.Game.Scripts.Presentation.GameStateStrategy
 {

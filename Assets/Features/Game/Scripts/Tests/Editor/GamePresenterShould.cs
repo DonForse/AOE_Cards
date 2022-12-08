@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
-using Data;
+using Features.Data;
 using Features.Game.Scripts.Domain;
 using Features.Game.Scripts.Presentation;
+using Features.Infrastructure;
+using Features.Infrastructure.Data;
+using Features.Infrastructure.Services;
 using Features.Match.Domain;
-using Infrastructure;
-using Infrastructure.Data;
-using Infrastructure.Services;
-using Match.Domain;
+using Features.Token.Scripts.Domain;
 using NSubstitute;
 using NUnit.Framework;
-using Token;
 using UniRx;
 
 namespace Features.Game.Scripts.Tests.Editor

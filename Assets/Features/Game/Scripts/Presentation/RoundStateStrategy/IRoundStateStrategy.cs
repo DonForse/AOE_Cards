@@ -1,4 +1,4 @@
-﻿using Infrastructure.Data;
+﻿using Features.Infrastructure.Data;
 
 namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 {

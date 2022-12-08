@@ -2,7 +2,7 @@
 using Features.Game.Scripts.Domain;
 using UnityEngine;
 
-namespace Data
+namespace Features.Data
 {
     public abstract class CardData : ScriptableObject
     {

@@ -1,12 +1,12 @@
-﻿using System;
-using Common;
-using Match.Domain;
+﻿using Features.Home.Scripts.Domain;
+using Features.Home.Scripts.Presentation;
+using Features.Match.Domain;
+using Features.Token.Scripts.Domain;
 using NSubstitute;
 using NUnit.Framework;
-using Token;
 using UniRx;
 
-namespace Home.Scripts.Tests.Editor
+namespace Features.Home.Scripts.Tests.Editor
 {
     public class HomePresenterShould
     {

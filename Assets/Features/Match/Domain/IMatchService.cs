@@ -1,8 +1,7 @@
 using System;
-using Features.Match.Domain;
 using UniRx;
 
-namespace Match.Domain
+namespace Features.Match.Domain
 {
     public interface IMatchService
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Data;
+using Features.Data;
 
-namespace Infrastructure
+namespace Features.Infrastructure
 {
     public interface ICardProvider
     {

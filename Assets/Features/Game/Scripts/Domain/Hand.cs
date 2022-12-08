@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Data;
+using Features.Data;
 
 namespace Features.Game.Scripts.Domain
 {

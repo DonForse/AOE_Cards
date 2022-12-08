@@ -1,14 +1,15 @@
 ﻿using System;
-using Common;
-using Common.Utilities;
+using Features.Common.Utilities;
+using Features.Home.Scripts.Domain;
+using Features.Home.Scripts.Presentation;
 using Features.Match.Domain;
-using Sound;
+using Features.Sound;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Home
+namespace Features.Home.Scripts.Delivery
 {
     public class HomeView : MonoBehaviour, IView, IHomeView
     {

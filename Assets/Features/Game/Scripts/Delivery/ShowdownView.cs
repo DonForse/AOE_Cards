@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
-using Common.Utilities;
+using Features.Common;
+using Features.Common.Utilities;
 using Features.Game.Scripts.Domain;
-using Infrastructure.Data;
-using Sound;
+using Features.Infrastructure.Data;
+using Features.Sound;
 using TMPro;
 using UnityEngine;
 

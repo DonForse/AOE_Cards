@@ -1,13 +1,9 @@
-using UnityEngine;
+using Features.Home.Scripts.Domain;
+using Features.Match.Domain;
+using Features.Token.Scripts.Domain;
 using UniRx;
-using System;
-using Common;
-using Infrastructure.DTOs;
-using Infrastructure.Services.Exceptions;
-using Match.Domain;
-using Token;
 
-namespace Home
+namespace Features.Home.Scripts.Presentation
 {
     public class HomePresenter
     {

@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.Game.Scripts.Domain;
+using Features.Infrastructure.Data;
 using Features.ServerLogic.Controllers;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
-using Infrastructure.Data;
 using UniRx;
 using UnityEngine;
-using HandDto = Infrastructure.DTOs.HandDto;
-using RoundDto = Infrastructure.DTOs.RoundDto;
+using HandDto = Features.Infrastructure.DTOs.HandDto;
+using RoundDto = Features.Infrastructure.DTOs.RoundDto;
 
-namespace Infrastructure.Services
+namespace Features.Infrastructure.Services
 {
     public class OfflinePlayService : IPlayService
     {

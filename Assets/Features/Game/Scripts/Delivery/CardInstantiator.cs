@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using Features.Data;
 using UnityEngine;
 
 namespace Features.Game.Scripts.Delivery

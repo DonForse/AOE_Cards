@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Common;
-using Common.Utilities;
+using Features.Common;
+using Features.Common.Utilities;
 using Features.Game.Scripts.Domain;
 using UnityEngine;
 using UnityEngine.UI;

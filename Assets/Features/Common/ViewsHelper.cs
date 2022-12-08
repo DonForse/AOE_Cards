@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Common
+namespace Features.Common
 {
     public static class ViewsHelper
     {

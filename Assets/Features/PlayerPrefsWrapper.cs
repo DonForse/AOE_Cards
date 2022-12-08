@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Common
+namespace Features
 {
     public class PlayerPrefsWrapper : IPlayerPrefs
     {

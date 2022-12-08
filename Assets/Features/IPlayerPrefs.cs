@@ -1,4 +1,4 @@
-﻿namespace Common
+﻿namespace Features
 {
     public interface IPlayerPrefs
     {

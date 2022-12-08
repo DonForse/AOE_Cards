@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using Infrastructure.DTOs;
+using Features.Infrastructure.DTOs;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Infrastructure.Services
+namespace Features.Infrastructure.Services
 {
     public class ResponseInfo
     {

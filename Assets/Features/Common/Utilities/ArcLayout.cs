@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Common.Utilities
+namespace Features.Common.Utilities
 {
     [ExecuteAlways]
     public class ArcLayout : LayoutGroup

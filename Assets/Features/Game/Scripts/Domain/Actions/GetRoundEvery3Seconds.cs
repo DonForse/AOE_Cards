@@ -1,6 +1,6 @@
 ﻿using System;
-using Infrastructure.Data;
-using Infrastructure.Services;
+using Features.Infrastructure.Data;
+using Features.Infrastructure.Services;
 using UniRx;
 
 namespace Features.Game.Scripts.Domain.Actions

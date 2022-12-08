@@ -2,7 +2,7 @@
 using Features.Match.Domain;
 using UniRx;
 
-namespace Home
+namespace Features.Home.Scripts.Domain
 {
     public interface IHomeView
     {

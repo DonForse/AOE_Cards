@@ -1,8 +1,7 @@
 ﻿using System;
-using Infrastructure.DTOs;
-using Infrastructure.Services;
+using Features.Infrastructure.DTOs;
 
-namespace Login.Scripts.Domain
+namespace Features.Login.Scripts.Domain
 {
     public interface ILoginService
     {

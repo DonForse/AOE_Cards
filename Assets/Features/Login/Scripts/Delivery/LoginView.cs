@@ -1,16 +1,15 @@
 ﻿using System;
-using Common;
-using Common.Utilities;
-using Home;
-using Login.Scripts.Domain;
-using Login.Scripts.Presentation;
-using Sound;
+using Features.Common.Utilities;
+using Features.Home;
+using Features.Login.Scripts.Domain;
+using Features.Login.Scripts.Presentation;
+using Features.Sound;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Login.Scripts.Delivery
+namespace Features.Login.Scripts.Delivery
 {
     public class LoginView : MonoBehaviour, IView, ILoginView
     {

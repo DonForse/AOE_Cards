@@ -1,13 +1,12 @@
 using System;
-using Common;
-using Infrastructure.DTOs;
-using Login.Scripts.Domain;
-using Login.Scripts.Presentation;
+using Features.Infrastructure.DTOs;
+using Features.Login.Scripts.Domain;
+using Features.Login.Scripts.Presentation;
 using NSubstitute;
 using NUnit.Framework;
 using UniRx;
 
-namespace Login.Scripts.Tests.Editor
+namespace Features.Login.Scripts.Tests.Editor
 {
     public class LoginPresenterShould
     {

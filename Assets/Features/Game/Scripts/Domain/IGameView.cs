@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.Infrastructure.Data;
 using Features.Match.Domain;
-using Infrastructure.Data;
 using UniRx;
 
 namespace Features.Game.Scripts.Domain

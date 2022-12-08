@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Features.Match.Domain;
 
-namespace Home
+namespace Features
 {
     public interface IFindMatchInQueue
     {

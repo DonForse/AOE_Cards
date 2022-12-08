@@ -1,7 +1,7 @@
 ﻿using System;
-using Infrastructure.Data;
+using Features.Infrastructure.Data;
 
-namespace Infrastructure.DTOs
+namespace Features.Infrastructure.DTOs
 {
     [Serializable]
     public class RoundDto

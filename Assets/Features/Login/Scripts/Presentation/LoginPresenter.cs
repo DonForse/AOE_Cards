@@ -1,10 +1,9 @@
 ﻿using System;
-using Common;
-using Infrastructure.DTOs;
-using Login.Scripts.Domain;
+using Features.Infrastructure.DTOs;
+using Features.Login.Scripts.Domain;
 using UniRx;
 
-namespace Login.Scripts.Presentation
+namespace Features.Login.Scripts.Presentation
 {
     public class LoginPresenter : IDisposable
     {

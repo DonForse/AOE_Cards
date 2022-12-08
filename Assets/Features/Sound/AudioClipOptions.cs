@@ -1,4 +1,4 @@
-﻿namespace Sound
+﻿namespace Features.Sound
 {
     public class AudioClipOptions
     {

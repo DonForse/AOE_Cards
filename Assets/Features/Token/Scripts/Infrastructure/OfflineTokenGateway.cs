@@ -1,8 +1,9 @@
 ﻿using System;
-using Infrastructure.DTOs;
+using Features.Infrastructure.DTOs;
+using Features.Token.Scripts.Domain;
 using UniRx;
 
-namespace Token.Scripts.Infrastructure
+namespace Features.Token.Scripts.Infrastructure
 {
     public class OfflineTokenService : ITokenService
     {

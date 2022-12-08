@@ -1,11 +1,11 @@
 ﻿using Features.Game.Scripts.Domain;
-using Home;
-using Sound;
+using Features.Home;
+using Features.Sound;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Result
+namespace Features.Result
 {
     public class ResultView : MonoBehaviour, IView
     {

@@ -1,14 +1,13 @@
 using Features.Game.Scripts.Delivery;
 using Features.Game.Scripts.Domain;
+using Features.Home.Scripts.Delivery;
+using Features.Login.Scripts.Delivery;
 using Features.Match.Domain;
-using Infrastructure.Services;
-using Login;
-using Login.Scripts.Delivery;
-using Result;
-using Rules.Scripts.Delivery;
+using Features.Result;
+using Features.Rules.Scripts.Delivery;
 using UnityEngine;
 
-namespace Home
+namespace Features.Home
 {
     public class Navigator : MonoBehaviour
     {

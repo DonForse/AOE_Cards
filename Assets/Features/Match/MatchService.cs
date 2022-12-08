@@ -2,18 +2,17 @@ using System;
 using System.Linq;
 using System.Text;
 using Features.Game.Scripts.Domain;
+using Features.Infrastructure;
+using Features.Infrastructure.Data;
+using Features.Infrastructure.DTOs;
+using Features.Infrastructure.Services;
+using Features.Infrastructure.Services.Exceptions;
 using Features.Match.Domain;
-using Infrastructure;
-using Infrastructure.Data;
-using Infrastructure.DTOs;
-using Infrastructure.Services;
-using Infrastructure.Services.Exceptions;
-using Match.Domain;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Match
+namespace Features.Match
 {
     public class MatchService : IMatchService
     {

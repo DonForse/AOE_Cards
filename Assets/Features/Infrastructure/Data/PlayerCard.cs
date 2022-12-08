@@ -1,6 +1,6 @@
-using Data;
+using Features.Data;
 
-namespace Infrastructure.Data
+namespace Features.Infrastructure.Data
 {
     public class PlayerCard
     {

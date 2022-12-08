@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Features.Game.Scripts.Domain;
+using Features.Infrastructure.Data;
 using Features.Match.Domain;
-using Infrastructure.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

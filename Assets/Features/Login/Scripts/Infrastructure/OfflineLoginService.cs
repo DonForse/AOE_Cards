@@ -1,13 +1,12 @@
 ﻿using System;
+using Features.Infrastructure.DTOs;
+using Features.Login.Scripts.Domain;
 using Features.ServerLogic.Controllers;
 using Features.ServerLogic.Users.Service;
-using Infrastructure.DTOs;
-using Infrastructure.Services;
-using Login.Scripts.Domain;
 using UniRx;
 using UnityEngine;
 
-namespace Login.Scripts.Infrastructure
+namespace Features.Login.Scripts.Infrastructure
 {
     public class OfflineLoginService : ILoginService
     {

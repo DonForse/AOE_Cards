@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Data
+﻿namespace Features.Infrastructure.Data
 {
     public enum RoundState
     {

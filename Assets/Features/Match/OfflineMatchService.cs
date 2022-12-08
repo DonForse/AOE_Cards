@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Linq;
 using Features.Game.Scripts.Domain;
+using Features.Infrastructure;
+using Features.Infrastructure.Data;
 using Features.Match.Domain;
 using Features.ServerLogic.Controllers;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
-using Infrastructure;
-using Infrastructure.Data;
-using Match.Domain;
 using UniRx;
 using UnityEngine;
-using MatchDto = Infrastructure.DTOs.MatchDto;
+using MatchDto = Features.Infrastructure.DTOs.MatchDto;
 
-namespace Match
+namespace Features.Match
 {
     public class OfflineMatchService : IMatchService
     {

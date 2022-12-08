@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Infrastructure.Services.Exceptions
+namespace Features.Infrastructure.Services.Exceptions
 {
     internal class PlayServiceException : Exception
     {

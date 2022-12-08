@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Features.Game.Scripts.Domain;
-using Infrastructure.Data;
-using Infrastructure.DTOs;
-using Infrastructure.Services.Exceptions;
+using Features.Infrastructure.Data;
+using Features.Infrastructure.DTOs;
+using Features.Infrastructure.Services.Exceptions;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
-using UniRx;
 
-namespace Infrastructure.Services
+namespace Features.Infrastructure.Services
 {
     public class PlayService : IPlayService
     {

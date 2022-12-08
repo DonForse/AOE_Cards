@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Infrastructure.DTOs
+namespace Features.Infrastructure.DTOs
 {
     public class UserResponseDto
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sound
+namespace Features.Sound
 {
     public class MuteSound : MonoBehaviour
     {

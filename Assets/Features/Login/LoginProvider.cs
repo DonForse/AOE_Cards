@@ -1,9 +1,9 @@
-﻿using Features.ServerLogic;
+﻿using Features.Login.Scripts.Domain;
+using Features.Login.Scripts.Infrastructure;
+using Features.ServerLogic;
 using Features.ServerLogic.Controllers;
-using Login.Scripts.Domain;
-using Login.Scripts.Infrastructure;
 
-namespace Login
+namespace Features.Login
 {
     public class LoginProvider
     {

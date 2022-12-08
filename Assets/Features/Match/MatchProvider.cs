@@ -1,9 +1,9 @@
-﻿using Features.ServerLogic;
+﻿using Features.Infrastructure;
+using Features.Match.Domain;
+using Features.ServerLogic;
 using Features.ServerLogic.Controllers;
-using Infrastructure;
-using Match.Domain;
 
-namespace Match
+namespace Features.Match
 {
     public static class MatchProvider
     {

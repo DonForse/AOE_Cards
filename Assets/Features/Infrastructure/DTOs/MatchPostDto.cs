@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Infrastructure.DTOs
+namespace Features.Infrastructure.DTOs
 {
     [Serializable]
     public class MatchPostDto

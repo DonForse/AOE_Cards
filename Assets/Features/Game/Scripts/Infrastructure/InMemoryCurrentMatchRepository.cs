@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Features.Game.Scripts.Domain;
+using Features.Infrastructure.Data;
 using Features.Match.Domain;
-using Infrastructure.Data;
 
 namespace Features.Game.Scripts.Infrastructure
 {

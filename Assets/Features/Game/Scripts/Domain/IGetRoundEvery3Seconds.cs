@@ -1,5 +1,5 @@
 ﻿using System;
-using Infrastructure.Data;
+using Features.Infrastructure.Data;
 
 namespace Features.Game.Scripts.Domain
 {

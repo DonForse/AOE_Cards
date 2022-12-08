@@ -1,10 +1,9 @@
 ﻿using System;
+using Features.Infrastructure.Services.Exceptions;
 using Features.Match.Domain;
-using Infrastructure.Services.Exceptions;
-using Match.Domain;
 using UniRx;
 
-namespace Home
+namespace Features
 {
     public class FindMatchInQueue : IFindMatchInQueue
     {

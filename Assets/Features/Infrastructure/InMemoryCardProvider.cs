@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Data;
+using Features.Data;
 using UnityEngine;
 
-namespace Infrastructure
+namespace Features.Infrastructure
 {
     public class InMemoryCardProvider : MonoBehaviour, ICardProvider
     {

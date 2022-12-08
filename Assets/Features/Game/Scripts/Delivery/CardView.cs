@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Features.Game.Scripts.Domain;
-using Sound;
+using Features.Sound;
 using TMPro;
 using UniRx;
 using UnityEngine;
