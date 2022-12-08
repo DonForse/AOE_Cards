@@ -5,14 +5,14 @@ using Features.ServerLogic.Users.Infrastructure;
 using Features.ServerLogic.Users.Service;
 using Newtonsoft.Json;
 
-namespace Features.ServerLogic.Controllers
+namespace Features.ServerLogic.Handlers
 {
     
-    public class UserController
+    public class UserHandler
     {
         private readonly IUsersRepository _usersRepository;
 
-        public UserController(IUsersRepository usersRepository)
+        public UserHandler(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }

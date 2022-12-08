@@ -2,7 +2,7 @@
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public class GetMatch
+    public class GetMatch : IGetMatch
     {
         private readonly IMatchesRepository _matchesRepository;
 
@@ -10,7 +10,7 @@ namespace Features.ServerLogic.Matches.Action
             _matchesRepository = matchesRepository;
         }
 
-        internal Domain.ServerMatch Execute(string matchId)
+        public Domain.ServerMatch Execute(string matchId)
         {
             return _matchesRepository.Get(matchId);
         }

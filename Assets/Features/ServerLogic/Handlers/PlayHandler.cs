@@ -5,15 +5,15 @@ using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 
-namespace Features.ServerLogic.Controllers
+namespace Features.ServerLogic.Handlers
 {
     
-    public class PlayController
+    public class PlayHandler
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
 
-        public PlayController(IMatchesRepository matchesRepository, ICardRepository cardRepository)
+        public PlayHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;

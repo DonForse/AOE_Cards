@@ -5,14 +5,14 @@ using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 
-namespace Features.ServerLogic.Controllers
+namespace Features.ServerLogic.Handlers
 {
-    public class RoundController
+    public class RoundHandler
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
 
-        public RoundController(IMatchesRepository matchesRepository, ICardRepository cardRepository)
+        public RoundHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;

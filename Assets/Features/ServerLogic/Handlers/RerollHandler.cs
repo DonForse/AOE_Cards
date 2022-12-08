@@ -5,15 +5,15 @@ using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 
-namespace Features.ServerLogic.Controllers
+namespace Features.ServerLogic.Handlers
 {
     
-    public class RerollController
+    public class RerollHandler
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
 
-        public RerollController(IMatchesRepository matchesRepository, ICardRepository cardRepository)
+        public RerollHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;

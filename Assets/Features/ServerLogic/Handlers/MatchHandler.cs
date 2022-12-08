@@ -10,9 +10,9 @@ using Features.ServerLogic.Users.Domain;
 using Features.ServerLogic.Users.Infrastructure;
 using Newtonsoft.Json;
 
-namespace Features.ServerLogic.Controllers
+namespace Features.ServerLogic.Handlers
 {
-    public class MatchController
+    public class MatchHandler
     {
         private readonly IUsersQueuedRepository _usersQueuedRepository;
         private readonly IFriendsUsersQueuedRepository _friendsQueueRepository;
@@ -20,7 +20,7 @@ namespace Features.ServerLogic.Controllers
         private readonly ICardRepository _cardRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly IServerConfiguration _serverConfiguration;
-        public MatchController(IUsersQueuedRepository usersQueuedRepository, 
+        public MatchHandler(IUsersQueuedRepository usersQueuedRepository, 
             IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
             IMatchesRepository matchesRepository,
             ICardRepository cardRepository,

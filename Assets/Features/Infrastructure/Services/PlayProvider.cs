@@ -1,5 +1,5 @@
 ﻿using Features.ServerLogic;
-using Features.ServerLogic.Controllers;
+using Features.ServerLogic.Handlers;
 
 namespace Features.Infrastructure.Services
 {
@@ -10,8 +10,8 @@ namespace Features.Infrastructure.Services
         public static IPlayService PlayService(ICardProvider cardProvider) => _playService ??= new PlayService(cardProvider);
 
         public static IPlayService OfflinePlayService(InMemoryCardProvider cardProvider) => _playService??= 
-            new OfflinePlayService(new RoundController(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()),
-                new PlayController(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()),
-                cardProvider,new RerollController(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
+            new OfflinePlayService(new RoundHandler(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()),
+                new PlayHandler(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()),
+                cardProvider,new RerollHandler(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
     }
 }

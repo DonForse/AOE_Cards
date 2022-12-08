@@ -4,7 +4,7 @@ using Features.Game.Scripts.Domain;
 using Features.Infrastructure;
 using Features.Infrastructure.Data;
 using Features.Match.Domain;
-using Features.ServerLogic.Controllers;
+using Features.ServerLogic.Handlers;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using UniRx;
 using UnityEngine;
@@ -15,18 +15,18 @@ namespace Features.Match
     public class OfflineMatchService : IMatchService
     {
         private readonly ICardProvider _cardProvider;
-        private readonly MatchController _matchController;
+        private readonly MatchHandler _matchHandler;
         private string UserId() => PlayerPrefs.GetString(PlayerPrefsHelper.UserId);
 
-        public OfflineMatchService(ICardProvider cardProvider, MatchController matchController)
+        public OfflineMatchService(ICardProvider cardProvider, MatchHandler matchHandler)
         {
             _cardProvider = cardProvider;
-            _matchController = matchController;
+            _matchHandler = matchHandler;
         }
 
         public IObservable<GameMatch> StartMatch(bool vsBot, bool vsFriend, string friendCode, int botDifficulty)
         {
-            var response = _matchController.Post(UserId(),
+            var response = _matchHandler.Post(UserId(),
                 new MatchInfoDto {vsBot = vsBot, vsFriend = vsFriend, friendCode = friendCode, botDifficulty = botDifficulty});
             
             var dto = JsonUtility.FromJson<MatchDto>(response.response);
@@ -37,14 +37,14 @@ namespace Features.Match
 
         public IObservable<GameMatch> GetMatch()
         {
-            var response = _matchController.Get(UserId());
+            var response = _matchHandler.Get(UserId());
             var dto = JsonUtility.FromJson<MatchDto>(response.response);
             return Observable.Return(DtoToMatchStatus(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
         public IObservable<Unit> RemoveMatch()
         {
-            _matchController.Delete(UserId());
+            _matchHandler.Delete(UserId());
             return Observable.ReturnUnit();
         }
 

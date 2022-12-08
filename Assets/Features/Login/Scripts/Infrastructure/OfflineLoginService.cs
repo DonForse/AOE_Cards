@@ -1,7 +1,7 @@
 ﻿using System;
 using Features.Infrastructure.DTOs;
 using Features.Login.Scripts.Domain;
-using Features.ServerLogic.Controllers;
+using Features.ServerLogic.Handlers;
 using Features.ServerLogic.Users.Service;
 using UniRx;
 using UnityEngine;
@@ -10,23 +10,23 @@ namespace Features.Login.Scripts.Infrastructure
 {
     public class OfflineLoginService : ILoginService
     {
-        private readonly UserController _userController;
+        private readonly UserHandler _userHandler;
 
-        public OfflineLoginService(UserController userController )
+        public OfflineLoginService(UserHandler userHandler )
         {
-            _userController = userController;
+            _userHandler = userHandler;
         }
 
         public IObservable<UserResponseDto> Register(string playerName, string password)
         {
-            var response = _userController.Put(new UserRequestDto() {password = password, username = playerName});
+            var response = _userHandler.Put(new UserRequestDto() {password = password, username = playerName});
             var dto = JsonUtility.FromJson<UserResponseDto>(response.response);
             return Observable.Return(dto);
         }
 
         public IObservable<UserResponseDto> Login(string playerName, string password)
         {
-            var response = _userController.Post(new UserRequestDto() {password = password, username = playerName});
+            var response = _userHandler.Post(new UserRequestDto() {password = password, username = playerName});
             var dto = JsonUtility.FromJson<UserResponseDto>(response.response);
             return Observable.Return(dto);
         }

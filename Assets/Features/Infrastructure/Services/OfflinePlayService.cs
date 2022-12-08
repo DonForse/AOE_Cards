@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Game.Scripts.Domain;
 using Features.Infrastructure.Data;
-using Features.ServerLogic.Controllers;
+using Features.ServerLogic.Handlers;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using UniRx;
 using UnityEngine;
@@ -14,45 +14,45 @@ namespace Features.Infrastructure.Services
 {
     public class OfflinePlayService : IPlayService
     {
-        private readonly RoundController _roundController;
-        private readonly PlayController _playController;
+        private readonly RoundHandler _roundHandler;
+        private readonly PlayHandler _playHandler;
         private readonly ICardProvider _cardProvider;
-        private readonly RerollController _rerollController;
+        private readonly RerollHandler _rerollHandler;
         private string UserId() => PlayerPrefs.GetString(PlayerPrefsHelper.UserId);
         private string MatchId() => PlayerPrefs.GetString(PlayerPrefsHelper.MatchId);
 
-        public OfflinePlayService(RoundController roundController, PlayController playController, ICardProvider cardProvider, RerollController rerollController)
+        public OfflinePlayService(RoundHandler roundHandler, PlayHandler playHandler, ICardProvider cardProvider, RerollHandler rerollHandler)
         {
-            _roundController = roundController;
-            _playController = playController;
+            _roundHandler = roundHandler;
+            _playHandler = playHandler;
             _cardProvider = cardProvider;
-            _rerollController = rerollController;
+            _rerollHandler = rerollHandler;
         }
 
         public IObservable<Round> GetRound(int roundNumber)
         {
-            var responseInfo = _roundController.Get(UserId(), MatchId(), roundNumber);
+            var responseInfo = _roundHandler.Get(UserId(), MatchId(), roundNumber);
             var dto = JsonUtility.FromJson<RoundDto>(responseInfo.response);
             return Observable.Return(DtoToRound(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
         public IObservable<Hand> PlayUnitCard(string cardName)
         {
-            var responseInfo = _playController.Post(UserId(), MatchId(), new CardInfoDto(){cardname = cardName, type = "unit"});
+            var responseInfo = _playHandler.Post(UserId(), MatchId(), new CardInfoDto(){cardname = cardName, type = "unit"});
             var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
             return Observable.Return(DtoToHand(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
         public IObservable<Hand> PlayUpgradeCard(string cardName)
         {
-            var responseInfo = _playController.Post(UserId(), MatchId(), new CardInfoDto(){cardname = cardName, type = "upgrade"});
+            var responseInfo = _playHandler.Post(UserId(), MatchId(), new CardInfoDto(){cardname = cardName, type = "upgrade"});
             var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
             return Observable.Return(DtoToHand(dto)).Delay(TimeSpan.FromSeconds(1));
         }
 
         public IObservable<Hand> ReRollCards(IList<string> unitCards, IList<string> upgradeCards)
         {
-            var responseInfo = _rerollController.Post(UserId(), MatchId(),
+            var responseInfo = _rerollHandler.Post(UserId(), MatchId(),
                 new RerollInfoDto {unitCards = unitCards.ToArray(), upgradeCards = upgradeCards.ToArray()});
             var dto = JsonUtility.FromJson<HandDto>(responseInfo.response);
             return Observable.Return(DtoToHand(dto)).Delay(TimeSpan.FromSeconds(1));
