@@ -31,7 +31,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             string expectedCardName = "card1";
             string expectedCardNameTwo = "card2";
-            
+
             var playerCards = new Dictionary<string, PlayerCard>()
             {
                 {UserIdOne, new PlayerCard()},
@@ -39,38 +39,95 @@ namespace Features.ServerLogic.Editor.Tests
             };
 
             var playerOneHand = new Hand()
-                {UnitsCards = new List<UnitCard>()
+            {
+                UnitsCards = new List<UnitCard>()
                 {
                     UnitCardMother.Create(expectedCardName),
                     UnitCardMother.Create(""),
-                }};
+                }
+            };
             var playerTwoHand = new Hand()
-            {UnitsCards = new List<UnitCard>()
             {
-                UnitCardMother.Create(expectedCardNameTwo),
-                UnitCardMother.Create(""),
-            }};
+                UnitsCards = new List<UnitCard>()
+                {
+                    UnitCardMother.Create(expectedCardNameTwo),
+                    UnitCardMother.Create(""),
+                }
+            };
 
             var playerHands = new Dictionary<string, Hand>()
             {
                 {UserIdOne, playerOneHand},
-                {UserIdTwo,playerTwoHand}
+                {UserIdTwo, playerTwoHand}
             };
-            var board = BoardMother.Create(withPlayerHands:playerHands);
+            var board = BoardMother.Create(withPlayerHands: playerHands);
             var serverMatch = ServerMatchMother.Create(withId: MatchId, withBoard: board);
             var round = RoundMother.Create(withUsers: new List<string>() {UserIdOne, UserIdTwo},
                 withPlayerCards: playerCards);
-            
+
             GivenRoundInUnitState(round);
             WhenExecute(serverMatch, round);
             Received.InOrder(() =>
             {
                 ThenPlayedCardForUserOne();
-                ThenPlayedCardForUserTwo();    
+                ThenPlayedCardForUserTwo();
             });
 
             void ThenPlayedCardForUserOne() => _playUnitCard.Received(1).Execute(MatchId, UserIdOne, expectedCardName);
-            void ThenPlayedCardForUserTwo() => _playUnitCard.Received(1).Execute(MatchId, UserIdTwo, expectedCardNameTwo);
+
+            void ThenPlayedCardForUserTwo() =>
+                _playUnitCard.Received(1).Execute(MatchId, UserIdTwo, expectedCardNameTwo);
+        }
+
+        [Test]
+        public void NotPlayUnitIfRoundIsInUnitPhaseButPlayerAlreadyPlayedUnit()
+        {
+            string expectedCardName = "card1";
+            string expectedCardNameTwo = "card2";
+
+            var playerCards = new Dictionary<string, PlayerCard>()
+            {
+                {UserIdOne, new PlayerCard()},
+                {UserIdTwo, new PlayerCard() {UnitCard = UnitCardMother.Create("someCard")}},
+            };
+
+            var playerOneHand = new Hand()
+            {
+                UnitsCards = new List<UnitCard>()
+                {
+                    UnitCardMother.Create(expectedCardName),
+                    UnitCardMother.Create(""),
+                }
+            };
+            var playerTwoHand = new Hand()
+            {
+                UnitsCards = new List<UnitCard>()
+                {
+                    UnitCardMother.Create(expectedCardNameTwo),
+                    UnitCardMother.Create(""),
+                }
+            };
+
+            var playerHands = new Dictionary<string, Hand>()
+            {
+                {UserIdOne, playerOneHand},
+                {UserIdTwo, playerTwoHand}
+            };
+            var board = BoardMother.Create(withPlayerHands: playerHands);
+            var serverMatch = ServerMatchMother.Create(withId: MatchId, withBoard: board);
+            var round = RoundMother.Create(withUsers: new List<string>() {UserIdOne, UserIdTwo},
+                withPlayerCards: playerCards);
+
+            GivenRoundInUnitState(round);
+            WhenExecute(serverMatch, round);
+
+            ThenPlayedCardForUserOne();
+            ThenDidNotPlayCardForUserTwo();
+
+            void ThenPlayedCardForUserOne() => _playUnitCard.Received(1).Execute(MatchId, UserIdOne, expectedCardName);
+
+            void ThenDidNotPlayCardForUserTwo() =>
+                _playUnitCard.DidNotReceive().Execute(MatchId, UserIdTwo, Arg.Any<string>());
         }
 
         private void WhenExecute(ServerMatch serverMatch, Round round)
