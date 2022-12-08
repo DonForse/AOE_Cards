@@ -12,7 +12,7 @@ namespace Features.ServerLogic
         {
             _playMatchService = new PlayMatchService(
                 ServerLogicProvider.MatchesRepository(),
-                new PlayInactiveMatches());
+                ServerLogicProvider.PlayInactiveMatch());
             _playMatchService.Initialize();
         }
 

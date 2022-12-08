@@ -1,4 +1,5 @@
 ﻿using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Service;
 using Features.ServerLogic.Users.Infrastructure;
@@ -21,5 +22,10 @@ namespace Features.ServerLogic
 
         public static IServerConfiguration ServerConfiguration() => new ServerConfiguration();
 
+        public static IPlayUnitCard PlayUnitCard() => new PlayUnitCard(MatchesRepository(), CardRepository());
+        public static IPlayUpgradeCard PlayUpgradeCard() => new PlayUpgradeCard(MatchesRepository(), CardRepository());
+
+        public static IPlayInactiveMatch PlayInactiveMatch() =>
+            new PlayInactiveMatch(PlayUnitCard(), PlayUpgradeCard());
     }
 }

@@ -3,10 +3,16 @@ using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public class PlayInactiveMatches : IPlayInactiveMatches
+    public class PlayInactiveMatch : IPlayInactiveMatch
     {
-        private IPlayUnitCard _playUnitCard;
-        private IPlayUpgradeCard _playUpgradeCard;
+        private readonly IPlayUnitCard _playUnitCard;
+        private readonly IPlayUpgradeCard _playUpgradeCard;
+
+        public PlayInactiveMatch(IPlayUnitCard playUnitCard, IPlayUpgradeCard playUpgradeCard)
+        {
+            _playUnitCard = playUnitCard;
+            _playUpgradeCard = playUpgradeCard;
+        }
 
         public void Execute(ServerMatch serverMatch, Round round)
         {
@@ -19,7 +25,7 @@ namespace Features.ServerLogic.Matches.Action
                         if (pc.Value.UnitCard == null)
                         {
                             _playUnitCard.Execute(serverMatch.Guid, pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First().CardName);
-                            break;
+                            continue;
                         }
                     }
                     if (round.RoundState == RoundState.Upgrade)

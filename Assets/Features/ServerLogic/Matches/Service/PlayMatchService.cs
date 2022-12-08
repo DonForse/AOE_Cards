@@ -11,12 +11,12 @@ namespace Features.ServerLogic.Matches.Service
     public class PlayMatchService : IDisposable
     {
         private readonly IMatchesRepository _matchesRepository;
-        private readonly IPlayInactiveMatches _playInactiveMatches;
+        private readonly IPlayInactiveMatch _playInactiveMatch;
 
-        public PlayMatchService(IMatchesRepository matchesRepository, IPlayInactiveMatches playInactiveMatches)
+        public PlayMatchService(IMatchesRepository matchesRepository, IPlayInactiveMatch playInactiveMatch)
         {
             _matchesRepository = matchesRepository;
-            _playInactiveMatches = playInactiveMatches;
+            _playInactiveMatch = playInactiveMatch;
         }
 
         private static Timer Timer;
@@ -71,7 +71,7 @@ namespace Features.ServerLogic.Matches.Service
                 if (!RoundPhaseTimedOut(round)) continue;
                 try
                 {
-                    _playInactiveMatches.Execute(match, round);
+                    _playInactiveMatch.Execute(match, round);
                 }
                 catch { }
 

@@ -2,7 +2,7 @@
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public interface IPlayInactiveMatches
+    public interface IPlayInactiveMatch
     {
         void Execute(ServerMatch serverMatch, Round round);
     }
