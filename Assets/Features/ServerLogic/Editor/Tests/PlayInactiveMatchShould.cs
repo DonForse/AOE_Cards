@@ -5,6 +5,7 @@ using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -18,13 +19,15 @@ namespace Features.ServerLogic.Editor.Tests
         private PlayInactiveMatch _playInactiveMatch;
         private IPlayUpgradeCard _playUpgradeCard;
         private IPlayUnitCard _playUnitCard;
+        private IPlayReroll _playReroll;
 
         [SetUp]
         public void Setup()
         {
             _playUnitCard = Substitute.For<IPlayUnitCard>();
             _playUpgradeCard = Substitute.For<IPlayUpgradeCard>();
-            _playInactiveMatch = new PlayInactiveMatch(_playUnitCard, _playUpgradeCard);
+            _playReroll = Substitute.For<IPlayReroll>();
+            _playInactiveMatch = new PlayInactiveMatch(_playUnitCard, _playUpgradeCard, _playReroll);
         }
 
         [Test]
@@ -236,9 +239,62 @@ namespace Features.ServerLogic.Editor.Tests
                 _playUpgradeCard.DidNotReceive().Execute(MatchId, UserIdTwo, Arg.Any<string>());
         }
 
+        [Test]
+        public void PlayRerollIfRoundIsInRerollPhase()
+        {
+            var playerCards = new Dictionary<string, PlayerCard>()
+            {
+                {UserIdOne, new PlayerCard()},
+                {UserIdTwo, new PlayerCard()},
+            };
+
+            var board = BoardMother.Create();
+            var serverMatch = ServerMatchMother.Create(withId: MatchId, withBoard: board);
+            var round = RoundMother.Create(withUsers: new List<string>() {UserIdOne, UserIdTwo},
+                withPlayerCards: playerCards,
+                withPlayerReroll: new Dictionary<string, bool>() {{UserIdOne, false}, {UserIdTwo, false}});
+
+            GivenRoundInRerollState(round);
+            WhenExecute(serverMatch, round);
+            Received.InOrder(() =>
+            {
+                ThenPlayRerollForUserOne();
+                ThenPlayRerollForUserTwo();
+            });
+
+            void ThenPlayRerollForUserOne() => _playReroll.Received(1).Execute(serverMatch, UserIdOne, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
+            void ThenPlayRerollForUserTwo() => _playReroll.Received(1).Execute(serverMatch, UserIdTwo, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
+        }
+        
+        [Test]
+        public void NotPlayRerollIfRoundIsInRerollPhaseButPlayerAlreadyRerolled()
+        {
+            var playerCards = new Dictionary<string, PlayerCard>()
+            {
+                {UserIdOne, new PlayerCard()},
+                {UserIdTwo, new PlayerCard()},
+            };
+
+            var board = BoardMother.Create();
+            var serverMatch = ServerMatchMother.Create(withId: MatchId, withBoard: board);
+            var round = RoundMother.Create(withUsers: new List<string>() {UserIdOne, UserIdTwo},
+                withPlayerCards: playerCards,
+                withPlayerReroll: new Dictionary<string, bool>() {{UserIdOne, true}, {UserIdTwo, false}});
+
+            GivenRoundInRerollState(round);
+            WhenExecute(serverMatch, round);
+
+            ThenDidNotPlayRerollForUserOne();
+                ThenPlayRerollForUserTwo();
+
+                void ThenDidNotPlayRerollForUserOne() => _playReroll.DidNotReceive()
+                    .Execute(serverMatch, UserIdOne, Arg.Any<RerollInfoDto>());
+            void ThenPlayRerollForUserTwo() => _playReroll.Received(1).Execute(serverMatch, UserIdTwo, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
+        }
+
         private void WhenExecute(ServerMatch serverMatch, Round round) =>
             _playInactiveMatch.Execute(serverMatch, round);
-
+        private static void GivenRoundInRerollState(Round round) => round.ChangeRoundState(RoundState.Reroll);
         private static void GivenRoundInUnitState(Round round) => round.ChangeRoundState(RoundState.Unit);
         private static void GivenRoundInUpgradeState(Round round) => round.ChangeRoundState(RoundState.Upgrade);
     }

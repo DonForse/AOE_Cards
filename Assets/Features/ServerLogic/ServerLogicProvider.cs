@@ -26,6 +26,8 @@ namespace Features.ServerLogic
         public static IPlayUpgradeCard PlayUpgradeCard() => new PlayUpgradeCard(MatchesRepository(), CardRepository());
 
         public static IPlayInactiveMatch PlayInactiveMatch() =>
-            new PlayInactiveMatch(PlayUnitCard(), PlayUpgradeCard());
+            new PlayInactiveMatch(PlayUnitCard(), PlayUpgradeCard(), PlayReroll());
+
+        public static IPlayReroll PlayReroll() => new PlayReroll(CardRepository());
     }
 }

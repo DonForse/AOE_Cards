@@ -29,7 +29,7 @@ namespace Features.ServerLogic.Controllers
                 var match = getMatch.Execute(matchId);
                 if (match == null)
                     throw new ApplicationException("Match Not Found!");
-                var rerollHand = new RerollHand(_cardRepository);
+                var rerollHand = new PlayReroll(_cardRepository);
                 rerollHand.Execute(match, userId, cards);
                 var handDto = new HandDto(_matchesRepository.Get(matchId).Board.PlayersHands[userId]);
 

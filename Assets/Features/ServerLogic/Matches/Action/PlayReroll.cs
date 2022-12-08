@@ -10,19 +10,20 @@ using Features.ServerLogic.Matches.Infrastructure.DTO;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    internal class RerollHand
+    public class PlayReroll : IPlayReroll
     {
         private readonly ICardRepository _cardRepository;
         private readonly GetUnitCard _getUnitCard;
         private readonly GetUpgradeCard _getUpgradeCard;
 
-        public RerollHand(ICardRepository cardRepository)
+        public PlayReroll(ICardRepository cardRepository)
         {
             _cardRepository = cardRepository;
             _getUnitCard = new GetUnitCard(_cardRepository);
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
         }
-        internal void Execute(ServerMatch serverMatch, string userId, RerollInfoDto cards)
+
+        public void Execute(ServerMatch serverMatch, string userId, RerollInfoDto cards)
         {
             var round = serverMatch.Board.RoundsPlayed.LastOrDefault();
             if (round.RoundState != RoundState.Reroll || round.PlayerReroll.ContainsKey(userId) && round.PlayerReroll[userId] )
@@ -53,7 +54,7 @@ namespace Features.ServerLogic.Matches.Action
 
         }
 
-        private static void AddNewUnitCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UnitCard> unitCards, List<UnitCard> units)
+        private static void AddNewUnitCards(ServerMatch serverMatch, string userId, List<UnitCard> unitCards, List<UnitCard> units)
         {
             serverMatch.Board.PlayersHands[userId].UnitsCards = units;
             for (int i = 0; i < unitCards.Count; i++)
@@ -63,7 +64,7 @@ namespace Features.ServerLogic.Matches.Action
             serverMatch.Board.Deck.AddUnitCards(unitCards);
         }
 
-        private static void AddNewUpgradeCards(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UpgradeCard> upgradeCards, List<UpgradeCard> upgrades)
+        private static void AddNewUpgradeCards(ServerMatch serverMatch, string userId, List<UpgradeCard> upgradeCards, List<UpgradeCard> upgrades)
         {
             serverMatch.Board.PlayersHands[userId].UpgradeCards = upgrades;
             for (int i = 0; i < upgradeCards.Count; i++)
@@ -73,7 +74,7 @@ namespace Features.ServerLogic.Matches.Action
             serverMatch.Board.Deck.AddUpgradeCards(upgradeCards);
         }
 
-        private List<UnitCard> GetNewHandUnits(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId, List<UnitCard> unitCards, ref bool revert)
+        private List<UnitCard> GetNewHandUnits(ServerMatch serverMatch, string userId, List<UnitCard> unitCards, ref bool revert)
         {
             var units = serverMatch.Board.PlayersHands[userId].UnitsCards.ToList();
             foreach (var card in unitCards)

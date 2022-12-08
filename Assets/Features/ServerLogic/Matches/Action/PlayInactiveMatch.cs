@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure.DTO;
 
 namespace Features.ServerLogic.Matches.Action
 {
@@ -7,11 +9,13 @@ namespace Features.ServerLogic.Matches.Action
     {
         private readonly IPlayUnitCard _playUnitCard;
         private readonly IPlayUpgradeCard _playUpgradeCard;
+        private readonly IPlayReroll _playReroll;
 
-        public PlayInactiveMatch(IPlayUnitCard playUnitCard, IPlayUpgradeCard playUpgradeCard)
+        public PlayInactiveMatch(IPlayUnitCard playUnitCard, IPlayUpgradeCard playUpgradeCard, IPlayReroll playReroll)
         {
             _playUnitCard = playUnitCard;
             _playUpgradeCard = playUpgradeCard;
+            _playReroll = playReroll;
         }
 
         public void Execute(ServerMatch serverMatch, Round round)
@@ -38,12 +42,16 @@ namespace Features.ServerLogic.Matches.Action
                     }
                     if (round.RoundState == RoundState.Reroll)
                     {
-                        round.PlayerReroll[pc.Key] = true;
-                        if (round.PlayerReroll.Values.All(rerolled => rerolled))
-                        {
-                            round.ChangeRoundState(RoundState.Upgrade);
-                            break;
-                        }
+                        if (!round.PlayerReroll[pc.Key])
+                            _playReroll.Execute(serverMatch, pc.Key,
+                                new RerollInfoDto()
+                                    {unitCards = new List<string>(), upgradeCards = new List<string>()});
+                        // round.PlayerReroll[pc.Key] = true;
+                        // if (round.PlayerReroll.Values.All(rerolled => rerolled))
+                        // {
+                        //     round.ChangeRoundState(RoundState.Upgrade);
+                        //     break;
+                        // }
                     }
                 }
 
