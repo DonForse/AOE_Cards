@@ -14,7 +14,7 @@ using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public class CreateMatch
+    public class CreateMatch : ICreateMatch
     {
         private readonly IMatchesRepository _matchRepository;
         private readonly ICardRepository _cardRepository;

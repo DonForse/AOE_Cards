@@ -12,6 +12,6 @@ namespace Features.Match
         public static IMatchService MatchService(ICardProvider cardProvider) => _matchService ??= new MatchService(cardProvider);
         public static IMatchService OfflineMatchService(ICardProvider cardProvider) => _matchService ??= new OfflineMatchService(cardProvider,
             new MatchHandler(ServerLogicProvider.UsersQueuedRepository(), ServerLogicProvider.FriendsUserQueuedRepository(),
-                ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository(),ServerLogicProvider.UsersRepository(), ServerLogicProvider.ServerConfiguration()));
+                ServerLogicProvider.MatchesRepository(),ServerLogicProvider.UsersRepository(),ServerLogicProvider.MatchCreatorService(), ServerLogicProvider.CreateMatch()));
     }
 }

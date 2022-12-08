@@ -9,7 +9,12 @@ using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Service
 {
-    public class MatchCreator
+    public interface IMatchCreatorService
+    {
+        void CreateMatches();
+    }
+
+    public class MatchCreatorService : IMatchCreatorService
     {
         private readonly IUsersQueuedRepository _usersQueuedRepository;
         private readonly IFriendsUsersQueuedRepository _friendsQueuedRepository;
@@ -23,7 +28,7 @@ namespace Features.ServerLogic.Matches.Service
 
         private readonly CreateMatch _createMatch;
 
-        public MatchCreator(IMatchesRepository matchRepository,
+        public MatchCreatorService(IMatchesRepository matchRepository,
             ICardRepository cardRepository, 
             IUsersQueuedRepository usersQueuedRepository,
             IFriendsUsersQueuedRepository friendsUsersQueuedRepository,

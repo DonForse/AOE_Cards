@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
@@ -17,30 +16,30 @@ namespace Features.ServerLogic.Handlers
         private readonly IUsersQueuedRepository _usersQueuedRepository;
         private readonly IFriendsUsersQueuedRepository _friendsQueueRepository;
         private readonly IMatchesRepository _matchesRepository;
-        private readonly ICardRepository _cardRepository;
         private readonly IUsersRepository _usersRepository;
-        private readonly IServerConfiguration _serverConfiguration;
+        private readonly IMatchCreatorService _matchCreatorService;
+        private readonly ICreateMatch _createMatch;
+
         public MatchHandler(IUsersQueuedRepository usersQueuedRepository, 
             IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
             IMatchesRepository matchesRepository,
-            ICardRepository cardRepository,
-            IUsersRepository usersRepository, 
-            IServerConfiguration serverConfiguration)
+            IUsersRepository usersRepository,
+            IMatchCreatorService matchCreatorService,
+            ICreateMatch createMatch)
         {
             _usersQueuedRepository = usersQueuedRepository;
             _friendsQueueRepository = friendsUsersQueuedRepository;
             _matchesRepository = matchesRepository;
-            _cardRepository = cardRepository;
             _usersRepository = usersRepository;
-            _serverConfiguration = serverConfiguration;
+            _matchCreatorService = matchCreatorService;
+            _createMatch = createMatch;
         }
         // GET api/matches/guid-guid-guid-guid
         /// <returns> no match available</returns> (retry after a few secs) -> remember to clear from memory if unused or used
         /// <returns>matchId + matchstatus</returns>
         public ResponseDto Get(string userId)
         {
-            var matchCreator = new MatchCreator(_matchesRepository, _cardRepository, _usersQueuedRepository, _friendsQueueRepository, _serverConfiguration);
-            matchCreator.CreateMatches();
+            _matchCreatorService.CreateMatches();
             
             try
             {
@@ -101,8 +100,7 @@ namespace Features.ServerLogic.Handlers
 
         private ResponseDto PlayBot(User user, int botDifficulty)
         {
-            var createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration, new CreateBotUser());
-            createMatch.Execute(new List<User> { user }, true, botDifficulty);
+            _createMatch.Execute(new List<User> { user }, true, botDifficulty);
             var response = new ResponseDto
             {
                 response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),

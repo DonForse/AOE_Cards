@@ -2,6 +2,7 @@
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Service;
+using Features.ServerLogic.Users.Actions;
 using Features.ServerLogic.Users.Infrastructure;
 
 namespace Features.ServerLogic
@@ -29,5 +30,11 @@ namespace Features.ServerLogic
             new PlayInactiveMatch(PlayUnitCard(), PlayUpgradeCard(), PlayReroll());
 
         public static IPlayReroll PlayReroll() => new PlayReroll(CardRepository());
+
+        public static IMatchCreatorService MatchCreatorService() =>
+            new MatchCreatorService(MatchesRepository(), CardRepository(), UsersQueuedRepository(),
+                FriendsUserQueuedRepository(), ServerConfiguration());
+        public static ICreateMatch CreateMatch() => new CreateMatch(MatchesRepository(), CardRepository(), ServerConfiguration(), CreateBotUser());
+        public static ICreateBotUser CreateBotUser() => new CreateBotUser();
     }
 }
