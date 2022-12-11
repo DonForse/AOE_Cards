@@ -19,13 +19,15 @@ namespace Features.ServerLogic.Handlers
         private readonly IUsersRepository _usersRepository;
         private readonly IMatchCreatorService _matchCreatorService;
         private readonly ICreateMatch _createMatch;
+        private readonly IGetUser _getUser;
 
         public MatchHandler(IUsersQueuedRepository usersQueuedRepository, 
             IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
             IMatchesRepository matchesRepository,
             IUsersRepository usersRepository,
             IMatchCreatorService matchCreatorService,
-            ICreateMatch createMatch)
+            ICreateMatch createMatch,
+            IGetUser getUser)
         {
             _usersQueuedRepository = usersQueuedRepository;
             _friendsQueueRepository = friendsUsersQueuedRepository;
@@ -33,6 +35,7 @@ namespace Features.ServerLogic.Handlers
             _usersRepository = usersRepository;
             _matchCreatorService = matchCreatorService;
             _createMatch = createMatch;
+            _getUser = getUser;
         }
         // GET api/matches/guid-guid-guid-guid
         /// <returns> no match available</returns> (retry after a few secs) -> remember to clear from memory if unused or used
@@ -43,11 +46,7 @@ namespace Features.ServerLogic.Handlers
             
             try
             {
-                var getUser = new GetUser(_usersRepository);
-                var user = getUser.Execute(userId);
-                if (user == null)
-                    throw new ApplicationException("user is not valid");
-
+                var user = ValidateUser(userId);
                 var match = _matchesRepository.GetByUserId(userId);
 
                 var responseDto = new ResponseDto
@@ -73,10 +72,8 @@ namespace Features.ServerLogic.Handlers
         {
             try
             {
-                var getUser = new GetUser(_usersRepository);
-                var user = getUser.Execute(userId);
-                if (user == null)
-                    throw new ApplicationException("user is not valid");
+                var user = ValidateUser(userId);
+
                 var matchInfo = matchInfoDto;
 
                 if (matchInfo.vsBot)
@@ -139,10 +136,7 @@ namespace Features.ServerLogic.Handlers
         {
             try
             {
-                var getUser = new GetUser(_usersRepository);
-                var user = getUser.Execute(userId);
-                if (user == null)
-                    throw new ApplicationException("user is not valid");
+                var user = ValidateUser(userId);
                 _friendsQueueRepository.Remove(user.FriendCode);
 
                 _usersQueuedRepository.Remove(userId);
@@ -165,6 +159,14 @@ namespace Features.ServerLogic.Handlers
                 };
                 return responseDto;
             }
+        }
+
+        private User ValidateUser(string userId)
+        {
+            var user = _getUser.Execute(userId);
+            if (user == null)
+                throw new ApplicationException("user is not valid");
+            return user;
         }
     }
 }

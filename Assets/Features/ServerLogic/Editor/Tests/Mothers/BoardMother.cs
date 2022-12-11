@@ -10,6 +10,8 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             IDictionary<string, Hand> withPlayerHands = null,
             IList<Round> withRoundsPlayed = null)
         {
+            if (withRoundsPlayed == null)
+                withRoundsPlayed = new List<Round>();
             return new Board()
             {
                 Deck = withDeck,

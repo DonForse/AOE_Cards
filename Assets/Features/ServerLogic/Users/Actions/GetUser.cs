@@ -5,7 +5,7 @@ using Features.ServerLogic.Users.Infrastructure;
 
 namespace Features.ServerLogic.Users.Actions
 {
-    internal class GetUser
+    public class GetUser : IGetUser
     {
         private IUsersRepository _usersRepository;
 
@@ -14,7 +14,7 @@ namespace Features.ServerLogic.Users.Actions
             _usersRepository = usersRepository;
         }
 
-        internal User Execute(string username, string encodedPassword, DateTime dt)
+        public User Execute(string username, string encodedPassword, DateTime dt)
         {
             //hashthingy
             var password = DecodePassword(encodedPassword, dt);
@@ -55,7 +55,7 @@ namespace Features.ServerLogic.Users.Actions
             return encoding.GetString(newPassword);
         }
 
-        internal User Execute(string userId)
+        public User Execute(string userId)
         {
             //hashthingy
             var user = _usersRepository.GetById(userId);
