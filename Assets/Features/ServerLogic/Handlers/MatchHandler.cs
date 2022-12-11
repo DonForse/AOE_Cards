@@ -77,12 +77,36 @@ namespace Features.ServerLogic.Handlers
                 var matchInfo = matchInfoDto;
 
                 if (matchInfo.vsBot)
-                    return PlayBot(user, matchInfo.botDifficulty);
+                {
+                    _createMatch.Execute(new List<User> { user }, true, matchInfo.botDifficulty);
+                    var response = new ResponseDto
+                    {
+                        response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
+                        error = string.Empty
+                    };
+                    return response;
+                }
 
                 if (matchInfo.vsFriend)
-                    return EnqueueFriend(user, matchInfo);
+                {
+                    var enqueueUserFriend = new EnqueueFriendUser(_friendsQueueRepository);
+                    enqueueUserFriend.Execute(user, matchInfo.friendCode);
 
-                return EnqueueRandom(user);
+                    return new ResponseDto
+                    {
+                        response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
+                        error = string.Empty
+                    };
+                }
+
+                var enqueueUser = new EnqueueUser(_usersQueuedRepository);
+                enqueueUser.Execute(user, DateTime.Now);
+
+                return new ResponseDto
+                {
+                    response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
+                    error = string.Empty
+                };
             }
             catch (Exception ex)
             { 
@@ -94,44 +118,7 @@ namespace Features.ServerLogic.Handlers
                 return responseDto;
             }
         }
-
-        private ResponseDto PlayBot(User user, int botDifficulty)
-        {
-            _createMatch.Execute(new List<User> { user }, true, botDifficulty);
-            var response = new ResponseDto
-            {
-                response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
-                error = string.Empty
-            };
-            return response;
-        }
-
-        private ResponseDto EnqueueRandom(User user)
-        {
-            var enqueueUser = new EnqueueUser(_usersQueuedRepository);
-            enqueueUser.Execute(user, DateTime.Now);
-
-            var responseDto = new ResponseDto
-            {
-                response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
-                error = string.Empty
-            };
-            return responseDto;
-        }
-
-        private ResponseDto EnqueueFriend(User user, MatchInfoDto matchInfo)
-        {
-            var enqueueUserFriend = new EnqueueFriendUser(_friendsQueueRepository);
-            enqueueUserFriend.Execute(user, matchInfo.friendCode);
-
-            var responseDto = new ResponseDto
-            {
-                response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
-                error = string.Empty
-            };
-            return responseDto;
-        }
-
+        
         public ResponseDto Delete(string userId)
         {
             try
