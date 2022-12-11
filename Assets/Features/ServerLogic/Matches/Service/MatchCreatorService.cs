@@ -20,11 +20,11 @@ namespace Features.ServerLogic.Matches.Service
         private readonly IFriendsUsersQueuedRepository _friendsQueuedRepository;
         private readonly IMatchesRepository _matchRepository;
         private readonly ICardRepository _cardRepository;
-        private readonly DequeueUser _dequeueUser;
-        private readonly EnqueueUser _enqueueUser;
+        private readonly DequeueMatch _dequeueMatch;
+        private readonly EnqueueMatch _enqueueMatch;
 
-        private readonly DequeueFriendUser _dequeueFriendUser;
-        private readonly EnqueueFriendUser _enqueueFriendUser;
+        private readonly DequeueFriendMatch _dequeueFriendUser;
+        private readonly EnqueueFriendMatch _enqueueFriendMatch;
 
         private readonly CreateMatch _createMatch;
 
@@ -38,10 +38,10 @@ namespace Features.ServerLogic.Matches.Service
             _cardRepository = cardRepository;
             _usersQueuedRepository = usersQueuedRepository;
             _friendsQueuedRepository = friendsUsersQueuedRepository;
-            _dequeueUser = new DequeueUser(_usersQueuedRepository);
-            _enqueueUser = new EnqueueUser(_usersQueuedRepository);
-            _dequeueFriendUser = new DequeueFriendUser(_friendsQueuedRepository);
-            _enqueueFriendUser = new EnqueueFriendUser(_friendsQueuedRepository);
+            _dequeueMatch = new DequeueMatch(_usersQueuedRepository);
+            _enqueueMatch = new EnqueueMatch(_usersQueuedRepository);
+            _dequeueFriendUser = new DequeueFriendMatch(_friendsQueuedRepository);
+            _enqueueFriendMatch = new EnqueueFriendMatch(_friendsQueuedRepository);
             _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration, new CreateBotUser());
         }
 
@@ -80,7 +80,7 @@ namespace Features.ServerLogic.Matches.Service
             var usersEnqueued = new List<Tuple<User, DateTime>>();
             while (users.Count > 0)
             {
-                var user = _dequeueUser.Execute(users[0], true);
+                var user = _dequeueMatch.Execute(users[0]);
                 if (usersEnqueued.Count > 0)
                 {
                     var matchUsers = new List<User> { usersEnqueued[0].Item1, user.Item1 };
@@ -88,14 +88,13 @@ namespace Features.ServerLogic.Matches.Service
                     users.Remove(user.Item1);
                     usersEnqueued.Clear();
                     continue;
-
                 }
                 usersEnqueued.Add(user);
                 users.Remove(user.Item1);
             }
             while (usersEnqueued.Count > 0)
             {
-                _enqueueUser.Execute(usersEnqueued[0].Item1, usersEnqueued[0].Item2);
+                _enqueueMatch.Execute(usersEnqueued[0].Item1, usersEnqueued[0].Item2);
                 usersEnqueued.Remove(usersEnqueued[0]);
             }
         }

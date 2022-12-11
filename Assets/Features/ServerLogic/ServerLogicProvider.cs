@@ -37,5 +37,9 @@ namespace Features.ServerLogic
         public static ICreateMatch CreateMatch() => new CreateMatch(MatchesRepository(), CardRepository(), ServerConfiguration(), CreateBotUser());
         public static ICreateBotUser CreateBotUser() => new CreateBotUser();
         public static IGetUser GetUser() => new GetUser(UsersRepository());
+        public static IEnqueueFriendMatch EnqueueFriendMatch() => new EnqueueFriendMatch(FriendsUserQueuedRepository());
+        public static IEnqueueMatch EnqueueMatch() => new EnqueueMatch(UsersQueuedRepository());
+        public static IDequeueFriendMatch DequeueFriendMatch() => new DequeueFriendMatch(FriendsUserQueuedRepository());
+        public static IDequeueMatch DequeueMatch() => new DequeueMatch(UsersQueuedRepository());
     }
 }

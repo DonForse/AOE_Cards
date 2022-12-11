@@ -4,11 +4,11 @@ using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Users.Actions
 {
-    internal class EnqueueUser
+    public class EnqueueMatch : IEnqueueMatch
     {
         private readonly IUsersQueuedRepository _usersQueuedRepository;
 
-        public EnqueueUser(IUsersQueuedRepository usersQueuedRepository)
+        public EnqueueMatch(IUsersQueuedRepository usersQueuedRepository)
         {
             _usersQueuedRepository = usersQueuedRepository;
         }

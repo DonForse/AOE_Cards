@@ -6,36 +6,37 @@ using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Features.ServerLogic.Matches.Service;
 using Features.ServerLogic.Users.Actions;
 using Features.ServerLogic.Users.Domain;
-using Features.ServerLogic.Users.Infrastructure;
 using Newtonsoft.Json;
 
 namespace Features.ServerLogic.Handlers
 {
     public class MatchHandler
     {
-        private readonly IUsersQueuedRepository _usersQueuedRepository;
-        private readonly IFriendsUsersQueuedRepository _friendsQueueRepository;
         private readonly IMatchesRepository _matchesRepository;
-        private readonly IUsersRepository _usersRepository;
         private readonly IMatchCreatorService _matchCreatorService;
         private readonly ICreateMatch _createMatch;
         private readonly IGetUser _getUser;
-
-        public MatchHandler(IUsersQueuedRepository usersQueuedRepository, 
-            IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
-            IMatchesRepository matchesRepository,
-            IUsersRepository usersRepository,
+        private readonly IEnqueueFriendMatch _enqueueFriendMatch;
+        private readonly IEnqueueMatch _enqueueMatch;
+        private readonly IDequeueFriendMatch _dequeueFriendMatch;
+        private readonly IDequeueMatch _dequeueMatch;
+        public MatchHandler(IMatchesRepository matchesRepository,
             IMatchCreatorService matchCreatorService,
             ICreateMatch createMatch,
-            IGetUser getUser)
+            IGetUser getUser,
+            IEnqueueFriendMatch enqueueFriendMatch,
+            IEnqueueMatch enqueueMatch,
+            IDequeueFriendMatch dequeueFriendMatch,
+            IDequeueMatch dequeueMatch)
         {
-            _usersQueuedRepository = usersQueuedRepository;
-            _friendsQueueRepository = friendsUsersQueuedRepository;
             _matchesRepository = matchesRepository;
-            _usersRepository = usersRepository;
             _matchCreatorService = matchCreatorService;
             _createMatch = createMatch;
             _getUser = getUser;
+            _enqueueFriendMatch = enqueueFriendMatch;
+            _enqueueMatch = enqueueMatch;
+            _dequeueFriendMatch = dequeueFriendMatch;
+            _dequeueMatch = dequeueMatch;
         }
         // GET api/matches/guid-guid-guid-guid
         /// <returns> no match available</returns> (retry after a few secs) -> remember to clear from memory if unused or used
@@ -73,12 +74,10 @@ namespace Features.ServerLogic.Handlers
             try
             {
                 var user = ValidateUser(userId);
-
-                var matchInfo = matchInfoDto;
-
-                if (matchInfo.vsBot)
+                if (matchInfoDto.vsBot)
                 {
-                    _createMatch.Execute(new List<User> { user }, true, matchInfo.botDifficulty);
+                    //TODO: Enqueue User to Bot queue or something like that or extrapolate create vs bot.
+                    _createMatch.Execute(new List<User> { user }, true, matchInfoDto.botDifficulty); 
                     var response = new ResponseDto
                     {
                         response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),
@@ -87,10 +86,9 @@ namespace Features.ServerLogic.Handlers
                     return response;
                 }
 
-                if (matchInfo.vsFriend)
+                if (matchInfoDto.vsFriend)
                 {
-                    var enqueueUserFriend = new EnqueueFriendUser(_friendsQueueRepository);
-                    enqueueUserFriend.Execute(user, matchInfo.friendCode);
+                    _enqueueFriendMatch.Execute(user, matchInfoDto.friendCode);
 
                     return new ResponseDto
                     {
@@ -98,9 +96,8 @@ namespace Features.ServerLogic.Handlers
                         error = string.Empty
                     };
                 }
-
-                var enqueueUser = new EnqueueUser(_usersQueuedRepository);
-                enqueueUser.Execute(user, DateTime.Now);
+                
+                _enqueueMatch.Execute(user, DateTime.Now);
 
                 return new ResponseDto
                 {
@@ -124,24 +121,23 @@ namespace Features.ServerLogic.Handlers
             try
             {
                 var user = ValidateUser(userId);
-                _friendsQueueRepository.Remove(user.FriendCode);
+                _dequeueFriendMatch.Execute(user);
 
-                _usersQueuedRepository.Remove(userId);
+                _dequeueMatch.Execute(user);
+                //Clear Match Data from user
                 _matchesRepository.RemoveByUserId(userId);
 
-                var responseDto = new ResponseDto
+                return new ResponseDto
                 {
                     response = "ok",
                     error = string.Empty
                 };
-                return responseDto;
-
             }
             catch (Exception ex)
             {
                 var responseDto = new ResponseDto
                 {
-                    response = "error",
+                    response = "",
                     error = ex.Message
                 };
                 return responseDto;

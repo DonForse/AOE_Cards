@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Cards.Domain.Units;
 using Features.ServerLogic.Cards.Domain.Upgrades;
@@ -29,6 +30,10 @@ namespace Features.ServerLogic.Editor.Tests
         private IMatchCreatorService _matchCreatorService;
         private ICreateMatch _createMatch;
         private IGetUser _getUser;
+        private IEnqueueFriendMatch _enqueueFriendMatch;
+        private IEnqueueMatch _enqueueMatch;
+        private IDequeueFriendMatch _dequeueFriendMatch;
+        private IDequeueMatch _dequeueMatch;
 
 
         [SetUp]
@@ -38,7 +43,12 @@ namespace Features.ServerLogic.Editor.Tests
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _getUser = Substitute.For<IGetUser>();
             _createMatch = Substitute.For<ICreateMatch>();
-            _matchHandler = new MatchHandler(_usersQueuedRepository, _friendsQueuedRepository, _matchesRepository, _usersRepository, _matchCreatorService,_createMatch, _getUser );
+            _enqueueFriendMatch = Substitute.For<IEnqueueFriendMatch>();
+            _enqueueMatch = Substitute.For<IEnqueueMatch>();
+            _dequeueFriendMatch = Substitute.For<IDequeueFriendMatch>();
+            _dequeueMatch = Substitute.For<IDequeueMatch>();
+            _matchHandler = new MatchHandler(_matchesRepository,
+                _matchCreatorService,_createMatch, _getUser, _enqueueFriendMatch, _enqueueMatch,_dequeueFriendMatch, _dequeueMatch );
         }
 
         [Test]
@@ -94,17 +104,68 @@ namespace Features.ServerLogic.Editor.Tests
         }
         
         [Test]
-        public void CreateMatchWhenVersusBotAndReturnEmptyResponse()
+        public void CreateMatchWhenPostVersusBotAndReturnEmptyResponse()
         {
             GivenUser();
-            GivenMatchExists();
             var expectedBotDifficulty = 5;
             var response = WhenPost(new MatchInfoDto() {vsBot = true, botDifficulty = expectedBotDifficulty});
             ThenCreateMatchIsCalled(expectedBotDifficulty);
             ThenResponseIsEmptyMatchDto(response);
-
         }
         
+        [Test]
+        public void EnqueueUserWhenPostVsFriend()
+        {
+            var expectedFriendCode = "ExpectedFriendCode";
+            GivenUser(friendCode: expectedFriendCode);
+            var response = WhenPost(new MatchInfoDto() {vsFriend = true, friendCode = expectedFriendCode});
+            _enqueueFriendMatch.Received(1).Execute(Arg.Is<User>(user=>user.Id == UserId),expectedFriendCode);
+            ThenResponseIsEmptyMatchDto(response);
+        }
+        [Test]
+        public void EnqueueUserWhenPost()
+        {
+            var expectedFriendCode = "ExpectedFriendCode";
+            GivenUser(friendCode: expectedFriendCode);
+            var response = WhenPost(new MatchInfoDto());
+            _enqueueMatch.Received(1).Execute(Arg.Is<User>(user=>user.Id == UserId), Arg.Any<DateTime>());
+            ThenResponseIsEmptyMatchDto(response);
+        }
+
+        [Test]
+        public void RespondsErrorWhenDeleteAndNoUser()
+        {
+            GivenUserDoesNotExists();
+            var response = WhenDelete();
+            ThenResponseContainsError();
+            void ThenResponseContainsError()
+            {
+                Assert.AreEqual("", response.response);
+                Assert.AreEqual("user is not valid", response.error);
+            }
+        }
+        
+        [Test]
+        public void DequeueFromWaitListAndRemoveMatchDataIfExists()
+        {
+            GivenUser(friendCode:"FriendCode");
+            var response = WhenDelete();
+            
+            _dequeueFriendMatch.Received(1).Execute(Arg.Is<User>(user=> user.Id == UserId && user.FriendCode == "FriendCode"));
+            _dequeueMatch.Received(1).Execute(Arg.Is<User>(user=> user.Id == UserId && user.FriendCode == "FriendCode"));
+            
+            _matchesRepository.Received(1).RemoveByUserId(UserId);
+            
+            ThenResponseIsExpected();
+            void ThenResponseIsExpected()
+            {
+                Assert.AreEqual("ok", response.response);
+                Assert.AreEqual("", response.error);
+            }
+        }
+
+        private ResponseDto WhenDelete() => _matchHandler.Delete(UserId);
+
         private void GivenMatchExists() => _matchesRepository.GetByUserId(UserId).Returns(
             ServerMatchMother.Create(MatchId,withBoard:BoardMother.Create(withRoundsPlayed: new List<Round>(), withPlayerHands:new Dictionary<string, Hand>()
             {
@@ -112,10 +173,10 @@ namespace Features.ServerLogic.Editor.Tests
                 {UserId+"2", new Hand(){UnitsCards = new List<UnitCard>(), UpgradeCards = new List<UpgradeCard>()}}
             })));
 
-        private void GivenUser() =>
+        private void GivenUser(string userId = UserId, string friendCode = "FriendCode", string password = "Password", string userName = "UserName") =>
             _getUser.Execute(UserId)
                 .Returns(
-                    UserMother.Create(UserId, "FriendCode", "Password", "UserName"));
+                    UserMother.Create(userId,friendCode ,password , userName));
 
 
         private void GivenUserDoesNotExists() => _getUser.Execute(UserId).Returns((User)null);

@@ -3,11 +3,11 @@ using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Users.Actions
 {
-    internal class EnqueueFriendUser
+    public class EnqueueFriendMatch : IEnqueueFriendMatch
     {
         private readonly IFriendsUsersQueuedRepository _usersQueuedRepository;
 
-        public EnqueueFriendUser(IFriendsUsersQueuedRepository usersQueuedRepository)
+        public EnqueueFriendMatch(IFriendsUsersQueuedRepository usersQueuedRepository)
         {
             _usersQueuedRepository = usersQueuedRepository;
         }
