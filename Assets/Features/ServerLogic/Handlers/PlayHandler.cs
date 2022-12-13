@@ -14,13 +14,15 @@ namespace Features.ServerLogic.Handlers
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
         private readonly IRemoveUserMatch _removeUserMatch;
+        private readonly IGetMatch _getMatch;
 
         public PlayHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository,
-            IRemoveUserMatch removeUserMatch)
+            IRemoveUserMatch removeUserMatch, IGetMatch getMatch)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
             _removeUserMatch = removeUserMatch;
+            _getMatch = getMatch;
         }
 
         // GET api/play/matchid(guid-guid-guid-guid)
@@ -28,8 +30,7 @@ namespace Features.ServerLogic.Handlers
         /// <returns>matchId</returns>
         public ResponseDto Get(string userId, string matchId, int roundNumber)
         {
-            var getMatch = new GetMatch(_matchesRepository);
-            var match = getMatch.Execute(matchId);
+            var match = _getMatch.Execute(matchId);
             if (match == null)
                 throw new ApplicationException("Match not found");
 
