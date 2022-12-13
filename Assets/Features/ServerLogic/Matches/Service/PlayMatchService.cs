@@ -15,10 +15,11 @@ namespace Features.ServerLogic.Matches.Service
         private readonly IPlayInactiveMatch _playInactiveMatch;
         private readonly IRemoveUserMatch _removeUserMatch;
 
-        public PlayMatchService(IMatchesRepository matchesRepository, IPlayInactiveMatch playInactiveMatch)
+        public PlayMatchService(IMatchesRepository matchesRepository, IPlayInactiveMatch playInactiveMatch, IRemoveUserMatch removeUserMatch)
         {
             _matchesRepository = matchesRepository;
             _playInactiveMatch = playInactiveMatch;
+            _removeUserMatch = removeUserMatch;
         }
 
         private static Timer Timer;

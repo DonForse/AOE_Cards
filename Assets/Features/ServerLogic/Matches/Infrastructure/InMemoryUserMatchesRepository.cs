@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using UnityEngine;
 
 namespace Features.ServerLogic.Matches.Infrastructure
 {
@@ -20,13 +21,5 @@ namespace Features.ServerLogic.Matches.Infrastructure
         {
             _userMatches.TryRemove(userId, out var matchId);
         }
-    }
-
-    public interface IUserMatchesRepository
-    {
-        void Add(string userId, string matchId);
-        string GetMatchId(string userId);
-        void Remove(string userId);
-
     }
 }

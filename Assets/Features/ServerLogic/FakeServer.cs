@@ -12,7 +12,8 @@ namespace Features.ServerLogic
         {
             _playMatchService = new PlayMatchService(
                 ServerLogicProvider.MatchesRepository(),
-                ServerLogicProvider.PlayInactiveMatch());
+                ServerLogicProvider.PlayInactiveMatch(),
+                ServerLogicProvider.RemoveUserMatch());
             _playMatchService.Initialize();
         }
 
