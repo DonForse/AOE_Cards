@@ -22,13 +22,19 @@ namespace Features.ServerLogic.Matches.Action
         private readonly GetUnitCard _getUnitCard;
         private readonly GetUpgradeCard _getUpgradeCard;
         private readonly IServerConfiguration _serverConfiguration;
+        private readonly IUserMatchesRepository _userMatchesRepository;
+
         public CreateMatch(IMatchesRepository matchRepository,
-            ICardRepository cardRepository, IServerConfiguration serverConfiguration, ICreateBotUser createBotUser)
+            ICardRepository cardRepository,
+            IServerConfiguration serverConfiguration,
+            ICreateBotUser createBotUser,
+            IUserMatchesRepository userMatchesRepository)
         {
             _matchRepository = matchRepository;
             _cardRepository = cardRepository;
             _serverConfiguration = serverConfiguration;
             _createBot = createBotUser;
+            _userMatchesRepository = userMatchesRepository;
             _getUnitCard = new GetUnitCard(_cardRepository);
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
         }
@@ -37,8 +43,21 @@ namespace Features.ServerLogic.Matches.Action
         {
             var match = CreateMatchInstance(users, isBot);
             match.BotDifficulty = botDifficulty;
-            _matchRepository.Add(match);
+            PersistMatch(match);
+            PersistUsersToMatch(users, match);
         }
+
+        private void PersistMatch(ServerMatch match) => _matchRepository.Add(match);
+
+        private void PersistUsersToMatch(IEnumerable<User> users, ServerMatch match)
+        {
+            foreach (var user in users)
+            {
+                if (user.Id != "BOT")
+                    _userMatchesRepository.Add(user.Id, match.Guid);
+            }
+        }
+
         private Domain.ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
         {
             if (isBotMatch)

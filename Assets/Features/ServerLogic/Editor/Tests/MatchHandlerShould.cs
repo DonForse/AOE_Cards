@@ -34,6 +34,8 @@ namespace Features.ServerLogic.Editor.Tests
         private IEnqueueMatch _enqueueMatch;
         private IDequeueFriendMatch _dequeueFriendMatch;
         private IDequeueMatch _dequeueMatch;
+        private IRemoveUserMatch _removeUserMatch;
+        private IGetUserMatch _getUserMatch;
 
 
         [SetUp]
@@ -47,8 +49,10 @@ namespace Features.ServerLogic.Editor.Tests
             _enqueueMatch = Substitute.For<IEnqueueMatch>();
             _dequeueFriendMatch = Substitute.For<IDequeueFriendMatch>();
             _dequeueMatch = Substitute.For<IDequeueMatch>();
-            _matchHandler = new MatchHandler(_matchesRepository,
-                _matchCreatorService,_createMatch, _getUser, _enqueueFriendMatch, _enqueueMatch,_dequeueFriendMatch, _dequeueMatch );
+            _getUserMatch = Substitute.For<IGetUserMatch>();
+            _removeUserMatch = Substitute.For<IRemoveUserMatch>();
+            _matchHandler = new MatchHandler(_getUserMatch,
+                _matchCreatorService,_createMatch, _getUser, _enqueueFriendMatch, _enqueueMatch,_dequeueFriendMatch, _dequeueMatch ,_removeUserMatch);
         }
 
         [Test]
@@ -76,7 +80,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             GivenUser();
             var response = WhenGet();
-            _matchesRepository.GetByUserId(UserId).Returns((ServerMatch)null);
+            _getUserMatch.Execute(UserId).Returns((ServerMatch)null);
             ThenResponseIsEmptyMatchDto(response);
         }
 
@@ -153,9 +157,8 @@ namespace Features.ServerLogic.Editor.Tests
             
             _dequeueFriendMatch.Received(1).Execute(Arg.Is<User>(user=> user.Id == UserId && user.FriendCode == "FriendCode"));
             _dequeueMatch.Received(1).Execute(Arg.Is<User>(user=> user.Id == UserId && user.FriendCode == "FriendCode"));
-            
-            _matchesRepository.Received(1).RemoveByUserId(UserId);
-            
+            _removeUserMatch.Received(1).Execute(UserId);
+
             ThenResponseIsExpected();
             void ThenResponseIsExpected()
             {
@@ -166,7 +169,7 @@ namespace Features.ServerLogic.Editor.Tests
 
         private ResponseDto WhenDelete() => _matchHandler.Delete(UserId);
 
-        private void GivenMatchExists() => _matchesRepository.GetByUserId(UserId).Returns(
+        private void GivenMatchExists() => _getUserMatch.Execute(UserId).Returns(
             ServerMatchMother.Create(MatchId,withBoard:BoardMother.Create(withRoundsPlayed: new List<Round>(), withPlayerHands:new Dictionary<string, Hand>()
             {
                 {UserId, new Hand(){UnitsCards = new List<UnitCard>(), UpgradeCards = new List<UpgradeCard>()}},

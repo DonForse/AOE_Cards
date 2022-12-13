@@ -42,7 +42,7 @@ namespace Features.ServerLogic.Matches.Service
             _enqueueMatch = new EnqueueMatch(_usersQueuedRepository);
             _dequeueFriendUser = new DequeueFriendMatch(_friendsQueuedRepository);
             _enqueueFriendMatch = new EnqueueFriendMatch(_friendsQueuedRepository);
-            _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration, new CreateBotUser());
+            _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration, new CreateBotUser(), ServerLogicProvider.UserMatchesRepository());
         }
 
         public void CreateMatches()

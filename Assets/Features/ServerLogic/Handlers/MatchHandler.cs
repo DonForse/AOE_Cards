@@ -12,7 +12,7 @@ namespace Features.ServerLogic.Handlers
 {
     public class MatchHandler
     {
-        private readonly IMatchesRepository _matchesRepository;
+        private readonly IGetUserMatch _getUserMatch;
         private readonly IMatchCreatorService _matchCreatorService;
         private readonly ICreateMatch _createMatch;
         private readonly IGetUser _getUser;
@@ -20,16 +20,18 @@ namespace Features.ServerLogic.Handlers
         private readonly IEnqueueMatch _enqueueMatch;
         private readonly IDequeueFriendMatch _dequeueFriendMatch;
         private readonly IDequeueMatch _dequeueMatch;
-        public MatchHandler(IMatchesRepository matchesRepository,
+        private readonly IRemoveUserMatch _removeUserMatch;
+        public MatchHandler(IGetUserMatch getUserMatch,
             IMatchCreatorService matchCreatorService,
             ICreateMatch createMatch,
             IGetUser getUser,
             IEnqueueFriendMatch enqueueFriendMatch,
             IEnqueueMatch enqueueMatch,
             IDequeueFriendMatch dequeueFriendMatch,
-            IDequeueMatch dequeueMatch)
+            IDequeueMatch dequeueMatch,
+            IRemoveUserMatch removeUserMatch)
         {
-            _matchesRepository = matchesRepository;
+            _getUserMatch = getUserMatch;
             _matchCreatorService = matchCreatorService;
             _createMatch = createMatch;
             _getUser = getUser;
@@ -37,6 +39,7 @@ namespace Features.ServerLogic.Handlers
             _enqueueMatch = enqueueMatch;
             _dequeueFriendMatch = dequeueFriendMatch;
             _dequeueMatch = dequeueMatch;
+            _removeUserMatch = removeUserMatch;
         }
         // GET api/matches/guid-guid-guid-guid
         /// <returns> no match available</returns> (retry after a few secs) -> remember to clear from memory if unused or used
@@ -48,7 +51,7 @@ namespace Features.ServerLogic.Handlers
             try
             {
                 var user = ValidateUser(userId);
-                var match = _matchesRepository.GetByUserId(userId);
+                var match = _getUserMatch.Execute(userId);
 
                 var responseDto = new ResponseDto
                 {
@@ -125,7 +128,7 @@ namespace Features.ServerLogic.Handlers
 
                 _dequeueMatch.Execute(user);
                 //Clear Match Data from user
-                _matchesRepository.RemoveByUserId(userId);
+                _removeUserMatch.Execute(userId);
 
                 return new ResponseDto
                 {

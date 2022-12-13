@@ -11,12 +11,13 @@ namespace Features.Match
 
         public static IMatchService MatchService(ICardProvider cardProvider) => _matchService ??= new MatchService(cardProvider);
         public static IMatchService OfflineMatchService(ICardProvider cardProvider) => _matchService ??= new OfflineMatchService(cardProvider,
-            new MatchHandler(ServerLogicProvider.MatchesRepository(),
+            new MatchHandler(ServerLogicProvider.GetUserMatch(),
                 ServerLogicProvider.MatchCreatorService(), ServerLogicProvider.CreateMatch(),
                 ServerLogicProvider.GetUser(),
                 ServerLogicProvider.EnqueueFriendMatch(),
                 ServerLogicProvider.EnqueueMatch(),
                 ServerLogicProvider.DequeueFriendMatch(),
-                ServerLogicProvider.DequeueMatch()));
+                ServerLogicProvider.DequeueMatch(), 
+                ServerLogicProvider.RemoveUserMatch()));
     }
 }

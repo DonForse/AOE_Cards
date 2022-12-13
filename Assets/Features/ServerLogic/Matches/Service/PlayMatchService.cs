@@ -5,6 +5,7 @@ using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Domain.Bot;
 using Features.ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Users.Actions;
 
 namespace Features.ServerLogic.Matches.Service
 {
@@ -12,6 +13,7 @@ namespace Features.ServerLogic.Matches.Service
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly IPlayInactiveMatch _playInactiveMatch;
+        private readonly IRemoveUserMatch _removeUserMatch;
 
         public PlayMatchService(IMatchesRepository matchesRepository, IPlayInactiveMatch playInactiveMatch)
         {
@@ -62,7 +64,7 @@ namespace Features.ServerLogic.Matches.Service
                 var round = match.Board.RoundsPlayed.LastOrDefault();
                 if (match.IsFinished)
                 {
-                    RemoveFinishedMatchesAfterDelay(matchesRepository, round, match);
+                    RemoveFinishedMatchesAfterDelay(round, match);
                     continue;
                 }
                 
@@ -80,14 +82,14 @@ namespace Features.ServerLogic.Matches.Service
 
         private static bool RoundPhaseTimedOut(Round round) => 0 > round.Timer;
 
-        private static void RemoveFinishedMatchesAfterDelay(IMatchesRepository matchesRepository, Round round,
+        private void RemoveFinishedMatchesAfterDelay(Round round,
             ServerMatch match)
         {
             if (round.Timer < -300) //5 minutes 
             {
                 foreach (var user in match.Users)
                 {
-                    matchesRepository.RemoveByUserId(user.Id);
+                    _removeUserMatch.Execute(user.Id);
                 }
             }
         }
@@ -99,7 +101,7 @@ namespace Features.ServerLogic.Matches.Service
             {
                 if (match.IsFinished)
                 {
-                    OnBotMatchCompletion(matchService);
+                    OnBotMatchCompletion();
                     continue;
                 }
 
@@ -135,9 +137,9 @@ namespace Features.ServerLogic.Matches.Service
             return round == null || round.RoundState == RoundState.Finished;
         }
 
-        private void OnBotMatchCompletion(IMatchesRepository matchService)
+        private void OnBotMatchCompletion()
         {
-            matchService.RemoveByUserId("BOT");
+            _removeUserMatch.Execute("BOT");
         }
     }
 }

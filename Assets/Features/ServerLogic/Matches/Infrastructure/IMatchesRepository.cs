@@ -4,12 +4,10 @@ namespace Features.ServerLogic.Matches.Infrastructure
 {
     public interface IMatchesRepository
     {
-        bool Add(Features.ServerLogic.Matches.Domain.ServerMatch serverMatchStatus);
-        bool Update(Features.ServerLogic.Matches.Domain.ServerMatch serverMatchStatus);
-        Features.ServerLogic.Matches.Domain.ServerMatch Get(string matchId);
-        Features.ServerLogic.Matches.Domain.ServerMatch GetByUserId(string userId);
+        bool Add(Domain.ServerMatch serverMatchStatus);
+        bool Update(Domain.ServerMatch serverMatchStatus);
+        Domain.ServerMatch Get(string matchId);
         void Remove(string matchId);
-        void RemoveByUserId(string userId);
-        IList<Features.ServerLogic.Matches.Domain.ServerMatch> GetAll();
+        IEnumerable<Domain.ServerMatch> GetAll();
     }
 }

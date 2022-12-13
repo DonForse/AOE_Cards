@@ -26,6 +26,7 @@ namespace Features.ServerLogic.Editor.Tests
         private ICardRepository _cardRepository;
         private IServerConfiguration _serverConfiguration;
         private ICreateBotUser _createBotUser;
+        private IUserMatchesRepository _userMatchesRepository;
 
         [SetUp]
         public void Setup()
@@ -34,7 +35,8 @@ namespace Features.ServerLogic.Editor.Tests
             _cardRepository = Substitute.For<ICardRepository>();
             _serverConfiguration = Substitute.For<IServerConfiguration>();
             _createBotUser = Substitute.For<ICreateBotUser>();
-            createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration, _createBotUser);
+            _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
+            createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration, _createBotUser,_userMatchesRepository);
         }
         
         [Test]
@@ -46,6 +48,7 @@ namespace Features.ServerLogic.Editor.Tests
             GivenAmountOfUpgradeCardsForPlayersIs(1);
             WhenCreateMatchWithOneUser();
             ThenMatchRepositoryReceived(Arg.Any<ServerMatch>());
+            ThenUserMatchIsAddedWithOneUser();
         }
         
         [Test]
@@ -67,6 +70,7 @@ namespace Features.ServerLogic.Editor.Tests
                 x.Board.RoundsPlayed.Count == 1 
                 && x.Board.RoundsPlayed.First().roundNumber == 1
                 && x.Board.RoundsPlayed.First().RoundUpgradeCard != null));
+            ThenUserMatchIsAddedWithOneUser();
         }
         
         [Test]
@@ -78,6 +82,7 @@ namespace Features.ServerLogic.Editor.Tests
             GivenCreateBotUserReturns();
             WhenCreateMatchWithOneUser();
             _createBotUser.Received(1).Execute();
+            ThenUserMatchIsAddedWithOneUser();
         }
 
         [Test]
@@ -90,6 +95,7 @@ namespace Features.ServerLogic.Editor.Tests
             ThenDidNotAddBot();
             ThenMatchRepositoryReceived(Arg.Is<ServerMatch>(x =>
                 x.Users.Any(x => x.Id == UserIdOne && x.UserName == UserNameOne)));
+            ThenUserMatchIsAddedWithTwoUsers();
         }
 
         [Test]
@@ -102,7 +108,7 @@ namespace Features.ServerLogic.Editor.Tests
             ThenMatchRepositoryReceived(Arg.Is<ServerMatch>(serverMatch =>
                     ThenServerMatchContainsExpectedUnitCards(serverMatch) 
                     && ThenServerMatchContainsHandsWithVillagerCards(serverMatch)));
-
+            ThenUserMatchIsAddedWithTwoUsers();
         }
         
         [Test]
@@ -114,6 +120,21 @@ namespace Features.ServerLogic.Editor.Tests
             
             WhenCreateMatchWithTwoUsers();
             _matchesRepository.Received(1).Add(Arg.Is<ServerMatch>(serverMatch => ThenServerMatchContainsExpectedUpgradeCards(serverMatch)));
+            ThenUserMatchIsAddedWithTwoUsers();
+        }
+
+        private void ThenUserMatchIsAddedWithTwoUsers()
+        {
+            Received.InOrder(() =>
+            {
+                _userMatchesRepository.Received(1).Add(UserIdOne, Arg.Any<string>());
+                _userMatchesRepository.Received(1).Add(UserIdTwo, Arg.Any<string>());    
+            });
+        }
+
+        private void ThenUserMatchIsAddedWithOneUser()
+        {
+            _userMatchesRepository.Received(1).Add(UserIdOne, Arg.Any<string>());
         }
 
         private static List<User> AListOfUsersWithOneUser() => new()

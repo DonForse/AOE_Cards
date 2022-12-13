@@ -3,6 +3,7 @@ using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
+using Features.ServerLogic.Users.Actions;
 using Newtonsoft.Json;
 
 namespace Features.ServerLogic.Handlers
@@ -12,11 +13,14 @@ namespace Features.ServerLogic.Handlers
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
+        private readonly IRemoveUserMatch _removeUserMatch;
 
-        public PlayHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository)
+        public PlayHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository,
+            IRemoveUserMatch removeUserMatch)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
+            _removeUserMatch = removeUserMatch;
         }
 
         // GET api/play/matchid(guid-guid-guid-guid)
@@ -32,7 +36,7 @@ namespace Features.ServerLogic.Handlers
             try
             {
                 if (match.IsFinished)
-                    _matchesRepository.RemoveByUserId(userId);
+                    _removeUserMatch.Execute(userId);
                 var round = new RoundDto(match.Board.RoundsPlayed[roundNumber], match.Users, userId);
 
                 var responseDto = new ResponseDto
