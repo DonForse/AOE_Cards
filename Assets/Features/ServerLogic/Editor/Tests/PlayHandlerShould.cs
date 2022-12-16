@@ -11,6 +11,7 @@ using Features.ServerLogic.Users.Actions;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Features.ServerLogic.Editor.Tests
 {
@@ -35,13 +36,16 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
         [Test]
-        public void ThrowsWhenGetAndNoMatch()
+        public void RespondsErrorWhenGetAndNoMatch()
         {
             GivenGetMatchReturnsNoMatch();
-            ThenThrows(() => WhenGet());
+            var response = WhenGet();
+            Assert.AreEqual("{\"finished\":false,\"cardsplayed\":null,\"winnerplayer\":null," +
+                            "\"upgradecardround\":null,\"roundnumber\":0,\"rivalready\":false,\"hasReroll\":false,\"roundState\":0," +
+                            "\"roundTimer\":0}", response.response);
+            Assert.AreEqual("Match not found", response.error);
 
             void GivenGetMatchReturnsNoMatch() => _getMatch.Execute(MatchId).Returns((ServerMatch) null);
-            void ThenThrows(TestDelegate testDelegate) => Assert.Throws<ApplicationException>(testDelegate);
         }
 
         [Test]
@@ -82,12 +86,26 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
         [Test]
-        public void Responds()
+        public void RespondsGivenRoundInfo()
         {
             GivenGetMatchReturnsMatch();
             var response = WhenGet();
-            Assert.AreEqual("{}", response.response);
+            Assert.AreEqual("{\"finished\":false,\"cardsplayed\":[{\"player\":null,\"upgradecard\":\"\",\"unitcard\":\"\",\"unitcardpower\":0}," +
+                            "{\"player\":null,\"upgradecard\":\"\",\"unitcard\":\"\",\"unitcardpower\":0}],\"winnerplayer\":[]," +
+                            "\"upgradecardround\":\"unit-card\",\"roundnumber\":0,\"rivalready\":false,\"hasReroll\":true,\"roundState\":0," +
+                            "\"roundTimer\":40}", response.response);
             Assert.AreEqual("", response.error);
+        }
+        
+        [Test]
+        public void RespondsErrorWhenUnexistingRound()
+        {
+            GivenGetMatchReturnsMatch();
+            var response = WhenGet(5);
+            Assert.AreEqual("{\"finished\":false,\"cardsplayed\":null,\"winnerplayer\":null," +
+                            "\"upgradecardround\":null,\"roundnumber\":0,\"rivalready\":false,\"hasReroll\":false,\"roundState\":0," +
+                            "\"roundTimer\":0}", response.response);
+            Assert.AreEqual("Round does not exists", response.error);
         }
 
         private void GivenGetMatchReturnsMatch() => _getMatch.Execute(MatchId)

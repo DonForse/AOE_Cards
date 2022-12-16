@@ -30,12 +30,14 @@ namespace Features.ServerLogic.Handlers
         /// <returns>matchId</returns>
         public ResponseDto Get(string userId, string matchId, int roundNumber)
         {
-            var match = _getMatch.Execute(matchId);
-            if (match == null)
-                throw new ApplicationException("Match not found");
-
             try
             {
+                var match = _getMatch.Execute(matchId);
+                if (match == null)
+                    throw new ApplicationException("Match not found");
+                if (match.Board.RoundsPlayed.Count < roundNumber)
+                    throw new ApplicationException("Round does not exists");
+                    
                 if (match.IsFinished)
                     _removeUserMatch.Execute(userId);
                 var round = new RoundDto(match.Board.RoundsPlayed[roundNumber], match.Users, userId);
@@ -47,10 +49,11 @@ namespace Features.ServerLogic.Handlers
                 };
                 return responseDto;
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 var responseDto = new ResponseDto
                 {
-                    response = JsonConvert.SerializeObject(new RoundDto(match.Board.RoundsPlayed[roundNumber], match.Users, userId)),
+                    response = JsonConvert.SerializeObject(new RoundDto(null, null, userId)),
                     error = ex.Message
                 };
                 return responseDto;
