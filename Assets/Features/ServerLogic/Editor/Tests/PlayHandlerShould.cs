@@ -153,6 +153,46 @@ namespace Features.ServerLogic.Editor.Tests
 
             void ThenPlayUpgradeCardIsCalled() => _playUnitCard.Received(1).Execute(MatchId, UserId, expectedCardName);
         }
+        
+        [Test]
+        public void ReturnHandWhenPostAndSendUnit()
+        {
+            var expectedCardName = "test";
+            var cardType = "unit";
+            GivenGetMatchReturnsMatch(withPlayerHands:new Dictionary<string, Hand>()
+            {
+                {UserId, new Hand()
+                {
+                    UnitsCards = new List<UnitCard>(){UnitCardMother.Create("test")},
+                    UpgradeCards = new List<UpgradeCard>()
+                }},
+                {UserId + "2", new Hand(){}}
+            });
+            var response = WhenPost(new CardInfoDto() {cardname = expectedCardName, type = cardType});
+
+            Assert.AreEqual("",response.error);
+            Assert.AreEqual("{\"units\":[\"test\"],\"upgrades\":[]}",response.response);
+        }
+        
+        [Test]
+        public void ReturnHandWhenPostAndSendUpgrade()
+        {
+            var expectedCardName = "test";
+            var cardType = "upgrade";
+            GivenGetMatchReturnsMatch(withPlayerHands:new Dictionary<string, Hand>()
+            {
+                {UserId, new Hand()
+                {
+                    UnitsCards = new List<UnitCard>(){UnitCardMother.Create("test")},
+                    UpgradeCards = new List<UpgradeCard>(){UpgradeCardMother.Create("test")}
+                }},
+                {UserId + "2", new Hand(){}}
+            });
+            var response = WhenPost(new CardInfoDto() {cardname = expectedCardName, type = cardType});
+
+            Assert.AreEqual("",response.error);
+            Assert.AreEqual("{\"units\":[\"test\"],\"upgrades\":[\"test\"]}",response.response);
+        }
 
         private void GivenGetMatchReturnsMatch(Dictionary<string, PlayerCard> withPlayerCards = null, Dictionary<string, Hand> withPlayerHands = null)
         {
