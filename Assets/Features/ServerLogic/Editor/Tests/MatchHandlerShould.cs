@@ -25,7 +25,6 @@ namespace Features.ServerLogic.Editor.Tests
         private MatchHandler _matchHandler;
         private IUsersQueuedRepository _usersQueuedRepository;
         private IFriendsUsersQueuedRepository _friendsQueuedRepository;
-        private IMatchesRepository _matchesRepository;
         private IUsersRepository _usersRepository;
         private IMatchCreatorService _matchCreatorService;
         private ICreateMatch _createMatch;
@@ -42,7 +41,6 @@ namespace Features.ServerLogic.Editor.Tests
         public void Setup()
         {
             _matchCreatorService = Substitute.For<IMatchCreatorService>();
-            _matchesRepository = Substitute.For<IMatchesRepository>();
             _getUser = Substitute.For<IGetUser>();
             _createMatch = Substitute.For<ICreateMatch>();
             _enqueueFriendMatch = Substitute.For<IEnqueueFriendMatch>();

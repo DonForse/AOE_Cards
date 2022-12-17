@@ -1,7 +1,5 @@
 ﻿using System;
-using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Action;
-using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 
@@ -9,13 +7,11 @@ namespace Features.ServerLogic.Handlers
 {
     public class RoundHandler
     {
-        private readonly IMatchesRepository _matchesRepository;
-        private readonly ICardRepository _cardRepository;
+        private readonly IGetMatch _getMatch;
 
-        public RoundHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository)
+        public RoundHandler(IGetMatch getMatch)
         {
-            _matchesRepository = matchesRepository;
-            _cardRepository = cardRepository;
+            _getMatch = getMatch;
         }
 
         // GET api/play/matchid(guid-guid-guid-guid)
@@ -25,18 +21,16 @@ namespace Features.ServerLogic.Handlers
         {
             try
             {
-                var getMatch = new GetMatch(_matchesRepository);
-                var match = getMatch.Execute(matchId);
+                var match = _getMatch.Execute(matchId);
                 if (match == null)
                     throw new ApplicationException("Match not found");
 
-                var round = new RoundDto(null, null, userId);
-                if (match.Board.RoundsPlayed.Count > roundNumber)
-                    round = new RoundDto(match.Board.RoundsPlayed[roundNumber], match.Users, userId);
+                if (match.Board.RoundsPlayed.Count < roundNumber)
+                    throw new ApplicationException("Round not found");
 
                 var responseDto = new ResponseDto
                 {
-                    response = JsonConvert.SerializeObject(round),
+                    response = JsonConvert.SerializeObject(new RoundDto(match.Board.RoundsPlayed[roundNumber], match.Users, userId)),
                     error = string.Empty
                 };
                 return responseDto;
