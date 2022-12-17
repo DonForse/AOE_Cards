@@ -1,7 +1,5 @@
 ﻿using System;
-using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Action;
-using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Features.ServerLogic.Users.Actions;
 using Newtonsoft.Json;
@@ -11,18 +9,17 @@ namespace Features.ServerLogic.Handlers
     
     public class PlayHandler
     {
-        private readonly IMatchesRepository _matchesRepository;
-        private readonly ICardRepository _cardRepository;
         private readonly IRemoveUserMatch _removeUserMatch;
         private readonly IGetMatch _getMatch;
+        private readonly IPlayUpgradeCard _playUpgradeCard;
+        private readonly IPlayUnitCard _playUnitCard;
 
-        public PlayHandler(IMatchesRepository matchesRepository, ICardRepository cardRepository,
-            IRemoveUserMatch removeUserMatch, IGetMatch getMatch)
+        public PlayHandler(IRemoveUserMatch removeUserMatch, IGetMatch getMatch, IPlayUnitCard playUnitCard, IPlayUpgradeCard playUpgradeCard)
         {
-            _matchesRepository = matchesRepository;
-            _cardRepository = cardRepository;
             _removeUserMatch = removeUserMatch;
             _getMatch = getMatch;
+            _playUnitCard = playUnitCard;
+            _playUpgradeCard = playUpgradeCard;
         }
 
         // GET api/play/matchid(guid-guid-guid-guid)
@@ -68,15 +65,13 @@ namespace Features.ServerLogic.Handlers
                 var postCardData = card;
                 if (postCardData.type == "upgrade")
                 {
-                    var playUpgrade = new PlayUpgradeCard(_matchesRepository, _cardRepository);
-                    playUpgrade.Execute(matchId, userId, postCardData.cardname);
+                    _playUpgradeCard.Execute(matchId, userId, postCardData.cardname);
                 }
                 else
                 {
-                    var playUnit = new PlayUnitCard(_matchesRepository, _cardRepository);
-                    playUnit.Execute(matchId, userId, postCardData.cardname);
+                    _playUnitCard.Execute(matchId, userId, postCardData.cardname);
                 }
-                var handDto = new HandDto(_matchesRepository.Get(matchId).Board.PlayersHands[userId]);
+                var handDto = new HandDto(_getMatch.Execute(matchId).Board.PlayersHands[userId]);
 
                 var responseDto = new ResponseDto
                 {
@@ -88,13 +83,11 @@ namespace Features.ServerLogic.Handlers
             catch (Exception ex){
                 var responseDto = new ResponseDto
                 {
-                    response = JsonConvert.SerializeObject(new HandDto(_matchesRepository.Get(matchId).Board.PlayersHands[userId])),
+                    response = JsonConvert.SerializeObject(new HandDto(_getMatch.Execute(matchId).Board.PlayersHands[userId])),
                     error = ex.Message
                 };
                 return responseDto;
             }
-            
         }
-
     }
 }

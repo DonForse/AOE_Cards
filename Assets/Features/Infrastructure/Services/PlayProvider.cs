@@ -11,9 +11,8 @@ namespace Features.Infrastructure.Services
 
         public static IPlayService OfflinePlayService(InMemoryCardProvider cardProvider) => _playService??= 
             new OfflinePlayService(new RoundHandler(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()),
-                new PlayHandler(ServerLogicProvider.MatchesRepository(), 
-                    ServerLogicProvider.CardRepository(), ServerLogicProvider.RemoveUserMatch(),
-                    ServerLogicProvider.GetMatch()),
+                new PlayHandler(ServerLogicProvider.RemoveUserMatch(),
+                    ServerLogicProvider.GetMatch(), ServerLogicProvider.PlayUnitCard(), ServerLogicProvider.PlayUpgradeCard()),
                 cardProvider,new RerollHandler(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
     }
 }
