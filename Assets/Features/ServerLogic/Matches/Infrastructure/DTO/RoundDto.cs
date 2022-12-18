@@ -37,7 +37,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
             {
                 var pc = new PlayerCardDto()
                 {
-                    player = users.FirstOrDefault(u => u.Id == playerCard.Key).UserName,
+                    player = users.FirstOrDefault(u => u.Id == playerCard.Key)?.UserName,
                     upgradecard = showUpgradeCards ? playerCard.Value.UpgradeCard?.CardName : string.Empty,
                     unitcard = showUnitCards ? playerCard.Value.UnitCard?.CardName : string.Empty,
                     unitcardpower = showUnitCards ? playerCard.Value.UnitCardPower : 0,

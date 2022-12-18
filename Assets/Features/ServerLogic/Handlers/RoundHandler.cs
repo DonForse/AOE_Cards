@@ -25,7 +25,7 @@ namespace Features.ServerLogic.Handlers
                 if (match == null)
                     throw new ApplicationException("Match not found");
 
-                if (match.Board.RoundsPlayed.Count < roundNumber)
+                if (match.Board.RoundsPlayed.Count <= roundNumber)
                     throw new ApplicationException("Round not found");
 
                 var responseDto = new ResponseDto
