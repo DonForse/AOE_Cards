@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Matches.Domain;
+using NSubstitute.ReturnsExtensions;
 
 namespace Features.ServerLogic.Matches.Infrastructure.DTO
 {
@@ -14,6 +15,8 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
         }
         public HandDto(Hand hand)
         {
+            if (hand == null)
+                return;
             units = hand.UnitsCards.Select(unit => unit.CardName).ToList();
             upgrades = hand.UpgradeCards.Select(upgrade => upgrade.CardName).ToList();
         }

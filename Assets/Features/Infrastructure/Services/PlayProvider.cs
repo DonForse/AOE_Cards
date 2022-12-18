@@ -13,6 +13,6 @@ namespace Features.Infrastructure.Services
             new OfflinePlayService(new RoundHandler(ServerLogicProvider.GetMatch()),
                 new PlayHandler(ServerLogicProvider.RemoveUserMatch(),
                     ServerLogicProvider.GetMatch(), ServerLogicProvider.PlayUnitCard(), ServerLogicProvider.PlayUpgradeCard()),
-                cardProvider,new RerollHandler(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
+                cardProvider,new RerollHandler(ServerLogicProvider.GetMatch(), ServerLogicProvider.PlayReroll()));
     }
 }
