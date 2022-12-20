@@ -5,7 +5,7 @@ using Features.ServerLogic.Users.Infrastructure;
 
 namespace Features.ServerLogic.Users.Actions
 {
-    internal class CreateUser
+    public class CreateUser : ICreateUser
     {
         private readonly IUsersRepository _usersRepository;
         private readonly CreateGuestUser _createGuest;
@@ -17,7 +17,7 @@ namespace Features.ServerLogic.Users.Actions
             random = new Random();
         }
 
-        internal User Execute(string username, string password)
+        public User Execute(string username, string password)
         {
             if (username == "GUEST")
             {

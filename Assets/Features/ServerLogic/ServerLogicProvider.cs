@@ -56,9 +56,9 @@ namespace Features.ServerLogic
         public static IDequeueFriendMatch DequeueFriendMatch() => new DequeueFriendMatch(FriendsUserQueuedRepository());
         public static IDequeueMatch DequeueMatch() => new DequeueMatch(UsersQueuedRepository());
         public static IGetUserMatch GetUserMatch() => new GetUserMatch(MatchesRepository(), UserMatchesRepository());
-
         public static IRemoveUserMatch RemoveUserMatch() =>
             new RemoveUserMatch(MatchesRepository(), UserMatchesRepository());
         public static IGetMatch GetMatch() => new GetMatch(MatchesRepository());
+        public static ICreateUser CreateUser() => new CreateUser(UsersRepository());
     }
 }

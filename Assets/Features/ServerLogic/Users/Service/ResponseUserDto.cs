@@ -11,6 +11,8 @@ namespace Features.ServerLogic.Users.Service
 
         public ResponseUserDto(User user, string shortTermToken, string longTermToken)
         {
+            if (user == null)
+                return;
             guid = user.Id;
             username = user.UserName;
             friendCode = user.FriendCode;

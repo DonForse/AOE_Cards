@@ -11,6 +11,7 @@ namespace Features.Login
 
         public static ILoginService LoginService() => _loginService ??= new LoginService();
 
-        public static ILoginService OfflineLoginService() => _loginService ??= new OfflineLoginService(new UserHandler(ServerLogicProvider.UsersRepository()));
+        public static ILoginService OfflineLoginService() => _loginService ??= 
+            new OfflineLoginService(new UserHandler(ServerLogicProvider.GetUser(), ServerLogicProvider.CreateUser()));
     }
 }
