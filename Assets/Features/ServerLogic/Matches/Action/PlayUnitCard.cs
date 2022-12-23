@@ -25,6 +25,8 @@ namespace Features.ServerLogic.Matches.Action
         public void Execute(string matchId,string userId, string cardname)
         {
             var match = _matchesRepository.Get(matchId);
+            if (match == null)
+                throw new ApplicationException("Match doesnt exists");
             //get type of card.
             var unitCard = _cardRepository.GetUnitCard(cardname);
             PlayCard(userId, unitCard, match);
