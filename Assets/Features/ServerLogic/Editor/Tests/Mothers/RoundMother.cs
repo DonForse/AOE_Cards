@@ -11,9 +11,10 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             IDictionary<string, PlayerCard> withPlayerCards = null,
             IDictionary<string, bool> withPlayerReroll = null, UpgradeCard withRoundUpgradeCard = null,
             int withNextBotAction = 0,
-            IList<User> withPlayersWinner = null, int withRoundNumber = 0)
+            IList<User> withPlayersWinner = null, int withRoundNumber = 0, RoundState? withRoundState = null)
         {
-            return new Round(withUsers)
+            withUsers ??= new List<string>();
+            var r = new Round(withUsers)
             {
                 roundNumber = withRoundNumber,
                 PlayerCards = withPlayerCards,
@@ -22,6 +23,10 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
                 RoundUpgradeCard = withRoundUpgradeCard,
                 NextBotActionTimeInSeconds = withNextBotAction,
             };
+
+            if (withRoundState != null)
+                r.ChangeRoundState(withRoundState.Value);
+            return r;
         }
     }
 }

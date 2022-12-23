@@ -8,10 +8,6 @@ namespace Features.ServerLogic.Matches.Domain
     {
         public IList<UnitCard> UnitsCards;
         public IList<UpgradeCard> UpgradeCards;
-
-        public void PlayCard(ServerMatch serverMatch, string userId) {
-
-        }
     }
 }
 

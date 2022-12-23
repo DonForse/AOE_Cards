@@ -25,22 +25,22 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
             return BasePower;
         }
 
-        public virtual void ApplicateEffectPreUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
+        public virtual void ApplicateEffectPreUnit(ServerMatch serverMatch, string userId)
         {
 
         }
 
-        public virtual void ApplicateEffectPostUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
+        public virtual void ApplicateEffectPostUnit(ServerMatch serverMatch, string userId)
         {
 
         }
 
-        public virtual void ApplicateEffectPreCalculus(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
+        public virtual void ApplicateEffectPreCalculus(ServerMatch serverMatch, string userId)
         {
 
         }
 
-        public virtual void ApplicateEffectPostCalculus(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
+        public virtual void ApplicateEffectPostCalculus(ServerMatch serverMatch, string userId)
         {
         }
     }

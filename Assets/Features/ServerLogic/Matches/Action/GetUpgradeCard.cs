@@ -4,7 +4,7 @@ using Features.ServerLogic.Cards.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    internal class GetUpgradeCard
+    public class GetUpgradeCard : IGetUpgradeCard
     {
         private readonly ICardRepository _cardRepository;
         public GetUpgradeCard(ICardRepository cardRepository)

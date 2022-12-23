@@ -1,4 +1,5 @@
-﻿using Features.ServerLogic.Cards.Infrastructure;
+﻿using Features.ServerLogic.Cards.Actions;
+using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Service;
@@ -39,8 +40,7 @@ namespace Features.ServerLogic
         public static IPlayInactiveMatch PlayInactiveMatch() =>
             new PlayInactiveMatch(PlayUnitCard(), PlayUpgradeCard(), PlayReroll());
 
-        public static IPlayReroll PlayReroll() => new PlayReroll(CardRepository());
-
+        public static IPlayReroll PlayReroll() => new PlayReroll(GetUnitCard(), GetUpgradeCard());
 
         public static IMatchCreatorService MatchCreatorService() =>
             new MatchCreatorService(MatchesRepository(), CardRepository(), UsersQueuedRepository(),
@@ -60,5 +60,7 @@ namespace Features.ServerLogic
             new RemoveUserMatch(MatchesRepository(), UserMatchesRepository());
         public static IGetMatch GetMatch() => new GetMatch(MatchesRepository());
         public static ICreateUser CreateUser() => new CreateUser(UsersRepository());
+        private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());
+        private static IGetUpgradeCard GetUpgradeCard() => new GetUpgradeCard(CardRepository());
     }
 }

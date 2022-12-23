@@ -5,7 +5,7 @@ using Features.ServerLogic.Cards.Infrastructure;
 
 namespace Features.ServerLogic.Cards.Actions
 {
-    public class GetUnitCard
+    public class GetUnitCard : IGetUnitCard
     {
         private readonly ICardRepository _cardRepository;
         public GetUnitCard(ICardRepository cardRepository) {
