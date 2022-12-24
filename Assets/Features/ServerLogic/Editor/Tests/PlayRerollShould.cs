@@ -10,6 +10,7 @@ using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
+using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -50,11 +51,14 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ThrowsWhenUpgradeCardAlreadyPlayedForThatRound()
         {
-            var match = AMatch(withPlayerCards: new Dictionary<string, PlayerCard>()
-            {
-                {UserId, new PlayerCard() {UpgradeCard = UpgradeCardMother.Create("some card")}}
-            });
+            var match = AMatchWithAnUpgradeCardPlayed();
             ThenThrows(() => WhenReroll(match));
+
+            ServerMatch AMatchWithAnUpgradeCardPlayed() =>
+                AMatch(withPlayerCards: new Dictionary<string, PlayerCard>
+                {
+                    {UserId, new PlayerCard() {UpgradeCard = UpgradeCardMother.Create("some card")}}
+                });
         }
 
         [Test]
@@ -68,9 +72,11 @@ namespace Features.ServerLogic.Editor.Tests
         public void ThrowsWhenUnitCardSelectedForRerollDoesNotExists()
         {
             var cardName = "some card";
-            _getUnitCard.Execute(cardName).Returns((UnitCard) null);
+            GivenGetUnitCardsReturnsNull();
             var match = AMatch();
             ThenThrows(() => WhenReroll(match, ARerollInfoDto(new List<string> {cardName}, new List<string>())));
+
+            void GivenGetUnitCardsReturnsNull() => _getUnitCard.Execute(cardName).Returns((UnitCard) null);
         }
 
         [Test]
@@ -78,14 +84,10 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var rerolledCardName = "Rerolled Card";
             var cardNameInHand = "Card in Hand";
-            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
-            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
-            _getUnitCard.Execute(rerolledCardName).Returns(UnitCardMother.Create(rerolledCardName));
+            var unitCardInHand = GivenUnitCard(cardNameInHand);
+            GivenUnitCard(rerolledCardName);
 
-            var match = AMatch(withPlayerHands: new Dictionary<string, Hand>
-            {
-                { UserId, new Hand {UnitsCards = new List<UnitCard> {unitCardInHand}} }
-            });
+            var match = AMatch(withPlayerHands: PlayerHandsWithUnit(unitCardInHand));
             ThenThrows(() =>
                 WhenReroll(match, ARerollInfoDto(new List<string> {rerolledCardName}, new List<string>())));
         }
@@ -94,9 +96,11 @@ namespace Features.ServerLogic.Editor.Tests
         public void ThrowsWhenUpgradeCardSelectedForRerollDoesNotExists()
         {
             var cardName = "some card";
-            _getUpgradeCard.Execute(cardName).Returns((UpgradeCard) null);
+            GivenUpgradeCardIsNull();
             var match = AMatch();
             ThenThrows(() => WhenReroll(match, ARerollInfoDto(new List<string>(), new List<string>() {cardName})));
+
+            void GivenUpgradeCardIsNull() => _getUpgradeCard.Execute(cardName).Returns((UpgradeCard) null);
         }
 
 
@@ -105,14 +109,10 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var rerolledCardName = "Rerolled Card";
             var cardNameInHand = "Card in Hand";
-            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
-            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
-            _getUpgradeCard.Execute(rerolledCardName).Returns(UpgradeCardMother.Create(rerolledCardName));
+            var upgradeCardInHand = GivenUpgradeCard(cardNameInHand);
+            GivenUpgradeCard(rerolledCardName);
 
-            var match = AMatch(withPlayerHands: new Dictionary<string, Hand>
-            {
-                {UserId, new Hand {UpgradeCards = new List<UpgradeCard> {upgradeCardInHand}}}
-            });
+            var match = AMatch(withPlayerHands: PlayerHandsWithUpgradeCard(upgradeCardInHand));
             ThenThrows(() =>
                 WhenReroll(match, ARerollInfoDto(new List<string>() , new List<string> {rerolledCardName})));
         }
@@ -123,27 +123,15 @@ namespace Features.ServerLogic.Editor.Tests
             var playerRerolls= new Dictionary<string, bool>(){{UserId, false}};
             var unitCardName = "Villager";
             var upgradeCardName = "Card in Hand - Upgrade";
-            var unitCardThatWillBeRerolled = UnitCardMother.Create(unitCardName);
-            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(upgradeCardName);
-
-            _getUnitCard.Execute(unitCardName).Returns(unitCardThatWillBeRerolled);
-            _getUpgradeCard.Execute(upgradeCardName).Returns(upgradeCardThatWillBeRerolled);
-
+            var unitCardThatWillBeRerolled = GivenUnitCard(unitCardName);
+            var upgradeCardThatWillBeRerolled = GivenUpgradeCard(upgradeCardName);
+            
             var unitDeckCard = UnitCardMother.Create("Deck card");
             var upgradeDeckCard = UpgradeCardMother.Create("Deck card");
             var deck = ADeckWithCards();
 
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {
-                    {
-                        UserId, new Hand
-                        {
-                            UnitsCards = new List<UnitCard> {unitCardThatWillBeRerolled},
-                            UpgradeCards = new List<UpgradeCard> {upgradeCardThatWillBeRerolled}
-                        }
-                    }
-                },
+                withPlayerHands: PlayerHandWithCards(unitCardThatWillBeRerolled, upgradeCardThatWillBeRerolled),
                 withDeck: deck, 
                 withPlayersReroll:playerRerolls);
             WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
@@ -163,34 +151,21 @@ namespace Features.ServerLogic.Editor.Tests
                 };
         }
 
-
         [Test]
         public void SetPlayerRerollToTrue()
         {
             var playerRerolls= new Dictionary<string, bool>(){{UserId, false}};
             var unitCardName = "Card in Hand - Unit";
             var upgradeCardName = "Card in Hand - Upgrade";
-            var unitCardThatWillBeRerolled = UnitCardMother.Create(unitCardName);
-            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(upgradeCardName);
-
-            _getUnitCard.Execute(unitCardName).Returns(unitCardThatWillBeRerolled);
-            _getUpgradeCard.Execute(upgradeCardName).Returns(upgradeCardThatWillBeRerolled);
+            var unitCardThatWillBeRerolled = GivenUnitCard(unitCardName);
+            var upgradeCardThatWillBeRerolled = GivenUpgradeCard(upgradeCardName);
 
             var unitDeckCard = UnitCardMother.Create("Deck card");
             var upgradeDeckCard = UpgradeCardMother.Create("Deck card");
             var deck = ADeckWithCards();
 
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {
-                    {
-                        UserId, new Hand
-                        {
-                            UnitsCards = new List<UnitCard> {unitCardThatWillBeRerolled},
-                            UpgradeCards = new List<UpgradeCard> {upgradeCardThatWillBeRerolled}
-                        }
-                    }
-                },
+                withPlayerHands: PlayerHandWithCards(unitCardThatWillBeRerolled, upgradeCardThatWillBeRerolled),
                 withDeck: deck, 
                 withPlayersReroll:playerRerolls);
             WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
@@ -216,21 +191,13 @@ namespace Features.ServerLogic.Editor.Tests
             var cardNameInHand = "Card in Hand";
             var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
             var deckCard = UnitCardMother.Create("Deck card");
-            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
-            var unitCardThatWillBeRerolled = UnitCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+            var unitCardInHand = GivenUnitCard(cardNameInHand);
+            var unitCardThatWillBeRerolled = GivenUnitCard(anotherCardNameInHandThatWillBeRerolled);
 
             var deck = ADeckWithAUnitCard();
 
-            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
-            _getUnitCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(unitCardThatWillBeRerolled);
-
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                    {{UserId, new Hand
-                    {
-                        UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
-                        UpgradeCards = new List<UpgradeCard>()
-                    }}},
+                withPlayerHands: APlayerHandWithMultipleUnits(unitCardInHand, unitCardThatWillBeRerolled),
                 withDeck: deck);
             WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
             
@@ -250,22 +217,14 @@ namespace Features.ServerLogic.Editor.Tests
             var cardNameInHand = "Card in Hand";
             var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
             var deckCard = UnitCardMother.Create("Deck card");
-            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
-            var unitCardThatWillBeRerolled = UnitCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
-
+            var unitCardInHand = GivenUnitCard(cardNameInHand);
+            var unitCardThatWillBeRerolled = GivenUnitCard(anotherCardNameInHandThatWillBeRerolled);
             var deck = ADeckWithAUnitCard();
 
-            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
-            _getUnitCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(unitCardThatWillBeRerolled);
-
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {{UserId, new Hand
-                {
-                    UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
-                    UpgradeCards = new List<UpgradeCard>()
-                }}},
+                withPlayerHands: APlayerHandWithMultipleUnits(unitCardInHand, unitCardThatWillBeRerolled),
                 withDeck: deck);
+            
             WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
             
             Assert.Contains(deckCard, match.Board.PlayersHands[UserId].UnitsCards.ToList());
@@ -285,21 +244,13 @@ namespace Features.ServerLogic.Editor.Tests
             var cardNameInHand = "Card in Hand";
             var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
             var deckCard = UnitCardMother.Create("Deck card");
-            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
-            var unitCardThatWillBeRerolled = UnitCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+            var unitCardInHand = GivenUnitCard(cardNameInHand);
+            var unitCardThatWillBeRerolled = GivenUnitCard(anotherCardNameInHandThatWillBeRerolled);
 
             var deck = ADeckWithAUnitCard();
 
-            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
-            _getUnitCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(unitCardThatWillBeRerolled);
-
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {{UserId, new Hand
-                {
-                    UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
-                    UpgradeCards = new List<UpgradeCard>()
-                }}},
+                withPlayerHands: APlayerHandWithMultipleUnits(unitCardInHand, unitCardThatWillBeRerolled),
                 withDeck: deck);
             WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
             
@@ -319,21 +270,13 @@ namespace Features.ServerLogic.Editor.Tests
             var cardNameInHand = "Card in Hand";
             var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
             var deckCard = UpgradeCardMother.Create("Deck card");
-            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
-            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+            var upgradeCardInHand = GivenUpgradeCard(cardNameInHand);
+            var upgradeCardThatWillBeRerolled = GivenUpgradeCard(anotherCardNameInHandThatWillBeRerolled);
 
             var deck = ADeckWithAUpgradeCard();
 
-            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
-            _getUpgradeCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(upgradeCardThatWillBeRerolled);
-
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {{UserId, new Hand
-                {
-                    UnitsCards = new List<UnitCard>() ,
-                    UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
-                }}},
+                withPlayerHands: PlayerHandsWithMultipleUpgradeCards(upgradeCardInHand, upgradeCardThatWillBeRerolled),
                 withDeck: deck);
             WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
             
@@ -353,21 +296,13 @@ namespace Features.ServerLogic.Editor.Tests
             var cardNameInHand = "Card in Hand";
             var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
             var deckCard = UpgradeCardMother.Create("Deck card");
-            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
-            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+            var upgradeCardInHand = GivenUpgradeCard(cardNameInHand);
+            var upgradeCardThatWillBeRerolled = GivenUpgradeCard(anotherCardNameInHandThatWillBeRerolled);
 
             var deck = ADeckWithAUpgradeCard();
 
-            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
-            _getUpgradeCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(upgradeCardThatWillBeRerolled);
-
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {{UserId, new Hand
-                {
-                    UnitsCards = new List<UnitCard>() ,
-                    UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
-                }}},
+                withPlayerHands:PlayerHandsWithMultipleUpgradeCards(upgradeCardInHand, upgradeCardThatWillBeRerolled),
                 withDeck: deck);
             WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
             
@@ -390,21 +325,13 @@ namespace Features.ServerLogic.Editor.Tests
             var cardNameInHand = "Card in Hand";
             var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
             var deckCard = UpgradeCardMother.Create("Deck card");
-            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
-            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+            var upgradeCardInHand = GivenUpgradeCard(cardNameInHand);
+            var upgradeCardThatWillBeRerolled = GivenUpgradeCard(anotherCardNameInHandThatWillBeRerolled);
 
             var deck = ADeckWithAUpgradeCard();
-
-            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
-            _getUpgradeCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(upgradeCardThatWillBeRerolled);
-
+            
             var match = AMatch(
-                withPlayerHands: new Dictionary<string, Hand>
-                {{UserId, new Hand
-                {
-                    UnitsCards = new List<UnitCard>() ,
-                    UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
-                }}},
+                withPlayerHands:PlayerHandsWithMultipleUpgradeCards(upgradeCardInHand, upgradeCardThatWillBeRerolled),
                 withDeck: deck);
             WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
             
@@ -416,7 +343,35 @@ namespace Features.ServerLogic.Editor.Tests
                     UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard>()),
                     UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>(){ deckCard})
                 };
+        }
 
+        [Test]
+        public void ChangeMatchStateIfAllPlayersFinishedRerolling()
+        {
+            var playerRerolls= new Dictionary<string, bool>(){{UserId, false}};
+            var unitCardName = "Card in Hand - Unit";
+            var upgradeCardName = "Card in Hand - Upgrade";
+            var unitCardThatWillBeRerolled = GivenUnitCard(unitCardName);
+            var upgradeCardThatWillBeRerolled = GivenUpgradeCard(upgradeCardName);
+            
+            var unitDeckCard = UnitCardMother.Create("Deck card");
+            var upgradeDeckCard = UpgradeCardMother.Create("Deck card");
+            var deck = ADeckWithCards();
+
+            var match = AMatch(
+                withPlayerHands: PlayerHandWithCards(unitCardThatWillBeRerolled, upgradeCardThatWillBeRerolled),
+                withDeck: deck, 
+                withPlayersReroll:playerRerolls);
+            WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
+            
+            Assert.AreEqual(RoundState.Upgrade,match.Board.RoundsPlayed.LastOrDefault()!.RoundState);
+
+            Deck ADeckWithCards() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard> {unitDeckCard}),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard> {upgradeDeckCard})
+                };
         }
 
         private static ServerMatch AMatch(RoundState withRoundState = RoundState.Reroll,
@@ -434,43 +389,74 @@ namespace Features.ServerLogic.Editor.Tests
                             withPlayerReroll: withPlayersReroll ??= new Dictionary<string, bool>() {{UserId, false}}),
                     },
                     withDeck: withDeck,
-                    withPlayerHands: withPlayerHands ??= new Dictionary<string, Hand>() {{UserId, new Hand()}}));
+                    withPlayerHands: withPlayerHands ??= new Dictionary<string, Hand>() {{UserId, new Hand()}}),
+                withUsers: new List<User>() {UserMother.Create(UserId)}
+            );
+
+        private UnitCard GivenUnitCard(string cardNameInHand)
+        {
+            var unitCard = UnitCardMother.Create(cardNameInHand);
+            _getUnitCard.Execute(cardNameInHand).Returns(unitCard);
+            return unitCard;
+        }
+
+        private UpgradeCard GivenUpgradeCard(string cardNameInHand)
+        {
+            var upgradeCard = UpgradeCardMother.Create(cardNameInHand);
+            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCard);
+            return upgradeCard;
+        }
 
         private RerollInfoDto ARerollInfoDto(List<string> units, List<string> upgrades) =>
             new RerollInfoDto() {unitCards = units, upgradeCards = upgrades};
+        private static Dictionary<string, Hand> PlayerHandsWithUnit(UnitCard unitCardInHand)
+        {
+            var unit = new Dictionary<string, Hand>();
+            unit.Add(UserId, new Hand {UnitsCards = new List<UnitCard> {unitCardInHand}});
+            return unit;
+        }
+        
+        private static Dictionary<string, Hand> PlayerHandsWithUpgradeCard(UpgradeCard upgradeCardInHand)
+        {
+            var card = new Dictionary<string, Hand>();
+            card.Add(UserId, new Hand {UpgradeCards = new List<UpgradeCard> {upgradeCardInHand}});
+            return card;
+        }
+        
+        private static Dictionary<string, Hand> PlayerHandWithCards(UnitCard unitCardThatWillBeRerolled, UpgradeCard upgradeCardThatWillBeRerolled)
+        {
+            var cards = new Dictionary<string, Hand>();
+            cards.Add(UserId, new Hand
+            {
+                UnitsCards = new List<UnitCard> {unitCardThatWillBeRerolled},
+                UpgradeCards = new List<UpgradeCard> {upgradeCardThatWillBeRerolled}
+            });
+            return cards;
+        }
+        
+        private static Dictionary<string, Hand> APlayerHandWithMultipleUnits(UnitCard unitCardInHand, UnitCard unitCardThatWillBeRerolled)
+        {
+            return new Dictionary<string, Hand>
+            {{UserId, new Hand
+            {
+                UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
+                UpgradeCards = new List<UpgradeCard>()
+            }}};
+        }
+
+        private static Dictionary<string, Hand> PlayerHandsWithMultipleUpgradeCards(UpgradeCard upgradeCardInHand, UpgradeCard upgradeCardThatWillBeRerolled)
+        {
+            return new Dictionary<string, Hand>
+            {{UserId, new Hand
+            {
+                UnitsCards = new List<UnitCard>() ,
+                UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
+            }}};
+        }
 
         private void WhenReroll(ServerMatch match, RerollInfoDto rerollInfoDto = null) =>
             _playReroll.Execute(match, UserId, rerollInfoDto ??= new RerollInfoDto());
 
         private void ThenThrows(TestDelegate when) => Assert.Throws<ApplicationException>(when);
-
-        /*
-         var round = serverMatch.Board.RoundsPlayed.LastOrDefault();
-            if (round.RoundState != RoundState.Reroll || round.PlayerReroll.ContainsKey(userId) && round.PlayerReroll[userId] )
-                throw new ApplicationException("Reroll Not Available");
-
-            if (IsRoundAlradyPlayed(round, userId))
-                throw new ApplicationException("Reroll Not Available");
-
-            var unitCards = new List<UnitCard>();
-            GetUnitCards(serverMatch, userId, cards, unitCards);
-
-            var upgradeCards = new List<UpgradeCard>();
-            GetUpgradeCards(serverMatch, userId, cards, upgradeCards);
-
-            bool revert = false;
-            List<UpgradeCard> upgrades = GetNewHandUpgrades(serverMatch, userId, upgradeCards, ref revert);
-            List<UnitCard> units = GetNewHandUnits(serverMatch, userId, unitCards, ref revert);
-
-            if (revert)
-                throw new ApplicationException("Invalid Reroll");
-
-            round.PlayerReroll[userId] = true;
-            AddNewUpgradeCards(serverMatch, userId, upgradeCards, upgrades);
-            AddNewUnitCards(serverMatch, userId, unitCards, units);
-
-            if (round.PlayerReroll.Values.Count(v=>v) == 2)
-                serverMatch.Board.RoundsPlayed.LastOrDefault().ChangeRoundState(RoundState.Upgrade);
-         */
     }
 }
