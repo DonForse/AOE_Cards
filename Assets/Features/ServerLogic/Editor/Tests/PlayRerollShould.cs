@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Features.ServerLogic.Cards.Actions;
 using Features.ServerLogic.Cards.Domain.Units;
 using Features.ServerLogic.Cards.Domain.Upgrades;
@@ -118,51 +120,303 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void IgnoreVillagerCardReroll()
         {
-            Assert.Fail();
+            var playerRerolls= new Dictionary<string, bool>(){{UserId, false}};
+            var unitCardName = "Villager";
+            var upgradeCardName = "Card in Hand - Upgrade";
+            var unitCardThatWillBeRerolled = UnitCardMother.Create(unitCardName);
+            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(upgradeCardName);
+
+            _getUnitCard.Execute(unitCardName).Returns(unitCardThatWillBeRerolled);
+            _getUpgradeCard.Execute(upgradeCardName).Returns(upgradeCardThatWillBeRerolled);
+
+            var unitDeckCard = UnitCardMother.Create("Deck card");
+            var upgradeDeckCard = UpgradeCardMother.Create("Deck card");
+            var deck = ADeckWithCards();
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {
+                    {
+                        UserId, new Hand
+                        {
+                            UnitsCards = new List<UnitCard> {unitCardThatWillBeRerolled},
+                            UpgradeCards = new List<UpgradeCard> {upgradeCardThatWillBeRerolled}
+                        }
+                    }
+                },
+                withDeck: deck, 
+                withPlayersReroll:playerRerolls);
+            WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
+
+            
+            Assert.Contains(unitCardThatWillBeRerolled, match.Board.PlayersHands[UserId].UnitsCards.ToList());
+            Assert.Contains(upgradeDeckCard, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
+            Assert.Contains(unitDeckCard, match.Board.Deck.UnitCards);
+            Assert.Contains(upgradeCardThatWillBeRerolled, match.Board.Deck.UpgradeCards);
+            Assert.AreEqual(true, playerRerolls[UserId]);
+            
+            Deck ADeckWithCards() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard> {unitDeckCard}),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard> {upgradeDeckCard})
+                };
         }
 
 
         [Test]
         public void SetPlayerRerollToTrue()
         {
-            Assert.Fail();
-        }
+            var playerRerolls= new Dictionary<string, bool>(){{UserId, false}};
+            var unitCardName = "Card in Hand - Unit";
+            var upgradeCardName = "Card in Hand - Upgrade";
+            var unitCardThatWillBeRerolled = UnitCardMother.Create(unitCardName);
+            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(upgradeCardName);
 
+            _getUnitCard.Execute(unitCardName).Returns(unitCardThatWillBeRerolled);
+            _getUpgradeCard.Execute(upgradeCardName).Returns(upgradeCardThatWillBeRerolled);
+
+            var unitDeckCard = UnitCardMother.Create("Deck card");
+            var upgradeDeckCard = UpgradeCardMother.Create("Deck card");
+            var deck = ADeckWithCards();
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {
+                    {
+                        UserId, new Hand
+                        {
+                            UnitsCards = new List<UnitCard> {unitCardThatWillBeRerolled},
+                            UpgradeCards = new List<UpgradeCard> {upgradeCardThatWillBeRerolled}
+                        }
+                    }
+                },
+                withDeck: deck, 
+                withPlayersReroll:playerRerolls);
+            WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
+
+            
+            Assert.Contains(unitDeckCard, match.Board.PlayersHands[UserId].UnitsCards.ToList());
+            Assert.Contains(upgradeDeckCard, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
+            Assert.Contains(unitCardThatWillBeRerolled, match.Board.Deck.UnitCards);
+            Assert.Contains(upgradeCardThatWillBeRerolled, match.Board.Deck.UpgradeCards);
+            Assert.AreEqual(true, playerRerolls[UserId]);
+            
+            Deck ADeckWithCards() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard> {unitDeckCard}),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard> {upgradeDeckCard})
+                };
+        }
 
         [Test]
         public void NotChangeNotRerolledUnitHandCards()
         {
-            Assert.Fail();
+            var cardNameInHand = "Card in Hand";
+            var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
+            var deckCard = UnitCardMother.Create("Deck card");
+            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
+            var unitCardThatWillBeRerolled = UnitCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+
+            var deck = ADeckWithAUnitCard();
+
+            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
+            _getUnitCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(unitCardThatWillBeRerolled);
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                    {{UserId, new Hand
+                    {
+                        UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
+                        UpgradeCards = new List<UpgradeCard>()
+                    }}},
+                withDeck: deck);
+            WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
+            
+            Assert.Contains(unitCardInHand, match.Board.PlayersHands[UserId].UnitsCards.ToList());
+
+            Deck ADeckWithAUnitCard() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard> {deckCard}),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>())
+                };
         }
 
         [Test]
         public void ChangeRerolledUnitHandCards()
         {
-            Assert.Fail();
+            var cardNameInHand = "Card in Hand";
+            var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
+            var deckCard = UnitCardMother.Create("Deck card");
+            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
+            var unitCardThatWillBeRerolled = UnitCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+
+            var deck = ADeckWithAUnitCard();
+
+            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
+            _getUnitCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(unitCardThatWillBeRerolled);
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {{UserId, new Hand
+                {
+                    UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
+                    UpgradeCards = new List<UpgradeCard>()
+                }}},
+                withDeck: deck);
+            WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
+            
+            Assert.Contains(deckCard, match.Board.PlayersHands[UserId].UnitsCards.ToList());
+            Assert.IsFalse(match.Board.PlayersHands[UserId].UnitsCards.Contains(unitCardThatWillBeRerolled));
+
+            Deck ADeckWithAUnitCard() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard> {deckCard}),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>())
+                };
         }
 
         [Test]
         public void AddRerolledUnitCardsToDeck()
         {
-            Assert.Fail();
+            var cardNameInHand = "Card in Hand";
+            var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
+            var deckCard = UnitCardMother.Create("Deck card");
+            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
+            var unitCardThatWillBeRerolled = UnitCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+
+            var deck = ADeckWithAUnitCard();
+
+            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
+            _getUnitCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(unitCardThatWillBeRerolled);
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {{UserId, new Hand
+                {
+                    UnitsCards = new List<UnitCard> {unitCardInHand, unitCardThatWillBeRerolled},
+                    UpgradeCards = new List<UpgradeCard>()
+                }}},
+                withDeck: deck);
+            WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
+            
+            Assert.Contains(unitCardThatWillBeRerolled, match.Board.Deck.UnitCards);
+
+            Deck ADeckWithAUnitCard() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard> {deckCard}),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>())
+                };
         }
 
         [Test]
         public void NotChangeNotRerolledUpgradeHandCards()
         {
-            Assert.Fail();
+            var cardNameInHand = "Card in Hand";
+            var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
+            var deckCard = UpgradeCardMother.Create("Deck card");
+            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
+            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+
+            var deck = ADeckWithAUpgradeCard();
+
+            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
+            _getUpgradeCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(upgradeCardThatWillBeRerolled);
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {{UserId, new Hand
+                {
+                    UnitsCards = new List<UnitCard>() ,
+                    UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
+                }}},
+                withDeck: deck);
+            WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
+            
+            Assert.Contains(upgradeCardInHand, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
+
+            Deck ADeckWithAUpgradeCard() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard>()),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>(){ deckCard})
+                };
         }
 
         [Test]
         public void ChangeRerolledUpgradeHandCards()
         {
-            Assert.Fail();
+            var cardNameInHand = "Card in Hand";
+            var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
+            var deckCard = UpgradeCardMother.Create("Deck card");
+            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
+            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+
+            var deck = ADeckWithAUpgradeCard();
+
+            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
+            _getUpgradeCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(upgradeCardThatWillBeRerolled);
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {{UserId, new Hand
+                {
+                    UnitsCards = new List<UnitCard>() ,
+                    UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
+                }}},
+                withDeck: deck);
+            WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
+            
+            Assert.Contains(upgradeCardInHand, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
+            Assert.Contains(deckCard, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
+            Assert.IsFalse(match.Board.PlayersHands[UserId].UpgradeCards
+                .Contains(upgradeCardThatWillBeRerolled));
+            
+            Deck ADeckWithAUpgradeCard() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard>()),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>(){ deckCard})
+                };
         }
 
         [Test]
         public void AddRerolledUpgradeCardsToDeck()
         {
-            Assert.Fail();
+            var cardNameInHand = "Card in Hand";
+            var anotherCardNameInHandThatWillBeRerolled = "Card in Hand";
+            var deckCard = UpgradeCardMother.Create("Deck card");
+            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
+            var upgradeCardThatWillBeRerolled = UpgradeCardMother.Create(anotherCardNameInHandThatWillBeRerolled);
+
+            var deck = ADeckWithAUpgradeCard();
+
+            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
+            _getUpgradeCard.Execute(anotherCardNameInHandThatWillBeRerolled).Returns(upgradeCardThatWillBeRerolled);
+
+            var match = AMatch(
+                withPlayerHands: new Dictionary<string, Hand>
+                {{UserId, new Hand
+                {
+                    UnitsCards = new List<UnitCard>() ,
+                    UpgradeCards = new List<UpgradeCard>{upgradeCardInHand, upgradeCardThatWillBeRerolled}
+                }}},
+                withDeck: deck);
+            WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
+            
+            Assert.Contains(upgradeCardThatWillBeRerolled, match.Board.Deck.UpgradeCards);
+
+            Deck ADeckWithAUpgradeCard() =>
+                new()
+                {
+                    UnitCards = new ConcurrentStack<UnitCard>(new List<UnitCard>()),
+                    UpgradeCards = new ConcurrentStack<UpgradeCard>(new List<UpgradeCard>(){ deckCard})
+                };
+
         }
 
         private static ServerMatch AMatch(RoundState withRoundState = RoundState.Reroll,
