@@ -14,11 +14,19 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             IList<User> withPlayersWinner = null, int withRoundNumber = 0, RoundState? withRoundState = null)
         {
             withUsers ??= new List<string>();
+            if (withPlayerCards == null)
+            {
+                withPlayerCards = new Dictionary<string, PlayerCard>();
+                foreach (var user in withUsers) withPlayerCards.Add(user, new PlayerCard());
+            }
+
+            
+            
             var r = new Round(withUsers)
             {
                 roundNumber = withRoundNumber,
                 PlayerCards = withPlayerCards,
-                PlayerReroll = withPlayerReroll,
+                PlayerHasRerolled = withPlayerReroll,
                 PlayerWinner = withPlayersWinner,
                 RoundUpgradeCard = withRoundUpgradeCard,
                 NextBotActionTimeInSeconds = withNextBotAction,

@@ -141,7 +141,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal override void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"])
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"])
                 return;
 
 
@@ -168,7 +168,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             }
             RerollUnits(serverMatch, unitsToReroll);
             RerollUpgrades(serverMatch, upgradesToReroll);
-            serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"] = true;
+            serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"] = true;
         }
 
         private static void RerollUnits(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, List<UnitCard> rerollCards)

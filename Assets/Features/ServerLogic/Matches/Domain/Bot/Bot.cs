@@ -52,9 +52,9 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal virtual void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"])
+            if (serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"])
                 return;
-            serverMatch.Board.RoundsPlayed.Last().PlayerReroll["BOT"] = true;
+            serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"] = true;
         }
     }
 }

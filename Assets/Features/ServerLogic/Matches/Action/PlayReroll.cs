@@ -25,11 +25,13 @@ namespace Features.ServerLogic.Matches.Action
             var round = serverMatch.Board.RoundsPlayed.LastOrDefault();
             if (round == null)
                 throw new ApplicationException("Round does not exist");
-            
-            if (round.RoundState != RoundState.Reroll || round.PlayerReroll.ContainsKey(userId) && round.PlayerReroll[userId] )
-                throw new ApplicationException("Reroll Not Available");
 
+            if (round.RoundState != RoundState.Reroll)
+                throw new ApplicationException("Reroll Not Available");
+            
             if (IsRoundAlreadyPlayed(round, userId))
+                throw new ApplicationException("Reroll Not Available");
+            if (!PlayerCanRerollThisRound(userId, round))
                 throw new ApplicationException("Reroll Not Available");
 
             var unitCards = new List<UnitCard>();
@@ -39,8 +41,8 @@ namespace Features.ServerLogic.Matches.Action
             GetUpgradeCards(serverMatch, userId, cards, upgradeCards);
 
             bool revert = false;
-            List<UpgradeCard> upgradeCardsNotRerolled = GetUpgradesToStayInHand(serverMatch, userId, upgradeCards, ref revert);
             List<UnitCard> unitCardsNotRerolled = GetUnitsToStayInHand(serverMatch, userId, unitCards, ref revert);
+            List<UpgradeCard> upgradeCardsNotRerolled = GetUpgradesToStayInHand(serverMatch, userId, upgradeCards, ref revert);
 
             //TODO:
             //this is really hard scenario in which a validation already happened and then in another thread the card is no longer in the hand (use concurrent dic to fix)
@@ -49,17 +51,22 @@ namespace Features.ServerLogic.Matches.Action
             if (revert)
                 throw new ApplicationException("Invalid Reroll");
 
-            round.PlayerReroll[userId] = true;
-            AddNewUpgradeCards(serverMatch, userId, upgradeCards, upgradeCardsNotRerolled);
+            round.PlayerHasRerolled[userId] = true;
             AddNewUnitCards(serverMatch, userId, unitCards, unitCardsNotRerolled);
+            AddNewUpgradeCards(serverMatch, userId, upgradeCards, upgradeCardsNotRerolled);
 
             if (HasAllPlayersRerolled(round, serverMatch))
                 round.ChangeRoundState(RoundState.Upgrade);
         }
 
+        private static bool PlayerCanRerollThisRound(string userId, Round round)
+        {
+            return round.PlayerHasRerolled.ContainsKey(userId) && !round.PlayerHasRerolled[userId];
+        }
+
         private static bool HasAllPlayersRerolled(Round round, ServerMatch serverMatch)
         {
-            return round.PlayerReroll.Values.Count(v=>v) == serverMatch.Users.Count;
+            return round.PlayerHasRerolled.Values.Count(v=>v) == serverMatch.Users.Count;
         }
 
         private static void AddNewUnitCards(ServerMatch serverMatch, string userId, List<UnitCard> rerolledUnitCards, List<UnitCard> unitCardsNotRerolled)
@@ -130,10 +137,8 @@ namespace Features.ServerLogic.Matches.Action
             }
         }
 
-        private static bool UpgradeCardIsInPlayerHand(ServerMatch serverMatch, string userId, UpgradeCard card)
-        {
-            return serverMatch.Board.PlayersHands[userId].UpgradeCards.Any(c => c.CardName == card.CardName);
-        }
+        private static bool UpgradeCardIsInPlayerHand(ServerMatch serverMatch, string userId, UpgradeCard card) => 
+            serverMatch.Board.PlayersHands[userId].UpgradeCards.Any(c => c.CardName == card.CardName);
 
         private void GetUnitCards(ServerMatch serverMatch, string userId, RerollInfoDto cards, List<UnitCard> unitCards)
         {

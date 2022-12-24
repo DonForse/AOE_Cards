@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Features.ServerLogic.Cards.Actions;
 using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
@@ -37,7 +38,6 @@ namespace Features.ServerLogic.Editor.Tests
             ThenThrows(() => WhenReroll(match));
         }
 
-
         [Test]
         public void ThrowsWhenNotInReroll()
         {
@@ -48,94 +48,146 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ThrowsWhenUpgradeCardAlreadyPlayedForThatRound()
         {
-            var match = AMatch();
+            var match = AMatch(withPlayerCards: new Dictionary<string, PlayerCard>()
+            {
+                {UserId, new PlayerCard() {UpgradeCard = UpgradeCardMother.Create("some card")}}
+            });
             ThenThrows(() => WhenReroll(match));
         }
-        
+
+        [Test]
+        public void ThrowsWhenPlayerCannotReroll()
+        {
+            var match = AMatch(withPlayersReroll: new Dictionary<string, bool>() {{UserId, true}});
+            ThenThrows(() => WhenReroll(match));
+        }
+
         [Test]
         public void ThrowsWhenUnitCardSelectedForRerollDoesNotExists()
         {
             var cardName = "some card";
             _getUnitCard.Execute(cardName).Returns((UnitCard) null);
             var match = AMatch();
-            ThenThrows(() => WhenReroll(match));
-
+            ThenThrows(() => WhenReroll(match, ARerollInfoDto(new List<string> {cardName}, new List<string>())));
         }
-        
+
         [Test]
         public void ThrowsWhenUnitCardSelectedForRerollIsNotInPlayerHand()
         {
-            Assert.Fail();
+            var rerolledCardName = "Rerolled Card";
+            var cardNameInHand = "Card in Hand";
+            var unitCardInHand = UnitCardMother.Create(cardNameInHand);
+            _getUnitCard.Execute(cardNameInHand).Returns(unitCardInHand);
+            _getUnitCard.Execute(rerolledCardName).Returns(UnitCardMother.Create(rerolledCardName));
+
+            var match = AMatch(withPlayerHands: new Dictionary<string, Hand>
+            {
+                { UserId, new Hand {UnitsCards = new List<UnitCard> {unitCardInHand}} }
+            });
+            ThenThrows(() =>
+                WhenReroll(match, ARerollInfoDto(new List<string> {rerolledCardName}, new List<string>())));
         }
 
         [Test]
         public void ThrowsWhenUpgradeCardSelectedForRerollDoesNotExists()
         {
-            Assert.Fail();
+            var cardName = "some card";
+            _getUpgradeCard.Execute(cardName).Returns((UpgradeCard) null);
+            var match = AMatch();
+            ThenThrows(() => WhenReroll(match, ARerollInfoDto(new List<string>(), new List<string>() {cardName})));
         }
-        
-        
+
+
         [Test]
         public void ThrowsWhenUpgradeCardSelectedForRerollIsNotInPlayerHand()
         {
-            Assert.Fail();
+            var rerolledCardName = "Rerolled Card";
+            var cardNameInHand = "Card in Hand";
+            var upgradeCardInHand = UpgradeCardMother.Create(cardNameInHand);
+            _getUpgradeCard.Execute(cardNameInHand).Returns(upgradeCardInHand);
+            _getUpgradeCard.Execute(rerolledCardName).Returns(UpgradeCardMother.Create(rerolledCardName));
+
+            var match = AMatch(withPlayerHands: new Dictionary<string, Hand>
+            {
+                {UserId, new Hand {UpgradeCards = new List<UpgradeCard> {upgradeCardInHand}}}
+            });
+            ThenThrows(() =>
+                WhenReroll(match, ARerollInfoDto(new List<string>() , new List<string> {rerolledCardName})));
         }
-        
+
         [Test]
         public void IgnoreVillagerCardReroll()
         {
             Assert.Fail();
         }
-        
-        
+
+
         [Test]
         public void SetPlayerRerollToTrue()
         {
             Assert.Fail();
         }
 
-        
+
         [Test]
         public void NotChangeNotRerolledUnitHandCards()
         {
             Assert.Fail();
         }
+
         [Test]
         public void ChangeRerolledUnitHandCards()
         {
             Assert.Fail();
         }
+
         [Test]
         public void AddRerolledUnitCardsToDeck()
         {
             Assert.Fail();
         }
-        
+
         [Test]
         public void NotChangeNotRerolledUpgradeHandCards()
         {
             Assert.Fail();
         }
+
         [Test]
         public void ChangeRerolledUpgradeHandCards()
         {
             Assert.Fail();
         }
+
         [Test]
         public void AddRerolledUpgradeCardsToDeck()
         {
             Assert.Fail();
         }
-        private static ServerMatch AMatch(RoundState withRoundState = RoundState.Reroll,Dictionary<string,PlayerCard> withPlayerCards = null) => 
+
+        private static ServerMatch AMatch(RoundState withRoundState = RoundState.Reroll,
+            Dictionary<string, PlayerCard> withPlayerCards = null,
+            IDictionary<string, bool> withPlayersReroll = null,
+            Deck withDeck = null,
+            IDictionary<string, Hand> withPlayerHands = null) =>
             ServerMatchMother.Create(MatchId, withBoard:
                 BoardMother.Create(withRoundsPlayed:
                     new List<Round>()
                     {
-                        RoundMother.Create(withRoundState: withRoundState,
-                            withPlayerCards: withPlayerCards),
-                    }));
+                        RoundMother.Create(withUsers: new List<string> {UserId},
+                            withRoundState: withRoundState,
+                            withPlayerCards: withPlayerCards,
+                            withPlayerReroll: withPlayersReroll ??= new Dictionary<string, bool>() {{UserId, false}}),
+                    },
+                    withDeck: withDeck,
+                    withPlayerHands: withPlayerHands ??= new Dictionary<string, Hand>() {{UserId, new Hand()}}));
 
-        private void WhenReroll(ServerMatch match) => _playReroll.Execute(match, UserId, new RerollInfoDto());
+        private RerollInfoDto ARerollInfoDto(List<string> units, List<string> upgrades) =>
+            new RerollInfoDto() {unitCards = units, upgradeCards = upgrades};
+
+        private void WhenReroll(ServerMatch match, RerollInfoDto rerollInfoDto = null) =>
+            _playReroll.Execute(match, UserId, rerollInfoDto ??= new RerollInfoDto());
+
         private void ThenThrows(TestDelegate when) => Assert.Throws<ApplicationException>(when);
 
         /*
