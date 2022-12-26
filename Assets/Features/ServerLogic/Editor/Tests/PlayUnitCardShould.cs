@@ -41,6 +41,91 @@ namespace Features.ServerLogic.Editor.Tests
             ThenThrowsError(WhenExecute);
             Assert.Fail();
         }
+
+        [Test]
+        public void ThrowsWhenPlayerNotInMatch()
+        {
+            Assert.Fail();
+        }
+        
+        [Test]
+        public void ThrowsWhenUnitCardAlreadyPlayed()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ThrowsWhenRoundNotInUnitPhase()
+        {
+            Assert.Fail();
+        }
+        
+        [Test]
+        public void ThrowsWhenUnitCardNotInHand()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ApplyUpgradePreUnitPlayedEffects()
+        {
+        }
+
+        [Test]
+        public void SetUnitCardPlayed()
+        {
+            Assert.Fail();
+        }
+        
+        [Test]
+        public void RemoveUnitCardPlayedFromHand()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void DoNotRemoveUnitCardPlayedFromHandIfUnitIsVillager()
+        {
+            Assert.Fail();
+        }
+        
+        [Test]
+        public void ApplyUpgradePostUnitPlayedEffects()
+        {
+        }
+        
+        [Test]
+        public void ChangeRoundPhaseToFinishedIfAllPlayersPlayedUnit()
+        {
+            Assert.Fail();
+        }
+        
+        [Test]
+        public void DetermineRoundWinner()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void DetermineMatchWinner()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void CreateNewRoundIfMatchIsNotFinished()
+        {
+            Assert.Fail();
+        }
+        
+        
+        [Test]
+        public void UpdatesMatchRepository()
+        {
+            Assert.Fail();
+        }
+
+
         void GivenServerMatch() => _matchesRepository.Get(MatchId).Returns(ServerMatchMother.Create(MatchId));
         private void WhenExecute() => _playUnitCard.Execute(MatchId, UserId, CardName);
         private void ThenThrowsError(TestDelegate code) => Assert.Throws<ApplicationException>(code);

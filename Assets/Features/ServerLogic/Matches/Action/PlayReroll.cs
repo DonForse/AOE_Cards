@@ -57,6 +57,8 @@ namespace Features.ServerLogic.Matches.Action
 
             if (HasAllPlayersRerolled(round, serverMatch))
                 round.ChangeRoundState(RoundState.Upgrade);
+            
+            //TODO: IsUpdated but because it exists in memory, the repo is not called update.
         }
 
         private static bool PlayerCanRerollThisRound(string userId, Round round)

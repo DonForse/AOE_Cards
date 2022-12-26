@@ -29,6 +29,8 @@ namespace Features.ServerLogic.Matches.Action
                 throw new ApplicationException("Match doesnt exists");
             //get type of card.
             var unitCard = _cardRepository.GetUnitCard(cardname);
+            if (unitCard == null)
+                throw new ApplicationException("Card doesnt exists");
             PlayCard(userId, unitCard, match);
             _matchesRepository.Update(match);
         }
@@ -98,7 +100,7 @@ namespace Features.ServerLogic.Matches.Action
             
             
             if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
-                throw new ApplicationException("Unit card has already been played");
+                throw new ApplicationException("Unit card has already been played"); //TODO: Already Checked before
             
             if (card.CardName.ToLowerInvariant() == "villager") //TODO: Move to strategy
             {
@@ -106,7 +108,7 @@ namespace Features.ServerLogic.Matches.Action
                 return;
             }
 
-            if(!hand.UnitsCards.Remove(unitCard))
+            if(!hand.UnitsCards.Remove(unitCard)) //TODO: this is a validation for an already removed card
                 throw new ApplicationException("Unit card is not in hand");
 
             currentRound.PlayerCards[userId].UnitCard = card;
