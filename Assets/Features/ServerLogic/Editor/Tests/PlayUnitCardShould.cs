@@ -233,7 +233,11 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void UpdatesMatchRepository()
         {
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            _matchesRepository.Received(1).Update(serverMatch);
         }
 
 
