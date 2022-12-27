@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Features.ServerLogic.Cards.Domain.Units;
 using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
@@ -22,6 +24,8 @@ namespace Features.ServerLogic.Editor.Tests
         [SetUp]
         public void Setup()
         {
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _cardRepository = Substitute.For<ICardRepository>();
             _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository);
         }
 
@@ -38,32 +42,89 @@ namespace Features.ServerLogic.Editor.Tests
         public void ThrowsErrorWhenCardNotExists()
         {
             GivenServerMatch();
+            GivenCardDoesNotExists();
             ThenThrowsError(WhenExecute);
-            Assert.Fail();
+
+            void GivenCardDoesNotExists() => _cardRepository.GetUnitCard(CardName).Returns((UnitCard)null);
         }
 
         [Test]
         public void ThrowsWhenPlayerNotInMatch()
         {
-            Assert.Fail();
+            GivenServerMatchWithNoPlayerCards();
+            GivenCardPlayed();
+            ThenThrowsError(WhenExecute);
+            
+            void GivenServerMatchWithNoPlayerCards() => _matchesRepository.Get(MatchId).Returns(AServerMatchWithNoPlayerCards());
+            ServerMatch AServerMatchWithNoPlayerCards()
+            {
+                return ServerMatchMother.Create(MatchId,
+                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
+                    {
+                        RoundMother.Create(new []{UserId, UserId+"2"})
+                    }));
+            }
         }
-        
+
         [Test]
         public void ThrowsWhenUnitCardAlreadyPlayed()
         {
-            Assert.Fail();
+            GivenServerMatchWithUnitCardAlreadyPlayed();
+            GivenCardPlayed();
+            ThenThrowsError(WhenExecute);
+            
+            void GivenServerMatchWithUnitCardAlreadyPlayed() => _matchesRepository.Get(MatchId).Returns(AServerMatchWithUnitCardAlreadyPlayed());
+            ServerMatch AServerMatchWithUnitCardAlreadyPlayed()
+            {
+                return ServerMatchMother.Create(MatchId,
+                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
+                    {
+                        RoundMother.Create(new []{UserId, UserId+"2"}, withPlayerCards:new Dictionary<string, PlayerCard>()
+                        {
+                            {UserId, new PlayerCard(){UnitCard = UnitCardMother.Create("Some Card")}}
+                        })
+                    }));
+            }
         }
 
         [Test]
         public void ThrowsWhenRoundNotInUnitPhase()
         {
-            Assert.Fail();
+            GivenServerMatchWithRoundInUpgrade();
+            GivenCardPlayed();
+            ThenThrowsError(WhenExecute);
+            
+            void GivenServerMatchWithRoundInUpgrade() => _matchesRepository.Get(MatchId).Returns(AServerMatchWithUpgradePhase());
+            ServerMatch AServerMatchWithUpgradePhase()
+            {
+                return ServerMatchMother.Create(MatchId,
+                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
+                    {
+                        RoundMother.Create(new []{UserId, UserId+"2"}, 
+                            new Dictionary<string, PlayerCard> { {UserId, new PlayerCard()}},
+                            withRoundState: RoundState.Upgrade)
+                    }));
+            }
         }
-        
+
         [Test]
         public void ThrowsWhenUnitCardNotInHand()
         {
-            Assert.Fail();
+            GivenServerMatchWithCardNotInHand();
+            GivenCardPlayed();
+            ThenThrowsError(WhenExecute);
+            
+            void GivenServerMatchWithCardNotInHand() => _matchesRepository.Get(MatchId).Returns(AServerMatchWithCardNotInHand());
+            ServerMatch AServerMatchWithCardNotInHand()
+            {
+                return ServerMatchMother.Create(MatchId,
+                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
+                    {
+                        RoundMother.Create(new []{UserId, UserId+"2"}, 
+                            new Dictionary<string, PlayerCard> { {UserId, new PlayerCard()}},
+                            withRoundState: RoundState.Upgrade)
+                    }, withPlayerHands: new Dictionary<string, Hand> { {UserId, new Hand()}}));
+            }
         }
 
         [Test]
@@ -76,7 +137,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             Assert.Fail();
         }
-        
+
         [Test]
         public void RemoveUnitCardPlayedFromHand()
         {
@@ -88,18 +149,18 @@ namespace Features.ServerLogic.Editor.Tests
         {
             Assert.Fail();
         }
-        
+
         [Test]
         public void ApplyUpgradePostUnitPlayedEffects()
         {
         }
-        
+
         [Test]
         public void ChangeRoundPhaseToFinishedIfAllPlayersPlayedUnit()
         {
             Assert.Fail();
         }
-        
+
         [Test]
         public void DetermineRoundWinner()
         {
@@ -117,8 +178,8 @@ namespace Features.ServerLogic.Editor.Tests
         {
             Assert.Fail();
         }
-        
-        
+
+
         [Test]
         public void UpdatesMatchRepository()
         {
@@ -126,7 +187,23 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
 
-        void GivenServerMatch() => _matchesRepository.Get(MatchId).Returns(ServerMatchMother.Create(MatchId));
+
+        private void GivenCardPlayed() => _cardRepository.GetUnitCard(CardName).Returns(UnitCardMother.Create(CardName));
+        void GivenServerMatch() => _matchesRepository.Get(MatchId).Returns(AServerMatch());
+
+        private static ServerMatch AServerMatch()
+        {
+            return ServerMatchMother.Create(MatchId,
+                withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
+            {
+                RoundMother.Create(new []{UserId, UserId+"2"}, withPlayerCards:new Dictionary<string, PlayerCard>()
+                {
+                    {UserId, new PlayerCard()},
+                    {UserId+2, new PlayerCard()}
+                })
+            }));
+        }
+        
         private void WhenExecute() => _playUnitCard.Execute(MatchId, UserId, CardName);
         private void ThenThrowsError(TestDelegate code) => Assert.Throws<ApplicationException>(code);
 

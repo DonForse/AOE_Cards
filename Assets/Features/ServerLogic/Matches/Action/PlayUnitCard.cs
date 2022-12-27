@@ -32,10 +32,11 @@ namespace Features.ServerLogic.Matches.Action
             if (unitCard == null)
                 throw new ApplicationException("Card doesnt exists");
             PlayCard(userId, unitCard, match);
+            
             _matchesRepository.Update(match);
         }
-        
-        public void PlayCard(string userId, UnitCard unitCard, ServerMatch match)
+
+        private void PlayCard(string userId, UnitCard unitCard, ServerMatch match)
         {
             var currentRound = match.Board.RoundsPlayed.Last();
 
