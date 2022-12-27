@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
@@ -41,7 +43,7 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ThrowsErrorWhenCardNotExists()
         {
-            GivenServerMatch();
+            GivenServerMatch(AServerMatch(null));
             GivenCardDoesNotExists();
             ThenThrowsError(WhenExecute);
 
@@ -130,29 +132,67 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ApplyUpgradePreUnitPlayedEffects()
         {
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            var upgradeCardPlayedPreviousRound = (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.First().PlayerCards[UserId].UpgradeCard;
+            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UpgradeCard;
+            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().RoundUpgradeCard;
+
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            Assert.IsTrue(upgradeCardPlayedPreviousRound.CalledApplicateEffectPreUnit);
+            Assert.IsTrue(upgradeCardPlayedThisRound.CalledApplicateEffectPreUnit);
+            Assert.IsTrue(roundUpgradeCard.CalledApplicateEffectPreUnit);
         }
 
         [Test]
         public void SetUnitCardPlayed()
         {
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);            
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            
+            Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
+            Assert.IsTrue(serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UnitCard.CardName == CardName);
         }
 
         [Test]
         public void RemoveUnitCardPlayedFromHand()
         {
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            GivenServerMatch(serverMatch);
+            GivenCardPlayed();
+            
+            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
+
+            WhenExecute();
+            
+            Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
+            Assert.IsTrue(serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UnitCard.CardName == CardName);        
         }
 
         [Test]
         public void DoNotRemoveUnitCardPlayedFromHandIfUnitIsVillager()
         {
-            Assert.Fail();
+            var cardName = "Villager";
+            var card = GivenVillagerCardPlayed();
+            var serverMatch = AServerMatch(card);
+            GivenServerMatch(serverMatch);
+
+            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == cardName));
+
+            WhenExecuteWithVillagerCard();
+            
+            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == cardName));
+            Assert.IsTrue(serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UnitCard.CardName == cardName);
         }
 
         [Test]
         public void ApplyUpgradePostUnitPlayedEffects()
         {
+            Assert.Fail();
         }
 
         [Test]
@@ -187,24 +227,61 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
 
+        private UnitCard GivenCardPlayed()
+        {
+            var card = UnitCardMother.Create(CardName);
+            _cardRepository.GetUnitCard(CardName).Returns(card);
+            return card;
+        }
 
-        private void GivenCardPlayed() => _cardRepository.GetUnitCard(CardName).Returns(UnitCardMother.Create(CardName));
-        void GivenServerMatch() => _matchesRepository.Get(MatchId).Returns(AServerMatch());
+        private UnitCard GivenVillagerCardPlayed()
+        {
+            var card = UnitCardMother.Create("Villager");
+            _cardRepository.GetUnitCard("Villager").Returns(card);
+            return card;
+        }
 
-        private static ServerMatch AServerMatch()
+        void GivenServerMatch(ServerMatch serverMatch) => _matchesRepository.Get(MatchId).Returns(serverMatch);
+
+        private static ServerMatch AServerMatch(UnitCard cardInHand)
         {
             return ServerMatchMother.Create(MatchId,
-                withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
-            {
-                RoundMother.Create(new []{UserId, UserId+"2"}, withPlayerCards:new Dictionary<string, PlayerCard>()
-                {
-                    {UserId, new PlayerCard()},
-                    {UserId+2, new PlayerCard()}
-                })
-            }));
+                withBoard: BoardMother.Create(withPlayerHands: new Dictionary<string, Hand>()
+                    {
+                        {UserId, new Hand(){ 
+                            UnitsCards = new List<UnitCard>(){ cardInHand}, 
+                            UpgradeCards = new List<UpgradeCard>()}
+                        },
+                        {UserId +"2", new Hand(){ 
+                            UnitsCards = new List<UnitCard>(){}, 
+                            UpgradeCards = new List<UpgradeCard>()}
+                        }
+                    },
+                    withRoundsPlayed: new List<Round>()
+                    {
+                        RoundMother.Create(new[] { UserId, UserId + "2" },
+                            withPlayerCards: new Dictionary<string, PlayerCard>()
+                            {
+                                { UserId, new PlayerCard() { UpgradeCard = UpgradeCardMother.CreateStub() } },
+                                { UserId + 2, new PlayerCard() }
+                            }, withRoundState: RoundState.Finished,
+                            withRoundUpgradeCard: UpgradeCardMother.CreateStub()),
+                        RoundMother.Create(
+                            new[] { UserId, UserId + "2" },
+                            withPlayerCards: new Dictionary<string, PlayerCard>()
+                            {
+                                { UserId, new PlayerCard() { UpgradeCard = UpgradeCardMother.CreateStub() } },
+                                { UserId + 2, new PlayerCard() }
+                            },
+                            withRoundState: RoundState.Unit,
+                            withRoundUpgradeCard: UpgradeCardMother.CreateStub())
+                    }
+                ));
         }
         
         private void WhenExecute() => _playUnitCard.Execute(MatchId, UserId, CardName);
+        private void WhenExecuteWithVillagerCard() => _playUnitCard.Execute(MatchId, UserId, "Villager");
+
         private void ThenThrowsError(TestDelegate code) => Assert.Throws<ApplicationException>(code);
 
     }

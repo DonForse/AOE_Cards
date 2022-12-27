@@ -99,7 +99,6 @@ namespace Features.ServerLogic.Matches.Action
             if (unitCard == null)
                 throw new ApplicationException("Unit card is not in hand");
             
-            
             if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
                 throw new ApplicationException("Unit card has already been played"); //TODO: Already Checked before
             
