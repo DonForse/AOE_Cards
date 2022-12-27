@@ -37,9 +37,17 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
         public class UpgradeCardStub : UpgradeCard
         {
             public bool CalledApplicateEffectPreUnit = false;
+            public bool CalledApplicateEffectPostUnit = false;
+
             public override void ApplicateEffectPreUnit(ServerMatch serverMatch, string userId)
             {
                 CalledApplicateEffectPreUnit = true;
+                base.ApplicateEffectPreUnit(serverMatch, userId);
+            }
+            
+            public override void ApplicateEffectPostUnit(ServerMatch serverMatch, string userId)
+            {
+                CalledApplicateEffectPostUnit = true;
                 base.ApplicateEffectPreUnit(serverMatch, userId);
             }
         }

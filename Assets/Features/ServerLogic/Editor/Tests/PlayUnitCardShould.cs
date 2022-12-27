@@ -192,7 +192,17 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ApplyUpgradePostUnitPlayedEffects()
         {
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            var upgradeCardPlayedPreviousRound = (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.First().PlayerCards[UserId].UpgradeCard;
+            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UpgradeCard;
+            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().RoundUpgradeCard;
+
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            Assert.IsTrue(upgradeCardPlayedPreviousRound.CalledApplicateEffectPostUnit);
+            Assert.IsTrue(upgradeCardPlayedThisRound.CalledApplicateEffectPostUnit);
+            Assert.IsTrue(roundUpgradeCard.CalledApplicateEffectPostUnit);
         }
 
         [Test]
