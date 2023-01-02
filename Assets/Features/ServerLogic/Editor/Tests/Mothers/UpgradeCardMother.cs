@@ -19,7 +19,15 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
                 CardName = withCardName,
             };
         }
-        
+
+        public static TeutonsFaithUpgradeCard CreateFakeTeutonsFaithCard() => new TeutonsFaithUpgradeCard()
+        {
+            Archetypes =null,
+            BasePower = 0,
+            BonusVs = null,
+            CardName = "teutons faith",
+        };
+
         public static UpgradeCardStub CreateStub(string withCardName = "unit-card", int withBasePower = 0,
             List<Archetype> withArchetypes = null, List<Archetype> withBonusVs = null)
         {

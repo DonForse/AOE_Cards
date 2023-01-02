@@ -218,9 +218,24 @@ namespace Features.ServerLogic.Editor.Tests
             GivenServerMatch(serverMatch);
             WhenExecute();
             Assert.AreEqual(RoundState.Finished, round.RoundState);
+        }
+
+        [Test]
+        public void CreateNewRoundIfMatchIsNotFinished()
+        {
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            var round = serverMatch.Board.RoundsPlayed.Last();
+            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            //TODO: _createRound.Execute();
             Assert.AreEqual(3, serverMatch.Board.RoundsPlayed.Count);
         }
 
+        
         [Test]
         public void DetermineRoundWinner()
         {
@@ -233,11 +248,6 @@ namespace Features.ServerLogic.Editor.Tests
             Assert.Fail();
         }
 
-        [Test]
-        public void CreateNewRoundIfMatchIsNotFinished()
-        {
-            Assert.Fail();
-        }
 
 
         [Test]

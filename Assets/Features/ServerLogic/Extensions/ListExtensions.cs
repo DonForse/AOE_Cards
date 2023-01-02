@@ -9,7 +9,7 @@ namespace Features.ServerLogic.Extensions
     {
         public static bool ContainsAnyArchetype(this IList<Archetype> list, IList<Archetype> contained)
         {
-            return list.Any(x => contained.Any(c => x == c));
+            return list.Any(item => contained.Any(containedItem => item == containedItem));
         }
     }
 }
