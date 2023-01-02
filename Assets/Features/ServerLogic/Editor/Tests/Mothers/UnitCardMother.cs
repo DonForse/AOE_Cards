@@ -9,7 +9,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
         public static UnitCard Create(string withCardName = "unit-card",int withBasePower = 0, List<Archetype> withArchetypes = null, List<Archetype>withBonusVs =  null, int withPowerEffect = 0)
         {
             withArchetypes ??= new List<Archetype>() {Archetype.Monk};
-
+            withBonusVs ??= new List<Archetype>();
             return new UnitCard()
             {
                 Archetypes = withArchetypes,

@@ -8,6 +8,7 @@ using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
+using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -208,7 +209,16 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void ChangeRoundPhaseToFinishedIfAllPlayersPlayedUnit()
         {
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            var round = serverMatch.Board.RoundsPlayed.Last();
+            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            Assert.AreEqual(RoundState.Finished, round.RoundState);
+            Assert.AreEqual(3, serverMatch.Board.RoundsPlayed.Count);
         }
 
         [Test]
@@ -260,7 +270,9 @@ namespace Features.ServerLogic.Editor.Tests
         private static ServerMatch AServerMatch(UnitCard cardInHand)
         {
             return ServerMatchMother.Create(MatchId,
-                withBoard: BoardMother.Create(withPlayerHands: new Dictionary<string, Hand>()
+                withUsers: new List<User>(){UserMother.Create(UserId), UserMother.Create(UserId+ "2")},
+                withBoard: BoardMother.Create(
+                    withPlayerHands: new Dictionary<string, Hand>()
                     {
                         {UserId, new Hand(){ 
                             UnitsCards = new List<UnitCard>(){ cardInHand}, 
@@ -277,7 +289,7 @@ namespace Features.ServerLogic.Editor.Tests
                             withPlayerCards: new Dictionary<string, PlayerCard>()
                             {
                                 { UserId, new PlayerCard() { UpgradeCard = UpgradeCardMother.CreateStub() } },
-                                { UserId + 2, new PlayerCard() }
+                                { UserId + 2, new PlayerCard()  { UpgradeCard = UpgradeCardMother.CreateStub() }}
                             }, withRoundState: RoundState.Finished,
                             withRoundUpgradeCard: UpgradeCardMother.CreateStub()),
                         RoundMother.Create(
@@ -289,7 +301,8 @@ namespace Features.ServerLogic.Editor.Tests
                             },
                             withRoundState: RoundState.Unit,
                             withRoundUpgradeCard: UpgradeCardMother.CreateStub())
-                    }
+                    },
+                    withDeck:DeckMother.CreateWithRandomCards(10,10)
                 ));
         }
         

@@ -12,6 +12,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
         {
             if (withRoundsPlayed == null)
                 withRoundsPlayed = new List<Round>();
+            withDeck ??= DeckMother.CreateWithRandomCards();
             return new Board()
             {
                 Deck = withDeck,

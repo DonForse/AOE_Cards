@@ -14,6 +14,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             IList<User> withPlayersWinner = null, int withRoundNumber = 0, RoundState? withRoundState = null)
         {
             withUsers ??= new List<string>();
+            withPlayersWinner ??= new List<User>();
             if (withPlayerCards == null)
             {
                 withPlayerCards = new Dictionary<string, PlayerCard>();
