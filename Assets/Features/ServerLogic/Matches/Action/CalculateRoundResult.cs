@@ -9,24 +9,25 @@ using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public class CalculateRoundResult
+    public class CalculateRoundResult : ICalculateRoundResult
     {
         private readonly IMatchesRepository _matchesRepository;
-        private readonly List<IUpgradeCardStrategy> _upgradeCardStrategies;
+        private readonly List<IUpgradeCardStrategy> _upgradeCardPreCalculusStrategies;
 
         public CalculateRoundResult(IMatchesRepository matchesRepository)
         {
             _matchesRepository = matchesRepository;
-            _upgradeCardStrategies = new List<IUpgradeCardStrategy>();
-            _upgradeCardStrategies.Add(new TeutonsFaithUpgradeCardStrategy());
+            _upgradeCardPreCalculusStrategies = new List<IUpgradeCardStrategy>();
+            _upgradeCardPreCalculusStrategies.Add(new TeutonsFaithUpgradeCardStrategy());
+            _upgradeCardPreCalculusStrategies.Add(new PersianTCUpgradeCardStrategy());
         }
 
         public void Execute(string matchId)
         {
             var match = _matchesRepository.Get(matchId);
             var round = match.Board.CurrentRound;
-            var playerOnePower = GetPower(round, round.PlayerCards.Keys.First(), match.Board.RoundsPlayed);
-            var playerTwoPower = GetPower(round, round.PlayerCards.Keys.Last(), match.Board.RoundsPlayed);
+            var playerOnePower = GetPower(round, round.PlayerCards.Keys.First(), match.Board.RoundsPlayed, match );
+            var playerTwoPower = GetPower(round, round.PlayerCards.Keys.Last(), match.Board.RoundsPlayed, match);
             round.PlayerWinner = new List<User>();
             if (playerOnePower == playerTwoPower)
             {
@@ -43,20 +44,18 @@ namespace Features.ServerLogic.Matches.Action
             }
         }
 
-        private int GetPower(Round round, string player, IList<Round> boardRoundsPlayed)
+        private int GetPower(Round round, string player, IList<Round> boardRoundsPlayed, ServerMatch serverMatch)
         {
             var rivalPlayerCard = round.PlayerCards.First(x => x.Key != player).Value;
             var playerCard = round.PlayerCards[player];
             var totalPower = playerCard.UnitCard.BasePower;
             
-
             totalPower += CalculateUnitVsPower(playerCard.UnitCard, rivalPlayerCard);
-            totalPower += CalculateUpgradeCardBasePower(playerCard.UpgradeCard, playerCard, rivalPlayerCard);
-            totalPower += CalculateUpgradeCardBasePower(round.RoundUpgradeCard, playerCard, rivalPlayerCard);
+            totalPower += CalculateUpgradeCardBasePower(playerCard.UpgradeCard, playerCard, rivalPlayerCard, serverMatch, round, player);
+            totalPower += CalculateUpgradeCardBasePower(round.RoundUpgradeCard, playerCard, rivalPlayerCard, serverMatch, round, player);
             foreach (var previousRound in boardRoundsPlayed)
             {
-                totalPower += CalculateUpgradeCardBasePower(previousRound.PlayerCards[player].UpgradeCard, playerCard,
-                    rivalPlayerCard);
+                totalPower += CalculateUpgradeCardBasePower(previousRound.PlayerCards[player].UpgradeCard, playerCard, rivalPlayerCard, serverMatch, round, player);
             }
 
             return totalPower;
@@ -65,29 +64,24 @@ namespace Features.ServerLogic.Matches.Action
         private int CalculateUnitVsPower(UnitCard playerCardUnitCard, PlayerCard rivalPlayerCard) => 
             playerCardUnitCard.BonusVs.ContainsAnyArchetype(rivalPlayerCard.UnitCard.Archetypes) ? playerCardUnitCard.PowerEffect : 0;
 
-        private int CalculateUpgradeCardBasePower(UpgradeCard upgradeCard, PlayerCard pc, PlayerCard rivalCard)
+        private int CalculateUpgradeCardBasePower(UpgradeCard upgradeCard, PlayerCard pc, PlayerCard rivalCard, ServerMatch serverMatch, Round round, string userId )
         {
-            foreach (var strategy in _upgradeCardStrategies)
+            var power = 0;
+            foreach (var strategy in _upgradeCardPreCalculusStrategies)
             {
                 if (!strategy.IsValid(upgradeCard))continue;
-                strategy.Execute(upgradeCard, pc.UnitCard, rivalCard.UnitCard);
+                power = strategy.Execute(upgradeCard, pc.UnitCard, rivalCard.UnitCard, serverMatch, round, userId);
             }
 
             if (upgradeCard.Archetypes != null && !pc.UnitCard.Archetypes.Any(uArch => upgradeCard.Archetypes.Any(arch => arch == uArch)))
-                return 0;
+                return 0 + power;
 
             if (upgradeCard.BonusVs != null && upgradeCard.BonusVs.Count == 0)
-                return upgradeCard.BasePower;
+                return upgradeCard.BasePower +power;
 
             if (upgradeCard.BonusVs != null && !upgradeCard.BonusVs.Any(bonusVs => rivalCard.UnitCard.Archetypes.Any(arq => arq == bonusVs)))
                 return 0;
-            return upgradeCard.BasePower;
-            
-            // return upgradeCard.Archetypes.ContainsAnyArchetype(pc.UnitCard.Archetypes) &&
-            //        (upgradeCard.BonusVs == null
-            //         || upgradeCard.BonusVs.ContainsAnyArchetype(rivalCard.UnitCard.Archetypes))
-            //     ? upgradeCard.BasePower
-            //     : 0;
+            return upgradeCard.BasePower + power;
         }
     }
 }

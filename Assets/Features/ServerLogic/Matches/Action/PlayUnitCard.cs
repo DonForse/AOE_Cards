@@ -15,11 +15,14 @@ namespace Features.ServerLogic.Matches.Action
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
+        private readonly ICalculateRoundResult _calculateRoundResult;
 
-        public PlayUnitCard(IMatchesRepository matchesRepository, ICardRepository cardRepository)
+        public PlayUnitCard(IMatchesRepository matchesRepository, ICardRepository cardRepository,
+            ICalculateRoundResult calculateRoundResult)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
+            _calculateRoundResult = calculateRoundResult;
         }
 
         public void Execute(string matchId,string userId, string cardname)
@@ -121,42 +124,14 @@ namespace Features.ServerLogic.Matches.Action
             //TODO: CAREFUL WITH TIES.
             var higherValueUser = new List<User>();
             var higgerValue = 0;
+            _calculateRoundResult.Execute(serverMatch.Guid);
+
             foreach (var user in serverMatch.Users)
             {
                 List<UpgradeCard> upgradeCards = GetUpgradeCardsByPlayer(currentRound, user.Id, serverMatch);
-                List<UnitCard> vsUnits = GetVsUnits(currentRound, user.Id);
-                var currentUnitCard = currentRound.PlayerCards[user.Id].UnitCard;
-                ApplicatePreCalculusEffects(user.Id, upgradeCards, serverMatch);
-                var power = currentUnitCard.CalculatePower(serverMatch, user.Id);
                 ApplicatePostCalculusEffects(user.Id, upgradeCards, serverMatch);
-                currentRound.PlayerCards[user.Id].UnitCardPower = power;
-                if (power == higgerValue)
-                {
-                    higherValueUser.Add(user);
-                }
-                if (power > higgerValue)
-                {
-                    higherValueUser.Clear();
-                    higgerValue = power;
-                    higherValueUser.Add(user);
-                }
             }
             currentRound.PlayerWinner = higherValueUser;
-        }
-        
-        private List<UnitCard> GetVsUnits(Round currentRound, string userId)
-        {
-            return currentRound.PlayerCards
-                .Where(pc => pc.Key != userId)
-                .Select(c => c.Value.UnitCard).ToList();
-        }
-
-        private void ApplicatePreCalculusEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
-        {
-            foreach (var upgrade in upgrades)
-            {
-                upgrade.ApplicateEffectPreCalculus(serverMatch, userId);
-            }
         }
 
         private void ApplicatePostCalculusEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)

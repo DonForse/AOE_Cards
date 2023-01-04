@@ -39,6 +39,7 @@ namespace Features.ServerLogic.Editor.Tests
             new UserOneWinWithPreviousUpgrades(),
             new UserOneWinRoundWithScorpionCardResult(),
             new CavalryWinWhenTeutonsFaith(),
+            new WinWithPersianTC()
         };
         
         [TestCaseSource(nameof(_roundsCases))]
@@ -169,6 +170,59 @@ namespace Features.ServerLogic.Editor.Tests
             }}
         };
         public IList<Round> PreviousRounds => new List<Round>();
+    }
+    
+    public class WinWithPersianTC : IRoundResultTestCaseSource
+    {
+        public IList<string> Users => new List<string>
+        {
+            "Id",
+            "Id-2"
+        };
+
+        public IList<string> RoundWinners => new List<string>
+        {
+            "Id",
+        };
+
+        public UpgradeCard RoundUpgrade => UpgradeCardMother.Create(withBasePower: 0);
+
+        public Dictionary<string, PlayerCard> PlayerCards => new()
+        {
+            //Heavy Scorpion,Siege,Siege Unit,0,Always wins vs Infantry,Infantry,99
+            {"Id",new PlayerCard()
+            {
+                UnitCard = UnitCardMother.Create("Villager", 1, new List<Archetype>
+                    {Archetype.Villager}),
+                UpgradeCard = UpgradeCardMother.CreateFakePersianTC()
+            }},
+            {"Id-2",new PlayerCard()
+            {
+                UnitCard =UnitCardMother.Create("Cavalry", withBasePower: 49, withArchetypes:new List<Archetype>{ Archetype.Cavalry} ),
+                UpgradeCard = UpgradeCardMother.Create(withBasePower:0)
+            }}
+        };
+        public IList<Round> PreviousRounds => new List<Round>()
+        {
+            new Round(Users)
+            {
+                PlayerCards = new Dictionary<string, PlayerCard>
+                {
+                    {"Id", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:10,withCardName: "vill-upgrade",
+                        withArchetypes:new List<Archetype> {Archetype.Villager})}},
+                    {"Id-2", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:0)}}
+                }
+            },
+            new Round(Users)
+            {
+                PlayerCards = new Dictionary<string, PlayerCard>
+                {
+                    {"Id", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:14,withCardName: "vill-upgrade",
+                        withArchetypes:new List<Archetype> {Archetype.Villager})}},
+                    {"Id-2", new PlayerCard(){UpgradeCard = UpgradeCardMother.Create(withBasePower:0)}}
+                }
+            }
+        };
     }
     
     public class UserOneWinRoundWithScorpionCardResult : IRoundResultTestCaseSource

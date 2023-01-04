@@ -23,13 +23,15 @@ namespace Features.ServerLogic.Editor.Tests
         private IMatchesRepository _matchesRepository;
         private ICardRepository _cardRepository;
         private PlayUnitCard _playUnitCard;
+        private ICalculateRoundResult _calculateRoundResult;
 
         [SetUp]
         public void Setup()
         {
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _cardRepository = Substitute.For<ICardRepository>();
-            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository);
+            _calculateRoundResult = Substitute.For<ICalculateRoundResult>();
+            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult);
         }
 
         [Test]
@@ -239,6 +241,7 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void DetermineRoundWinner()
         {
+            // _calculateRoundResult.Execute();
             Assert.Fail();
         }
 

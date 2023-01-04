@@ -6,6 +6,6 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
     public interface IUpgradeCardStrategy
     {
         bool IsValid(UpgradeCard card);
-        void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard);
+        int Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId);
     }
 }

@@ -27,6 +27,17 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             BonusVs = null,
             CardName = "teutons faith",
         };
+        
+        public static PersianTCUpgradeCard CreateFakePersianTC()
+        {
+            return new PersianTCUpgradeCard()
+            {
+                Archetypes =new[] {Archetype.Villager},
+                BasePower = 0,
+                BonusVs = null,
+                CardName = "persian town center",
+            };
+        }
 
         public static UpgradeCardStub CreateStub(string withCardName = "unit-card", int withBasePower = 0,
             List<Archetype> withArchetypes = null, List<Archetype> withBonusVs = null)

@@ -33,7 +33,7 @@ namespace Features.ServerLogic
 
         public static IServerConfiguration ServerConfiguration() => new ServerConfiguration();
 
-        public static IPlayUnitCard PlayUnitCard() => new PlayUnitCard(MatchesRepository(), CardRepository());
+        public static IPlayUnitCard PlayUnitCard() => new PlayUnitCard(MatchesRepository(), CardRepository(), CalculateRoundResult());
         public static IPlayUpgradeCard PlayUpgradeCard() => new PlayUpgradeCard(MatchesRepository(), CardRepository());
 
 
@@ -62,5 +62,6 @@ namespace Features.ServerLogic
         public static ICreateUser CreateUser() => new CreateUser(UsersRepository());
         private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());
         private static IGetUpgradeCard GetUpgradeCard() => new GetUpgradeCard(CardRepository());
+        public static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository());
     }
 }

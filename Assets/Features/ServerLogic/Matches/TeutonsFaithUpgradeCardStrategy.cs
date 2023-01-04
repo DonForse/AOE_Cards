@@ -10,15 +10,12 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
     {
         public bool IsValid(UpgradeCard card) => card.CardName.ToLowerInvariant() == "teutons faith";
 
-        public void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard)
+        public int Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId)
         {
             if (unitCardPlayed.Archetypes.All(a => a != Archetype.Cavalry))
-            {
-                card.BasePower = 0;
-                return;
-            }
-            
-            card.BasePower = RivalPlayedMonk() ? 1000 : // do not use because of overflow: int.MaxValue;
+                return 0;
+
+            return RivalPlayedMonk() ? 1000 : // do not use because of overflow: int.MaxValue;
                 0;
 
             bool RivalPlayedMonk() => rivalUnitCard.Archetypes.ContainsAnyArchetype(new List<Archetype> {Archetype.Monk});

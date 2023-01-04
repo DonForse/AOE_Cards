@@ -30,8 +30,10 @@ namespace Features.ServerLogic.Matches.Service
         public void Initialize()
         {
             Timer = new Timer(PlayMatches, null, 3000, 3000);
-            hardBot = new HardBot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()), new PlayUnitCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
-            easyBot = new Bot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()), new PlayUnitCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()));
+            hardBot = new HardBot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()),
+                new PlayUnitCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository(), ServerLogicProvider.CalculateRoundResult()));
+            easyBot = new Bot(new PlayUpgradeCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository()), 
+                new PlayUnitCard(ServerLogicProvider.MatchesRepository(), ServerLogicProvider.CardRepository(), ServerLogicProvider.CalculateRoundResult()));
         }
 
         public void Dispose()
