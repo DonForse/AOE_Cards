@@ -364,7 +364,7 @@ namespace Features.ServerLogic.Editor.Tests
                 withPlayersReroll:playerRerolls);
             WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
             
-            Assert.AreEqual(RoundState.Upgrade,match.Board.RoundsPlayed.LastOrDefault()!.RoundState);
+            Assert.AreEqual(RoundState.Upgrade,match.Board.CurrentRound!.RoundState);
 
             Deck ADeckWithCards() =>
                 new()
@@ -380,14 +380,11 @@ namespace Features.ServerLogic.Editor.Tests
             Deck withDeck = null,
             IDictionary<string, Hand> withPlayerHands = null) =>
             ServerMatchMother.Create(MatchId, withBoard:
-                BoardMother.Create(withRoundsPlayed:
-                    new List<Round>()
-                    {
-                        RoundMother.Create(withUsers: new List<string> {UserId},
-                            withRoundState: withRoundState,
-                            withPlayerCards: withPlayerCards,
-                            withPlayerReroll: withPlayersReroll ??= new Dictionary<string, bool>() {{UserId, false}}),
-                    },
+                BoardMother.Create(withRoundsPlayed: new List<Round>(),
+                    withCurrentRound:RoundMother.Create(withUsers: new List<string> {UserId},
+                        withRoundState: withRoundState,
+                        withPlayerCards: withPlayerCards,
+                        withPlayerReroll: withPlayersReroll ??= new Dictionary<string, bool>() {{UserId, false}}),
                     withDeck: withDeck,
                     withPlayerHands: withPlayerHands ??= new Dictionary<string, Hand>() {{UserId, new Hand()}}),
                 withUsers: new List<User>() {UserMother.Create(UserId)}

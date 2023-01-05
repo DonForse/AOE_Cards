@@ -15,7 +15,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         public void PlayCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            var round = serverMatch.Board.RoundsPlayed.Last();
+            var round = serverMatch.Board.CurrentRound;
             if (round.RoundState == RoundState.Reroll)
             {
                 PlayReroll(serverMatch);
@@ -37,14 +37,14 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal virtual void PlayUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
+            if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UnitCard != null)
                 return;
             _playUnitCard.Execute(serverMatch.Guid, "BOT", serverMatch.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault()?.CardName);
         }
 
         internal virtual void PlayUpgrade(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
+            if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UpgradeCard != null)
                 return;
             _playUpgradeCard.Execute(serverMatch.Guid, "BOT",
                 serverMatch.Board.PlayersHands["BOT"].UpgradeCards.FirstOrDefault()?.CardName);
@@ -52,9 +52,9 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal virtual void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"])
+            if (serverMatch.Board.CurrentRound.PlayerHasRerolled["BOT"])
                 return;
-            serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"] = true;
+            serverMatch.Board.CurrentRound.PlayerHasRerolled["BOT"] = true;
         }
     }
 }

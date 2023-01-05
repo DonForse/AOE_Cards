@@ -6,8 +6,8 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
     {
         public override void ApplicateEffectPreCalculus(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
         {
-            var currentRound = serverMatch.Board.RoundsPlayed.Last();
-            var upgrades = serverMatch.GetUpgradeCardsByPlayer(currentRound, userId);
+            var currentRound = serverMatch.Board.CurrentRound;
+            var upgrades = serverMatch.GetUpgradeCardsByPlayer(userId);
             var power = 0;
             foreach (var upgrade in upgrades) {
                 if (upgrade.CardName == CardName)

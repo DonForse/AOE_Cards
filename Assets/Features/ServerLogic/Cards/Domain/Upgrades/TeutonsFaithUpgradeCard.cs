@@ -7,7 +7,7 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
     {        
         public override void ApplicateEffectPreCalculus(ServerMatch serverMatch, string userId)
         {
-            var currentRound = serverMatch.Board.RoundsPlayed.Last();
+            var currentRound = serverMatch.Board.CurrentRound;
             if (currentRound.PlayerCards[userId].UnitCard.Archetypes.All(a => a != Archetype.Cavalry))
             {
                 this.BasePower = 0;

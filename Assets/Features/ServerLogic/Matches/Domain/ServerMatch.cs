@@ -27,12 +27,15 @@ namespace Features.ServerLogic.Matches.Domain
                 .Select(c => c.Value.UnitCard).ToList();
         }
 
-        public List<UpgradeCard> GetUpgradeCardsByPlayer(Round currentRound, string userId)
+        public List<UpgradeCard> GetUpgradeCardsByPlayer(string userId)
         {
             var upgradeCards = Board.RoundsPlayed.SelectMany(r => r.PlayerCards
                 .Where(pc => pc.Key == userId && pc.Value.UpgradeCard != null)
-                .Select(pc => pc.Value.UpgradeCard)).ToList();
-            upgradeCards.Add(currentRound.RoundUpgradeCard);
+                .Select(pc => pc.Value.UpgradeCard))
+                .Concat(new []{Board.CurrentRound.PlayerCards[userId].UpgradeCard})
+                .Where(upgrade => upgrade != null)
+                .ToList();
+            upgradeCards.Add(Board.CurrentRound.RoundUpgradeCard);
             return upgradeCards;
         }
     }

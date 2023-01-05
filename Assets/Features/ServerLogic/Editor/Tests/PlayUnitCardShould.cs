@@ -138,8 +138,8 @@ namespace Features.ServerLogic.Editor.Tests
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
             var upgradeCardPlayedPreviousRound = (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.First().PlayerCards[UserId].UpgradeCard;
-            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UpgradeCard;
-            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().RoundUpgradeCard;
+            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.CurrentRound.PlayerCards[UserId].UpgradeCard;
+            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.CurrentRound.RoundUpgradeCard;
 
             GivenServerMatch(serverMatch);
             WhenExecute();
@@ -157,7 +157,7 @@ namespace Features.ServerLogic.Editor.Tests
             WhenExecute();
             
             Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
-            Assert.IsTrue(serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UnitCard.CardName == CardName);
+            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.CardName == CardName);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace Features.ServerLogic.Editor.Tests
             WhenExecute();
             
             Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
-            Assert.IsTrue(serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UnitCard.CardName == CardName);        
+            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.CardName == CardName);        
         }
 
         [Test]
@@ -189,7 +189,7 @@ namespace Features.ServerLogic.Editor.Tests
             WhenExecuteWithVillagerCard();
             
             Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == cardName));
-            Assert.IsTrue(serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UnitCard.CardName == cardName);
+            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.CardName == cardName);
         }
 
         [Test]
@@ -198,8 +198,8 @@ namespace Features.ServerLogic.Editor.Tests
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
             var upgradeCardPlayedPreviousRound = (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.First().PlayerCards[UserId].UpgradeCard;
-            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId].UpgradeCard;
-            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.Last().RoundUpgradeCard;
+            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.CurrentRound.PlayerCards[UserId].UpgradeCard;
+            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.CurrentRound.RoundUpgradeCard;
 
             GivenServerMatch(serverMatch);
             WhenExecute();
@@ -213,9 +213,9 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
-            var round = serverMatch.Board.RoundsPlayed.Last();
-            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
-            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+            var round = serverMatch.Board.CurrentRound;
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
 
             GivenServerMatch(serverMatch);
             WhenExecute();
@@ -227,9 +227,9 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
-            var round = serverMatch.Board.RoundsPlayed.Last();
-            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
-            serverMatch.Board.RoundsPlayed.Last().PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+            var round = serverMatch.Board.CurrentRound;
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
 
             GivenServerMatch(serverMatch);
             WhenExecute();
@@ -283,38 +283,44 @@ namespace Features.ServerLogic.Editor.Tests
         private static ServerMatch AServerMatch(UnitCard cardInHand)
         {
             return ServerMatchMother.Create(MatchId,
-                withUsers: new List<User>(){UserMother.Create(UserId), UserMother.Create(UserId+ "2")},
+                withUsers: new List<User>() {UserMother.Create(UserId), UserMother.Create(UserId + "2")},
                 withBoard: BoardMother.Create(
                     withPlayerHands: new Dictionary<string, Hand>()
                     {
-                        {UserId, new Hand(){ 
-                            UnitsCards = new List<UnitCard>(){ cardInHand}, 
-                            UpgradeCards = new List<UpgradeCard>()}
+                        {
+                            UserId, new Hand()
+                            {
+                                UnitsCards = new List<UnitCard>() {cardInHand},
+                                UpgradeCards = new List<UpgradeCard>()
+                            }
                         },
-                        {UserId +"2", new Hand(){ 
-                            UnitsCards = new List<UnitCard>(){}, 
-                            UpgradeCards = new List<UpgradeCard>()}
+                        {
+                            UserId + "2", new Hand()
+                            {
+                                UnitsCards = new List<UnitCard>() { },
+                                UpgradeCards = new List<UpgradeCard>()
+                            }
                         }
                     },
                     withRoundsPlayed: new List<Round>()
                     {
-                        RoundMother.Create(new[] { UserId, UserId + "2" },
+                        RoundMother.Create(new[] {UserId, UserId + "2"},
                             withPlayerCards: new Dictionary<string, PlayerCard>()
                             {
-                                { UserId, new PlayerCard() { UpgradeCard = UpgradeCardMother.CreateStub() } },
-                                { UserId + 2, new PlayerCard()  { UpgradeCard = UpgradeCardMother.CreateStub() }}
+                                {UserId, new PlayerCard() {UpgradeCard = UpgradeCardMother.CreateStub()}},
+                                {UserId + 2, new PlayerCard() {UpgradeCard = UpgradeCardMother.CreateStub()}}
                             }, withRoundState: RoundState.Finished,
-                            withRoundUpgradeCard: UpgradeCardMother.CreateStub()),
-                        RoundMother.Create(
-                            new[] { UserId, UserId + "2" },
-                            withPlayerCards: new Dictionary<string, PlayerCard>()
-                            {
-                                { UserId, new PlayerCard() { UpgradeCard = UpgradeCardMother.CreateStub() } },
-                                { UserId + 2, new PlayerCard() }
-                            },
-                            withRoundState: RoundState.Unit,
                             withRoundUpgradeCard: UpgradeCardMother.CreateStub())
                     },
+                    withCurrentRound: RoundMother.Create(
+                        new[] {UserId, UserId + "2"},
+                        withPlayerCards: new Dictionary<string, PlayerCard>()
+                        {
+                            {UserId, new PlayerCard() {UpgradeCard = UpgradeCardMother.CreateStub()}},
+                            {UserId + 2, new PlayerCard()}
+                        },
+                        withRoundState: RoundState.Unit,
+                        withRoundUpgradeCard: UpgradeCardMother.CreateStub()),
                     withDeck:DeckMother.CreateWithRandomCards(10,10)
                 ));
         }

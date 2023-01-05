@@ -19,7 +19,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal override void PlayUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UnitCard != null)
+            if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UnitCard != null)
                 return;
             var card = PickUnitCard(serverMatch);
             _playUnitCard.Execute(serverMatch.Guid, "BOT", card.CardName);
@@ -51,11 +51,10 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             return score;
         }
 
-        private int EvaluateUnitPower(UnitCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
+        private int EvaluateUnitPower(UnitCard card, ServerMatch serverMatch)
         {
             int score = 0;
-            var round = serverMatch.Board.RoundsPlayed.Last();
-            var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(round, serverMatch.Users.First(u => u.Id != "BOT").Id);
+            var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(serverMatch.Users.First(u => u.Id != "BOT").Id);
             score += card.BasePower;
 
             var roundsCount = serverMatch.Board.RoundsPlayed.Count;
@@ -70,9 +69,8 @@ namespace Features.ServerLogic.Matches.Domain.Bot
         private int EvaluateUnitArchetype(UnitCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             int score = 0;
-            var round = serverMatch.Board.RoundsPlayed.Last();
-            var upgrades = serverMatch.GetUpgradeCardsByPlayer(round,"BOT");
-            var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(round, serverMatch.Users.First(u => u.Id != "BOT").Id);
+            var upgrades = serverMatch.GetUpgradeCardsByPlayer("BOT");
+            var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(serverMatch.Users.First(u => u.Id != "BOT").Id);
             foreach (var upgrade in upgrades) {
                 if (upgrade == null)
                     continue;
@@ -86,7 +84,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal override void PlayUpgrade(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerCards["BOT"].UpgradeCard != null)
+            if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UpgradeCard != null)
                 return;
             var card = PickUpgradeCard(serverMatch);
             _playUpgradeCard.Execute(serverMatch.Guid, "BOT", card.CardName);
@@ -122,7 +120,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
         {
             var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             var upgrades = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
-            var playedUpgrades = serverMatch.GetUpgradeCardsByPlayer(serverMatch.Board.RoundsPlayed.Last(), "BOT");
+            var playedUpgrades = serverMatch.GetUpgradeCardsByPlayer("BOT");
             return units.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(ca => ca == ua))) 
                 + (upgrades.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(ca => ca == ua))) *2)
                 + (playedUpgrades.Count(pu => pu.Archetypes.Any(pua => card.Archetypes.Any(ca => ca == pua))) * 3);
@@ -141,7 +139,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
 
         internal override void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
-            if (serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"])
+            if (serverMatch.Board.CurrentRound.PlayerHasRerolled["BOT"])
                 return;
 
 
@@ -168,7 +166,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             }
             RerollUnits(serverMatch, unitsToReroll);
             RerollUpgrades(serverMatch, upgradesToReroll);
-            serverMatch.Board.RoundsPlayed.Last().PlayerHasRerolled["BOT"] = true;
+            serverMatch.Board.CurrentRound.PlayerHasRerolled["BOT"] = true;
         }
 
         private static void RerollUnits(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, List<UnitCard> rerollCards)

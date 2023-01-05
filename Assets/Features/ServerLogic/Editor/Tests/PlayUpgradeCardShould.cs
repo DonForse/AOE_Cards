@@ -185,7 +185,8 @@ namespace Features.ServerLogic.Editor.Tests
                         {UserId, withHand},
                         {UserIdTwo, new Hand()}
                     },
-                    RoundsPlayed = new List<Round>() {withRound}
+                    RoundsPlayed = new List<Round>() {},
+                    CurrentRound = withRound,
                 }
             };
         }

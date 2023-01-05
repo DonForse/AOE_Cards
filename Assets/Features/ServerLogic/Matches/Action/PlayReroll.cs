@@ -22,7 +22,7 @@ namespace Features.ServerLogic.Matches.Action
 
         public void Execute(ServerMatch serverMatch, string userId, RerollInfoDto cards)
         {
-            var round = serverMatch.Board.RoundsPlayed.LastOrDefault();
+            var round = serverMatch.Board.CurrentRound;
             if (round == null)
                 throw new ApplicationException("Round does not exist");
 

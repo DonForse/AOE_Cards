@@ -168,7 +168,11 @@ namespace Features.ServerLogic.Editor.Tests
         private ResponseDto WhenDelete() => _matchHandler.Delete(UserId);
 
         private void GivenMatchExists() => _getUserMatch.Execute(UserId).Returns(
-            ServerMatchMother.Create(MatchId,withBoard:BoardMother.Create(withRoundsPlayed: new List<Round>(), withPlayerHands:new Dictionary<string, Hand>()
+            ServerMatchMother.Create(MatchId,
+                withBoard:BoardMother.Create(
+                    withCurrentRound:null,
+                    withRoundsPlayed: new List<Round>(),
+                    withPlayerHands:new Dictionary<string, Hand>()
             {
                 {UserId, new Hand(){UnitsCards = new List<UnitCard>(), UpgradeCards = new List<UpgradeCard>()}},
                 {UserId+"2", new Hand(){UnitsCards = new List<UnitCard>(), UpgradeCards = new List<UpgradeCard>()}}

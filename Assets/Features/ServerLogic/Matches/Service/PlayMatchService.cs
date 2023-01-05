@@ -64,7 +64,7 @@ namespace Features.ServerLogic.Matches.Service
             var matches = matchesRepository.GetAll();
             foreach (var match in matches)
             {
-                var round = match.Board.RoundsPlayed.LastOrDefault();
+                var round = match.Board.CurrentRound;
                 if (match.IsFinished)
                 {
                     RemoveFinishedMatchesAfterDelay(round, match);
@@ -108,7 +108,7 @@ namespace Features.ServerLogic.Matches.Service
                     continue;
                 }
 
-                var round = match.Board.RoundsPlayed.LastOrDefault();
+                var round = match.Board.CurrentRound;
                 if (IsLastRoundFinished(round))
                     continue;
 

@@ -41,7 +41,7 @@ namespace Features.ServerLogic.Matches.Action
 
         private void PlayCard(string userId, UnitCard unitCard, ServerMatch match)
         {
-            var currentRound = match.Board.RoundsPlayed.Last();
+            var currentRound = match.Board.CurrentRound;
 
             if (!currentRound.PlayerCards.ContainsKey(userId))
                 throw new ApplicationException("Player is not in Match");
@@ -94,7 +94,7 @@ namespace Features.ServerLogic.Matches.Action
         }
         private  void Play(ServerMatch serverMatch, string userId, UnitCard card)
         {
-            var currentRound = serverMatch.Board.RoundsPlayed.Last();
+            var currentRound = serverMatch.Board.CurrentRound;
 
             var hand = serverMatch.Board.PlayersHands[userId];
             var unitCard = hand.UnitsCards.FirstOrDefault(u => u.CardName == card.CardName);
@@ -119,19 +119,19 @@ namespace Features.ServerLogic.Matches.Action
         
         private void DetermineWinner(ServerMatch serverMatch)
         {
-            var currentRound = serverMatch.Board.RoundsPlayed.Last();
+            var currentRound = serverMatch.Board.CurrentRound;
 
             //TODO: CAREFUL WITH TIES.
             var higherValueUser = new List<User>();
             var higgerValue = 0;
             _calculateRoundResult.Execute(serverMatch.Guid);
 
-            foreach (var user in serverMatch.Users)
-            {
-                List<UpgradeCard> upgradeCards = GetUpgradeCardsByPlayer(currentRound, user.Id, serverMatch);
-                ApplicatePostCalculusEffects(user.Id, upgradeCards, serverMatch);
-            }
-            currentRound.PlayerWinner = higherValueUser;
+            // foreach (var user in serverMatch.Users)
+            // {
+            //     List<UpgradeCard> upgradeCards = GetUpgradeCardsByPlayer(currentRound, user.Id, serverMatch);
+            //     ApplicatePostCalculusEffects(user.Id, upgradeCards, serverMatch);
+            // }
+            // currentRound.PlayerWinner = higherValueUser;
         }
 
         private void ApplicatePostCalculusEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
@@ -154,13 +154,14 @@ namespace Features.ServerLogic.Matches.Action
 
             serverMatch.MatchWinner = winnersGrouped.FirstOrDefault(w => w.Count() >= 4).First();
             if (serverMatch.IsFinished)
-                serverMatch.Board.RoundsPlayed.Last().ChangeRoundState(RoundState.GameFinished);
+                serverMatch.Board.CurrentRound.ChangeRoundState(RoundState.GameFinished);
             return true;
 
         }
 
         private void CreateNewRound(ServerMatch serverMatch)
         {
+            serverMatch.Board.RoundsPlayed.Add(serverMatch.Board.CurrentRound);
             var round = new Round(serverMatch.Users.Select(u=>u.Id))
             {
                 RoundUpgradeCard = serverMatch.Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
@@ -173,7 +174,7 @@ namespace Features.ServerLogic.Matches.Action
             else
                 round.ChangeRoundState(RoundState.Upgrade);
 
-            serverMatch.Board.RoundsPlayed.Add(round);
+            serverMatch.Board.CurrentRound = round;
         }
     }
 }

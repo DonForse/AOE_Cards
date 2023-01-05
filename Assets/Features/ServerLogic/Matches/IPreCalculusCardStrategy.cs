@@ -3,9 +3,9 @@ using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
-    public interface IUpgradeCardStrategy
+    public interface IPreCalculusCardStrategy
     {
         bool IsValid(UpgradeCard card);
-        int Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId);
+        void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId);
     }
 }

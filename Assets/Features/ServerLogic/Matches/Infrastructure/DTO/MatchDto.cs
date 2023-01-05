@@ -19,7 +19,9 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
             {
                 rounds = new List<RoundDto>()
             };
-            foreach (var round in serverMatch.Board.RoundsPlayed)
+            var rounds =
+                serverMatch.Board.RoundsPlayed.Concat(new[] {serverMatch.Board.CurrentRound}).Where(x => x != null);
+            foreach (var round in rounds)
             {
                 this.board.rounds.Add(new RoundDto(round, serverMatch.Users, userId));
             }

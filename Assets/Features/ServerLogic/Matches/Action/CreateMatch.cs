@@ -96,7 +96,7 @@ namespace Features.ServerLogic.Matches.Action
                 roundNumber = 1,
             };
             round.ChangeRoundState(RoundState.Reroll);
-            match.Board.RoundsPlayed.Add(round);
+            match.Board.CurrentRound = round;
 
             return match;
         }

@@ -28,7 +28,7 @@ namespace Features.ServerLogic.Matches.Action
 
         private void PlayCard(string userId, UpgradeCard upgradeCard, ServerMatch match)
         {
-            var currentRound = match.Board.RoundsPlayed.Last();
+            var currentRound = match.Board.CurrentRound;
 
             if (!PlayerExists(userId, currentRound))
                 throw new ApplicationException("Player is not in Match");

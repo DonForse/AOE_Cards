@@ -67,9 +67,10 @@ namespace Features.ServerLogic.Editor.Tests
             GivenAmountOfUpgradeCardsForPlayersIs(1);
             WhenCreateMatchWithOneUser();
             ThenMatchRepositoryReceived(Arg.Is<ServerMatch>(x =>
-                x.Board.RoundsPlayed.Count == 1 
-                && x.Board.RoundsPlayed.First().roundNumber == 1
-                && x.Board.RoundsPlayed.First().RoundUpgradeCard != null));
+                x.Board.RoundsPlayed.Count == 0 &&
+                x.Board.CurrentRound != null 
+                && x.Board.CurrentRound.roundNumber == 1
+                && x.Board.CurrentRound.RoundUpgradeCard != null));
             ThenUserMatchIsAddedWithOneUser();
         }
         
@@ -183,7 +184,7 @@ namespace Features.ServerLogic.Editor.Tests
         bool ThenServerMatchContainsExpectedUpgradeCards(ServerMatch sm) => sm.Board.Deck.UpgradeCards.Count == 1
                                                                             && sm.Board.PlayersHands[UserIdOne].UpgradeCards.Count == 1
                                                                             && sm.Board.PlayersHands[UserIdTwo].UpgradeCards.Count == 1 
-                                                                            && sm.Board.RoundsPlayed.First().RoundUpgradeCard.CardName != string.Empty;
+                                                                            && sm.Board.CurrentRound.RoundUpgradeCard.CardName != string.Empty;
 
         private bool ThenServerMatchContainsHandsWithVillagerCards(ServerMatch sm) =>
             sm.Board.Deck.UpgradeCards.Count == 1
