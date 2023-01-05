@@ -53,7 +53,7 @@ namespace Features.ServerLogic.Matches.Action
             if (currentRound.RoundState != RoundState.Unit)
                 throw new ApplicationException("Unit card sent but not expecting it");
 
-            var upgrades = GetUpgradeCardsByPlayer(currentRound, userId, match);
+            var upgrades = match.GetUpgradeCardsByPlayer(userId);
 
             ApplicatePreUnitEffects(userId, upgrades, match);
             Play(match, userId, unitCard);
@@ -69,14 +69,7 @@ namespace Features.ServerLogic.Matches.Action
         }
         private bool IsRoundFinished(Round round, ServerMatch serverMatch) => round.PlayerCards.Count(pc => pc.Value.UnitCard != null) 
                                                                               == serverMatch.Users.Count;
-        private List<UpgradeCard> GetUpgradeCardsByPlayer(Round currentRound, string userId, ServerMatch serverMatch)
-        {
-            var upgradeCards = serverMatch.Board.RoundsPlayed.SelectMany(r => r.PlayerCards
-                .Where(pc => pc.Key == userId && pc.Value.UpgradeCard != null)
-                .Select(pc => pc.Value.UpgradeCard)).ToList();
-            upgradeCards.Add(currentRound.RoundUpgradeCard);
-            return upgradeCards;
-        }
+
         private void ApplicatePostUnitEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
         {
             foreach (var upgrade in upgrades)

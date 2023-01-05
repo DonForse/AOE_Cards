@@ -67,7 +67,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             public override void ApplicateEffectPostUnit(ServerMatch serverMatch, string userId)
             {
                 CalledApplicateEffectPostUnit = true;
-                base.ApplicateEffectPreUnit(serverMatch, userId);
+                base.ApplicateEffectPostUnit(serverMatch, userId);
             }
         }
     }

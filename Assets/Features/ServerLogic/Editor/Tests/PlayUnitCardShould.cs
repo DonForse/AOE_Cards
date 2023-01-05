@@ -30,7 +30,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _cardRepository = Substitute.For<ICardRepository>();
-            _calculateRoundResult = Substitute.For<ICalculateRoundResult>();
+            _calculateRoundResult = new CalculateRoundResult(_matchesRepository);
             _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult);
         }
 
@@ -64,10 +64,7 @@ namespace Features.ServerLogic.Editor.Tests
             ServerMatch AServerMatchWithNoPlayerCards()
             {
                 return ServerMatchMother.Create(MatchId,
-                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
-                    {
-                        RoundMother.Create(new []{UserId, UserId+"2"})
-                    }));
+                    withBoard: BoardMother.Create(withCurrentRound: RoundMother.Create(new []{UserId, UserId+"2"})));
             }
         }
 
@@ -82,13 +79,12 @@ namespace Features.ServerLogic.Editor.Tests
             ServerMatch AServerMatchWithUnitCardAlreadyPlayed()
             {
                 return ServerMatchMother.Create(MatchId,
-                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
-                    {
-                        RoundMother.Create(new []{UserId, UserId+"2"}, withPlayerCards:new Dictionary<string, PlayerCard>()
-                        {
-                            {UserId, new PlayerCard(){UnitCard = UnitCardMother.Create("Some Card")}}
-                        })
-                    }));
+                    withBoard: BoardMother.Create(withCurrentRound: RoundMother.Create(new[] {UserId, UserId + "2"},
+                            withPlayerCards: new Dictionary<string, PlayerCard>()
+                            {
+                                {UserId, new PlayerCard() {UnitCard = UnitCardMother.Create("Some Card")}}
+                            })
+                    ));
             }
         }
 
@@ -103,12 +99,9 @@ namespace Features.ServerLogic.Editor.Tests
             ServerMatch AServerMatchWithUpgradePhase()
             {
                 return ServerMatchMother.Create(MatchId,
-                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
-                    {
-                        RoundMother.Create(new []{UserId, UserId+"2"}, 
+                    withBoard: BoardMother.Create(withCurrentRound: RoundMother.Create(new []{UserId, UserId+"2"}, 
                             new Dictionary<string, PlayerCard> { {UserId, new PlayerCard()}},
-                            withRoundState: RoundState.Upgrade)
-                    }));
+                            withRoundState: RoundState.Upgrade)));
             }
         }
 
@@ -123,12 +116,11 @@ namespace Features.ServerLogic.Editor.Tests
             ServerMatch AServerMatchWithCardNotInHand()
             {
                 return ServerMatchMother.Create(MatchId,
-                    withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
-                    {
+                    withBoard: BoardMother.Create(withCurrentRound:
                         RoundMother.Create(new []{UserId, UserId+"2"}, 
                             new Dictionary<string, PlayerCard> { {UserId, new PlayerCard()}},
-                            withRoundState: RoundState.Upgrade)
-                    }, withPlayerHands: new Dictionary<string, Hand> { {UserId, new Hand()}}));
+                            withRoundState: RoundState.Upgrade), 
+                        withPlayerHands: new Dictionary<string, Hand> { {UserId, new Hand()}}));
             }
         }
 
@@ -234,7 +226,8 @@ namespace Features.ServerLogic.Editor.Tests
             GivenServerMatch(serverMatch);
             WhenExecute();
             //TODO: _createRound.Execute();
-            Assert.AreEqual(3, serverMatch.Board.RoundsPlayed.Count);
+            Assert.AreEqual(2, serverMatch.Board.RoundsPlayed.Count);
+            Assert.AreEqual(3, serverMatch.Board.CurrentRound.roundNumber);
         }
 
         
