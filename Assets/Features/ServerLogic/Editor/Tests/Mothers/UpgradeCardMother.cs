@@ -20,7 +20,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             };
         }
 
-        public static TeutonsFaithUpgradeCard CreateFakeTeutonsFaithCard() => new TeutonsFaithUpgradeCard()
+        public static UpgradeCard CreateFakeTeutonsFaithCard() => new UpgradeCard()
         {
             Archetypes =null,
             BasePower = 0,
@@ -28,9 +28,9 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             CardName = "teutons faith",
         };
         
-        public static PersianTCUpgradeCard CreateFakePersianTC()
+        public static UpgradeCard CreateFakePersianTC()
         {
-            return new PersianTCUpgradeCard()
+            return new UpgradeCard()
             {
                 Archetypes =new[] {Archetype.Villager},
                 BasePower = 0,

@@ -30,7 +30,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _cardRepository = Substitute.For<ICardRepository>();
-            _calculateRoundResult = new CalculateRoundResult(_matchesRepository);
+            _calculateRoundResult = Substitute.For<ICalculateRoundResult>();
             _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult);
         }
 
@@ -234,8 +234,17 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void DetermineRoundWinner()
         {
-            // _calculateRoundResult.Execute();
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            var round = serverMatch.Board.CurrentRound;
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            ThenCalculateRoundResultIsCalled();
+
+            void ThenCalculateRoundResultIsCalled() => _calculateRoundResult.Received(1).Execute(MatchId);
         }
 
         [Test]

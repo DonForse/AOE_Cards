@@ -34,15 +34,6 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
         {
 
         }
-
-        public virtual void ApplicateEffectPreCalculus(ServerMatch serverMatch, string userId)
-        {
-
-        }
-
-        public virtual void ApplicateEffectPostCalculus(ServerMatch serverMatch, string userId)
-        {
-        }
     }
 }
 

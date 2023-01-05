@@ -74,7 +74,7 @@ namespace Features.ServerLogic.Cards.Infrastructure
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesVs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new TeutonsFaithUpgradeCard()
+            var card = new UpgradeCard()
             {
                 CardName = data[3],
                 BasePower = int.Parse(data[4]),
@@ -102,7 +102,7 @@ namespace Features.ServerLogic.Cards.Infrastructure
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesVs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new PersianTCUpgradeCard()
+            var card = new UpgradeCard()
             {
                 CardName = data[3],
                 BasePower = int.Parse(data[4]),

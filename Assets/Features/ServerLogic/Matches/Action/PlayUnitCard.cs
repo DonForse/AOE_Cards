@@ -16,6 +16,8 @@ namespace Features.ServerLogic.Matches.Action
         private readonly IMatchesRepository _matchesRepository;
         private readonly ICardRepository _cardRepository;
         private readonly ICalculateRoundResult _calculateRoundResult;
+        private readonly ICalculateMatchResult _calculateMatchResult;
+        private readonly ICreateRound _createRound;
 
         public PlayUnitCard(IMatchesRepository matchesRepository, ICardRepository cardRepository,
             ICalculateRoundResult calculateRoundResult)
@@ -62,9 +64,9 @@ namespace Features.ServerLogic.Matches.Action
             if (IsRoundFinished(currentRound, match))
             {
                 currentRound.ChangeRoundState(RoundState.Finished);
-                DetermineWinner(match);
-                if (!DetermineMatchWinner(match))
-                    CreateNewRound(match);
+                _calculateRoundResult.Execute(match.Guid);
+                if (!_calculateMatchResult.Execute(match.Guid))
+                    _createRound.Execute(match.Guid);
             }
         }
         private bool IsRoundFinished(Round round, ServerMatch serverMatch) => round.PlayerCards.Count(pc => pc.Value.UnitCard != null) 
@@ -108,66 +110,6 @@ namespace Features.ServerLogic.Matches.Action
                 throw new ApplicationException("Unit card is not in hand");
 
             currentRound.PlayerCards[userId].UnitCard = card;
-        }
-        
-        private void DetermineWinner(ServerMatch serverMatch)
-        {
-            var currentRound = serverMatch.Board.CurrentRound;
-
-            //TODO: CAREFUL WITH TIES.
-            var higherValueUser = new List<User>();
-            var higgerValue = 0;
-            _calculateRoundResult.Execute(serverMatch.Guid);
-
-            // foreach (var user in serverMatch.Users)
-            // {
-            //     List<UpgradeCard> upgradeCards = GetUpgradeCardsByPlayer(currentRound, user.Id, serverMatch);
-            //     ApplicatePostCalculusEffects(user.Id, upgradeCards, serverMatch);
-            // }
-            // currentRound.PlayerWinner = higherValueUser;
-        }
-
-        private void ApplicatePostCalculusEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
-        {
-            foreach (var upgrade in upgrades)
-            {
-                upgrade.ApplicateEffectPostCalculus(serverMatch, userId);
-            }
-        }
-        
-        private bool DetermineMatchWinner(ServerMatch serverMatch)
-        {
-            var winnersGrouped = serverMatch.Board.RoundsPlayed.SelectMany(r => r.PlayerWinner).GroupBy(c => c.Id);
-            //TODO: Coul be a tie
-            serverMatch.IsFinished = winnersGrouped.Any(w => w.Count() >= 4);
-            if (!serverMatch.IsFinished)
-                return false;
-
-            serverMatch.IsTie = winnersGrouped.Count(w => w.Count() >= 4) > 1;
-
-            serverMatch.MatchWinner = winnersGrouped.FirstOrDefault(w => w.Count() >= 4).First();
-            if (serverMatch.IsFinished)
-                serverMatch.Board.CurrentRound.ChangeRoundState(RoundState.GameFinished);
-            return true;
-
-        }
-
-        private void CreateNewRound(ServerMatch serverMatch)
-        {
-            serverMatch.Board.RoundsPlayed.Add(serverMatch.Board.CurrentRound);
-            var round = new Round(serverMatch.Users.Select(u=>u.Id))
-            {
-                RoundUpgradeCard = serverMatch.Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
-                PlayerWinner = null,
-                roundNumber = serverMatch.Board.RoundsPlayed.Count + 1,
-                NextBotActionTimeInSeconds = new Random().Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds())
-            };
-            if (round.roundNumber == 3 || round.roundNumber == 6)
-                round.ChangeRoundState(RoundState.Reroll);
-            else
-                round.ChangeRoundState(RoundState.Upgrade);
-
-            serverMatch.Board.CurrentRound = round;
         }
     }
 }
