@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
@@ -25,12 +26,13 @@ namespace Features.ServerLogic.Handlers
                 if (match == null)
                     throw new ApplicationException("Match not found");
 
-                if (match.Board.RoundsPlayed.Count <= roundNumber)
+                if (match.Board.RoundsPlayed.Count + 1 <= roundNumber)
                     throw new ApplicationException("Round not found");
 
+                var round = match.Board.RoundsPlayed.Concat(new[] {match.Board.CurrentRound}).ToArray()[roundNumber];
                 var responseDto = new ResponseDto
                 {
-                    response = JsonConvert.SerializeObject(new RoundDto(match.Board.RoundsPlayed[roundNumber], match.Users, userId)),
+                    response = JsonConvert.SerializeObject(new RoundDto(round, match.Users, userId)),
                     error = string.Empty
                 };
                 return responseDto;

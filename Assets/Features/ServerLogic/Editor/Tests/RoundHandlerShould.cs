@@ -43,17 +43,16 @@ namespace Features.ServerLogic.Editor.Tests
             }
         }
 
-        private ResponseDto WhenGet(int roundNumber = 0) => _roundHandler.Get(UserId, MatchId, roundNumber);
-
         [Test]
         public void RespondsErrorWhenNonExistingRound()
         {
             GivenGetMatchReturnsEmptyMatch();
-            var response = WhenGet();
+            var response = WhenGet(5);
             ThenRespondsError();
 
             void GivenGetMatchReturnsEmptyMatch() => _getMatch.Execute(Arg.Any<string>()).Returns(
-                ServerMatchMother.Create(withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>())));
+                ServerMatchMother.Create(withBoard:
+                    BoardMother.Create(withRoundsPlayed: new List<Round>(), withCurrentRound:null)));
 
             void ThenRespondsError()
             {
@@ -99,5 +98,7 @@ namespace Features.ServerLogic.Editor.Tests
                     response.response);
             }
         }
+
+        private ResponseDto WhenGet(int roundNumber = 0) => _roundHandler.Get(UserId, MatchId, roundNumber);
     }
 }
