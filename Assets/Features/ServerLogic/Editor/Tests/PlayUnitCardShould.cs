@@ -24,6 +24,8 @@ namespace Features.ServerLogic.Editor.Tests
         private ICardRepository _cardRepository;
         private PlayUnitCard _playUnitCard;
         private ICalculateRoundResult _calculateRoundResult;
+        private ICalculateMatchResult _calculateMatchResult;
+        private ICreateRound _createRound;
 
         [SetUp]
         public void Setup()
@@ -31,7 +33,9 @@ namespace Features.ServerLogic.Editor.Tests
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _cardRepository = Substitute.For<ICardRepository>();
             _calculateRoundResult = Substitute.For<ICalculateRoundResult>();
-            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult);
+            _calculateMatchResult = Substitute.For<ICalculateMatchResult>();
+            _createRound = Substitute.For<ICreateRound>();
+            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult, _calculateMatchResult, _createRound);
         }
 
         [Test]
@@ -201,42 +205,42 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
         [Test]
-        public void ChangeRoundPhaseToFinishedIfAllPlayersPlayedUnit()
-        {
-            var card = GivenCardPlayed();
-            var serverMatch = AServerMatch(card);
-            var round = serverMatch.Board.CurrentRound;
-            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
-            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
-
-            GivenServerMatch(serverMatch);
-            WhenExecute();
-            Assert.AreEqual(RoundState.Finished, round.RoundState);
-        }
-
-        [Test]
         public void CreateNewRoundIfMatchIsNotFinished()
         {
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
-            var round = serverMatch.Board.CurrentRound;
             serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
             serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
 
+            GivenMatchIsNotFinished();
             GivenServerMatch(serverMatch);
             WhenExecute();
-            //TODO: _createRound.Execute();
-            Assert.AreEqual(2, serverMatch.Board.RoundsPlayed.Count);
-            Assert.AreEqual(3, serverMatch.Board.CurrentRound.roundNumber);
+            ThenCreateRound();
+
+            void ThenCreateRound() => _createRound.Received(1).Execute(MatchId);
+        }
+        
+        [Test]
+        public void DoNotCreateNewRoundIfMatchIsFinished()
+        {
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+
+            GivenMatchIsFinished();
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            ThenCreateRound();
+
+            void ThenCreateRound() => _createRound.DidNotReceive().Execute(Arg.Any<string>());
         }
 
-        
         [Test]
         public void DetermineRoundWinner()
         {
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
-            var round = serverMatch.Board.CurrentRound;
             serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
             serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
 
@@ -250,7 +254,16 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void DetermineMatchWinner()
         {
-            Assert.Fail();
+            var card = GivenCardPlayed();
+            var serverMatch = AServerMatch(card);
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UpgradeCard = UpgradeCardMother.Create();
+            serverMatch.Board.CurrentRound.PlayerCards[UserId +"2"].UnitCard = UnitCardMother.Create();
+
+            GivenServerMatch(serverMatch);
+            WhenExecute();
+            ThenCreateRound();
+
+            void ThenCreateRound() => _calculateMatchResult.Received(1).Execute(MatchId);
         }
 
 
@@ -279,7 +292,8 @@ namespace Features.ServerLogic.Editor.Tests
             _cardRepository.GetUnitCard("Villager").Returns(card);
             return card;
         }
-
+        private void GivenMatchIsNotFinished() => _calculateMatchResult.Execute(MatchId).Returns(false);
+        private void GivenMatchIsFinished() => _calculateMatchResult.Execute(MatchId).Returns(true);
         void GivenServerMatch(ServerMatch serverMatch) => _matchesRepository.Get(MatchId).Returns(serverMatch);
 
         private static ServerMatch AServerMatch(UnitCard cardInHand)

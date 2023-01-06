@@ -6,8 +6,6 @@ using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
-using Features.ServerLogic.Matches.Service;
-using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {
@@ -20,11 +18,13 @@ namespace Features.ServerLogic.Matches.Action
         private readonly ICreateRound _createRound;
 
         public PlayUnitCard(IMatchesRepository matchesRepository, ICardRepository cardRepository,
-            ICalculateRoundResult calculateRoundResult)
+            ICalculateRoundResult calculateRoundResult, ICalculateMatchResult calculateMatchResult, ICreateRound createRound)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
             _calculateRoundResult = calculateRoundResult;
+            _calculateMatchResult = calculateMatchResult;
+            _createRound = createRound;
         }
 
         public void Execute(string matchId,string userId, string cardname)
