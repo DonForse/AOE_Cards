@@ -7,7 +7,7 @@ namespace Features.ServerLogic.Matches.Action
 {
     public class CreateRound : ICreateRound
     {
-        private IGetMatch _getMatch;
+        private readonly IGetMatch _getMatch;
         private readonly Random _random;
         
         public CreateRound(IGetMatch getMatch)
@@ -25,7 +25,9 @@ namespace Features.ServerLogic.Matches.Action
                 RoundUpgradeCard = serverMatch.Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
                 PlayerWinner = null,
                 roundNumber = serverMatch.Board.RoundsPlayed.Count + 1,
-                NextBotActionTimeInSeconds = _random.Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(), new ServerConfiguration().GetRoundTimerDurationInSeconds())
+                NextBotActionTimeInSeconds = 
+                    _random.Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(),
+                        new ServerConfiguration().GetRoundTimerDurationInSeconds())
             };
             if (round.roundNumber == 3 || round.roundNumber == 6)
                 round.ChangeRoundState(RoundState.Reroll);
