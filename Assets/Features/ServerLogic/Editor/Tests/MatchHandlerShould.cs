@@ -112,12 +112,25 @@ namespace Features.ServerLogic.Editor.Tests
         public void CreateMatchWhenPostVersusBotAndReturnEmptyResponse()
         {
             GivenUser();
+            GivenMatchExists();
             var expectedBotDifficulty = 5;
             var response = WhenPost(new MatchInfoDto() {vsBot = true, botDifficulty = expectedBotDifficulty});
             ThenCreateMatchIsCalled(expectedBotDifficulty);
             ThenResponseIsEmptyMatchDto(response);
         }
-        
+
+        [Test]
+        public void CreateRoundForMatchWhenPostVersusBotAndReturnEmptyResponse()
+        {
+            GivenUser();
+            GivenMatchExists();
+            var expectedBotDifficulty = 5;
+            var response = WhenPost(new MatchInfoDto() { vsBot = true, botDifficulty = expectedBotDifficulty });
+            ThenCreateRoundIsCalled();
+            ThenResponseIsEmptyMatchDto(response);
+        }
+
+
         [Test]
         public void EnqueueUserWhenPostVsFriend()
         {
@@ -127,6 +140,7 @@ namespace Features.ServerLogic.Editor.Tests
             _enqueueFriendMatch.Received(1).Execute(Arg.Is<User>(user=>user.Id == UserId),expectedFriendCode);
             ThenResponseIsEmptyMatchDto(response);
         }
+
         [Test]
         public void EnqueueUserWhenPost()
         {
@@ -149,7 +163,7 @@ namespace Features.ServerLogic.Editor.Tests
                 Assert.AreEqual("user is not valid", response.error);
             }
         }
-        
+
         [Test]
         public void DequeueFromWaitListAndRemoveMatchDataIfExists()
         {
@@ -167,6 +181,7 @@ namespace Features.ServerLogic.Editor.Tests
                 Assert.AreEqual("", response.error);
             }
         }
+
 
         private ResponseDto WhenDelete() => _matchHandler.Delete(UserId);
 
@@ -203,5 +218,7 @@ namespace Features.ServerLogic.Editor.Tests
             _createMatch.Received(1)
                 .Execute(Arg.Is<List<User>>(userList => userList.Count == 1 && userList.First().Id == UserId), true,
                     expectedBotDifficulty);
+
+        private void ThenCreateRoundIsCalled() => _createRound.Received(1).Execute(MatchId);
     }
 }

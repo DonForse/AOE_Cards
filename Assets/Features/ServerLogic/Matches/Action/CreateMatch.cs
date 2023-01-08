@@ -41,6 +41,7 @@ namespace Features.ServerLogic.Matches.Action
 
         public void Execute(IList<User> users, bool isBot, int botDifficulty = 0)
         {
+            //TODO: Validate user has no match.
             var match = CreateMatchInstance(users, isBot);
             match.BotDifficulty = botDifficulty;
             PersistMatch(match);

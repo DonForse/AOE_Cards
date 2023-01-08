@@ -105,7 +105,8 @@ namespace Features.ServerLogic.Editor.Tests
             GivenAmountOfUpgradeCardsForPlayersIs(1);
             
             WhenCreateMatchWithTwoUsers();
-            _matchesRepository.Received(1).Add(Arg.Is<ServerMatch>(serverMatch => ThenServerMatchContainsExpectedUpgradeCards(serverMatch)));
+            _matchesRepository.Received(1)
+                .Add(Arg.Is<ServerMatch>(serverMatch => ThenServerMatchContainsExpectedUpgradeCards(serverMatch)));
             ThenUserMatchIsAddedWithTwoUsers();
         }
 
@@ -167,14 +168,14 @@ namespace Features.ServerLogic.Editor.Tests
                                                                          && sm.Board.PlayersHands[UserIdOne].UnitsCards.Count == 2
                                                                          && sm.Board.PlayersHands[UserIdTwo].UnitsCards.Count == 2;
 
-        bool ThenServerMatchContainsExpectedUpgradeCards(ServerMatch sm) => sm.Board.Deck.UpgradeCards.Count == 1
+        bool ThenServerMatchContainsExpectedUpgradeCards(ServerMatch sm) => sm.Board.Deck.UpgradeCards.Count == 2
                                                                             && sm.Board.PlayersHands[UserIdOne]
                                                                                 .UpgradeCards.Count == 1
                                                                             && sm.Board.PlayersHands[UserIdTwo]
                                                                                 .UpgradeCards.Count == 1;
 
         private bool ThenServerMatchContainsHandsWithVillagerCards(ServerMatch sm) =>
-            sm.Board.Deck.UpgradeCards.Count == 1
+            sm.Board.Deck.UnitCards.Count == 1
             && sm.Board.PlayersHands[UserIdOne].UnitsCards.Any(x => x.CardName == "villager")
             && sm.Board.PlayersHands[UserIdTwo].UnitsCards.Any(x => x.CardName == "villager");
     }
