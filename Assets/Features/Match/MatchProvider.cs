@@ -18,6 +18,7 @@ namespace Features.Match
                 ServerLogicProvider.EnqueueMatch(),
                 ServerLogicProvider.DequeueFriendMatch(),
                 ServerLogicProvider.DequeueMatch(), 
-                ServerLogicProvider.RemoveUserMatch()));
+                ServerLogicProvider.RemoveUserMatch(),
+                ServerLogicProvider.CreateRound()));
     }
 }

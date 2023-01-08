@@ -35,6 +35,7 @@ namespace Features.ServerLogic.Editor.Tests
         private IDequeueMatch _dequeueMatch;
         private IRemoveUserMatch _removeUserMatch;
         private IGetUserMatch _getUserMatch;
+        private ICreateRound _createRound;
 
 
         [SetUp]
@@ -49,8 +50,10 @@ namespace Features.ServerLogic.Editor.Tests
             _dequeueMatch = Substitute.For<IDequeueMatch>();
             _getUserMatch = Substitute.For<IGetUserMatch>();
             _removeUserMatch = Substitute.For<IRemoveUserMatch>();
+            _createRound = Substitute.For<ICreateRound>();
             _matchHandler = new MatchHandler(_getUserMatch,
-                _matchCreatorService,_createMatch, _getUser, _enqueueFriendMatch, _enqueueMatch,_dequeueFriendMatch, _dequeueMatch ,_removeUserMatch);
+                _matchCreatorService,_createMatch, _getUser, _enqueueFriendMatch,
+                _enqueueMatch,_dequeueFriendMatch, _dequeueMatch ,_removeUserMatch, _createRound);
         }
 
         [Test]

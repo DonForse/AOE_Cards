@@ -44,7 +44,7 @@ namespace Features.ServerLogic
 
         public static IMatchCreatorService MatchCreatorService() =>
             new MatchCreatorService(MatchesRepository(), CardRepository(), UsersQueuedRepository(),
-                FriendsUserQueuedRepository(), ServerConfiguration());
+                FriendsUserQueuedRepository(), ServerConfiguration(), CreateRound(), GetUserMatch());
 
         public static ICreateMatch CreateMatch() => new CreateMatch(MatchesRepository(), CardRepository(),
             ServerConfiguration(), CreateBotUser(), UserMatchesRepository());

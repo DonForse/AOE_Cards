@@ -26,13 +26,17 @@ namespace Features.ServerLogic.Matches.Service
         private readonly DequeueFriendMatch _dequeueFriendUser;
         private readonly EnqueueFriendMatch _enqueueFriendMatch;
 
-        private readonly CreateMatch _createMatch;
+        private readonly ICreateMatch _createMatch;
+        private readonly IGetUserMatch _getUserMatch;
+        private readonly ICreateRound _createRound;
 
         public MatchCreatorService(IMatchesRepository matchRepository,
             ICardRepository cardRepository, 
             IUsersQueuedRepository usersQueuedRepository,
             IFriendsUsersQueuedRepository friendsUsersQueuedRepository,
-            IServerConfiguration serverConfiguration)
+            IServerConfiguration serverConfiguration,
+            ICreateRound createRound,
+            IGetUserMatch getUserMatch)
         {
             _matchRepository = matchRepository;
             _cardRepository = cardRepository;
@@ -42,7 +46,7 @@ namespace Features.ServerLogic.Matches.Service
             _enqueueMatch = new EnqueueMatch(_usersQueuedRepository);
             _dequeueFriendUser = new DequeueFriendMatch(_friendsQueuedRepository);
             _enqueueFriendMatch = new EnqueueFriendMatch(_friendsQueuedRepository);
-            _createMatch = new CreateMatch(_matchRepository, _cardRepository, serverConfiguration, new CreateBotUser(), ServerLogicProvider.UserMatchesRepository());
+            _createMatch = ServerLogicProvider.CreateMatch();
         }
 
         public void CreateMatches()
@@ -55,7 +59,6 @@ namespace Features.ServerLogic.Matches.Service
         {
             var usersKeys = _friendsQueuedRepository.GetKeys();
             var users = usersKeys.ToList();
-            var usersEnqueued = new List<Tuple<User, string>>();
 
             while (users.Count > 0)
             {
@@ -67,7 +70,9 @@ namespace Features.ServerLogic.Matches.Service
                     _createMatch.Execute(matchUsers, false);
                     users.Remove(users.FirstOrDefault(u => u.Key == users[0].Value));
                     users.Remove(users[0]);
-                    
+
+                    var match = _getUserMatch.Execute(users[0].Key);
+                    _createRound.Execute(match.Guid);
                     continue;
                 }
                 users.Remove(users[0]);
@@ -87,6 +92,9 @@ namespace Features.ServerLogic.Matches.Service
                     _createMatch.Execute(matchUsers, false);
                     users.Remove(user.Item1);
                     usersEnqueued.Clear();
+
+                    var match = _getUserMatch.Execute(user.Item1.Id);
+                    _createRound.Execute(match.Guid);
                     continue;
                 }
                 usersEnqueued.Add(user);
@@ -102,6 +110,8 @@ namespace Features.ServerLogic.Matches.Service
         private void CreateBotMatch(User user)
         {
             _createMatch.Execute(new List<User> { user }, true);
+            var match = _getUserMatch.Execute(user.Id);
+            _createRound.Execute(match.Guid);
         }
     }
 }

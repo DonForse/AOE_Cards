@@ -21,6 +21,8 @@ namespace Features.ServerLogic.Handlers
         private readonly IDequeueFriendMatch _dequeueFriendMatch;
         private readonly IDequeueMatch _dequeueMatch;
         private readonly IRemoveUserMatch _removeUserMatch;
+        private readonly ICreateRound _createRound;
+
         public MatchHandler(IGetUserMatch getUserMatch,
             IMatchCreatorService matchCreatorService,
             ICreateMatch createMatch,
@@ -29,7 +31,8 @@ namespace Features.ServerLogic.Handlers
             IEnqueueMatch enqueueMatch,
             IDequeueFriendMatch dequeueFriendMatch,
             IDequeueMatch dequeueMatch,
-            IRemoveUserMatch removeUserMatch)
+            IRemoveUserMatch removeUserMatch,
+            ICreateRound createRound)
         {
             _getUserMatch = getUserMatch;
             _matchCreatorService = matchCreatorService;
@@ -40,6 +43,7 @@ namespace Features.ServerLogic.Handlers
             _dequeueFriendMatch = dequeueFriendMatch;
             _dequeueMatch = dequeueMatch;
             _removeUserMatch = removeUserMatch;
+            _createRound = createRound;
         }
         // GET api/matches/guid-guid-guid-guid
         /// <returns> no match available</returns> (retry after a few secs) -> remember to clear from memory if unused or used
@@ -80,7 +84,9 @@ namespace Features.ServerLogic.Handlers
                 if (matchInfoDto.vsBot)
                 {
                     //TODO: Enqueue User to Bot queue or something like that or extrapolate create vs bot.
-                    _createMatch.Execute(new List<User> { user }, true, matchInfoDto.botDifficulty); 
+                    _createMatch.Execute(new List<User> { user }, true, matchInfoDto.botDifficulty);
+                    var match = _getUserMatch.Execute(userId);
+                    _createRound.Execute(match.Guid);
                     var response = new ResponseDto
                     {
                         response = JsonConvert.SerializeObject(new MatchDto(null, user.Id)),

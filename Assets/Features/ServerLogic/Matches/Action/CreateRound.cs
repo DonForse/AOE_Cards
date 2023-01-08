@@ -19,7 +19,8 @@ namespace Features.ServerLogic.Matches.Action
         public void Execute(string matchId)
         {
             var serverMatch = _getMatch.Execute(matchId);
-            serverMatch.Board.RoundsPlayed.Add(serverMatch.Board.CurrentRound);
+            if (serverMatch.Board.CurrentRound != null) 
+                serverMatch.Board.RoundsPlayed.Add(serverMatch.Board.CurrentRound);
             var round = new Round(serverMatch.Users.Select(u=>u.Id))
             {
                 RoundUpgradeCard = serverMatch.Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
@@ -29,7 +30,7 @@ namespace Features.ServerLogic.Matches.Action
                     _random.Next( new ServerConfiguration().GetMaxBotWaitForPlayRoundTimeInSeconds(),
                         new ServerConfiguration().GetRoundTimerDurationInSeconds())
             };
-            if (round.roundNumber == 3 || round.roundNumber == 6)
+            if (round.roundNumber == 1 || round.roundNumber == 3 || round.roundNumber == 6)
                 round.ChangeRoundState(RoundState.Reroll);
             else
                 round.ChangeRoundState(RoundState.Upgrade);

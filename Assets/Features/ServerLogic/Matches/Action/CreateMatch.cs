@@ -58,14 +58,14 @@ namespace Features.ServerLogic.Matches.Action
             }
         }
 
-        private Domain.ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
+        private ServerMatch CreateMatchInstance(IList<User> users, bool isBotMatch)
         {
             if (isBotMatch)
                 users.Add(_createBot.Execute());
             if (users.Count > 2)
                 throw new ApplicationException("Match only allowed of two users");
             
-            var match = new Domain.ServerMatch
+            var match = new ServerMatch
             {
                 Guid = Guid.NewGuid().ToString(),
                 Board = new Board()
@@ -90,14 +90,6 @@ namespace Features.ServerLogic.Matches.Action
 
                 match.Board.PlayersHands[user.Id].UnitsCards.Add(_cardRepository.GetUnitCard("villager"));
             };
-            var round = new Round(match.Users.Select(u => u.Id))
-            {
-                RoundUpgradeCard = match.Board.Deck.TakeUpgradeCards(1).FirstOrDefault(),
-                roundNumber = 1,
-            };
-            round.ChangeRoundState(RoundState.Reroll);
-            match.Board.CurrentRound = round;
-
             return match;
         }
     }

@@ -36,7 +36,8 @@ namespace Features.ServerLogic.Editor.Tests
             _serverConfiguration = Substitute.For<IServerConfiguration>();
             _createBotUser = Substitute.For<ICreateBotUser>();
             _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-            createMatch = new CreateMatch(_matchesRepository, _cardRepository, _serverConfiguration, _createBotUser,_userMatchesRepository);
+            createMatch = new CreateMatch(_matchesRepository, _cardRepository,
+                _serverConfiguration, _createBotUser,_userMatchesRepository);
         }
         
         [Test]
@@ -57,23 +58,7 @@ namespace Features.ServerLogic.Editor.Tests
             ThenThrowsApplicationException(WhenCreateMatchWithTwoUsersAndABot);
             void ThenThrowsApplicationException(TestDelegate expr) => Assert.Throws<ApplicationException>(expr);
         }
-        
-        [Test]
-        public void AddMatchWithRounds()
-        { 
-            GivenCardRepositoryWithCards();
-            GivenCreateBotUserReturns();
-            GivenAmountOfUnitCardsForPlayerIs(1);
-            GivenAmountOfUpgradeCardsForPlayersIs(1);
-            WhenCreateMatchWithOneUser();
-            ThenMatchRepositoryReceived(Arg.Is<ServerMatch>(x =>
-                x.Board.RoundsPlayed.Count == 0 &&
-                x.Board.CurrentRound != null 
-                && x.Board.CurrentRound.roundNumber == 1
-                && x.Board.CurrentRound.RoundUpgradeCard != null));
-            ThenUserMatchIsAddedWithOneUser();
-        }
-        
+
         [Test]
         public void AddMatchWithBot()
         {
@@ -181,10 +166,12 @@ namespace Features.ServerLogic.Editor.Tests
         bool ThenServerMatchContainsExpectedUnitCards(ServerMatch sm) => sm.Board.Deck.UnitCards.Count == 1
                                                                          && sm.Board.PlayersHands[UserIdOne].UnitsCards.Count == 2
                                                                          && sm.Board.PlayersHands[UserIdTwo].UnitsCards.Count == 2;
+
         bool ThenServerMatchContainsExpectedUpgradeCards(ServerMatch sm) => sm.Board.Deck.UpgradeCards.Count == 1
-                                                                            && sm.Board.PlayersHands[UserIdOne].UpgradeCards.Count == 1
-                                                                            && sm.Board.PlayersHands[UserIdTwo].UpgradeCards.Count == 1 
-                                                                            && sm.Board.CurrentRound.RoundUpgradeCard.CardName != string.Empty;
+                                                                            && sm.Board.PlayersHands[UserIdOne]
+                                                                                .UpgradeCards.Count == 1
+                                                                            && sm.Board.PlayersHands[UserIdTwo]
+                                                                                .UpgradeCards.Count == 1;
 
         private bool ThenServerMatchContainsHandsWithVillagerCards(ServerMatch sm) =>
             sm.Board.Deck.UpgradeCards.Count == 1

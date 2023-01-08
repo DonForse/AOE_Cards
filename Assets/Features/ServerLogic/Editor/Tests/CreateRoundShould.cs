@@ -40,6 +40,22 @@ namespace Features.ServerLogic.Editor.Tests
         }
         
         [Test]
+        public void ReturnANewRoundWithRerollWhenNewRoundIsTheFirst()
+        {
+            var previousCurrentRound = (Round)null;
+            var match = ServerMatchMother.Create(withBoard:
+                BoardMother.Create(
+                    withCurrentRound:previousCurrentRound,
+                    withRoundsPlayed: new List<Round>()));
+            _getMatch.Execute(MatchId).Returns(match);
+            _createRound.Execute(MatchId);
+
+
+            Assert.AreEqual( 0, match.Board.RoundsPlayed.Count);
+            Assert.AreEqual(RoundState.Reroll,match.Board.CurrentRound.RoundState);
+        }
+        
+        [Test]
         public void ReturnANewRoundWithRerollWhenNewRoundIsTheThird()
         {
             var previousCurrentRound = RoundMother.Create();
