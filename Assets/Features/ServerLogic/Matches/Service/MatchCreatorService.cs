@@ -9,11 +9,6 @@ using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Service
 {
-    public interface IMatchCreatorService
-    {
-        void CreateMatches();
-    }
-
     public class MatchCreatorService : IMatchCreatorService
     {
         private readonly IUsersQueuedRepository _usersQueuedRepository;
