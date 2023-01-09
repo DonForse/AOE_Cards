@@ -9,6 +9,6 @@ namespace Features.ServerLogic.Matches.Infrastructure
         bool Add(User user, DateTime date);
         Tuple<User, DateTime> Get(string userId);
         bool Remove(string userId);
-        IList<Tuple<User, DateTime>> GetAll();
+        IEnumerable<Tuple<User, DateTime>> GetAll();
     }
 }

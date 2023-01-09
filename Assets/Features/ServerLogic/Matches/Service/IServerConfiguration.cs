@@ -9,5 +9,6 @@ namespace Features.ServerLogic.Matches.Service
         int GetRoundTimerDurationInSeconds();
         int GetMaxBotWaitForPlayRoundTimeInSeconds();
         TimeSpan GetDurationInTimerForBotMatch();
+        int GetAmountOfPlayersInMatch();
     }
 }

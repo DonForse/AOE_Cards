@@ -24,6 +24,8 @@ namespace Features.ServerLogic.Matches.Service
             return 38;
         }
 
+        public int GetAmountOfPlayersInMatch() => 2;
+
         public TimeSpan GetDurationInTimerForBotMatch()
         {
             return TimeSpan.FromSeconds(30);

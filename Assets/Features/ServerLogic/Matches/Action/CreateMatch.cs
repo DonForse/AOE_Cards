@@ -39,13 +39,14 @@ namespace Features.ServerLogic.Matches.Action
             _getUpgradeCard = new GetUpgradeCard(_cardRepository);
         }
 
-        public void Execute(IList<User> users, bool isBot, int botDifficulty = 0)
+        public ServerMatch Execute(IList<User> users, bool isBot, int botDifficulty = 0)
         {
             //TODO: Validate user has no match.
             var match = CreateMatchInstance(users, isBot);
             match.BotDifficulty = botDifficulty;
             PersistMatch(match);
             PersistUsersToMatch(users, match);
+            return match;
         }
 
         private void PersistMatch(ServerMatch match) => _matchRepository.Add(match);

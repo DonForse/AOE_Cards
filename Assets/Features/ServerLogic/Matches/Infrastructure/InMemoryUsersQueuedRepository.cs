@@ -10,7 +10,6 @@ namespace Features.ServerLogic.Matches.Infrastructure
     {
         private readonly ConcurrentDictionary<string, Tuple<User,DateTime>> connectedUsers = new ConcurrentDictionary<string, Tuple<User, DateTime>>();
 
-
         public bool Add(User user, DateTime date)
         {
             return connectedUsers.TryAdd(user.Id, new Tuple<User,DateTime>(user,date));
@@ -23,7 +22,7 @@ namespace Features.ServerLogic.Matches.Infrastructure
             return null;
         }
 
-        public IList<Tuple<User, DateTime>> GetAll()
+        public IEnumerable<Tuple<User, DateTime>> GetAll()
         {
             return connectedUsers.Values.ToList();
         }

@@ -43,8 +43,13 @@ namespace Features.ServerLogic
         public static IPlayReroll PlayReroll() => new PlayReroll(GetUnitCard(), GetUpgradeCard());
 
         public static IMatchCreatorService MatchCreatorService() =>
-            new MatchCreatorService(MatchesRepository(), CardRepository(), UsersQueuedRepository(),
-                FriendsUserQueuedRepository(), ServerConfiguration(), CreateRound(), GetUserMatch());
+            new MatchCreatorService(UsersQueuedRepository(),
+                FriendsUserQueuedRepository(),
+                DequeueMatch(), 
+                EnqueueMatch(),
+                DequeueFriendMatch(),
+                GetUser(), 
+                CreateMatch(),CreateRound());
 
         public static ICreateMatch CreateMatch() => new CreateMatch(MatchesRepository(), CardRepository(),
             ServerConfiguration(), CreateBotUser(), UserMatchesRepository());
