@@ -17,23 +17,21 @@ namespace Features.ServerLogic.Matches.Action
         private readonly ICalculateRoundResult _calculateRoundResult;
         private readonly ICalculateMatchResult _calculateMatchResult;
         private readonly ICreateRound _createRound;
-        private readonly IList<IApplicateEffectPostUnitStrategy> _postUnitStrategy;
+        private readonly IApplyEffectPostUnit _applyEffectPostUnit;
 
         public PlayUnitCard(IMatchesRepository matchesRepository,
             ICardRepository cardRepository,
             ICalculateRoundResult calculateRoundResult,
             ICalculateMatchResult calculateMatchResult,
-            ICreateRound createRound)
+            ICreateRound createRound,
+            IApplyEffectPostUnit applyEffectPostUnit)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
             _calculateRoundResult = calculateRoundResult;
             _calculateMatchResult = calculateMatchResult;
             _createRound = createRound;
-
-            _postUnitStrategy = new List<IApplicateEffectPostUnitStrategy>();
-            _postUnitStrategy.Add(new FurorCelticaApplicateEffectPostUnitStrategy());
-            _postUnitStrategy.Add(new MadrasahApplicateEffectPostUnitStrategy());
+            _applyEffectPostUnit = applyEffectPostUnit;
         }
 
         public void Execute(string matchId, string userId, string cardname)
@@ -68,7 +66,7 @@ namespace Features.ServerLogic.Matches.Action
 
             ApplicatePreUnitEffects(userId, upgrades, match);
             Play(match, userId, unitCard);
-            ApplicatePostUnitEffects(userId, match,unitCard, upgrades);
+            _applyEffectPostUnit.Execute(match.Guid, userId);
 
             if (IsRoundFinished(currentRound, match))
             {
@@ -83,19 +81,6 @@ namespace Features.ServerLogic.Matches.Action
             round.PlayerCards.Count(pc => pc.Value.UnitCard != null)
             == serverMatch.Users.Count;
 
-        private void ApplicatePostUnitEffects(string userId, ServerMatch serverMatch, UnitCard unitCard,
-            IList<UpgradeCard> upgrades)
-        {
-            foreach (var upgradeCardPlayed in upgrades)
-            {
-                foreach (var postUnitStrategy in _postUnitStrategy)
-                {
-                    if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
-                    if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
-                    postUnitStrategy.Execute(serverMatch, userId, unitCard);
-                }
-            }
-        }
 
         private void ApplicatePreUnitEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
         {

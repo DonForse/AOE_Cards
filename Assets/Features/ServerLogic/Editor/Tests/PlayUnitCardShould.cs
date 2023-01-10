@@ -26,6 +26,7 @@ namespace Features.ServerLogic.Editor.Tests
         private ICalculateRoundResult _calculateRoundResult;
         private ICalculateMatchResult _calculateMatchResult;
         private ICreateRound _createRound;
+        private IApplyEffectPostUnit _applyEffectPostUnit;
 
         [SetUp]
         public void Setup()
@@ -35,7 +36,8 @@ namespace Features.ServerLogic.Editor.Tests
             _calculateRoundResult = Substitute.For<ICalculateRoundResult>();
             _calculateMatchResult = Substitute.For<ICalculateMatchResult>();
             _createRound = Substitute.For<ICreateRound>();
-            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult, _calculateMatchResult, _createRound);
+            _applyEffectPostUnit = Substitute.For<IApplyEffectPostUnit>();
+            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult, _calculateMatchResult, _createRound, _applyEffectPostUnit);
         }
 
         [Test]
@@ -193,16 +195,10 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var card = GivenCardPlayed();
             var serverMatch = AServerMatch(card);
-            var upgradeCardPlayedPreviousRound = (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.RoundsPlayed.First().PlayerCards[UserId].UpgradeCard;
-            var upgradeCardPlayedThisRound =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.CurrentRound.PlayerCards[UserId].UpgradeCard;
-            var roundUpgradeCard =  (UpgradeCardMother.UpgradeCardStub)serverMatch.Board.CurrentRound.RoundUpgradeCard;
-
             GivenServerMatch(serverMatch);
             WhenExecute();
-            Assert.IsTrue(upgradeCardPlayedPreviousRound.CalledApplicateEffectPostUnit);
-            Assert.IsTrue(upgradeCardPlayedThisRound.CalledApplicateEffectPostUnit);
-            Assert.IsTrue(roundUpgradeCard.CalledApplicateEffectPostUnit);
-        }
+            _applyEffectPostUnit.Received(1).Execute(MatchId, UserId);
+            }
 
         [Test]
         public void CreateNewRoundIfMatchIsNotFinished()
