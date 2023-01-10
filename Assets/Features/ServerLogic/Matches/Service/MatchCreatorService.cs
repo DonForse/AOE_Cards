@@ -29,7 +29,8 @@ namespace Features.ServerLogic.Matches.Service
             IDequeueFriendMatch dequeueFriendMatch,
             IGetUser getUser,
             ICreateMatch createMatch,
-            ICreateRound createRound)
+            ICreateRound createRound,
+            IServerConfiguration serverConfiguration)
         {
             _usersQueuedRepository = usersQueuedRepository;
             _friendsQueuedRepository = friendsUsersQueuedRepository;
@@ -39,7 +40,7 @@ namespace Features.ServerLogic.Matches.Service
             _getUser = getUser;
             _createMatch = createMatch;
             _createRound = createRound;
-            _createMatch = ServerLogicProvider.CreateMatch();
+            _serverConfiguration = serverConfiguration;
         }
 
         public void CreateMatches()
@@ -85,7 +86,7 @@ namespace Features.ServerLogic.Matches.Service
             while (users.Count > 0)
             {
                 var user = _dequeueMatch.Execute(users[0]);
-                if (!IsUserLastPlayerInMatch())
+                if (CanAddPlayersToMatch())
                 {
                     AddPlayerToFutureMatch(user);
                     users.Remove(user.Item1);
@@ -105,8 +106,8 @@ namespace Features.ServerLogic.Matches.Service
                 usersInMatchToBeCreated.Remove(usersInMatchToBeCreated[0]);
             }
 
-            bool IsUserLastPlayerInMatch() =>
-                usersInMatchToBeCreated.Count + 1 <= _serverConfiguration.GetAmountOfPlayersInMatch();
+            bool CanAddPlayersToMatch() =>
+                usersInMatchToBeCreated.Count +1 < _serverConfiguration.GetAmountOfPlayersInMatch();
 
             void AddPlayerToFutureMatch(Tuple<User, DateTime> user) => usersInMatchToBeCreated.Add(user);
 

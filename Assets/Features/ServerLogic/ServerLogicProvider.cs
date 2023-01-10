@@ -49,7 +49,9 @@ namespace Features.ServerLogic
                 EnqueueMatch(),
                 DequeueFriendMatch(),
                 GetUser(), 
-                CreateMatch(),CreateRound());
+                CreateMatch(),
+                CreateRound(), 
+                ServerConfiguration());
 
         public static ICreateMatch CreateMatch() => new CreateMatch(MatchesRepository(), CardRepository(),
             ServerConfiguration(), CreateBotUser(), UserMatchesRepository());
