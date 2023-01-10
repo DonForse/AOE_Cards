@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Cards.Domain.Units;
@@ -16,18 +17,26 @@ namespace Features.ServerLogic.Matches.Action
         private readonly ICalculateRoundResult _calculateRoundResult;
         private readonly ICalculateMatchResult _calculateMatchResult;
         private readonly ICreateRound _createRound;
+        private readonly IList<IApplicateEffectPostUnitStrategy> _postUnitStrategy;
 
-        public PlayUnitCard(IMatchesRepository matchesRepository, ICardRepository cardRepository,
-            ICalculateRoundResult calculateRoundResult, ICalculateMatchResult calculateMatchResult, ICreateRound createRound)
+        public PlayUnitCard(IMatchesRepository matchesRepository,
+            ICardRepository cardRepository,
+            ICalculateRoundResult calculateRoundResult,
+            ICalculateMatchResult calculateMatchResult,
+            ICreateRound createRound)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
             _calculateRoundResult = calculateRoundResult;
             _calculateMatchResult = calculateMatchResult;
             _createRound = createRound;
+
+            _postUnitStrategy = new List<IApplicateEffectPostUnitStrategy>();
+            _postUnitStrategy.Add(new FurorCelticaApplicateEffectPostUnitStrategy());
+            _postUnitStrategy.Add(new MadrasahApplicateEffectPostUnitStrategy());
         }
 
-        public void Execute(string matchId,string userId, string cardname)
+        public void Execute(string matchId, string userId, string cardname)
         {
             var match = _matchesRepository.Get(matchId);
             if (match == null)
@@ -37,7 +46,7 @@ namespace Features.ServerLogic.Matches.Action
             if (unitCard == null)
                 throw new ApplicationException("Card doesnt exists");
             PlayCard(userId, unitCard, match);
-            
+
             _matchesRepository.Update(match);
         }
 
@@ -48,7 +57,7 @@ namespace Features.ServerLogic.Matches.Action
             if (!currentRound.PlayerCards.ContainsKey(userId))
                 throw new ApplicationException("Player is not in Match");
 
-            if (currentRound.PlayerCards[userId].UnitCard != null)//check swap
+            if (currentRound.PlayerCards[userId].UnitCard != null) //check swap
                 throw new ApplicationException("Unit card has already been played");
 
             //if (currentRound.PlayerCards.Where(p=>p.Value.UpgradeCard != null).Count() < Users.Count)
@@ -59,7 +68,7 @@ namespace Features.ServerLogic.Matches.Action
 
             ApplicatePreUnitEffects(userId, upgrades, match);
             Play(match, userId, unitCard);
-            ApplicatePostUnitEffects(userId, upgrades, match);
+            ApplicatePostUnitEffects(userId, match,unitCard, upgrades);
 
             if (IsRoundFinished(currentRound, match))
             {
@@ -69,14 +78,22 @@ namespace Features.ServerLogic.Matches.Action
                     _createRound.Execute(match.Guid);
             }
         }
-        private bool IsRoundFinished(Round round, ServerMatch serverMatch) => round.PlayerCards.Count(pc => pc.Value.UnitCard != null) 
-                                                                              == serverMatch.Users.Count;
 
-        private void ApplicatePostUnitEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
+        private bool IsRoundFinished(Round round, ServerMatch serverMatch) =>
+            round.PlayerCards.Count(pc => pc.Value.UnitCard != null)
+            == serverMatch.Users.Count;
+
+        private void ApplicatePostUnitEffects(string userId, ServerMatch serverMatch, UnitCard unitCard,
+            IList<UpgradeCard> upgrades)
         {
-            foreach (var upgrade in upgrades)
+            foreach (var upgradeCardPlayed in upgrades)
             {
-                upgrade.ApplicateEffectPostUnit(serverMatch, userId);
+                foreach (var postUnitStrategy in _postUnitStrategy)
+                {
+                    if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
+                    if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
+                    postUnitStrategy.Execute(serverMatch, userId, unitCard);
+                }
             }
         }
 
@@ -87,7 +104,8 @@ namespace Features.ServerLogic.Matches.Action
                 upgrade.ApplicateEffectPreUnit(serverMatch, userId);
             }
         }
-        private  void Play(ServerMatch serverMatch, string userId, UnitCard card)
+
+        private void Play(ServerMatch serverMatch, string userId, UnitCard card)
         {
             var currentRound = serverMatch.Board.CurrentRound;
 
@@ -96,17 +114,17 @@ namespace Features.ServerLogic.Matches.Action
 
             if (unitCard == null)
                 throw new ApplicationException("Unit card is not in hand");
-            
+
             if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
                 throw new ApplicationException("Unit card has already been played"); //TODO: Already Checked before
-            
+
             if (card.CardName.ToLowerInvariant() == "villager") //TODO: Move to strategy
             {
                 currentRound.PlayerCards[userId].UnitCard = card;
                 return;
             }
 
-            if(!hand.UnitsCards.Remove(unitCard)) //TODO: this is a validation for an already removed card
+            if (!hand.UnitsCards.Remove(unitCard)) //TODO: this is a validation for an already removed card
                 throw new ApplicationException("Unit card is not in hand");
 
             currentRound.PlayerCards[userId].UnitCard = card;

@@ -5,7 +5,7 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
     public class MadrasahUpgradeCard : UpgradeCard
     {
-        public override void ApplicateEffectPostUnit(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch, string userId)
+        public override void ApplicateEffectPostUnit(ServerMatch serverMatch, string userId)
         {
             var currentRound = serverMatch.Board.CurrentRound;
             var unitPlayed = currentRound.PlayerCards[userId].UnitCard;
