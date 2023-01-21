@@ -29,7 +29,6 @@ namespace Features.ServerLogic.Matches.Action
                 foreach (var postUnitStrategy in _postUnitStrategy)
                 {
                     if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
-                    if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
                     postUnitStrategy.Execute(serverMatch, userId, unitCard);
                 }
             }

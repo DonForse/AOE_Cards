@@ -38,6 +38,28 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
                 CardName = "persian town center",
             };
         }
+        
+        public static UpgradeCard CreateFakeMadrasah()
+        {
+            return new UpgradeCard()
+            {
+                Archetypes =new[] {Archetype.Monk},
+                BasePower = 0,
+                BonusVs = null,
+                CardName = "madrasah",
+            };
+        }
+        
+        public static UpgradeCard CreateFakeFurorCeltica()
+        {
+            return new UpgradeCard()
+            {
+                Archetypes =new[] {Archetype.SiegeUnit},
+                BasePower = 0,
+                BonusVs = null,
+                CardName = "furor celtica",
+            };
+        }
 
         public static UpgradeCardStub CreateStub(string withCardName = "unit-card", int withBasePower = 0,
             List<Archetype> withArchetypes = null, List<Archetype> withBonusVs = null)
