@@ -42,6 +42,23 @@ namespace Features.ServerLogic.Editor.Tests
         }
         
         [Test]
+        public void ApplyFurorCelticaEffectWhenRoundUpgrade()
+        {
+            var card = UpgradeCardMother.CreateFakeFurorCeltica();
+            var siege = UnitCardMother.Create(withArchetypes: new List<Archetype> { Archetype.SiegeUnit });
+            var match = AServerMatch(new PlayerCard()
+            {
+                UnitCard = siege,
+                UpgradeCard = card
+            }, UpgradeCardMother.Create());
+            
+            _getMatch.Execute(MatchId).Returns(match);
+            _applyEffectPostUnit.Execute(MatchId, UserId);
+            
+            Assert.Fail();
+        }
+        
+        [Test]
         public void ApplyMadrasahEffect()
         {
             var card = UpgradeCardMother.CreateFakeMadrasah();
