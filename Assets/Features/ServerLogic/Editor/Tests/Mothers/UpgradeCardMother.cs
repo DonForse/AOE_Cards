@@ -60,37 +60,5 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
                 CardName = "furor celtica",
             };
         }
-
-        public static UpgradeCardStub CreateStub(string withCardName = "unit-card", int withBasePower = 0,
-            List<Archetype> withArchetypes = null, List<Archetype> withBonusVs = null)
-        {
-            withArchetypes ??= new List<Archetype>() {Archetype.Monk};
-
-            return new UpgradeCardStub()
-            {
-                Archetypes = withArchetypes,
-                BasePower = withBasePower,
-                BonusVs = withBonusVs,
-                CardName = withCardName,
-            };
-        }
-        
-        public class UpgradeCardStub : UpgradeCard
-        {
-            public bool CalledApplicateEffectPreUnit = false;
-            public bool CalledApplicateEffectPostUnit = false;
-
-            public override void ApplicateEffectPreUnit(ServerMatch serverMatch, string userId)
-            {
-                CalledApplicateEffectPreUnit = true;
-                base.ApplicateEffectPreUnit(serverMatch, userId);
-            }
-            
-            public override void ApplicateEffectPostUnit(ServerMatch serverMatch, string userId)
-            {
-                CalledApplicateEffectPostUnit = true;
-                base.ApplicateEffectPostUnit(serverMatch, userId);
-            }
-        }
     }
 }

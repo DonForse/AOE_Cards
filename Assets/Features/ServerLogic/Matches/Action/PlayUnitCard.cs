@@ -64,7 +64,7 @@ namespace Features.ServerLogic.Matches.Action
 
             var upgrades = match.GetUpgradeCardsByPlayer(userId);
 
-            ApplicatePreUnitEffects(userId, upgrades, match);
+            // _applyEffectPreUnit.Execute();
             Play(match, userId, unitCard);
             _applyEffectPostUnit.Execute(match.Guid, userId);
 
@@ -80,15 +80,7 @@ namespace Features.ServerLogic.Matches.Action
         private bool IsRoundFinished(Round round, ServerMatch serverMatch) =>
             round.PlayerCards.Count(pc => pc.Value.UnitCard != null)
             == serverMatch.Users.Count;
-
-
-        private void ApplicatePreUnitEffects(string userId, List<UpgradeCard> upgrades, ServerMatch serverMatch)
-        {
-            foreach (var upgrade in upgrades)
-            {
-                upgrade.ApplicateEffectPreUnit(serverMatch, userId);
-            }
-        }
+        
 
         private void Play(ServerMatch serverMatch, string userId, UnitCard card)
         {

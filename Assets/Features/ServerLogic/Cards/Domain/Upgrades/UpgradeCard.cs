@@ -24,16 +24,6 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
                 return 0;
             return BasePower;
         }
-
-        public virtual void ApplicateEffectPreUnit(ServerMatch serverMatch, string userId)
-        {
-
-        }
-
-        public virtual void ApplicateEffectPostUnit(ServerMatch serverMatch, string userId)
-        {
-
-        }
     }
 }
 
