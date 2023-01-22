@@ -90,19 +90,18 @@ namespace Features.ServerLogic.Matches.Action
 
         private int CalculateUpgradeCardBasePower(UpgradeCard upgradeCard, PlayerCard pc, PlayerCard rivalCard)
         {
-            var power = 0;
 
-            if (upgradeCard.Archetypes != null &&
-                !pc.UnitCard.Archetypes.Any(uArch => upgradeCard.Archetypes.Any(arch => arch == uArch)))
-                return 0 + power;
-
-            if (upgradeCard.BonusVs != null && upgradeCard.BonusVs.Count == 0)
-                return upgradeCard.BasePower + power;
-
-            if (upgradeCard.BonusVs != null &&
-                !upgradeCard.BonusVs.Any(bonusVs => rivalCard.UnitCard.Archetypes.Any(arq => arq == bonusVs)))
+            if (upgradeCard.archetypes != null &&
+                !pc.UnitCard.Archetypes.Any(uArch => upgradeCard.archetypes.Any(arch => arch == uArch)))
                 return 0;
-            return upgradeCard.BasePower + power;
+
+            if (upgradeCard.bonusVs != null && !upgradeCard.bonusVs.Any())
+                return upgradeCard.basePower;
+
+            if (upgradeCard.bonusVs != null &&
+                !upgradeCard.bonusVs.Any(bonusVs => rivalCard.UnitCard.Archetypes.Any(arq => arq == bonusVs)))
+                return 0;
+            return upgradeCard.basePower;
         }
     }
 }

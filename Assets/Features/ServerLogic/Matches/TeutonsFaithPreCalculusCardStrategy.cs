@@ -9,7 +9,7 @@ namespace Features.ServerLogic.Matches
 {
     public class TeutonsFaithPreCalculusCardStrategy : IPreCalculusCardStrategy
     {
-        public bool IsValid(UpgradeCard card) => card.CardName.ToLowerInvariant() == "teutons faith";
+        public bool IsValid(UpgradeCard card) => card.cardName.ToLowerInvariant() == "teutons faith";
 
         public void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId)
         {
@@ -19,7 +19,7 @@ namespace Features.ServerLogic.Matches
             if (!RivalPlayedMonk())
                 return;
             
-            card.BasePower= 1000; // do not use because of overflow: int.MaxValue;
+            card.basePower= 1000; // do not use because of overflow: int.MaxValue;
 
             bool RivalPlayedMonk() => rivalUnitCard.Archetypes.ContainsAnyArchetype(new List<Archetype> {Archetype.Monk});
         }

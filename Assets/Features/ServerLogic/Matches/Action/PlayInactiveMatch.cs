@@ -36,7 +36,7 @@ namespace Features.ServerLogic.Matches.Action
                     {
                         if (pc.Value.UpgradeCard == null)
                         {
-                            _playUpgradeCard.Execute(serverMatch.Guid,pc.Key, serverMatch.Board.PlayersHands[pc.Key].UpgradeCards.First().CardName);
+                            _playUpgradeCard.Execute(serverMatch.Guid,pc.Key, serverMatch.Board.PlayersHands[pc.Key].UpgradeCards.First().cardName);
                             continue;
                         }
                     }

@@ -8,7 +8,7 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
     {
         public bool IsValid(UpgradeCard card)
         {
-            return card.CardName.ToLowerInvariant() == "madrasah";
+            return card.cardName.ToLowerInvariant() == "madrasah";
         }
 
         public void Execute(ServerMatch serverMatch, string userId, UnitCard unitCardPlayed)

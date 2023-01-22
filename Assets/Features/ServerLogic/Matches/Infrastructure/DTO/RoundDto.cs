@@ -23,7 +23,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
                 return;
             winnerplayer = round.PlayerWinner != null ? round.PlayerWinner.Select(c => c.UserName).ToList() : new List<string>();
             finished = winnerplayer.Count > 0;
-            upgradecardround = round.RoundUpgradeCard?.CardName;
+            upgradecardround = round.RoundUpgradeCard?.cardName;
             roundnumber = round.roundNumber;
             hasReroll = !round.PlayerHasRerolled[userId];
             cardsplayed = new List<PlayerCardDto>();
@@ -38,7 +38,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
                 var pc = new PlayerCardDto()
                 {
                     player = users.FirstOrDefault(u => u.Id == playerCard.Key)?.UserName,
-                    upgradecard = showUpgradeCards ? playerCard.Value.UpgradeCard?.CardName : string.Empty,
+                    upgradecard = showUpgradeCards ? playerCard.Value.UpgradeCard?.cardName : string.Empty,
                     unitcard = showUnitCards ? playerCard.Value.UnitCard?.CardName : string.Empty,
                     unitcardpower = showUnitCards ? playerCard.Value.UnitCardPower : 0,
                 };

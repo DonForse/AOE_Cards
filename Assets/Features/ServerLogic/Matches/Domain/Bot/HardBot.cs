@@ -60,7 +60,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             var roundsCount = serverMatch.Board.RoundsPlayed.Count;
 
             if (card.BonusVs.Count > 0 && roundsCount > 2) {
-                if (RivalUpgrades.Count(ru => ru.Archetypes.Any(ruA => card.BonusVs.Any(bvA => bvA == ruA))) > roundsCount / 2)
+                if (RivalUpgrades.Count(ru => ru.archetypes.Any(ruA => card.BonusVs.Any(bvA => bvA == ruA))) > roundsCount / 2)
                     score += card.PowerEffect;
             }
             return score;
@@ -74,10 +74,10 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             foreach (var upgrade in upgrades) {
                 if (upgrade == null)
                     continue;
-                if (card.Archetypes.Any(c=>upgrade.Archetypes.Any(a => a == c)))
-                    score += upgrade.BasePower;
+                if (card.Archetypes.Any(c=>upgrade.archetypes.Any(a => a == c)))
+                    score += upgrade.basePower;
                 if (card.BonusVs.Count > 0) 
-                    score -= card.BasePower / 3 - (2* (RivalUpgrades.Count(c => c.Archetypes.Any(a => card.Archetypes.Any(arq => a == arq))) - serverMatch.Board.RoundsPlayed.Count));
+                    score -= card.BasePower / 3 - (2* (RivalUpgrades.Count(c => c.archetypes.Any(a => card.Archetypes.Any(arq => a == arq))) - serverMatch.Board.RoundsPlayed.Count));
             }
             return score;
         }
@@ -87,7 +87,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UpgradeCard != null)
                 return;
             var card = PickUpgradeCard(serverMatch);
-            _playUpgradeCard.Execute(serverMatch.Guid, "BOT", card.CardName);
+            _playUpgradeCard.Execute(serverMatch.Guid, "BOT", card.cardName);
         }
 
         private UpgradeCard PickUpgradeCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
@@ -121,18 +121,18 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             var upgrades = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
             var playedUpgrades = serverMatch.GetUpgradeCardsByPlayer("BOT");
-            return units.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(ca => ca == ua))) 
-                + (upgrades.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(ca => ca == ua))) *2)
-                + (playedUpgrades.Count(pu => pu.Archetypes.Any(pua => card.Archetypes.Any(ca => ca == pua))) * 3);
+            return units.Count(u => u.Archetypes.Any(ua => card.archetypes.Any(ca => ca == ua))) 
+                + (upgrades.Count(u => u.archetypes.Any(ua => card.archetypes.Any(ca => ca == ua))) *2)
+                + (playedUpgrades.Count(pu => pu.archetypes.Any(pua => card.archetypes.Any(ca => ca == pua))) * 3);
         }
 
         private int EvaluateUpgradePower(UpgradeCard card, Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
         {
             var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             int score = 0;
-            score += card.BasePower * units.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(c => c == ua)));
-            if (card.BonusVs.Count > 0) {
-                score -= (int)Math.Floor(card.BasePower - (units.Count(u => u.Archetypes.Any(ua => card.Archetypes.Any(c => c == ua))) * 1.3));
+            score += card.basePower * units.Count(u => u.Archetypes.Any(ua => card.archetypes.Any(c => c == ua)));
+            if (card.bonusVs.Any()) {
+                score -= (int)Math.Floor(card.basePower - (units.Count(u => u.Archetypes.Any(ua => card.archetypes.Any(c => c == ua))) * 1.3));
             }
             return score;
         }

@@ -27,7 +27,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
             }
             hand = new HandDto();
             hand.units = serverMatch.Board.PlayersHands[userId].UnitsCards.Select(c => c.CardName).ToList();
-            hand.upgrades = serverMatch.Board.PlayersHands[userId].UpgradeCards.Select(c => c.CardName).ToList();
+            hand.upgrades = serverMatch.Board.PlayersHands[userId].UpgradeCards.Select(c => c.cardName).ToList();
             users = serverMatch.Users.Select(u => u.UserName).ToList();
         }
     }

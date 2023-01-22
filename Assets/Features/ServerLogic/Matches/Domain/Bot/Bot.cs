@@ -47,7 +47,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UpgradeCard != null)
                 return;
             _playUpgradeCard.Execute(serverMatch.Guid, "BOT",
-                serverMatch.Board.PlayersHands["BOT"].UpgradeCards.FirstOrDefault()?.CardName);
+                serverMatch.Board.PlayersHands["BOT"].UpgradeCards.FirstOrDefault()?.cardName);
         }
 
         internal virtual void PlayReroll(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)

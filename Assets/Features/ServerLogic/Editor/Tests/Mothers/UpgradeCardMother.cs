@@ -11,54 +11,19 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
         {
             withArchetypes ??= new List<Archetype>() {Archetype.Monk};
 
-            return new UpgradeCard()
-            {
-                Archetypes = withArchetypes,
-                BasePower = withBasePower,
-                BonusVs = withBonusVs,
-                CardName = withCardName,
-            };
+            return new UpgradeCard(withCardName, withBasePower, withBonusVs, withArchetypes);
         }
 
-        public static UpgradeCard CreateFakeTeutonsFaithCard() => new UpgradeCard()
-        {
-            Archetypes =null,
-            BasePower = 0,
-            BonusVs = null,
-            CardName = "teutons faith",
-        };
-        
-        public static UpgradeCard CreateFakePersianTC()
-        {
-            return new UpgradeCard()
-            {
-                Archetypes =new[] {Archetype.Villager},
-                BasePower = 0,
-                BonusVs = null,
-                CardName = "persian town center",
-            };
-        }
-        
-        public static UpgradeCard CreateFakeMadrasah()
-        {
-            return new UpgradeCard()
-            {
-                Archetypes =new[] {Archetype.Monk},
-                BasePower = 0,
-                BonusVs = null,
-                CardName = "madrasah",
-            };
-        }
-        
-        public static UpgradeCard CreateFakeFurorCeltica()
-        {
-            return new UpgradeCard()
-            {
-                Archetypes =new[] {Archetype.SiegeUnit},
-                BasePower = 0,
-                BonusVs = null,
-                CardName = "furor celtica",
-            };
-        }
+        public static UpgradeCard CreateFakeTeutonsFaithCard() =>
+            new("teutons faith", 0, null, null);
+
+        public static UpgradeCard CreateFakePersianTC() =>
+            new("persian town center", 0, null, new[] { Archetype.Villager });
+
+        public static UpgradeCard CreateFakeMadrasah() => 
+            new("madrasah", 0, null, new[] { Archetype.Monk });
+
+        public static UpgradeCard CreateFakeFurorCeltica() =>
+            new("furor celtica", 0, null, new[] { Archetype.SiegeUnit });
     }
 }

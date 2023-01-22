@@ -148,10 +148,10 @@ namespace Features.ServerLogic.Editor.Tests
             };
             var upgradeCards = new List<UpgradeCard>()
             {
-                new UpgradeCard() {CardName = "upgrade"},
-                new UpgradeCard() {CardName = "upgrade-1"},
-                new UpgradeCard() {CardName = "upgrade-2"},
-                new UpgradeCard() {CardName = "upgrade-3"},
+                new UpgradeCard("upgrade", 0, null, null),
+                new UpgradeCard("upgrade-1", 0, null, null),
+                new UpgradeCard("upgrade-2", 0, null, null) ,
+                new UpgradeCard("upgrade-3", 0, null, null),
             };
             _cardRepository.GetUnitCards().Returns(unitCards);
             _cardRepository.GetUnitCard("villager").Returns(new UnitCard(){CardName = "villager"});

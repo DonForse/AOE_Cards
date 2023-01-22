@@ -140,7 +140,7 @@ namespace Features.ServerLogic.Matches.Action
         }
 
         private static bool UpgradeCardIsInPlayerHand(ServerMatch serverMatch, string userId, UpgradeCard card) => 
-            serverMatch.Board.PlayersHands[userId].UpgradeCards.Any(c => c.CardName == card.CardName);
+            serverMatch.Board.PlayersHands[userId].UpgradeCards.Any(c => c.cardName == card.cardName);
 
         private void GetUnitCards(ServerMatch serverMatch, string userId, RerollInfoDto cards, List<UnitCard> unitCards)
         {

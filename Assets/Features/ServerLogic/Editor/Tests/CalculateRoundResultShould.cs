@@ -69,14 +69,14 @@ namespace Features.ServerLogic.Editor.Tests
             new(UserIdOne,withPlayerCard ?? 
                           new PlayerCard()
                           {
-                              UpgradeCard = new UpgradeCard(),
+                              UpgradeCard = UpgradeCardMother.Create(),
                               UnitCard = new UnitCard(),
                           });
         private KeyValuePair<string, PlayerCard> APlayerTwoInfo(PlayerCard withPlayerCard=null) =>
             new(UserIdTwo,withPlayerCard??
                           new PlayerCard()
                           {
-                              UpgradeCard = new UpgradeCard(),
+                              UpgradeCard = UpgradeCardMother.Create(),
                               UnitCard = new UnitCard(),
                           });
         private Dictionary<string, PlayerCard> APlayerCards(KeyValuePair<string, PlayerCard> withPlayerOne, KeyValuePair<string, PlayerCard> withPlayerTwo) =>
@@ -90,7 +90,7 @@ namespace Features.ServerLogic.Editor.Tests
             return new Round(withUsers)
             {
                 PlayerCards = withPlayerCards ?? APlayerCards (APlayerOneInfo(), APlayerTwoInfo()),
-                RoundUpgradeCard = withRoundUpgradeCard ?? new UpgradeCard(),
+                RoundUpgradeCard = withRoundUpgradeCard ?? UpgradeCardMother.Create(),
             };
         }
     }

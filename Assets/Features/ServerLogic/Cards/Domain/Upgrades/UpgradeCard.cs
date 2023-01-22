@@ -7,22 +7,17 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
     public class UpgradeCard
     {
-        public string CardName;
-        public int BasePower;
-        public IList<Archetype> BonusVs;
-        public IList<Archetype> Archetypes;
+        public string cardName;
+        public int basePower;
+        public IEnumerable<Archetype> bonusVs;
+        public IEnumerable<Archetype> archetypes;
 
-        public virtual int CalculateValue(UnitCard unitCard, IList<UnitCard> vsCards)
+        public UpgradeCard(string cardName, int basePower, IEnumerable<Archetype> bonusVs, IEnumerable<Archetype> archetypes)
         {
-            if (Archetypes != null && !unitCard.Archetypes.Any(uArch => Archetypes.Any(arch => arch == uArch)))
-                return 0;
-
-            if (BonusVs != null && BonusVs.Count == 0)
-                return BasePower;
-
-            if (BonusVs != null && !BonusVs.Any(bonusVs => vsCards.Any(card => card.Archetypes.Any(arq => arq == bonusVs))))
-                return 0;
-            return BasePower;
+            this.cardName = cardName;
+            this.basePower = basePower;
+            this.bonusVs = bonusVs;
+            this.archetypes = archetypes;
         }
     }
 }

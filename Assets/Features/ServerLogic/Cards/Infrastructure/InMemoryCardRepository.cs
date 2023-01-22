@@ -35,7 +35,7 @@ namespace Features.ServerLogic.Cards.Infrastructure
         public UpgradeCard GetUpgradeCard(string cardName)
         {
             cardName = cardName.ToLower();
-            var card = _upgradeCards.FirstOrDefault(uc => uc.CardName.ToLower() == cardName);
+            var card = _upgradeCards.FirstOrDefault(uc => uc.cardName.ToLower() == cardName);
             return card;
         }
 
@@ -58,13 +58,9 @@ namespace Features.ServerLogic.Cards.Infrastructure
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesVs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new UpgradeCard()
-            {
-                CardName = data[3],
-                BasePower = int.Parse(data[4]),
-                Archetypes = archetypes.Select(ConvertArchetype).ToList(),
-                BonusVs = archetypesVs.Select(ConvertArchetype).ToList(),
-            };
+            var card = new UpgradeCard(data[3], int.Parse(data[4]),
+                archetypesVs.Select(ConvertArchetype),
+                archetypes.Select(ConvertArchetype));
             return card;
         }
 

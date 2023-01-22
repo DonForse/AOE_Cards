@@ -213,6 +213,6 @@ namespace Features.ServerLogic.Editor.Tests
 
         private void GivenMatchRepositoryReturns(ServerMatch match) => _matchesRepository.Get(MatchId).Returns(match);
         private void WhenExecute() => _playUpgradeCard.Execute(MatchId, UserId, CardName);
-        private static void ThenCardIsPlayed(Round round) => Assert.AreEqual(CardName, round.PlayerCards[UserId].UpgradeCard.CardName);
+        private static void ThenCardIsPlayed(Round round) => Assert.AreEqual(CardName, round.PlayerCards[UserId].UpgradeCard.cardName);
     }
 }
