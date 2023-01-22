@@ -88,7 +88,7 @@ namespace Features.ServerLogic.Cards.Infrastructure
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesVs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new MadrasahUpgradeCard()
+            var card = new UpgradeCard()
             {
                 CardName = data[3],
                 BasePower = int.Parse(data[4]),
@@ -112,11 +112,11 @@ namespace Features.ServerLogic.Cards.Infrastructure
             return card;
         }
 
-        private FurorCelticaUpgradeCard SetFurorCelticaUpgradeCard(string[] data)
+        private UpgradeCard SetFurorCelticaUpgradeCard(string[] data)
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesVs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new FurorCelticaUpgradeCard()
+            var card = new UpgradeCard()
             {
                 CardName = data[3],
                 BasePower = int.Parse(data[4]),
