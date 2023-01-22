@@ -40,7 +40,23 @@ namespace Features.ServerLogic.Editor.Tests
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
         }
-        
+
+        [Test]
+        public void NotApplyFurorCelticaEffectWhenNotPlayed()
+        {
+            var siege = UnitCardMother.Create(withArchetypes: new List<Archetype> { Archetype.SiegeUnit });
+            var match = AServerMatch(new PlayerCard()
+            {
+                UnitCard = siege,
+                UpgradeCard = UpgradeCardMother.Create()
+            }, UpgradeCardMother.Create());
+            
+            _getMatch.Execute(MatchId).Returns(match);
+            _applyEffectPostUnit.Execute(MatchId, UserId);
+            
+            Assert.IsFalse(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
+        }
+
         [Test]
         public void ApplyFurorCelticaEffectWhenRoundUpgrade()
         {
@@ -49,13 +65,35 @@ namespace Features.ServerLogic.Editor.Tests
             var match = AServerMatch(new PlayerCard()
             {
                 UnitCard = siege,
-                UpgradeCard = card
-            }, UpgradeCardMother.Create());
+                UpgradeCard = UpgradeCardMother.Create()
+            }, card);
             
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
-            Assert.Fail();
+            Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
+        }
+
+        [Test]
+        public void ApplyFurorCelticaEffectWhenUpgradePlayerPreviousRound()
+        {
+            var card = UpgradeCardMother.CreateFakeFurorCeltica();
+            var siege = UnitCardMother.Create(withArchetypes: new List<Archetype> { Archetype.SiegeUnit });
+            var match = AServerMatchWithPreviousRound(new PlayerCard()
+                {
+                    UnitCard = siege,
+                    UpgradeCard = UpgradeCardMother.Create()
+                },
+                new PlayerCard()
+                {
+                    UnitCard = siege,
+                    UpgradeCard = card
+                });
+            
+            _getMatch.Execute(MatchId).Returns(match);
+            _applyEffectPostUnit.Execute(MatchId, UserId);
+            
+            Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
         }
         
         [Test]
@@ -68,23 +106,6 @@ namespace Features.ServerLogic.Editor.Tests
                 UnitCard = monk,
                 UpgradeCard = card
             }, UpgradeCardMother.Create());
-            
-            _getMatch.Execute(MatchId).Returns(match);
-            _applyEffectPostUnit.Execute(MatchId, UserId);
-            
-            Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));
-        }
-        
-        [Test]
-        public void ApplyMadrasahEffectWhenRoundUpgrade()
-        {
-            var card = UpgradeCardMother.CreateFakeMadrasah();
-            var monk = UnitCardMother.Create(withArchetypes: new List<Archetype> { Archetype.Monk });
-            var match = AServerMatch(new PlayerCard()
-            {
-                UnitCard = monk,
-                UpgradeCard = UpgradeCardMother.Create()
-            }, card);
             
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
@@ -107,7 +128,24 @@ namespace Features.ServerLogic.Editor.Tests
             
             Assert.IsFalse(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));
         }
-        
+
+        [Test]
+        public void ApplyMadrasahEffectWhenRoundUpgrade()
+        {
+            var card = UpgradeCardMother.CreateFakeMadrasah();
+            var monk = UnitCardMother.Create(withArchetypes: new List<Archetype> { Archetype.Monk });
+            var match = AServerMatch(new PlayerCard()
+            {
+                UnitCard = monk,
+                UpgradeCard = UpgradeCardMother.Create()
+            }, card);
+            
+            _getMatch.Execute(MatchId).Returns(match);
+            _applyEffectPostUnit.Execute(MatchId, UserId);
+            
+            Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));
+        }
+
         [Test]
         public void ApplyMadrasahEffectWhenUpgradePlayerPreviousRound()
         {
