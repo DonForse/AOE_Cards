@@ -13,7 +13,7 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
 
         public void Execute(ServerMatch serverMatch, string userId, UnitCard unitCardPlayed)
         {
-            if (unitCardPlayed.Archetypes.Any(upArchetype => upArchetype == Archetype.Monk))
+            if (unitCardPlayed.archetypes.Any(upArchetype => upArchetype == Archetype.Monk))
                 serverMatch.Board.PlayersHands[userId].UnitsCards.Add(unitCardPlayed);
         }
     }

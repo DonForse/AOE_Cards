@@ -28,7 +28,7 @@ namespace Features.ServerLogic.Cards.Infrastructure
         public UnitCard GetUnitCard(string cardName)
         {
             cardName = cardName.ToLower();
-            var card = _unitCards.FirstOrDefault(uc => uc.CardName.ToLower() == cardName);
+            var card = _unitCards.FirstOrDefault(uc => uc.cardName.ToLower() == cardName);
             return card;
         }
 
@@ -56,8 +56,8 @@ namespace Features.ServerLogic.Cards.Infrastructure
 
         private UpgradeCard LoadUpgradeCard(string[] data)
         {
-            var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var archetypesVs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            var archetypes = data[2].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            var archetypesVs = data[5].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var card = new UpgradeCard(data[3], int.Parse(data[4]),
                 archetypesVs.Select(ConvertArchetype),
                 archetypes.Select(ConvertArchetype));
@@ -83,14 +83,8 @@ namespace Features.ServerLogic.Cards.Infrastructure
         {
             var archetypes = data[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var archetypesvs = data[5].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            var card = new UnitCard()
-            {
-                CardName = data[0].Trim('\n'),
-                BasePower = int.Parse(data[3]),
-                Archetypes = archetypes.Select(c => ConvertArchetype(c)).ToList(),
-                BonusVs = archetypesvs.Select(c => ConvertArchetype(c)).ToList(),
-                PowerEffect = int.Parse(data[6])
-            };
+            var card = new UnitCard(data[0].Trim('\n'), int.Parse(data[3]), int.Parse(data[6]),
+                archetypesvs.Select(ConvertArchetype), archetypes.Select(ConvertArchetype));
             return card;
         }
 

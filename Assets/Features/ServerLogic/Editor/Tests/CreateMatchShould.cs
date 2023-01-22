@@ -4,6 +4,7 @@ using System.Linq;
 using Features.ServerLogic.Cards.Domain.Units;
 using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
@@ -140,21 +141,21 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var unitCards = new List<UnitCard>()
             {
-                new UnitCard() {CardName = "villager"},
-                new UnitCard() {CardName = "card-1"},
-                new UnitCard() {CardName = "card-2"},
-                new UnitCard() {CardName = "card-3"},
+                UnitCardMother.Create("villager"),
+                UnitCardMother.Create("card-1"),
+                UnitCardMother.Create("card-2"),
+                UnitCardMother.Create("card-3"),
                 
             };
             var upgradeCards = new List<UpgradeCard>()
             {
-                new UpgradeCard("upgrade", 0, null, null),
-                new UpgradeCard("upgrade-1", 0, null, null),
-                new UpgradeCard("upgrade-2", 0, null, null) ,
-                new UpgradeCard("upgrade-3", 0, null, null),
+                UpgradeCardMother.Create("upgrade"),
+                UpgradeCardMother.Create("upgrade-1"),
+                UpgradeCardMother.Create("upgrade-2") ,
+                UpgradeCardMother.Create("upgrade-3"),
             };
             _cardRepository.GetUnitCards().Returns(unitCards);
-            _cardRepository.GetUnitCard("villager").Returns(new UnitCard(){CardName = "villager"});
+            _cardRepository.GetUnitCard("villager").Returns(UnitCardMother.Create("villager"));
             _cardRepository.GetUpgradeCards().Returns(upgradeCards);
         }
 
@@ -176,7 +177,7 @@ namespace Features.ServerLogic.Editor.Tests
 
         private bool ThenServerMatchContainsHandsWithVillagerCards(ServerMatch sm) =>
             sm.Board.Deck.UnitCards.Count == 1
-            && sm.Board.PlayersHands[UserIdOne].UnitsCards.Any(x => x.CardName == "villager")
-            && sm.Board.PlayersHands[UserIdTwo].UnitsCards.Any(x => x.CardName == "villager");
+            && sm.Board.PlayersHands[UserIdOne].UnitsCards.Any(x => x.cardName == "villager")
+            && sm.Board.PlayersHands[UserIdTwo].UnitsCards.Any(x => x.cardName == "villager");
     }
 }

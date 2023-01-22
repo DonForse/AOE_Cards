@@ -69,7 +69,7 @@ namespace Features.ServerLogic.Matches.Action
         {
             var rivalPlayerCard = currentRound.PlayerCards.First(x => x.Key != player).Value;
             var playerCard = currentRound.PlayerCards[player];
-            var totalPower = playerCard.UnitCard.BasePower;
+            var totalPower = playerCard.UnitCard.basePower;
 
             totalPower += CalculateUnitVsPower(playerCard.UnitCard, rivalPlayerCard);
             totalPower += CalculateUpgradeCardBasePower(playerCard.UpgradeCard, playerCard, rivalPlayerCard);
@@ -84,22 +84,22 @@ namespace Features.ServerLogic.Matches.Action
         }
 
         private int CalculateUnitVsPower(UnitCard playerCardUnitCard, PlayerCard rivalPlayerCard) =>
-            playerCardUnitCard.BonusVs.ContainsAnyArchetype(rivalPlayerCard.UnitCard.Archetypes)
-                ? playerCardUnitCard.PowerEffect
+            playerCardUnitCard.bonusVs.ContainsAnyArchetype(rivalPlayerCard.UnitCard.archetypes)
+                ? playerCardUnitCard.powerEffect
                 : 0;
 
         private int CalculateUpgradeCardBasePower(UpgradeCard upgradeCard, PlayerCard pc, PlayerCard rivalCard)
         {
 
             if (upgradeCard.archetypes != null &&
-                !pc.UnitCard.Archetypes.Any(uArch => upgradeCard.archetypes.Any(arch => arch == uArch)))
+                !pc.UnitCard.archetypes.Any(uArch => upgradeCard.archetypes.Any(arch => arch == uArch)))
                 return 0;
 
             if (upgradeCard.bonusVs != null && !upgradeCard.bonusVs.Any())
                 return upgradeCard.basePower;
 
             if (upgradeCard.bonusVs != null &&
-                !upgradeCard.bonusVs.Any(bonusVs => rivalCard.UnitCard.Archetypes.Any(arq => arq == bonusVs)))
+                !upgradeCard.bonusVs.Any(bonusVs => rivalCard.UnitCard.archetypes.Any(arq => arq == bonusVs)))
                 return 0;
             return upgradeCard.basePower;
         }

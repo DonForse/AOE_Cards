@@ -6,11 +6,20 @@ namespace Features.ServerLogic.Cards.Domain.Units
 {
     public class UnitCard
     {
-        public string CardName;
-        public int BasePower;
-        public int PowerEffect;
-        public IList<Archetype> BonusVs;
-        public IList<Archetype> Archetypes;
+        public readonly string cardName;
+        public readonly int basePower;
+        public readonly int powerEffect;
+        public readonly IEnumerable<Archetype> bonusVs;
+        public readonly IEnumerable<Archetype> archetypes;
+
+        public UnitCard(string cardName, int basePower, int powerEffect, IEnumerable<Archetype> bonusVs, IEnumerable<Archetype> archetypes)
+        {
+            this.cardName = cardName;
+            this.basePower = basePower;
+            this.powerEffect = powerEffect;
+            this.bonusVs = bonusVs;
+            this.archetypes = archetypes;
+        }
     }
 }
 

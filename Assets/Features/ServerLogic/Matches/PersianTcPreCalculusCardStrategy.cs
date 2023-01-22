@@ -13,7 +13,7 @@ namespace Features.ServerLogic.Matches
 
         public void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId)
         {
-            if (!unitCardPlayed.Archetypes.ContainsAnyArchetype(Archetype.Villager))
+            if (!unitCardPlayed.archetypes.ContainsAnyArchetype(Archetype.Villager))
                 return;
             var upgrades = serverMatch.GetUpgradeCardsByPlayer(userId);
             var power = 0;
@@ -23,18 +23,18 @@ namespace Features.ServerLogic.Matches
                 power += CalculateValue(upgrade,round.PlayerCards[userId].UnitCard, serverMatch.GetVsUnits(round, userId));
             }
 
-            card.basePower = power + unitCardPlayed.BasePower;
+            card.basePower = power + unitCardPlayed.basePower;
         }
         
         private int CalculateValue(UpgradeCard card, UnitCard unitCard, IList<UnitCard> vsCards)
         {
-            if (card.archetypes != null && !unitCard.Archetypes.Any(uArch => card.archetypes.Any(arch => arch == uArch)))
+            if (card.archetypes != null && !unitCard.archetypes.Any(uArch => card.archetypes.Any(arch => arch == uArch)))
                 return 0;
 
             if (card.bonusVs != null && !card.bonusVs.Any())
                 return card.basePower;
 
-            if (card.bonusVs != null && !card.bonusVs.Any(bonusVs => vsCards.Any(card => card.Archetypes.Any(arq => arq == bonusVs))))
+            if (card.bonusVs != null && !card.bonusVs.Any(bonusVs => vsCards.Any(card => card.archetypes.Any(arq => arq == bonusVs))))
                 return 0;
             return card.basePower;
         }

@@ -70,14 +70,14 @@ namespace Features.ServerLogic.Editor.Tests
                           new PlayerCard()
                           {
                               UpgradeCard = UpgradeCardMother.Create(),
-                              UnitCard = new UnitCard(),
+                              UnitCard = UnitCardMother.Create(),
                           });
         private KeyValuePair<string, PlayerCard> APlayerTwoInfo(PlayerCard withPlayerCard=null) =>
             new(UserIdTwo,withPlayerCard??
                           new PlayerCard()
                           {
                               UpgradeCard = UpgradeCardMother.Create(),
-                              UnitCard = new UnitCard(),
+                              UnitCard = UnitCardMother.Create(),
                           });
         private Dictionary<string, PlayerCard> APlayerCards(KeyValuePair<string, PlayerCard> withPlayerOne, KeyValuePair<string, PlayerCard> withPlayerTwo) =>
             new()

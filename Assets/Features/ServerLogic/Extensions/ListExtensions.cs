@@ -6,12 +6,12 @@ namespace Features.ServerLogic.Extensions
 {
     public static class ListExtensions
     {
-        public static bool ContainsAnyArchetype(this IList<Archetype> list, IList<Archetype> contained)
+        public static bool ContainsAnyArchetype(this IEnumerable<Archetype> list, IEnumerable<Archetype> contained)
         {
             return list.Any(item => contained.Any(containedItem => item == containedItem));
         }
         
-        public static bool ContainsAnyArchetype(this IList<Archetype> list, Archetype contained)
+        public static bool ContainsAnyArchetype(this IEnumerable<Archetype> list, Archetype contained)
         {
             return list.Any(item =>item == contained);
         }

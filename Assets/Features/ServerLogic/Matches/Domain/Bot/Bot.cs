@@ -39,7 +39,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
         {
             if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UnitCard != null)
                 return;
-            _playUnitCard.Execute(serverMatch.Guid, "BOT", serverMatch.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault()?.CardName);
+            _playUnitCard.Execute(serverMatch.Guid, "BOT", serverMatch.Board.PlayersHands["BOT"].UnitsCards.FirstOrDefault()?.cardName);
         }
 
         internal virtual void PlayUpgrade(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)

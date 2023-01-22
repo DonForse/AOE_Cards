@@ -22,7 +22,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             if (serverMatch.Board.CurrentRound.PlayerCards["BOT"].UnitCard != null)
                 return;
             var card = PickUnitCard(serverMatch);
-            _playUnitCard.Execute(serverMatch.Guid, "BOT", card.CardName);
+            _playUnitCard.Execute(serverMatch.Guid, "BOT", card.cardName);
         }
 
         private UnitCard PickUnitCard(Features.ServerLogic.Matches.Domain.ServerMatch serverMatch)
@@ -55,13 +55,13 @@ namespace Features.ServerLogic.Matches.Domain.Bot
         {
             int score = 0;
             var RivalUpgrades = serverMatch.GetUpgradeCardsByPlayer(serverMatch.Users.First(u => u.Id != "BOT").Id);
-            score += card.BasePower;
+            score += card.basePower;
 
             var roundsCount = serverMatch.Board.RoundsPlayed.Count;
 
-            if (card.BonusVs.Count > 0 && roundsCount > 2) {
-                if (RivalUpgrades.Count(ru => ru.archetypes.Any(ruA => card.BonusVs.Any(bvA => bvA == ruA))) > roundsCount / 2)
-                    score += card.PowerEffect;
+            if (card.bonusVs.Any() && roundsCount > 2) {
+                if (RivalUpgrades.Count(ru => ru.archetypes.Any(ruA => card.bonusVs.Any(bvA => bvA == ruA))) > roundsCount / 2)
+                    score += card.powerEffect;
             }
             return score;
         }
@@ -74,10 +74,10 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             foreach (var upgrade in upgrades) {
                 if (upgrade == null)
                     continue;
-                if (card.Archetypes.Any(c=>upgrade.archetypes.Any(a => a == c)))
+                if (card.archetypes.Any(c=>upgrade.archetypes.Any(a => a == c)))
                     score += upgrade.basePower;
-                if (card.BonusVs.Count > 0) 
-                    score -= card.BasePower / 3 - (2* (RivalUpgrades.Count(c => c.archetypes.Any(a => card.Archetypes.Any(arq => a == arq))) - serverMatch.Board.RoundsPlayed.Count));
+                if (card.bonusVs.Any()) 
+                    score -= card.basePower / 3 - (2* (RivalUpgrades.Count(c => c.archetypes.Any(a => card.archetypes.Any(arq => a == arq))) - serverMatch.Board.RoundsPlayed.Count));
             }
             return score;
         }
@@ -121,7 +121,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             var upgrades = serverMatch.Board.PlayersHands["BOT"].UpgradeCards;
             var playedUpgrades = serverMatch.GetUpgradeCardsByPlayer("BOT");
-            return units.Count(u => u.Archetypes.Any(ua => card.archetypes.Any(ca => ca == ua))) 
+            return units.Count(u => u.archetypes.Any(ua => card.archetypes.Any(ca => ca == ua))) 
                 + (upgrades.Count(u => u.archetypes.Any(ua => card.archetypes.Any(ca => ca == ua))) *2)
                 + (playedUpgrades.Count(pu => pu.archetypes.Any(pua => card.archetypes.Any(ca => ca == pua))) * 3);
         }
@@ -130,9 +130,9 @@ namespace Features.ServerLogic.Matches.Domain.Bot
         {
             var units = serverMatch.Board.PlayersHands["BOT"].UnitsCards;
             int score = 0;
-            score += card.basePower * units.Count(u => u.Archetypes.Any(ua => card.archetypes.Any(c => c == ua)));
+            score += card.basePower * units.Count(u => u.archetypes.Any(ua => card.archetypes.Any(c => c == ua)));
             if (card.bonusVs.Any()) {
-                score -= (int)Math.Floor(card.basePower - (units.Count(u => u.Archetypes.Any(ua => card.archetypes.Any(c => c == ua))) * 1.3));
+                score -= (int)Math.Floor(card.basePower - (units.Count(u => u.archetypes.Any(ua => card.archetypes.Any(c => c == ua))) * 1.3));
             }
             return score;
         }
@@ -149,7 +149,7 @@ namespace Features.ServerLogic.Matches.Domain.Bot
             List<UnitCard> unitsToReroll = new List<UnitCard>();
             foreach (var card in units)
             {
-                if (card.CardName.ToLower() == "villager")
+                if (card.cardName.ToLower() == "villager")
                     continue;
                 if (EvaluateUnitCard(card, serverMatch) < 15)
                 {

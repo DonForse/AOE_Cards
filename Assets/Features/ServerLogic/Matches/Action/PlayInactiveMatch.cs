@@ -28,7 +28,7 @@ namespace Features.ServerLogic.Matches.Action
                     {
                         if (pc.Value.UnitCard == null)
                         {
-                            _playUnitCard.Execute(serverMatch.Guid, pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First().CardName);
+                            _playUnitCard.Execute(serverMatch.Guid, pc.Key, serverMatch.Board.PlayersHands[pc.Key].UnitsCards.First().cardName);
                             continue;
                         }
                     }

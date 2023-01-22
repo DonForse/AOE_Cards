@@ -138,8 +138,8 @@ namespace Features.ServerLogic.Editor.Tests
             GivenServerMatch(serverMatch);
             WhenExecute();
             
-            Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
-            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.CardName == CardName);
+            Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.cardName == CardName));
+            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.cardName == CardName);
         }
 
         [Test]
@@ -150,12 +150,12 @@ namespace Features.ServerLogic.Editor.Tests
             GivenServerMatch(serverMatch);
             GivenCardPlayed();
             
-            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
+            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.cardName == CardName));
 
             WhenExecute();
             
-            Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == CardName));
-            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.CardName == CardName);        
+            Assert.IsFalse(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.cardName == CardName));
+            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.cardName == CardName);        
         }
 
         [Test]
@@ -166,12 +166,12 @@ namespace Features.ServerLogic.Editor.Tests
             var serverMatch = AServerMatch(card);
             GivenServerMatch(serverMatch);
 
-            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == cardName));
+            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.cardName == cardName));
 
             WhenExecuteWithVillagerCard();
             
-            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.CardName == cardName));
-            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.CardName == cardName);
+            Assert.IsTrue(serverMatch.Board.PlayersHands[UserId].UnitsCards.Any(card => card.cardName == cardName));
+            Assert.IsTrue(serverMatch.Board.CurrentRound.PlayerCards[UserId].UnitCard.cardName == cardName);
         }
 
         [Test]

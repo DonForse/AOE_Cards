@@ -39,7 +39,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
                 {
                     player = users.FirstOrDefault(u => u.Id == playerCard.Key)?.UserName,
                     upgradecard = showUpgradeCards ? playerCard.Value.UpgradeCard?.cardName : string.Empty,
-                    unitcard = showUnitCards ? playerCard.Value.UnitCard?.CardName : string.Empty,
+                    unitcard = showUnitCards ? playerCard.Value.UnitCard?.cardName : string.Empty,
                     unitcardpower = showUnitCards ? playerCard.Value.UnitCardPower : 0,
                 };
                 cardsplayed.Add(pc);

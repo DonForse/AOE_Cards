@@ -158,7 +158,7 @@ namespace Features.ServerLogic.Matches.Action
         }
 
         private static bool UnitCardIsInPlayerHand(ServerMatch serverMatch, string userId, UnitCard card) => 
-            serverMatch.Board.PlayersHands[userId].UnitsCards.Any(c => c.CardName == card.CardName);
+            serverMatch.Board.PlayersHands[userId].UnitsCards.Any(c => c.cardName == card.cardName);
 
         private static bool IsVillagerCard(string cardName) => cardName.ToLower() == "villager";
 

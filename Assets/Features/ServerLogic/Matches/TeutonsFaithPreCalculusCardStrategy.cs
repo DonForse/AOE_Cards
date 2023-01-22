@@ -13,7 +13,7 @@ namespace Features.ServerLogic.Matches
 
         public void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId)
         {
-            if (unitCardPlayed.Archetypes.All(a => a != Archetype.Cavalry))
+            if (unitCardPlayed.archetypes.All(a => a != Archetype.Cavalry))
                 return;
 
             if (!RivalPlayedMonk())
@@ -21,7 +21,7 @@ namespace Features.ServerLogic.Matches
             
             card.basePower= 1000; // do not use because of overflow: int.MaxValue;
 
-            bool RivalPlayedMonk() => rivalUnitCard.Archetypes.ContainsAnyArchetype(new List<Archetype> {Archetype.Monk});
+            bool RivalPlayedMonk() => rivalUnitCard.archetypes.ContainsAnyArchetype(new List<Archetype> {Archetype.Monk});
         }
     }
 }

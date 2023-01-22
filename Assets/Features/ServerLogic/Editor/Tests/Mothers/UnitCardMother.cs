@@ -10,14 +10,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
         {
             withArchetypes ??= new List<Archetype>() {Archetype.Monk};
             withBonusVs ??= new List<Archetype>();
-            return new UnitCard()
-            {
-                Archetypes = withArchetypes,
-                BasePower = withBasePower,
-                BonusVs = withBonusVs,
-                CardName = withCardName,
-                PowerEffect = withPowerEffect
-            };
+            return new UnitCard(withCardName, withBasePower, withPowerEffect, withBonusVs,withArchetypes);
         }
     }
 }

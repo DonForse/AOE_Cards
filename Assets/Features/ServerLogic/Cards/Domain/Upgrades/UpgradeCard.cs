@@ -7,10 +7,10 @@ namespace Features.ServerLogic.Cards.Domain.Upgrades
 {
     public class UpgradeCard
     {
-        public string cardName;
+        public readonly string cardName;
         public int basePower;
-        public IEnumerable<Archetype> bonusVs;
-        public IEnumerable<Archetype> archetypes;
+        public readonly IEnumerable<Archetype> bonusVs;
+        public readonly IEnumerable<Archetype> archetypes;
 
         public UpgradeCard(string cardName, int basePower, IEnumerable<Archetype> bonusVs, IEnumerable<Archetype> archetypes)
         {

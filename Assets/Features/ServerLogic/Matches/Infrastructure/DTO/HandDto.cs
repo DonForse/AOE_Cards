@@ -17,7 +17,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
         {
             if (hand == null)
                 return;
-            units = hand.UnitsCards.Select(unit => unit.CardName).ToList();
+            units = hand.UnitsCards.Select(unit => unit.cardName).ToList();
             upgrades = hand.UpgradeCards.Select(upgrade => upgrade.cardName).ToList();
         }
     }

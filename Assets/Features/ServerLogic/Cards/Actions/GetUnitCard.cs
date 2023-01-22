@@ -15,7 +15,7 @@ namespace Features.ServerLogic.Cards.Actions
         {
             var result = _cardRepository.GetUnitCards();
             if (!withVillager)
-                result = result.Where(uc => uc.CardName.ToLower() != "villager").ToList();
+                result = result.Where(uc => uc.cardName.ToLower() != "villager").ToList();
             return result;
         }
         public UnitCard Execute(string cardName)

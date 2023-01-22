@@ -87,7 +87,7 @@ namespace Features.ServerLogic.Matches.Action
             var currentRound = serverMatch.Board.CurrentRound;
 
             var hand = serverMatch.Board.PlayersHands[userId];
-            var unitCard = hand.UnitsCards.FirstOrDefault(u => u.CardName == card.CardName);
+            var unitCard = hand.UnitsCards.FirstOrDefault(u => u.cardName == card.cardName);
 
             if (unitCard == null)
                 throw new ApplicationException("Unit card is not in hand");
@@ -95,7 +95,7 @@ namespace Features.ServerLogic.Matches.Action
             if (currentRound.PlayerCards.ContainsKey(userId) && currentRound.PlayerCards[userId].UnitCard != null)
                 throw new ApplicationException("Unit card has already been played"); //TODO: Already Checked before
 
-            if (card.CardName.ToLowerInvariant() == "villager") //TODO: Move to strategy
+            if (card.cardName.ToLowerInvariant() == "villager") //TODO: Move to strategy
             {
                 currentRound.PlayerCards[userId].UnitCard = card;
                 return;
