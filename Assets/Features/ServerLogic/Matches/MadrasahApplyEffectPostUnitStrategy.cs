@@ -4,7 +4,7 @@ using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Matches
 {
-    public class MadrasahApplicateEffectPostUnitStrategy : IApplicateEffectPostUnitStrategy
+    public class MadrasahApplyEffectPostUnitStrategy : IApplyEffectPostUnitStrategy
     {
         public bool IsValid(UpgradeCard card)
         {

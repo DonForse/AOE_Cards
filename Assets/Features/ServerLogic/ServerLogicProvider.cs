@@ -56,12 +56,24 @@ namespace Features.ServerLogic
         public static IRemoveUserMatch RemoveUserMatch() =>
             new RemoveUserMatch(MatchesRepository(), UserMatchesRepository());
         public static ICreateUser CreateUser() => new CreateUser(UsersRepository());
+
+        public static HardBot HardBot() => 
+            new HardBot(PlayUpgradeCard(), PlayUnitCard(), GetPlayerPlayedUpgradesInMatch());
+
+        public static Bot EasyBot() => new Bot(PlayUpgradeCard(), PlayUnitCard());
         public static ICreateNewRound CreateRound() => new CreateNewRound(MatchesRepository());
+
         private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());
+
         private static IGetUpgradeCard GetUpgradeCard() => new GetUpgradeCard(CardRepository());
-        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository(), GetPlayerPlayedUpgradesInMatch());
+
+        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository(), GetPlayerPlayedUpgradesInMatch(), ApplyEffectPreCalculus());
+
         private static ICalculateMatchResult CalculateMatchResult() => new CalculateMatchResult(MatchesRepository());
+
         private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(MatchesRepository(),GetPlayerPlayedUpgradesInMatch() );
+
+
         private static IUsersQueuedRepository UsersQueuedRepository() =>
             _usersQueuedRepostiory ??= new InMemoryUsersQueuedRepository();
 
@@ -70,20 +82,21 @@ namespace Features.ServerLogic
 
         public static IMatchesRepository MatchesRepository() => _matchesRepository ??= new InMemoryMatchesRepository();
 
+
         private static IUserMatchesRepository UserMatchesRepository() =>
             _userMatchesRepository ??= new InMemoryUserMatchesRepository();
 
         private static IUsersRepository UsersRepository() => _usersRepository ??= new InMemoryUsersRepository();
+
         private static ICardRepository CardRepository() => _cardRepository ??= new InMemoryCardRepository();
 
         private static IServerConfiguration ServerConfiguration() => new ServerConfiguration();
 
+
         private static IGetPlayerPlayedUpgradesInMatch GetPlayerPlayedUpgradesInMatch() =>
             new GetPlayerPlayedUpgradesInMatch(MatchesRepository());
 
-        public static HardBot HardBot() => 
-            new HardBot(PlayUpgradeCard(), PlayUnitCard(), GetPlayerPlayedUpgradesInMatch());
-
-        public static Bot EasyBot() => new Bot(PlayUpgradeCard(), PlayUnitCard());
+        private static IApplyEffectPreCalculus ApplyEffectPreCalculus() =>
+            new ApplyEffectPreCalculus(MatchesRepository(), GetPlayerPlayedUpgradesInMatch());
     }
 }

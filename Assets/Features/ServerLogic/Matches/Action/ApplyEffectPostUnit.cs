@@ -8,16 +8,16 @@ namespace Features.ServerLogic.Matches.Action
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
-        private IEnumerable<IApplicateEffectPostUnitStrategy> _postUnitStrategy;
+        private IEnumerable<IApplyEffectPostUnitStrategy> _postUnitStrategy;
 
         public ApplyEffectPostUnit(IMatchesRepository matchesRepository, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
         {
             _matchesRepository = matchesRepository;
             _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
-            _postUnitStrategy = new List<IApplicateEffectPostUnitStrategy>
+            _postUnitStrategy = new List<IApplyEffectPostUnitStrategy>
             {
-                new MadrasahApplicateEffectPostUnitStrategy(),
-                new FurorCelticaApplicateEffectPostUnitStrategy()
+                new MadrasahApplyEffectPostUnitStrategy(),
+                new FurorCelticaApplyEffectPostUnitStrategy()
             };
         }
 

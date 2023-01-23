@@ -5,11 +5,10 @@ using Features.ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public class ApplyEffectPreCalculus : IApplyEffectPostUnit
+    public class ApplyEffectPreCalculus : IApplyEffectPreCalculus
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
-        private IEnumerable<IApplicateEffectPostUnitStrategy> _postUnitStrategy;
         private readonly IEnumerable<IPreCalculusCardStrategy> _upgradeCardPreCalculusStrategies;
 
         public ApplyEffectPreCalculus(IMatchesRepository matchesRepository, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
@@ -23,7 +22,7 @@ namespace Features.ServerLogic.Matches.Action
             };
         }
 
-        public void Execute(string matchId, string userId)
+        public void Execute(string matchId)
         {
             var match = _matchesRepository.Get(matchId);
             var currentRound = match.Board.CurrentRound;

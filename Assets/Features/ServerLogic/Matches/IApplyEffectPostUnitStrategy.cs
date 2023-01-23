@@ -3,7 +3,7 @@ using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Matches
 {
-    public interface IApplicateEffectPostUnitStrategy
+    public interface IApplyEffectPostUnitStrategy
     {
         bool IsValid(UpgradeCard card);
         void Execute(ServerMatch serverMatch, string userId, UnitCard unitCardPlayed);

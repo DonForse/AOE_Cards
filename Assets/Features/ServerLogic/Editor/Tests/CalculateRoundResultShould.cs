@@ -26,7 +26,8 @@ namespace Features.ServerLogic.Editor.Tests
         {
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
-            _calculateRoundResultShould = new CalculateRoundResult(_matchesRepository,_getPlayerPlayedUpgradesInMatch);
+            _calculateRoundResultShould = new CalculateRoundResult(_matchesRepository,_getPlayerPlayedUpgradesInMatch,
+                new ApplyEffectPreCalculus(_matchesRepository,_getPlayerPlayedUpgradesInMatch));
         }
 
         static IRoundResultTestCaseSource[] _roundsCases =
