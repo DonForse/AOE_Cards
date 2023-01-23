@@ -8,15 +8,6 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
 {
     public static class DeckMother
     {
-        public static Deck Create(IList<UnitCard> unitCards = null, IList<UpgradeCard> upgradeCards = null)
-        {
-            return new Deck
-            {
-                UnitCards = new ConcurrentStack<UnitCard>(unitCards ??= new List<UnitCard>()),
-                UpgradeCards = new ConcurrentStack<UpgradeCard>(upgradeCards ??= new List<UpgradeCard>())
-            };
-        }
-        
         public static Deck CreateWithRandomCards(int unitCardsCount = 0,int upgradeCardsCount = 0)
         {
             var unitCards = new List<UnitCard>();

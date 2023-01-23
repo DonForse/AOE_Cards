@@ -80,8 +80,8 @@ namespace Features.ServerLogic.Editor.Tests
         public void RespondsEmptyWhenGetAndNoMatch()
         {
             GivenUser();
-            var response = WhenGet();
             _getUserMatch.Execute(UserId).Returns((ServerMatch)null);
+            var response = WhenGet();
             ThenResponseIsEmptyMatchDto(response);
         }
 

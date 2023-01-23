@@ -68,7 +68,7 @@ namespace Features.ServerLogic.Matches.Action
 
         private static bool HasAllPlayersRerolled(Round round, ServerMatch serverMatch)
         {
-            return round.PlayerHasRerolled.Values.Count(v=>v) == serverMatch.Users.Count;
+            return round.PlayerHasRerolled.Values.Count(v=>v) == serverMatch.Users.Count();
         }
 
         private static void AddNewUnitCards(ServerMatch serverMatch, string userId, List<UnitCard> rerolledUnitCards, List<UnitCard> unitCardsNotRerolled)

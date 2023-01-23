@@ -30,8 +30,8 @@ namespace Features.ServerLogic.Matches.Service
         public void Initialize()
         {
             Timer = new Timer(PlayMatches, null, 3000, 3000);
-            hardBot = new HardBot(ServerLogicProvider.PlayUpgradeCard(), ServerLogicProvider.PlayUnitCard());
-            easyBot = new Bot(ServerLogicProvider.PlayUpgradeCard(), ServerLogicProvider.PlayUnitCard());
+            hardBot = ServerLogicProvider.HardBot();
+            easyBot = ServerLogicProvider.EasyBot();
         }
 
         public void Dispose()

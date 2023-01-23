@@ -108,7 +108,7 @@ namespace Features.ServerLogic.Editor.Tests
             var response = WhenGet();
             Assert.AreEqual("{\"finished\":false,\"cardsplayed\":[{\"player\":null,\"upgradecard\":\"\",\"unitcard\":\"\",\"unitcardpower\":0}," +
                             "{\"player\":null,\"upgradecard\":\"\",\"unitcard\":\"\",\"unitcardpower\":0}],\"winnerplayer\":[]," +
-                            "\"upgradecardround\":\"unit-card\",\"roundnumber\":0,\"rivalready\":false,\"hasReroll\":true,\"roundState\":0," +
+                            "\"upgradecardround\":\"round-upgrade-card\",\"roundnumber\":0,\"rivalready\":false,\"hasReroll\":true,\"roundState\":0," +
                             "\"roundTimer\":40}", response.response);
             Assert.AreEqual("", response.error);
         }

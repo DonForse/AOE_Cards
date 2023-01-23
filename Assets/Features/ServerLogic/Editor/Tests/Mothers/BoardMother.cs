@@ -10,8 +10,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
             IDictionary<string, Hand> withPlayerHands = null,
             IList<Round> withRoundsPlayed = null)
         {
-            if (withRoundsPlayed == null)
-                withRoundsPlayed = new List<Round>();
+            withRoundsPlayed ??= new List<Round>();
             withDeck ??= DeckMother.CreateWithRandomCards();
             return new Board()
             {

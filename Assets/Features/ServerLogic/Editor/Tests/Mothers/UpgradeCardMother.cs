@@ -6,7 +6,7 @@ namespace Features.ServerLogic.Editor.Tests.Mothers
 {
     public static class UpgradeCardMother
     {
-        public static UpgradeCard Create(string withCardName = "unit-card", int withBasePower = 0,
+        public static UpgradeCard Create(string withCardName = "round-upgrade-card", int withBasePower = 0,
             List<Archetype> withArchetypes = null, List<Archetype> withBonusVs = null)
         {
             withArchetypes ??= new List<Archetype>() {Archetype.Monk};

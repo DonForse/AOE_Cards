@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Features.ServerLogic.Cards.Domain.Units;
 using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
-using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -18,13 +16,16 @@ namespace Features.ServerLogic.Editor.Tests
         private const string UserIdTwo = "Id-2";
         private const string MatchId = "MATCH-ID";
         private CalculateRoundResult _calculateRoundResultShould;
-        private IMatchesRepository _matchesRepository;
+        private IGetMatch _getMatch;
+        private IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
+
 
         [SetUp]
         public void Setup()
         {
-            _matchesRepository = Substitute.For<IMatchesRepository>();
-            _calculateRoundResultShould = new CalculateRoundResult(_matchesRepository);
+            _getMatch = Substitute.For<IGetMatch>();
+            _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
+            _calculateRoundResultShould = new CalculateRoundResult(_getMatch,_getPlayerPlayedUpgradesInMatch);
         }
 
         static IRoundResultTestCaseSource[] _roundsCases =
@@ -41,18 +42,19 @@ namespace Features.ServerLogic.Editor.Tests
             new CavalryWinWhenTeutonsFaith(),
             new WinWithPersianTC()
         };
-        
+
         [TestCaseSource(nameof(_roundsCases))]
         public void GetCorrectWinner(IRoundResultTestCaseSource roundCase)
         {
-            var round = ARound(roundCase.Users, roundCase.PlayerCards, roundCase.RoundUpgrade);
-            ServerMatch sm = new ServerMatch(){
-                Users = AUsers(roundCase.Users), 
-                Board = new Board
-                {
-                    RoundsPlayed = roundCase.PreviousRounds,
-                    CurrentRound = round
-                }};
+            var pc = roundCase.PlayerCards;
+            var roundUpgrade = roundCase.RoundUpgrade;
+            var previousRounds = roundCase.PreviousRounds;
+            
+            var round = ARound(roundCase.Users, pc, roundUpgrade);
+            var sm = ServerMatchMother.Create(MatchId, AUsers(roundCase.Users),
+                BoardMother.Create(withRoundsPlayed: previousRounds, withCurrentRound: round));
+            
+            GivenUpgradeCards(pc, roundUpgrade, previousRounds);
             GivenMatchRepositoryReturns(sm);
             WhenExecute();
             ThenRoundWinnerIs();
@@ -62,9 +64,35 @@ namespace Features.ServerLogic.Editor.Tests
                 Assert.IsTrue(roundCase.RoundWinners.All(rw=>round.PlayerWinner.Any(x=>x.Id == rw)));
             }
         }
-        private void GivenMatchRepositoryReturns(ServerMatch sm) => _matchesRepository.Get(MatchId).Returns(sm);
+
+        private void GivenUpgradeCards( Dictionary<string, PlayerCard> playerCards, UpgradeCard roundUpgrade, IList<Round> previousRounds)
+        {
+            var playerOneCards =
+                new List<UpgradeCard>()
+                {
+                    roundUpgrade,
+                    playerCards[UserIdOne].UpgradeCard
+                };
+            playerOneCards.AddRange(previousRounds.Select(round => round.PlayerCards[UserIdOne].UpgradeCard));
+
+            _getPlayerPlayedUpgradesInMatch.Execute(MatchId, UserIdOne).Returns(playerOneCards);
+
+            var playerTwoCards =
+                new List<UpgradeCard>(previousRounds.Select(x => x.PlayerCards[UserIdTwo].UpgradeCard))
+                {
+                    roundUpgrade,
+                    playerCards[UserIdTwo].UpgradeCard
+                };
+            playerTwoCards.AddRange(previousRounds.Select(round => round.PlayerCards[UserIdTwo].UpgradeCard));
+
+            _getPlayerPlayedUpgradesInMatch.Execute(MatchId, UserIdTwo).Returns(playerTwoCards);
+        }
+
+        private void GivenMatchRepositoryReturns(ServerMatch sm) => _getMatch.Execute(MatchId).Returns(sm);
         private void WhenExecute() => _calculateRoundResultShould.Execute(MatchId);
-        private IList<User> AUsers(IList<string> roundCaseUsers) => roundCaseUsers.Select(player => new User() {Id = player}).ToList();
+
+        private IEnumerable<User> AUsers(IList<string> roundCaseUsers) =>
+            roundCaseUsers.Select(player => UserMother.Create(player));
         private KeyValuePair<string, PlayerCard> APlayerOneInfo(PlayerCard withPlayerCard=null) =>
             new(UserIdOne,withPlayerCard ?? 
                           new PlayerCard()
@@ -87,11 +115,9 @@ namespace Features.ServerLogic.Editor.Tests
             };
         private  Round ARound(IList<string> withUsers, Dictionary<string, PlayerCard> withPlayerCards = null,UpgradeCard withRoundUpgradeCard = null )
         {
-            return new Round(withUsers)
-            {
-                PlayerCards = withPlayerCards ?? APlayerCards (APlayerOneInfo(), APlayerTwoInfo()),
-                RoundUpgradeCard = withRoundUpgradeCard ?? UpgradeCardMother.Create(),
-            };
+            return RoundMother.Create(withUsers,
+                withPlayerCards ?? APlayerCards(APlayerOneInfo(), APlayerTwoInfo()),
+                withRoundUpgradeCard: withRoundUpgradeCard ?? UpgradeCardMother.Create());
         }
     }
     

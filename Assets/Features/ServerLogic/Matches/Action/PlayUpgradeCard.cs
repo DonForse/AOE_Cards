@@ -56,6 +56,6 @@ namespace Features.ServerLogic.Matches.Action
         private static bool PlayerHaveAlreadyPlayedUpgradeCard(string userId, Round currentRound) => currentRound.PlayerCards[userId].UpgradeCard != null;
         private static bool PlayerExists(string userId, Round currentRound) => currentRound.PlayerCards.ContainsKey(userId);
         private bool IsUpgradePhaseOver(Round currentRound, ServerMatch sm) => 
-            currentRound.PlayerCards.Count(c => c.Value.UpgradeCard != null) >= sm.Users.Count;
+            currentRound.PlayerCards.Count(c => c.Value.UpgradeCard != null) >= sm.Users.Count();
     }
 }

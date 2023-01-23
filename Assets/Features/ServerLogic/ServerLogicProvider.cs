@@ -1,6 +1,7 @@
 ﻿using Features.ServerLogic.Cards.Actions;
 using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Domain.Bot;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Service;
 using Features.ServerLogic.Users.Actions;
@@ -59,9 +60,9 @@ namespace Features.ServerLogic
         public static ICreateRound CreateRound() => new CreateRound(GetMatch());
         private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());
         private static IGetUpgradeCard GetUpgradeCard() => new GetUpgradeCard(CardRepository());
-        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository());
+        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(GetMatch(), GetPlayerPlayedUpgradesInMatch());
         private static ICalculateMatchResult CalculateMatchResult() => new CalculateMatchResult(GetMatch());
-        private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(GetMatch());
+        private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(GetMatch(),GetPlayerPlayedUpgradesInMatch() );
         private static IUsersQueuedRepository UsersQueuedRepository() =>
             _usersQueuedRepostiory ??= new InMemoryUsersQueuedRepository();
 
@@ -77,5 +78,13 @@ namespace Features.ServerLogic
         private static ICardRepository CardRepository() => _cardRepository ??= new InMemoryCardRepository();
 
         private static IServerConfiguration ServerConfiguration() => new ServerConfiguration();
+
+        private static IGetPlayerPlayedUpgradesInMatch GetPlayerPlayedUpgradesInMatch() =>
+            new GetPlayerPlayedUpgradesInMatch(GetMatch());
+
+        public static HardBot HardBot() => 
+            new HardBot(PlayUpgradeCard(), PlayUnitCard(), GetPlayerPlayedUpgradesInMatch());
+
+        public static Bot EasyBot() => new Bot(PlayUpgradeCard(), PlayUnitCard());
     }
 }

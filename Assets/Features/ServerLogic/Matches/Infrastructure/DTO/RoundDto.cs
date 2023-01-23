@@ -17,7 +17,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
         public RoundState roundState;
         public int roundTimer;
 
-        public RoundDto(Round round, IList<User> users, string userId)
+        public RoundDto(Round round, IEnumerable<User> users, string userId)
         {
             if (round == null)
                 return;

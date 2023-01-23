@@ -16,12 +16,14 @@ namespace Features.ServerLogic.Editor.Tests
         private const string MatchId = "MatchId";
         private ApplyEffectPostUnit _applyEffectPostUnit;
         private IGetMatch _getMatch;
+        private IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
 
         [SetUp]
         public void Setup()
         {
             _getMatch = Substitute.For<IGetMatch>();
-            _applyEffectPostUnit = new ApplyEffectPostUnit(_getMatch);
+            _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
+            _applyEffectPostUnit = new ApplyEffectPostUnit(_getMatch, _getPlayerPlayedUpgradesInMatch);
         }
 
         [Test]
@@ -34,7 +36,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UnitCard = siege,
                 UpgradeCard = card
             }, UpgradeCardMother.Create());
-            
+            GivenUpgradeCards(new List<UpgradeCard> {card});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -50,7 +52,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UnitCard = siege,
                 UpgradeCard = UpgradeCardMother.Create()
             }, UpgradeCardMother.Create());
-            
+            GivenUpgradeCards(new List<UpgradeCard>());
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -62,12 +64,12 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var card = UpgradeCardMother.CreateFakeFurorCeltica();
             var siege = UnitCardMother.Create(withArchetypes: new List<Archetype> { Archetype.SiegeUnit });
-            var match = AServerMatch(new PlayerCard()
+            var match = AServerMatch(new PlayerCard
             {
                 UnitCard = siege,
                 UpgradeCard = UpgradeCardMother.Create()
             }, card);
-            
+            GivenUpgradeCards(new List<UpgradeCard> {card});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -89,7 +91,7 @@ namespace Features.ServerLogic.Editor.Tests
                     UnitCard = siege,
                     UpgradeCard = card
                 });
-            
+            GivenUpgradeCards(new List<UpgradeCard> {card});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -106,7 +108,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UnitCard = monk,
                 UpgradeCard = card
             }, UpgradeCardMother.Create());
-            
+            GivenUpgradeCards(new List<UpgradeCard> {card});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -122,7 +124,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UnitCard = monk,
                 UpgradeCard = UpgradeCardMother.Create()
             }, UpgradeCardMother.Create());
-            
+            GivenUpgradeCards(new List<UpgradeCard> {});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -140,6 +142,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UpgradeCard = UpgradeCardMother.Create()
             }, card);
             
+            GivenUpgradeCards(new List<UpgradeCard> {card});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -161,7 +164,7 @@ namespace Features.ServerLogic.Editor.Tests
                     UnitCard = monk,
                     UpgradeCard = card
                 });
-            
+            GivenUpgradeCards(new List<UpgradeCard> {card});
             _getMatch.Execute(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
@@ -193,7 +196,9 @@ namespace Features.ServerLogic.Editor.Tests
                     },
                     new List<Round>()));
         }
-        
+
+        private void GivenUpgradeCards(List<UpgradeCard> cards) => _getPlayerPlayedUpgradesInMatch.Execute(MatchId, UserId).Returns(cards);
+
         private static ServerMatch AServerMatchWithPreviousRound(PlayerCard playerCard,PlayerCard previousPlayerCard)
         {
             return ServerMatchMother.Create(MatchId,

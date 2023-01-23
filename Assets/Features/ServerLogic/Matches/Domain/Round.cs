@@ -38,14 +38,5 @@ namespace Features.ServerLogic.Matches.Domain
             RoundPlayStartTime = DateTime.Now;
         }
     }
-
-    public enum RoundState
-    {
-        Reroll,
-        Upgrade,
-        Unit, 
-        Finished,
-        GameFinished,
-    }
 }
 

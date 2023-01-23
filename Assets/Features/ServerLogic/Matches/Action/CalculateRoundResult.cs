@@ -11,41 +11,30 @@ namespace Features.ServerLogic.Matches.Action
 {
     public class CalculateRoundResult : ICalculateRoundResult
     {
-        private readonly IMatchesRepository _matchesRepository;
+        private readonly IGetMatch _getMatch;
         private readonly List<IPreCalculusCardStrategy> _upgradeCardPreCalculusStrategies;
+        private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
 
-        public CalculateRoundResult(IMatchesRepository matchesRepository)
+        public CalculateRoundResult(IGetMatch getMatch, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
         {
-            _matchesRepository = matchesRepository;
+            _getMatch = getMatch;
+            _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
             _upgradeCardPreCalculusStrategies = new List<IPreCalculusCardStrategy>();
             _upgradeCardPreCalculusStrategies.Add(new TeutonsFaithPreCalculusCardStrategy());
-            _upgradeCardPreCalculusStrategies.Add(new PersianTcPreCalculusCardStrategy());
+            _upgradeCardPreCalculusStrategies.Add(new PersianTcPreCalculusCardStrategy(_getPlayerPlayedUpgradesInMatch));
         }
 
         public void Execute(string matchId)
         {
-            var match = _matchesRepository.Get(matchId);
+            var match = _getMatch.Execute(matchId);
             var currentRound = match.Board.CurrentRound;
 
-            foreach (var user in match.Users)
-            {
-                foreach (var upgradeCardPlayed in match.GetUpgradeCardsByPlayer(user.Id))
-                {
-                    foreach (var strategy in _upgradeCardPreCalculusStrategies)
-                    {
-                        if (!strategy.IsValid(upgradeCardPlayed)) continue;
-                        var rivalCard = currentRound.PlayerCards.First(x => x.Key != user.Id);
-                        strategy.Execute(upgradeCardPlayed, currentRound.PlayerCards[user.Id].UnitCard,
-                            rivalCard.Value.UnitCard, match, currentRound, user.Id);
-                    }
-                }
-            }
+            ApplyPreCalculus(matchId, match, currentRound);
 
-            var playerOnePower = GetPower(currentRound, currentRound.PlayerCards.Keys.First(), match.Board.RoundsPlayed,
-                match);
-            var playerTwoPower = GetPower(currentRound, currentRound.PlayerCards.Keys.Last(), match.Board.RoundsPlayed,
-                match);
+            var playerOnePower = GetPower(currentRound, currentRound.PlayerCards.Keys.First(), match.Board.RoundsPlayed);
+            var playerTwoPower = GetPower(currentRound, currentRound.PlayerCards.Keys.Last(), match.Board.RoundsPlayed);
             currentRound.PlayerWinner = new List<User>();
+            
             if (playerOnePower == playerTwoPower)
             {
                 currentRound.PlayerWinner.Add(match.Users.First(x => x.Id == currentRound.PlayerCards.Keys.First()));
@@ -65,7 +54,26 @@ namespace Features.ServerLogic.Matches.Action
             currentRound.PlayerCards[currentRound.PlayerCards.Keys.Last()].UnitCardPower = playerTwoPower;
         }
 
-        private int GetPower(Round currentRound, string player, IList<Round> boardRoundsPlayed, ServerMatch serverMatch)
+        private void ApplyPreCalculus(string matchId, ServerMatch match, Round currentRound)
+        {
+            foreach (var user in match.Users)
+            {
+                var upgrades = _getPlayerPlayedUpgradesInMatch.Execute(matchId, user.Id);
+
+                foreach (var upgradeCardPlayed in upgrades)
+                {
+                    foreach (var strategy in _upgradeCardPreCalculusStrategies)
+                    {
+                        if (!strategy.IsValid(upgradeCardPlayed)) continue;
+                        var rivalCard = currentRound.PlayerCards.First(x => x.Key != user.Id);
+                        strategy.Execute(upgradeCardPlayed, currentRound.PlayerCards[user.Id].UnitCard,
+                            rivalCard.Value.UnitCard, match, currentRound, user.Id);
+                    }
+                }
+            }
+        }
+
+        private int GetPower(Round currentRound, string player, IList<Round> boardRoundsPlayed)
         {
             var rivalPlayerCard = currentRound.PlayerCards.First(x => x.Key != player).Value;
             var playerCard = currentRound.PlayerCards[player];
