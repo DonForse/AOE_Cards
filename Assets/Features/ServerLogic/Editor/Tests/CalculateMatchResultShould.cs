@@ -2,6 +2,7 @@
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,21 +13,21 @@ namespace Features.ServerLogic.Editor.Tests
     {
         private const string MatchId = "MatchId";
         private CalculateMatchResult _calculateMatchResult;
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
 
 
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
-            _calculateMatchResult = new CalculateMatchResult(_getMatch);
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _calculateMatchResult = new CalculateMatchResult(_matchesRepository);
         }
 
         [Test]
         public void ReturnFalseWhenNotEnoughRoundsWonByAPlayer()
         {
             var match = AMatch();
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             var result = _calculateMatchResult.Execute(MatchId);
             Assert.AreEqual(false, result);
             Assert.IsNull(match.MatchWinner);
@@ -55,7 +56,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             var winner = UserMother.Create("UserId");
             var match = AMatchWonByUser(winner);
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             var result = _calculateMatchResult.Execute(MatchId);
             Assert.AreEqual(true, result);
             Assert.AreEqual(winner, match.MatchWinner);
@@ -68,7 +69,7 @@ namespace Features.ServerLogic.Editor.Tests
         public void SetTieToTrueWhenPlayersTie()
         {
             var match = AMatchTiedByUser();
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             var result = _calculateMatchResult.Execute(MatchId);
             Assert.AreEqual(true, result);
             Assert.AreEqual(true, match.IsFinished);

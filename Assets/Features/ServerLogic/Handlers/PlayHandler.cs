@@ -1,5 +1,6 @@
 ﻿using System;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Features.ServerLogic.Users.Actions;
 using Newtonsoft.Json;
@@ -10,14 +11,14 @@ namespace Features.ServerLogic.Handlers
     public class PlayHandler
     {
         private readonly IRemoveUserMatch _removeUserMatch;
-        private readonly IGetMatch _getMatch;
+        private readonly IMatchesRepository _matchesRepository;
         private readonly IPlayUpgradeCard _playUpgradeCard;
         private readonly IPlayUnitCard _playUnitCard;
 
-        public PlayHandler(IRemoveUserMatch removeUserMatch, IGetMatch getMatch, IPlayUnitCard playUnitCard, IPlayUpgradeCard playUpgradeCard)
+        public PlayHandler(IRemoveUserMatch removeUserMatch, IMatchesRepository matchesRepository, IPlayUnitCard playUnitCard, IPlayUpgradeCard playUpgradeCard)
         {
             _removeUserMatch = removeUserMatch;
-            _getMatch = getMatch;
+            _matchesRepository = matchesRepository;
             _playUnitCard = playUnitCard;
             _playUpgradeCard = playUpgradeCard;
         }
@@ -29,7 +30,7 @@ namespace Features.ServerLogic.Handlers
         {
             try
             {
-                var match = _getMatch.Execute(matchId);
+                var match = _matchesRepository.Get(matchId);
                 if (match == null)
                     throw new ApplicationException("Match not found");
                 if (match.Board.RoundsPlayed.Count < roundNumber)
@@ -71,7 +72,7 @@ namespace Features.ServerLogic.Handlers
                 {
                     _playUnitCard.Execute(matchId, userId, postCardData.cardname);
                 }
-                var handDto = new HandDto(_getMatch.Execute(matchId).Board.PlayersHands[userId]);
+                var handDto = new HandDto(_matchesRepository.Get(matchId).Board.PlayersHands[userId]);
 
                 var responseDto = new ResponseDto
                 {
@@ -83,7 +84,7 @@ namespace Features.ServerLogic.Handlers
             catch (Exception ex){
                 var responseDto = new ResponseDto
                 {
-                    response = JsonConvert.SerializeObject(new HandDto(_getMatch.Execute(matchId).Board.PlayersHands[userId])),
+                    response = JsonConvert.SerializeObject(new HandDto(_matchesRepository.Get(matchId).Board.PlayersHands[userId])),
                     error = ex.Message
                 };
                 return responseDto;

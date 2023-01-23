@@ -3,6 +3,7 @@ using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Handlers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,13 +16,13 @@ namespace Features.ServerLogic.Editor.Tests
         private const string UserId = "UserId";
         private const string MatchId = "MatchId";
         private RoundHandler _roundHandler;
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
 
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
-            _roundHandler = new RoundHandler(_getMatch);
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _roundHandler = new RoundHandler(_matchesRepository);
         }
 
         [Test]
@@ -31,7 +32,7 @@ namespace Features.ServerLogic.Editor.Tests
             var response = WhenGet();
             ThenRespondsError();
 
-            void GivenGetMatchReturnsNull() => _getMatch.Execute(Arg.Any<string>()).Returns((ServerMatch) null);
+            void GivenGetMatchReturnsNull() => _matchesRepository.Get(Arg.Any<string>()).Returns((ServerMatch) null);
 
             void ThenRespondsError()
             {
@@ -50,7 +51,7 @@ namespace Features.ServerLogic.Editor.Tests
             var response = WhenGet(5);
             ThenRespondsError();
 
-            void GivenGetMatchReturnsEmptyMatch() => _getMatch.Execute(Arg.Any<string>()).Returns(
+            void GivenGetMatchReturnsEmptyMatch() => _matchesRepository.Get(Arg.Any<string>()).Returns(
                 ServerMatchMother.Create(withBoard:
                     BoardMother.Create(withRoundsPlayed: new List<Round>(), withCurrentRound:null)));
 
@@ -73,7 +74,7 @@ namespace Features.ServerLogic.Editor.Tests
             ThenRespondsError();
 
 
-            void GivenGetMatchReturnsEmptyMatch() => _getMatch.Execute(Arg.Any<string>()).Returns(
+            void GivenGetMatchReturnsEmptyMatch() => _matchesRepository.Get(Arg.Any<string>()).Returns(
                 ServerMatchMother.Create(withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()
                 {
                     RoundMother.Create(

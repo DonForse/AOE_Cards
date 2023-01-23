@@ -29,7 +29,7 @@ namespace Features.ServerLogic
             new PlayInactiveMatch(PlayUnitCard(), PlayUpgradeCard(), PlayReroll());
 
 
-        public static IPlayReroll PlayReroll() => new PlayReroll(GetUnitCard(), GetUpgradeCard());
+        public static IPlayReroll PlayReroll() => new PlayReroll(MatchesRepository(),GetUnitCard(), GetUpgradeCard() );
 
         public static IMatchCreatorService MatchCreatorService() =>
             new MatchCreatorService(UsersQueuedRepository(),
@@ -55,14 +55,13 @@ namespace Features.ServerLogic
         public static IGetUserMatch GetUserMatch() => new GetUserMatch(MatchesRepository(), UserMatchesRepository());
         public static IRemoveUserMatch RemoveUserMatch() =>
             new RemoveUserMatch(MatchesRepository(), UserMatchesRepository());
-        public static IGetMatch GetMatch() => new GetMatch(MatchesRepository());
         public static ICreateUser CreateUser() => new CreateUser(UsersRepository());
-        public static ICreateRound CreateRound() => new CreateRound(GetMatch());
+        public static ICreateNewRound CreateRound() => new CreateNewRound(MatchesRepository());
         private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());
         private static IGetUpgradeCard GetUpgradeCard() => new GetUpgradeCard(CardRepository());
-        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(GetMatch(), GetPlayerPlayedUpgradesInMatch());
-        private static ICalculateMatchResult CalculateMatchResult() => new CalculateMatchResult(GetMatch());
-        private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(GetMatch(),GetPlayerPlayedUpgradesInMatch() );
+        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository(), GetPlayerPlayedUpgradesInMatch());
+        private static ICalculateMatchResult CalculateMatchResult() => new CalculateMatchResult(MatchesRepository());
+        private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(MatchesRepository(),GetPlayerPlayedUpgradesInMatch() );
         private static IUsersQueuedRepository UsersQueuedRepository() =>
             _usersQueuedRepostiory ??= new InMemoryUsersQueuedRepository();
 
@@ -80,7 +79,7 @@ namespace Features.ServerLogic
         private static IServerConfiguration ServerConfiguration() => new ServerConfiguration();
 
         private static IGetPlayerPlayedUpgradesInMatch GetPlayerPlayedUpgradesInMatch() =>
-            new GetPlayerPlayedUpgradesInMatch(GetMatch());
+            new GetPlayerPlayedUpgradesInMatch(MatchesRepository());
 
         public static HardBot HardBot() => 
             new HardBot(PlayUpgradeCard(), PlayUnitCard(), GetPlayerPlayedUpgradesInMatch());

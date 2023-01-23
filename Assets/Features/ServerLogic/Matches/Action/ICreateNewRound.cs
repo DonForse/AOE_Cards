@@ -1,6 +1,6 @@
 ﻿namespace Features.ServerLogic.Matches.Action
 {
-    public interface ICreateRound
+    public interface ICreateNewRound
     {
         void Execute(string matchId);
     }

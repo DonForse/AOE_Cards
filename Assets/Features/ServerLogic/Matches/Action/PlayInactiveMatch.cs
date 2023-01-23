@@ -43,7 +43,7 @@ namespace Features.ServerLogic.Matches.Action
                     if (round.RoundState == RoundState.Reroll)
                     {
                         if (!round.PlayerHasRerolled[pc.Key])
-                            _playReroll.Execute(serverMatch, pc.Key,
+                            _playReroll.Execute(serverMatch.Guid, pc.Key,
                                 new RerollInfoDto()
                                     {unitCards = new List<string>(), upgradeCards = new List<string>()});
                     }

@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Linq;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Service;
 
 namespace Features.ServerLogic.Matches.Action
 {
-    public class CreateRound : ICreateRound
+    public class CreateNewRound : ICreateNewRound
     {
-        private readonly IGetMatch _getMatch;
+        private readonly IMatchesRepository _currentMatchRepository;
         private readonly Random _random;
         
-        public CreateRound(IGetMatch getMatch)
+        public CreateNewRound(IMatchesRepository matchesRepository)
         {
             _random = new Random();
-            _getMatch = getMatch;
+            _currentMatchRepository = matchesRepository;
         }
 
         public void Execute(string matchId)
         {
-            var serverMatch = _getMatch.Execute(matchId);
+            var serverMatch = _currentMatchRepository.Get(matchId);
             if (serverMatch.Board.CurrentRound != null) 
                 serverMatch.Board.RoundsPlayed.Add(serverMatch.Board.CurrentRound);
             var round = new Round(serverMatch.Users.Select(u=>u.Id))
@@ -36,6 +37,7 @@ namespace Features.ServerLogic.Matches.Action
                 round.ChangeRoundState(RoundState.Upgrade);
 
             serverMatch.Board.CurrentRound = round;
+            _currentMatchRepository.Update(serverMatch);
         }
     }
 }

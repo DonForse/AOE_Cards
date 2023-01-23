@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 
@@ -8,11 +9,11 @@ namespace Features.ServerLogic.Handlers
 {
     public class RoundHandler
     {
-        private readonly IGetMatch _getMatch;
+        private readonly IMatchesRepository _matchesRepository;
 
-        public RoundHandler(IGetMatch getMatch)
+        public RoundHandler(IMatchesRepository matchesRepository)
         {
-            _getMatch = getMatch;
+            _matchesRepository = matchesRepository;
         }
 
         // GET api/play/matchid(guid-guid-guid-guid)
@@ -22,7 +23,7 @@ namespace Features.ServerLogic.Handlers
         {
             try
             {
-                var match = _getMatch.Execute(matchId);
+                var match = _matchesRepository.Get(matchId);
                 if (match == null)
                     throw new ApplicationException("Match not found");
 

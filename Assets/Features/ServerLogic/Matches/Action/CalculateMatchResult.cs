@@ -1,20 +1,21 @@
 ﻿using System.Linq;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Action
 {
     public class CalculateMatchResult : ICalculateMatchResult
     {
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
 
-        public CalculateMatchResult(IGetMatch getMatch)
+        public CalculateMatchResult(IMatchesRepository matchesRepository)
         {
-            _getMatch = getMatch;
+            _matchesRepository = matchesRepository;
         }
 
         public bool Execute(string matchId)
         {
-            var serverMatch = _getMatch.Execute(matchId);
+            var serverMatch = _matchesRepository.Get(matchId);
             
             var winnersGrouped = serverMatch.Board.RoundsPlayed.Concat(new []{serverMatch.Board.CurrentRound})
                 .SelectMany(r => r.PlayerWinner)
@@ -31,6 +32,8 @@ namespace Features.ServerLogic.Matches.Action
             serverMatch.MatchWinner = winnersGrouped.FirstOrDefault(w => w.Count() >= 4).First();
             if (serverMatch.IsFinished)
                 serverMatch.Board.CurrentRound.ChangeRoundState(RoundState.GameFinished);
+            
+            _matchesRepository.Update(serverMatch);
             return true;
         }
     }

@@ -249,7 +249,7 @@ namespace Features.ServerLogic.Editor.Tests
             };
 
             var board = BoardMother.Create();
-            var serverMatch = ServerMatchMother.Create(withId: MatchId, withBoard: board);
+            var serverMatch = ServerMatchMother.Create(MatchId, withBoard: board);
             var round = RoundMother.Create(withUsers: new List<string>() {UserIdOne, UserIdTwo},
                 withPlayerCards: playerCards,
                 withPlayerReroll: new Dictionary<string, bool>() {{UserIdOne, false}, {UserIdTwo, false}});
@@ -262,8 +262,8 @@ namespace Features.ServerLogic.Editor.Tests
                 ThenPlayRerollForUserTwo();
             });
 
-            void ThenPlayRerollForUserOne() => _playReroll.Received(1).Execute(serverMatch, UserIdOne, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
-            void ThenPlayRerollForUserTwo() => _playReroll.Received(1).Execute(serverMatch, UserIdTwo, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
+            void ThenPlayRerollForUserOne() => _playReroll.Received(1).Execute(MatchId, UserIdOne, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
+            void ThenPlayRerollForUserTwo() => _playReroll.Received(1).Execute(MatchId, UserIdTwo, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
         }
         
         [Test]
@@ -276,7 +276,7 @@ namespace Features.ServerLogic.Editor.Tests
             };
 
             var board = BoardMother.Create();
-            var serverMatch = ServerMatchMother.Create(withId: MatchId, withBoard: board);
+            var serverMatch = ServerMatchMother.Create(MatchId, withBoard: board);
             var round = RoundMother.Create(withUsers: new List<string>() {UserIdOne, UserIdTwo},
                 withPlayerCards: playerCards,
                 withPlayerReroll: new Dictionary<string, bool>() {{UserIdOne, true}, {UserIdTwo, false}});
@@ -288,8 +288,8 @@ namespace Features.ServerLogic.Editor.Tests
                 ThenPlayRerollForUserTwo();
 
                 void ThenDidNotPlayRerollForUserOne() => _playReroll.DidNotReceive()
-                    .Execute(serverMatch, UserIdOne, Arg.Any<RerollInfoDto>());
-            void ThenPlayRerollForUserTwo() => _playReroll.Received(1).Execute(serverMatch, UserIdTwo, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
+                    .Execute(MatchId, UserIdOne, Arg.Any<RerollInfoDto>());
+            void ThenPlayRerollForUserTwo() => _playReroll.Received(1).Execute(MatchId, UserIdTwo, Arg.Is<RerollInfoDto>(x=>x.unitCards.Count == 0 && x.upgradeCards.Count == 0));
         }
 
         private void WhenExecute(ServerMatch serverMatch, Round round) =>

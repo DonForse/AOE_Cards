@@ -4,6 +4,7 @@ using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,15 +16,15 @@ namespace Features.ServerLogic.Editor.Tests
         private const string UserId = "UserId";
         private const string MatchId = "MatchId";
         private ApplyEffectPostUnit _applyEffectPostUnit;
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
         private IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
 
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
+            _matchesRepository = Substitute.For<IMatchesRepository>();
             _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
-            _applyEffectPostUnit = new ApplyEffectPostUnit(_getMatch, _getPlayerPlayedUpgradesInMatch);
+            _applyEffectPostUnit = new ApplyEffectPostUnit(_matchesRepository, _getPlayerPlayedUpgradesInMatch);
         }
 
         [Test]
@@ -37,7 +38,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UpgradeCard = card
             }, UpgradeCardMother.Create());
             GivenUpgradeCards(new List<UpgradeCard> {card});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
@@ -53,7 +54,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UpgradeCard = UpgradeCardMother.Create()
             }, UpgradeCardMother.Create());
             GivenUpgradeCards(new List<UpgradeCard>());
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsFalse(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
@@ -70,7 +71,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UpgradeCard = UpgradeCardMother.Create()
             }, card);
             GivenUpgradeCards(new List<UpgradeCard> {card});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
@@ -92,7 +93,7 @@ namespace Features.ServerLogic.Editor.Tests
                     UpgradeCard = card
                 });
             GivenUpgradeCards(new List<UpgradeCard> {card});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(siege));
@@ -109,7 +110,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UpgradeCard = card
             }, UpgradeCardMother.Create());
             GivenUpgradeCards(new List<UpgradeCard> {card});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));
@@ -125,7 +126,7 @@ namespace Features.ServerLogic.Editor.Tests
                 UpgradeCard = UpgradeCardMother.Create()
             }, UpgradeCardMother.Create());
             GivenUpgradeCards(new List<UpgradeCard> {});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsFalse(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));
@@ -143,7 +144,7 @@ namespace Features.ServerLogic.Editor.Tests
             }, card);
             
             GivenUpgradeCards(new List<UpgradeCard> {card});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));
@@ -165,7 +166,7 @@ namespace Features.ServerLogic.Editor.Tests
                     UpgradeCard = card
                 });
             GivenUpgradeCards(new List<UpgradeCard> {card});
-            _getMatch.Execute(MatchId).Returns(match);
+            _matchesRepository.Get(MatchId).Returns(match);
             _applyEffectPostUnit.Execute(MatchId, UserId);
             
             Assert.IsTrue(match.Board.PlayersHands[UserId].UnitsCards.Contains(monk));

@@ -26,7 +26,7 @@ namespace Features.ServerLogic.Editor.Tests
         private IDequeueFriendMatch _dequeueFriendMatch;
         private IGetUserMatch _getUserMatch;
         private IGetUser _getUser;
-        private ICreateRound _createRound;
+        private ICreateNewRound _createNewRound;
         private ICreateMatch _createMatch;
 
         private IServerConfiguration _serverConfiguration;
@@ -45,10 +45,10 @@ namespace Features.ServerLogic.Editor.Tests
             _dequeueFriendMatch = Substitute.For<IDequeueFriendMatch>();
             _getUser = Substitute.For<IGetUser>();
             _createMatch = Substitute.For<ICreateMatch>();
-            _createRound = Substitute.For<ICreateRound>();
+            _createNewRound = Substitute.For<ICreateNewRound>();
             _serverConfiguration = Substitute.For<IServerConfiguration>();
             matchCreatorService = new MatchCreatorService(_usersQueuedRepository,_friendsQueuedRepository, 
-                _dequeueMatch,_enqueueMatch, _dequeueFriendMatch,_getUser,_createMatch, _createRound, _serverConfiguration);
+                _dequeueMatch,_enqueueMatch, _dequeueFriendMatch,_getUser,_createMatch, _createNewRound, _serverConfiguration);
             
             _serverConfiguration.GetAmountOfPlayersInMatch().Returns(2);
         }
@@ -69,7 +69,7 @@ namespace Features.ServerLogic.Editor.Tests
                 _dequeueFriendMatch.Received(1).Execute(UserTwo);
                 _createMatch.Received(1).Execute(Arg.Is<List<User>>(x => x.Contains(UserOne) && x.Contains(UserTwo)),
                     false);
-                _createRound.Received(1).Execute(MatchId);    
+                _createNewRound.Received(1).Execute(MatchId);    
             });
         }
 
@@ -87,7 +87,7 @@ namespace Features.ServerLogic.Editor.Tests
             _dequeueFriendMatch.DidNotReceive().Execute(UserTwo);
             _createMatch.DidNotReceive().Execute(Arg.Is<List<User>>(x => x.Contains(UserOne) && x.Contains(UserTwo)),
                 false);
-            _createRound.DidNotReceive().Execute(MatchId);
+            _createNewRound.DidNotReceive().Execute(MatchId);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace Features.ServerLogic.Editor.Tests
             _dequeueFriendMatch.DidNotReceive().Execute(UserOne);
             _createMatch.DidNotReceive().Execute(Arg.Is<List<User>>(x => x.Contains(UserOne) && x.Contains(UserTwo)),
                 false);
-            _createRound.DidNotReceive().Execute(MatchId);
+            _createNewRound.DidNotReceive().Execute(MatchId);
         }
         
                 
@@ -125,7 +125,7 @@ namespace Features.ServerLogic.Editor.Tests
                 _dequeueFriendMatch.Received(1).Execute(UserTwo);
                 _createMatch.Received(1).Execute(Arg.Is<List<User>>(x => x.Contains(UserOne) && x.Contains(UserTwo) && !x.Contains(UserThree)),
                     false);
-                _createRound.Received(1).Execute(MatchId);    
+                _createNewRound.Received(1).Execute(MatchId);    
             });
             
             _dequeueFriendMatch.DidNotReceive().Execute(UserThree);
@@ -153,7 +153,7 @@ namespace Features.ServerLogic.Editor.Tests
                 _dequeueMatch.Received(1).Execute(UserTwo);
                 _createMatch.Received(1).Execute(Arg.Is<List<User>>(x => x.Contains(UserOne) && x.Contains(UserTwo)),
                     false);
-                _createRound.Received(1).Execute(MatchId);    
+                _createNewRound.Received(1).Execute(MatchId);    
             });
         }
         
@@ -179,7 +179,7 @@ namespace Features.ServerLogic.Editor.Tests
                 _dequeueMatch.Received(1).Execute(UserTwo);
                 _createMatch.Received(1).Execute(Arg.Is<List<User>>(x => x.Contains(UserOne) && x.Contains(UserTwo)),
                     false);
-                _createRound.Received(1).Execute(MatchId);
+                _createNewRound.Received(1).Execute(MatchId);
                 _enqueueMatch.Received(1).Execute(UserThree, Arg.Any<DateTime>());
             });
         }

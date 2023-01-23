@@ -1,5 +1,6 @@
 ﻿using System;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Newtonsoft.Json;
 
@@ -8,12 +9,12 @@ namespace Features.ServerLogic.Handlers
     
     public class RerollHandler
     {
-        private readonly IGetMatch _getMatch;
+        private readonly IMatchesRepository _matchesRepository;
         private readonly IPlayReroll _playReroll;
 
-        public RerollHandler(IGetMatch getMatch, IPlayReroll playReroll)
+        public RerollHandler(IMatchesRepository matchesRepository, IPlayReroll playReroll)
         {
-            _getMatch = getMatch;
+            _matchesRepository = matchesRepository;
             _playReroll = playReroll;
         }
 
@@ -23,11 +24,11 @@ namespace Features.ServerLogic.Handlers
             try
             {
                 var cards = json;
-                var match = _getMatch.Execute(matchId);
+                var match = _matchesRepository.Get(matchId);
                 if (match == null)
                     throw new ApplicationException("Match Not Found!");
-                _playReroll.Execute(match, userId, cards);
-                var handDto = new HandDto(_getMatch.Execute(matchId).Board.PlayersHands[userId]);
+                _playReroll.Execute(matchId, userId, cards);
+                var handDto = new HandDto(_matchesRepository.Get(matchId).Board.PlayersHands[userId]);
 
                 var responseDto = new ResponseDto
                 {

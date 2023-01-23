@@ -3,6 +3,7 @@ using System.Linq;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -10,16 +11,16 @@ namespace Features.ServerLogic.Editor.Tests
 {
     public class CreateRoundShould
     {
-        private CreateRound _createRound;
-        private IGetMatch _getMatch;
+        private CreateNewRound _createNewRound;
+        private IMatchesRepository _matchesRepository;
         private const string MatchId = "MatchId";
 
 
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
-            _createRound = new CreateRound(_getMatch);
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _createNewRound = new CreateNewRound(_matchesRepository);
         }
 
         [Test]
@@ -30,8 +31,8 @@ namespace Features.ServerLogic.Editor.Tests
                 BoardMother.Create(
                     withCurrentRound:previousCurrentRound,
                     withRoundsPlayed: new List<Round>()));
-            _getMatch.Execute(MatchId).Returns(match);
-            _createRound.Execute(MatchId);
+            _matchesRepository.Get(MatchId).Returns(match);
+            _createNewRound.Execute(MatchId);
 
 
             Assert.AreEqual( 1, match.Board.RoundsPlayed.Count);
@@ -47,8 +48,8 @@ namespace Features.ServerLogic.Editor.Tests
                 BoardMother.Create(
                     withCurrentRound:previousCurrentRound,
                     withRoundsPlayed: new List<Round>()));
-            _getMatch.Execute(MatchId).Returns(match);
-            _createRound.Execute(MatchId);
+            _matchesRepository.Get(MatchId).Returns(match);
+            _createNewRound.Execute(MatchId);
 
 
             Assert.AreEqual( 0, match.Board.RoundsPlayed.Count);
@@ -63,8 +64,8 @@ namespace Features.ServerLogic.Editor.Tests
                 BoardMother.Create(
                     withCurrentRound:previousCurrentRound,
                     withRoundsPlayed: new List<Round>{RoundMother.Create()}));
-            _getMatch.Execute(MatchId).Returns(match);
-            _createRound.Execute(MatchId);
+            _matchesRepository.Get(MatchId).Returns(match);
+            _createNewRound.Execute(MatchId);
 
 
             Assert.AreEqual( 2, match.Board.RoundsPlayed.Count);
@@ -81,8 +82,8 @@ namespace Features.ServerLogic.Editor.Tests
                     withRoundsPlayed: new List<Round>{
                         RoundMother.Create(),RoundMother.Create(),
                         RoundMother.Create(),RoundMother.Create()}));
-            _getMatch.Execute(MatchId).Returns(match);
-            _createRound.Execute(MatchId);
+            _matchesRepository.Get(MatchId).Returns(match);
+            _createNewRound.Execute(MatchId);
 
             Assert.AreEqual( 5, match.Board.RoundsPlayed.Count);
             Assert.AreEqual(previousCurrentRound, match.Board.RoundsPlayed.Last());

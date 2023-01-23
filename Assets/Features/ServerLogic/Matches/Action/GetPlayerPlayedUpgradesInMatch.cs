@@ -1,20 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Action
 {
     public class GetPlayerPlayedUpgradesInMatch : IGetPlayerPlayedUpgradesInMatch
     {
-        private readonly IGetMatch _getMatch;
-        public GetPlayerPlayedUpgradesInMatch(IGetMatch getMatch)
+        private readonly IMatchesRepository _matchesRepository;
+        public GetPlayerPlayedUpgradesInMatch(IMatchesRepository matchesRepository)
         {
-            _getMatch = getMatch;
+            _matchesRepository = matchesRepository;
         }
 
         public IEnumerable<UpgradeCard> Execute(string matchId, string userId)
         {
-            var match = _getMatch.Execute(matchId);
+            var match = _matchesRepository.Get(matchId);
             var upgradeCards = match.Board.RoundsPlayed.SelectMany(r => r.PlayerCards
                     .Where(pc => pc.Key == userId && pc.Value.UpgradeCard != null)
                     .Select(pc => pc.Value.UpgradeCard))

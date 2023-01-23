@@ -9,6 +9,7 @@ using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
@@ -24,6 +25,7 @@ namespace Features.ServerLogic.Editor.Tests
         private PlayReroll _playReroll;
         private IGetUpgradeCard _getUpgradeCard;
         private IGetUnitCard _getUnitCard;
+        private IMatchesRepository _matchesRepository;
 
 
         [SetUp]
@@ -31,28 +33,42 @@ namespace Features.ServerLogic.Editor.Tests
         {
             _getUnitCard = Substitute.For<IGetUnitCard>();
             _getUpgradeCard = Substitute.For<IGetUpgradeCard>();
-            _playReroll = new PlayReroll(_getUnitCard, _getUpgradeCard);
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _playReroll = new PlayReroll(_matchesRepository, _getUnitCard, _getUpgradeCard);
         }
 
+        [Test]
+        public void ThrowsWhenNoMatch()
+        {
+            GivenNoMatch();
+            ThenThrows(() => WhenReroll());
+
+            void GivenNoMatch() => _matchesRepository.Get(MatchId).Returns((ServerMatch)null);
+        }
+        
         [Test]
         public void ThrowsWhenNoRounds()
         {
             var match = ServerMatchMother.Create(MatchId, withBoard: BoardMother.Create());
-            ThenThrows(() => WhenReroll(match));
+            GivenMatch(match);
+            ThenThrows(() => WhenReroll());
         }
 
         [Test]
         public void ThrowsWhenNotInReroll()
         {
             var match = AMatch(RoundState.Unit);
-            ThenThrows(() => WhenReroll(match));
+            GivenMatch(match);
+
+            ThenThrows(() => WhenReroll());
         }
 
         [Test]
         public void ThrowsWhenUpgradeCardAlreadyPlayedForThatRound()
         {
             var match = AMatchWithAnUpgradeCardPlayed();
-            ThenThrows(() => WhenReroll(match));
+            GivenMatch(match);
+            ThenThrows(() => WhenReroll());
 
             ServerMatch AMatchWithAnUpgradeCardPlayed() =>
                 AMatch(withPlayerCards: new Dictionary<string, PlayerCard>
@@ -65,7 +81,8 @@ namespace Features.ServerLogic.Editor.Tests
         public void ThrowsWhenPlayerCannotReroll()
         {
             var match = AMatch(withPlayersReroll: new Dictionary<string, bool>() {{UserId, true}});
-            ThenThrows(() => WhenReroll(match));
+            GivenMatch(match);
+            ThenThrows(() => WhenReroll());
         }
 
         [Test]
@@ -74,7 +91,8 @@ namespace Features.ServerLogic.Editor.Tests
             var cardName = "some card";
             GivenGetUnitCardsReturnsNull();
             var match = AMatch();
-            ThenThrows(() => WhenReroll(match, ARerollInfoDto(new List<string> {cardName}, new List<string>())));
+            GivenMatch(match);
+            ThenThrows(() => WhenReroll(ARerollInfoDto(new List<string> {cardName}, new List<string>())));
 
             void GivenGetUnitCardsReturnsNull() => _getUnitCard.Execute(cardName).Returns((UnitCard) null);
         }
@@ -88,8 +106,9 @@ namespace Features.ServerLogic.Editor.Tests
             GivenUnitCard(rerolledCardName);
 
             var match = AMatch(withPlayerHands: PlayerHandsWithUnit(unitCardInHand));
+            GivenMatch(match);
             ThenThrows(() =>
-                WhenReroll(match, ARerollInfoDto(new List<string> {rerolledCardName}, new List<string>())));
+                WhenReroll(ARerollInfoDto(new List<string> {rerolledCardName}, new List<string>())));
         }
 
         [Test]
@@ -98,7 +117,8 @@ namespace Features.ServerLogic.Editor.Tests
             var cardName = "some card";
             GivenUpgradeCardIsNull();
             var match = AMatch();
-            ThenThrows(() => WhenReroll(match, ARerollInfoDto(new List<string>(), new List<string>() {cardName})));
+            GivenMatch(match);
+            ThenThrows(() => WhenReroll(ARerollInfoDto(new List<string>(), new List<string>() {cardName})));
 
             void GivenUpgradeCardIsNull() => _getUpgradeCard.Execute(cardName).Returns((UpgradeCard) null);
         }
@@ -113,8 +133,9 @@ namespace Features.ServerLogic.Editor.Tests
             GivenUpgradeCard(rerolledCardName);
 
             var match = AMatch(withPlayerHands: PlayerHandsWithUpgradeCard(upgradeCardInHand));
+            GivenMatch(match);
             ThenThrows(() =>
-                WhenReroll(match, ARerollInfoDto(new List<string>() , new List<string> {rerolledCardName})));
+                WhenReroll(ARerollInfoDto(new List<string>() , new List<string> {rerolledCardName})));
         }
 
         [Test]
@@ -134,7 +155,9 @@ namespace Features.ServerLogic.Editor.Tests
                 withPlayerHands: PlayerHandWithCards(unitCardThatWillBeRerolled, upgradeCardThatWillBeRerolled),
                 withDeck: deck, 
                 withPlayersReroll:playerRerolls);
-            WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
+            GivenMatch(match);
+
+            WhenReroll(ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
 
             
             Assert.Contains(unitCardThatWillBeRerolled, match.Board.PlayersHands[UserId].UnitsCards.ToList());
@@ -168,7 +191,9 @@ namespace Features.ServerLogic.Editor.Tests
                 withPlayerHands: PlayerHandWithCards(unitCardThatWillBeRerolled, upgradeCardThatWillBeRerolled),
                 withDeck: deck, 
                 withPlayersReroll:playerRerolls);
-            WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
+            GivenMatch(match);
+
+            WhenReroll(ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
 
             
             Assert.Contains(unitDeckCard, match.Board.PlayersHands[UserId].UnitsCards.ToList());
@@ -199,7 +224,8 @@ namespace Features.ServerLogic.Editor.Tests
             var match = AMatch(
                 withPlayerHands: APlayerHandWithMultipleUnits(unitCardInHand, unitCardThatWillBeRerolled),
                 withDeck: deck);
-            WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
             
             Assert.Contains(unitCardInHand, match.Board.PlayersHands[UserId].UnitsCards.ToList());
 
@@ -225,7 +251,8 @@ namespace Features.ServerLogic.Editor.Tests
                 withPlayerHands: APlayerHandWithMultipleUnits(unitCardInHand, unitCardThatWillBeRerolled),
                 withDeck: deck);
             
-            WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
             
             Assert.Contains(deckCard, match.Board.PlayersHands[UserId].UnitsCards.ToList());
             Assert.IsFalse(match.Board.PlayersHands[UserId].UnitsCards.Contains(unitCardThatWillBeRerolled));
@@ -252,7 +279,9 @@ namespace Features.ServerLogic.Editor.Tests
             var match = AMatch(
                 withPlayerHands: APlayerHandWithMultipleUnits(unitCardInHand, unitCardThatWillBeRerolled),
                 withDeck: deck);
-            WhenReroll(match, ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
+                        
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string> {anotherCardNameInHandThatWillBeRerolled}, new List<string>()));
             
             Assert.Contains(unitCardThatWillBeRerolled, match.Board.Deck.UnitCards);
 
@@ -278,7 +307,9 @@ namespace Features.ServerLogic.Editor.Tests
             var match = AMatch(
                 withPlayerHands: PlayerHandsWithMultipleUpgradeCards(upgradeCardInHand, upgradeCardThatWillBeRerolled),
                 withDeck: deck);
-            WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
+                        
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
             
             Assert.Contains(upgradeCardInHand, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
 
@@ -304,7 +335,9 @@ namespace Features.ServerLogic.Editor.Tests
             var match = AMatch(
                 withPlayerHands:PlayerHandsWithMultipleUpgradeCards(upgradeCardInHand, upgradeCardThatWillBeRerolled),
                 withDeck: deck);
-            WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
+                        
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
             
             Assert.Contains(upgradeCardInHand, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
             Assert.Contains(deckCard, match.Board.PlayersHands[UserId].UpgradeCards.ToList());
@@ -333,7 +366,9 @@ namespace Features.ServerLogic.Editor.Tests
             var match = AMatch(
                 withPlayerHands:PlayerHandsWithMultipleUpgradeCards(upgradeCardInHand, upgradeCardThatWillBeRerolled),
                 withDeck: deck);
-            WhenReroll(match, ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
+                        
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string>(),new List<string> {anotherCardNameInHandThatWillBeRerolled}));
             
             Assert.Contains(upgradeCardThatWillBeRerolled, match.Board.Deck.UpgradeCards);
 
@@ -362,7 +397,9 @@ namespace Features.ServerLogic.Editor.Tests
                 withPlayerHands: PlayerHandWithCards(unitCardThatWillBeRerolled, upgradeCardThatWillBeRerolled),
                 withDeck: deck, 
                 withPlayersReroll:playerRerolls);
-            WhenReroll(match, ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
+                        
+            GivenMatch(match);
+            WhenReroll(ARerollInfoDto(new List<string> {unitCardName}, new List<string> {upgradeCardName}));
             
             Assert.AreEqual(RoundState.Upgrade,match.Board.CurrentRound!.RoundState);
 
@@ -451,8 +488,9 @@ namespace Features.ServerLogic.Editor.Tests
             }}};
         }
 
-        private void WhenReroll(ServerMatch match, RerollInfoDto rerollInfoDto = null) =>
-            _playReroll.Execute(match, UserId, rerollInfoDto ??= new RerollInfoDto());
+        private void GivenMatch(ServerMatch match) => _matchesRepository.Get(MatchId).Returns(match);
+        private void WhenReroll(RerollInfoDto rerollInfoDto = null) =>
+            _playReroll.Execute(MatchId, UserId, rerollInfoDto ??= new RerollInfoDto());
 
         private void ThenThrows(TestDelegate when) => Assert.Throws<ApplicationException>(when);
     }

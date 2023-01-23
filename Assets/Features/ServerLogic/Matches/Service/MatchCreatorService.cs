@@ -19,7 +19,7 @@ namespace Features.ServerLogic.Matches.Service
         private readonly IServerConfiguration _serverConfiguration;
 
         private readonly ICreateMatch _createMatch;
-        private readonly ICreateRound _createRound;
+        private readonly ICreateNewRound _createNewRound;
 
         public MatchCreatorService(
             IUsersQueuedRepository usersQueuedRepository,
@@ -29,7 +29,7 @@ namespace Features.ServerLogic.Matches.Service
             IDequeueFriendMatch dequeueFriendMatch,
             IGetUser getUser,
             ICreateMatch createMatch,
-            ICreateRound createRound,
+            ICreateNewRound createNewRound,
             IServerConfiguration serverConfiguration)
         {
             _usersQueuedRepository = usersQueuedRepository;
@@ -39,7 +39,7 @@ namespace Features.ServerLogic.Matches.Service
             _dequeueFriendMatch = dequeueFriendMatch;
             _getUser = getUser;
             _createMatch = createMatch;
-            _createRound = createRound;
+            _createNewRound = createNewRound;
             _serverConfiguration = serverConfiguration;
         }
 
@@ -116,7 +116,7 @@ namespace Features.ServerLogic.Matches.Service
         private void CreateMatchBetweenPlayers(List<User> matchUsers)
         {
             var match = _createMatch.Execute(matchUsers, false);
-            _createRound.Execute(match.Guid);
+            _createNewRound.Execute(match.Guid);
         }
     }
 }

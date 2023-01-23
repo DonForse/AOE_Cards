@@ -5,6 +5,7 @@ using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Handlers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 using NSubstitute;
 using NUnit.Framework;
@@ -18,21 +19,21 @@ namespace Features.ServerLogic.Editor.Tests
         private const string UserId = "UserId";
 
         private RerollHandler _rerollHandler;
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
         private IPlayReroll _playReroll;
 
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
+            _matchesRepository = Substitute.For<IMatchesRepository>();
             _playReroll = Substitute.For<IPlayReroll>();
-            _rerollHandler = new RerollHandler(_getMatch, _playReroll);
+            _rerollHandler = new RerollHandler(_matchesRepository, _playReroll);
         }
 
         [Test]
         public void RespondsErrorWhenMatchIsNull()
         {
-            _getMatch.Execute(MatchId).Returns((ServerMatch) null);
+            _matchesRepository.Get(MatchId).Returns((ServerMatch) null);
             var response = WhenPost(new() {""}, new() {""});
 
             Assert.AreEqual("Match Not Found!", response.error);
@@ -42,9 +43,9 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void CallPlayRerollWhenPost()
         {
-            _getMatch.Execute(MatchId).Returns(ServerMatchMother.Create());
+            _matchesRepository.Get(MatchId).Returns(ServerMatchMother.Create(MatchId));
             var response = WhenPost(new() {"test-unit"}, new() {"test-upgrade"});
-            _playReroll.Received(1).Execute(Arg.Any<ServerMatch>(), UserId,
+            _playReroll.Received(1).Execute(MatchId, UserId,
                 Arg.Is<RerollInfoDto>(x =>
                     x.unitCards.Contains("test-unit")
                     && x.upgradeCards.Contains("test-upgrade"))
@@ -54,7 +55,7 @@ namespace Features.ServerLogic.Editor.Tests
         [Test]
         public void RespondsHand()
         {
-            _getMatch.Execute(MatchId).Returns(ServerMatchMother.Create(withBoard: BoardMother.Create(
+            _matchesRepository.Get(MatchId).Returns(ServerMatchMother.Create(withBoard: BoardMother.Create(
                 withPlayerHands: new Dictionary<string, Hand>()
                 {
                     {

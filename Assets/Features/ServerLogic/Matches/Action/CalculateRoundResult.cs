@@ -11,13 +11,13 @@ namespace Features.ServerLogic.Matches.Action
 {
     public class CalculateRoundResult : ICalculateRoundResult
     {
-        private readonly IGetMatch _getMatch;
+        private readonly IMatchesRepository _matchesRepository;
         private readonly List<IPreCalculusCardStrategy> _upgradeCardPreCalculusStrategies;
         private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
 
-        public CalculateRoundResult(IGetMatch getMatch, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
+        public CalculateRoundResult(IMatchesRepository matchesRepository, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
         {
-            _getMatch = getMatch;
+            _matchesRepository = matchesRepository;
             _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
             _upgradeCardPreCalculusStrategies = new List<IPreCalculusCardStrategy>();
             _upgradeCardPreCalculusStrategies.Add(new TeutonsFaithPreCalculusCardStrategy());
@@ -26,7 +26,7 @@ namespace Features.ServerLogic.Matches.Action
 
         public void Execute(string matchId)
         {
-            var match = _getMatch.Execute(matchId);
+            var match = _matchesRepository.Get(matchId);
             var currentRound = match.Board.CurrentRound;
 
             ApplyPreCalculus(matchId, match, currentRound);
@@ -52,6 +52,8 @@ namespace Features.ServerLogic.Matches.Action
             //hotfix:
             currentRound.PlayerCards[currentRound.PlayerCards.Keys.First()].UnitCardPower = playerOnePower;
             currentRound.PlayerCards[currentRound.PlayerCards.Keys.Last()].UnitCardPower = playerTwoPower;
+            
+            _matchesRepository.Update(match);
         }
 
         private void ApplyPreCalculus(string matchId, ServerMatch match, Round currentRound)

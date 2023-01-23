@@ -4,6 +4,7 @@ using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -16,16 +17,16 @@ namespace Features.ServerLogic.Editor.Tests
         private const string UserIdTwo = "Id-2";
         private const string MatchId = "MATCH-ID";
         private CalculateRoundResult _calculateRoundResultShould;
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
         private IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
 
 
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
+            _matchesRepository = Substitute.For<IMatchesRepository>();
             _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
-            _calculateRoundResultShould = new CalculateRoundResult(_getMatch,_getPlayerPlayedUpgradesInMatch);
+            _calculateRoundResultShould = new CalculateRoundResult(_matchesRepository,_getPlayerPlayedUpgradesInMatch);
         }
 
         static IRoundResultTestCaseSource[] _roundsCases =
@@ -88,7 +89,7 @@ namespace Features.ServerLogic.Editor.Tests
             _getPlayerPlayedUpgradesInMatch.Execute(MatchId, UserIdTwo).Returns(playerTwoCards);
         }
 
-        private void GivenMatchRepositoryReturns(ServerMatch sm) => _getMatch.Execute(MatchId).Returns(sm);
+        private void GivenMatchRepositoryReturns(ServerMatch sm) => _matchesRepository.Get(MatchId).Returns(sm);
         private void WhenExecute() => _calculateRoundResultShould.Execute(MatchId);
 
         private IEnumerable<User> AUsers(IList<string> roundCaseUsers) =>

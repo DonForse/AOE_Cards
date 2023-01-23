@@ -5,6 +5,7 @@ using Features.ServerLogic.Cards.Actions;
 using Features.ServerLogic.Cards.Domain.Units;
 using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;
 
 namespace Features.ServerLogic.Matches.Action
@@ -13,15 +14,21 @@ namespace Features.ServerLogic.Matches.Action
     {
         private readonly IGetUnitCard _getUnitCard;
         private readonly IGetUpgradeCard _getUpgradeCard;
+        private readonly IMatchesRepository _matchesRepository;
 
-        public PlayReroll(IGetUnitCard getUnitCard, IGetUpgradeCard getUpgradeCard)
+        public PlayReroll(IMatchesRepository matchesRepository, IGetUnitCard getUnitCard, IGetUpgradeCard getUpgradeCard)
         {
+            _matchesRepository = matchesRepository;
             _getUnitCard = getUnitCard;
             _getUpgradeCard = getUpgradeCard;
         }
 
-        public void Execute(ServerMatch serverMatch, string userId, RerollInfoDto cards)
+        public void Execute(string matchId, string userId, RerollInfoDto cards)
         {
+            var serverMatch = _matchesRepository.Get(matchId);
+            if (serverMatch == null)
+                throw new ApplicationException("Match does not exist");
+
             var round = serverMatch.Board.CurrentRound;
             if (round == null)
                 throw new ApplicationException("Round does not exist");

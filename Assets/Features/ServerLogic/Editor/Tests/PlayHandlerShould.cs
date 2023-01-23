@@ -25,7 +25,7 @@ namespace Features.ServerLogic.Editor.Tests
         private PlayHandler _playHandler;
         private ICardRepository _cardRepository;
         private IRemoveUserMatch _removeUserMatch;
-        private IGetMatch _getMatch;
+        private IMatchesRepository _matchesRepository;
         private IPlayUnitCard _playUnitCard;
         private IPlayUpgradeCard _playUpgradeCard;
 
@@ -33,11 +33,11 @@ namespace Features.ServerLogic.Editor.Tests
         [SetUp]
         public void Setup()
         {
-            _getMatch = Substitute.For<IGetMatch>();
+            _matchesRepository = Substitute.For<IMatchesRepository>();
             _removeUserMatch = Substitute.For<IRemoveUserMatch>();
             _playUnitCard = Substitute.For<IPlayUnitCard>();
             _playUpgradeCard = Substitute.For<IPlayUpgradeCard>();
-            _playHandler = new PlayHandler(_removeUserMatch, _getMatch, _playUnitCard, _playUpgradeCard);
+            _playHandler = new PlayHandler(_removeUserMatch, _matchesRepository, _playUnitCard, _playUpgradeCard);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Features.ServerLogic.Editor.Tests
                             "\"roundTimer\":0}", response.response);
             Assert.AreEqual("Match not found", response.error);
 
-            void GivenGetMatchReturnsNoMatch() => _getMatch.Execute(MatchId).Returns((ServerMatch) null);
+            void GivenGetMatchReturnsNoMatch() => _matchesRepository.Get(MatchId).Returns((ServerMatch) null);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Features.ServerLogic.Editor.Tests
 
             void GivenGetMatchReturnsFinishedMatch()
             {
-                _getMatch.Execute(MatchId)
+                _matchesRepository.Get(MatchId)
                     .Returns(
                         ServerMatchMother.Create(
                             withIsFinished:true,
@@ -196,7 +196,7 @@ namespace Features.ServerLogic.Editor.Tests
 
         private void GivenGetMatchReturnsMatch(Dictionary<string, PlayerCard> withPlayerCards = null, Dictionary<string, Hand> withPlayerHands = null)
         {
-            _getMatch.Execute(MatchId)
+            _matchesRepository.Get(MatchId)
                 .Returns(
                     ServerMatchMother.Create(
                         withBoard: BoardMother.Create(

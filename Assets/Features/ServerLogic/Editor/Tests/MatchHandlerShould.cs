@@ -35,7 +35,7 @@ namespace Features.ServerLogic.Editor.Tests
         private IDequeueMatch _dequeueMatch;
         private IRemoveUserMatch _removeUserMatch;
         private IGetUserMatch _getUserMatch;
-        private ICreateRound _createRound;
+        private ICreateNewRound _createNewRound;
 
 
         [SetUp]
@@ -50,10 +50,10 @@ namespace Features.ServerLogic.Editor.Tests
             _dequeueMatch = Substitute.For<IDequeueMatch>();
             _getUserMatch = Substitute.For<IGetUserMatch>();
             _removeUserMatch = Substitute.For<IRemoveUserMatch>();
-            _createRound = Substitute.For<ICreateRound>();
+            _createNewRound = Substitute.For<ICreateNewRound>();
             _matchHandler = new MatchHandler(_getUserMatch,
                 _matchCreatorService,_createMatch, _getUser, _enqueueFriendMatch,
-                _enqueueMatch,_dequeueFriendMatch, _dequeueMatch ,_removeUserMatch, _createRound);
+                _enqueueMatch,_dequeueFriendMatch, _dequeueMatch ,_removeUserMatch, _createNewRound);
         }
 
         [Test]
@@ -219,6 +219,6 @@ namespace Features.ServerLogic.Editor.Tests
                 .Execute(Arg.Is<List<User>>(userList => userList.Count == 1 && userList.First().Id == UserId), true,
                     expectedBotDifficulty);
 
-        private void ThenCreateRoundIsCalled() => _createRound.Received(1).Execute(MatchId);
+        private void ThenCreateRoundIsCalled() => _createNewRound.Received(1).Execute(MatchId);
     }
 }

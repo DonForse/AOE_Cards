@@ -25,7 +25,7 @@ namespace Features.ServerLogic.Editor.Tests
         private PlayUnitCard _playUnitCard;
         private ICalculateRoundResult _calculateRoundResult;
         private ICalculateMatchResult _calculateMatchResult;
-        private ICreateRound _createRound;
+        private ICreateNewRound _createNewRound;
         private IApplyEffectPostUnit _applyEffectPostUnit;
 
         [SetUp]
@@ -35,9 +35,9 @@ namespace Features.ServerLogic.Editor.Tests
             _cardRepository = Substitute.For<ICardRepository>();
             _calculateRoundResult = Substitute.For<ICalculateRoundResult>();
             _calculateMatchResult = Substitute.For<ICalculateMatchResult>();
-            _createRound = Substitute.For<ICreateRound>();
+            _createNewRound = Substitute.For<ICreateNewRound>();
             _applyEffectPostUnit = Substitute.For<IApplyEffectPostUnit>();
-            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult, _calculateMatchResult, _createRound, _applyEffectPostUnit);
+            _playUnitCard = new PlayUnitCard(_matchesRepository, _cardRepository, _calculateRoundResult, _calculateMatchResult, _createNewRound, _applyEffectPostUnit);
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace Features.ServerLogic.Editor.Tests
             WhenExecute();
             ThenCreateRound();
 
-            void ThenCreateRound() => _createRound.Received(1).Execute(MatchId);
+            void ThenCreateRound() => _createNewRound.Received(1).Execute(MatchId);
         }
         
         [Test]
@@ -213,7 +213,7 @@ namespace Features.ServerLogic.Editor.Tests
             WhenExecute();
             ThenCreateRound();
 
-            void ThenCreateRound() => _createRound.DidNotReceive().Execute(Arg.Any<string>());
+            void ThenCreateRound() => _createNewRound.DidNotReceive().Execute(Arg.Any<string>());
         }
 
         [Test]

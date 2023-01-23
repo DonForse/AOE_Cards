@@ -16,21 +16,21 @@ namespace Features.ServerLogic.Matches.Action
         private readonly ICardRepository _cardRepository;
         private readonly ICalculateRoundResult _calculateRoundResult;
         private readonly ICalculateMatchResult _calculateMatchResult;
-        private readonly ICreateRound _createRound;
+        private readonly ICreateNewRound _createNewRound;
         private readonly IApplyEffectPostUnit _applyEffectPostUnit;
 
         public PlayUnitCard(IMatchesRepository matchesRepository,
             ICardRepository cardRepository,
             ICalculateRoundResult calculateRoundResult,
             ICalculateMatchResult calculateMatchResult,
-            ICreateRound createRound,
+            ICreateNewRound createNewRound,
             IApplyEffectPostUnit applyEffectPostUnit)
         {
             _matchesRepository = matchesRepository;
             _cardRepository = cardRepository;
             _calculateRoundResult = calculateRoundResult;
             _calculateMatchResult = calculateMatchResult;
-            _createRound = createRound;
+            _createNewRound = createNewRound;
             _applyEffectPostUnit = applyEffectPostUnit;
         }
 
@@ -71,7 +71,7 @@ namespace Features.ServerLogic.Matches.Action
                 currentRound.ChangeRoundState(RoundState.Finished);
                 _calculateRoundResult.Execute(match.Guid);
                 if (!_calculateMatchResult.Execute(match.Guid))
-                    _createRound.Execute(match.Guid);
+                    _createNewRound.Execute(match.Guid);
             }
         }
 

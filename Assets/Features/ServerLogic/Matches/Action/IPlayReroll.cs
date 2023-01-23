@@ -5,6 +5,6 @@ namespace Features.ServerLogic.Matches.Action
 {
     public interface IPlayReroll
     {
-        void Execute(ServerMatch serverMatch, string userId, RerollInfoDto cards);
+        void Execute(string matchId, string userId, RerollInfoDto cards);
     }
 }
