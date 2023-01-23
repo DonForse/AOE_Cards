@@ -6,7 +6,7 @@ namespace Features.ServerLogic.Matches.Action
 {
     public class CalculateMatchResult : ICalculateMatchResult
     {
-        private IMatchesRepository _matchesRepository;
+        private readonly IMatchesRepository _matchesRepository;
 
         public CalculateMatchResult(IMatchesRepository matchesRepository)
         {
