@@ -1,7 +1,8 @@
 ﻿using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Upgrades;
 using Features.ServerLogic.Matches.Domain;
 
-namespace Features.ServerLogic.Cards.Domain.Upgrades
+namespace Features.ServerLogic.Matches
 {
     public interface IApplicateEffectPostUnitStrategy
     {
