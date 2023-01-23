@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Entities;
 
 namespace Features.ServerLogic.Cards.Actions
 {

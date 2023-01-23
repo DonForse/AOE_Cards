@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Cards.Actions;
-using Features.ServerLogic.Cards.Domain.Units;
-using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Infrastructure.DTO;

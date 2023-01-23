@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Cards.Infrastructure;
 
 namespace Features.ServerLogic.Cards.Actions

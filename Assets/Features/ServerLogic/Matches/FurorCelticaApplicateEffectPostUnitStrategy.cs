@@ -1,6 +1,5 @@
 ﻿using System.Linq;
-using Features.ServerLogic.Cards.Domain.Units;
-using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Matches

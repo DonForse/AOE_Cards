@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-using Features.ServerLogic.Cards.Domain.Units;
-using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;

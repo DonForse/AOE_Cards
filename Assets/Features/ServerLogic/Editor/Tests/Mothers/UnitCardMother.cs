@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Features.ServerLogic.Cards.Domain.Units;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Editor.Tests.Mothers

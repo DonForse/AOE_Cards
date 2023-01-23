@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Cards.Infrastructure;
 using Features.ServerLogic.Editor.Tests.Mothers;
 using Features.ServerLogic.Matches.Action;

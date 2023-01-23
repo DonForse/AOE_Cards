@@ -2,8 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Features.ServerLogic.Cards.Domain.Units;
-using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Entities;
 
 namespace Features.ServerLogic.Matches.Domain
 {

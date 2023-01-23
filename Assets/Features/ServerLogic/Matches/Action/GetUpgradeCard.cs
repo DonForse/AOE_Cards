@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Features.ServerLogic.Cards.Domain.Upgrades;
+using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Cards.Infrastructure;
 
 namespace Features.ServerLogic.Matches.Action
