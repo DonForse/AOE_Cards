@@ -70,9 +70,7 @@ namespace Features.ServerLogic.Editor.Tests
         {
             GivenGetMatchReturnsEmptyMatch();
             var response = WhenGet();
-            Debug.Log(response.response);
             ThenRespondsError();
-
 
             void GivenGetMatchReturnsEmptyMatch() => _matchesRepository.Get(Arg.Any<string>()).Returns(
                 ServerMatchMother.Create(withBoard: BoardMother.Create(withRoundsPlayed: new List<Round>()

@@ -71,9 +71,7 @@ namespace Features.ServerLogic.Editor.Tests
                     }},
                 })));
             var response = WhenPost(new() {"test-unit"}, new() {"test-upgrade"});
-
-            Debug.Log(response.response);
-
+            
             Assert.AreEqual("", response.error);
             Assert.AreEqual("{\"units\":[\"test-hand-unit\"],\"upgrades\":[\"test-hand-upgrade\"]}", response.response);
         }

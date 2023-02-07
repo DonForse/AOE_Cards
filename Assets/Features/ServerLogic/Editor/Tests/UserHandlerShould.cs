@@ -79,7 +79,6 @@ namespace Features.ServerLogic.Editor.Tests
             var userRequestDto = AUserRequestDto(UserName, Password);
             GivenCreateUserReturns();
             var response = WhenPut(userRequestDto);
-            Debug.Log(response.response);
             Assert.AreEqual("",response.error);
             Assert.AreEqual("{\"guid\":\"UserId\",\"username\":\"UserName\",\"friendCode\":\"FriendCode\",\"accessToken\":\"\",\"refreshToken\":\"\"}",response.response);
 

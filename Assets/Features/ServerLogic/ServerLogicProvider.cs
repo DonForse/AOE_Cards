@@ -1,5 +1,7 @@
-﻿using Features.ServerLogic.Cards.Actions;
+﻿using System.Collections.Generic;
+using Features.ServerLogic.Cards.Actions;
 using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Matches;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain.Bot;
 using Features.ServerLogic.Matches.Infrastructure;
@@ -67,11 +69,20 @@ namespace Features.ServerLogic
 
         private static IGetUpgradeCard GetUpgradeCard() => new GetUpgradeCard(CardRepository());
 
-        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository(), GetPlayerPlayedUpgradesInMatch(), ApplyEffectPreCalculus());
+        private static ICalculateRoundResult CalculateRoundResult() => new CalculateRoundResult(MatchesRepository(), ApplyEffectPreCalculus());
 
         private static ICalculateMatchResult CalculateMatchResult() => new CalculateMatchResult(MatchesRepository());
 
-        private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(MatchesRepository(),GetPlayerPlayedUpgradesInMatch() );
+        private static IApplyEffectPostUnit ApplyEffectPostUnit() => new ApplyEffectPostUnit(GetPlayerPlayedUpgradesInMatch(),ApplyEffectPostUnitStrategies());
+
+        private static IEnumerable<IApplyEffectPostUnitStrategy> ApplyEffectPostUnitStrategies()
+        {
+            return new List<IApplyEffectPostUnitStrategy>
+            {
+                new MadrasahApplyEffectPostUnitStrategy(MatchesRepository()),
+                new FurorCelticaApplyEffectPostUnitStrategy(MatchesRepository())
+            };
+        }
 
 
         private static IUsersQueuedRepository UsersQueuedRepository() =>

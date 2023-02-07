@@ -11,15 +11,12 @@ namespace Features.ServerLogic.Matches.Action
     public class CalculateRoundResult : ICalculateRoundResult
     {
         private readonly IMatchesRepository _matchesRepository;
-        private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
         private readonly IApplyEffectPreCalculus _applyEffectPreCalculus;
 
         public CalculateRoundResult(IMatchesRepository matchesRepository,
-            IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch,
             IApplyEffectPreCalculus applyEffectPreCalculus)
         {
             _matchesRepository = matchesRepository;
-            _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
             _applyEffectPreCalculus = applyEffectPreCalculus;
         }
 

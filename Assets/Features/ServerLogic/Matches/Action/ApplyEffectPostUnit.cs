@@ -1,41 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Features.ServerLogic.Matches.Infrastructure;
+﻿using System.Collections.Generic;
 
 namespace Features.ServerLogic.Matches.Action
 {
     public class ApplyEffectPostUnit : IApplyEffectPostUnit
     {
-        private readonly IMatchesRepository _matchesRepository;
         private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
-        private IEnumerable<IApplyEffectPostUnitStrategy> _postUnitStrategy;
+        private readonly IEnumerable<IApplyEffectPostUnitStrategy> _postUnitStrategy;
 
-        public ApplyEffectPostUnit(IMatchesRepository matchesRepository, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
+        public ApplyEffectPostUnit(IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch,
+            IEnumerable<IApplyEffectPostUnitStrategy> strategies)
         {
-            _matchesRepository = matchesRepository;
             _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
-            _postUnitStrategy = new List<IApplyEffectPostUnitStrategy>
-            {
-                new MadrasahApplyEffectPostUnitStrategy(),
-                new FurorCelticaApplyEffectPostUnitStrategy()
-            };
+            _postUnitStrategy = strategies;
         }
 
         public void Execute(string matchId, string userId)
         {
-            var serverMatch = _matchesRepository.Get(matchId);
             var upgrades = _getPlayerPlayedUpgradesInMatch.Execute(matchId, userId);
-            var unitCard = serverMatch.Board.CurrentRound.PlayerCards[userId].UnitCard;
             foreach (var upgradeCardPlayed in upgrades)
             {
                 foreach (var postUnitStrategy in _postUnitStrategy)
                 {
-                    if (!postUnitStrategy.IsValid(upgradeCardPlayed)) continue;
-                    postUnitStrategy.Execute(serverMatch, userId, unitCard);
+                    postUnitStrategy.Execute(upgradeCardPlayed, matchId, userId);
                 }
             }
-
-            _matchesRepository.Update(serverMatch);
         }
     }
 }
