@@ -11,21 +11,16 @@ namespace Features.ServerLogic.Matches.Action
         private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
         private readonly IEnumerable<IPreCalculusCardStrategy> _upgradeCardPreCalculusStrategies;
 
-        public ApplyEffectPreCalculus(IMatchesRepository matchesRepository, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
+        public ApplyEffectPreCalculus(IMatchesRepository matchesRepository, IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch, IEnumerable<IPreCalculusCardStrategy> strategies)
         {
             _matchesRepository = matchesRepository;
             _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
-            _upgradeCardPreCalculusStrategies = new List<IPreCalculusCardStrategy>
-            {
-                new TeutonsFaithPreCalculusCardStrategy(),
-                new PersianTcPreCalculusCardStrategy(_getPlayerPlayedUpgradesInMatch)
-            };
+            _upgradeCardPreCalculusStrategies = strategies;
         }
 
         public void Execute(string matchId)
         {
             var match = _matchesRepository.Get(matchId);
-            var currentRound = match.Board.CurrentRound;
             foreach (var user in match.Users)
             {
                 var upgrades = _getPlayerPlayedUpgradesInMatch.Execute(matchId, user.Id);
@@ -34,10 +29,7 @@ namespace Features.ServerLogic.Matches.Action
                 {
                     foreach (var strategy in _upgradeCardPreCalculusStrategies)
                     {
-                        if (!strategy.IsValid(upgradeCardPlayed)) continue;
-                        var rivalCard = currentRound.PlayerCards.First(x => x.Key != user.Id);
-                        strategy.Execute(upgradeCardPlayed, currentRound.PlayerCards[user.Id].UnitCard,
-                            rivalCard.Value.UnitCard, match, currentRound, user.Id);
+                        strategy.Execute(upgradeCardPlayed, matchId, user.Id);
                     }
                 }
             }

@@ -16,9 +16,11 @@ namespace Features.ServerLogic.Editor.Tests
         private const string UserIdOne = "Id";
         private const string UserIdTwo = "Id-2";
         private const string MatchId = "MATCH-ID";
-        private CalculateRoundResult _calculateRoundResultShould;
+        private CalculateRoundResult _calculateRoundResult;
         private IMatchesRepository _matchesRepository;
         private IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
+        private IApplyEffectPreCalculus _applyEffectPreCalculus;
+
 
 
         [SetUp]
@@ -26,8 +28,8 @@ namespace Features.ServerLogic.Editor.Tests
         {
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
-            _calculateRoundResultShould = new CalculateRoundResult(_matchesRepository,
-                new ApplyEffectPreCalculus(_matchesRepository,_getPlayerPlayedUpgradesInMatch));
+            _applyEffectPreCalculus = Substitute.For<IApplyEffectPreCalculus>();
+            _calculateRoundResult = new CalculateRoundResult(_matchesRepository, _applyEffectPreCalculus);
         }
 
         static IRoundResultTestCaseSource[] _roundsCases =
@@ -41,9 +43,30 @@ namespace Features.ServerLogic.Editor.Tests
             new UserOneWinRoundResultUpgradeWithBonusCard(),
             new UserOneWinWithPreviousUpgrades(),
             new UserOneWinRoundWithScorpionCardResult(),
-            new CavalryWinWhenTeutonsFaith(),
-            new WinWithPersianTC()
         };
+        
+        [TestCaseSource(nameof(_roundsCases))]
+        public void ApplyEffectPreCalculus(IRoundResultTestCaseSource roundCase)
+        {
+            var pc = roundCase.PlayerCards;
+            var roundUpgrade = roundCase.RoundUpgrade;
+            var previousRounds = roundCase.PreviousRounds;
+            
+            var round = ARound(roundCase.Users, pc, roundUpgrade);
+            var sm = ServerMatchMother.Create(MatchId, AUsers(roundCase.Users),
+                BoardMother.Create(withRoundsPlayed: previousRounds, withCurrentRound: round));
+            
+            GivenUpgradeCards(pc, roundUpgrade, previousRounds);
+            GivenMatchRepositoryReturns(sm);
+            WhenExecute();
+            
+            ThenApplyEffectPreCalculus();
+
+            void ThenApplyEffectPreCalculus()
+            {
+                _applyEffectPreCalculus.Received(1).Execute(MatchId);
+            }
+        }
 
         [TestCaseSource(nameof(_roundsCases))]
         public void GetCorrectWinner(IRoundResultTestCaseSource roundCase)
@@ -66,7 +89,6 @@ namespace Features.ServerLogic.Editor.Tests
                 Assert.IsTrue(roundCase.RoundWinners.All(rw=>round.PlayerWinner.Any(x=>x.Id == rw)));
             }
         }
-
         private void GivenUpgradeCards( Dictionary<string, PlayerCard> playerCards, UpgradeCard roundUpgrade, IList<Round> previousRounds)
         {
             var playerOneCards =
@@ -91,7 +113,7 @@ namespace Features.ServerLogic.Editor.Tests
         }
 
         private void GivenMatchRepositoryReturns(ServerMatch sm) => _matchesRepository.Get(MatchId).Returns(sm);
-        private void WhenExecute() => _calculateRoundResultShould.Execute(MatchId);
+        private void WhenExecute() => _calculateRoundResult.Execute(MatchId);
 
         private IEnumerable<User> AUsers(IList<string> roundCaseUsers) =>
             roundCaseUsers.Select(player => UserMother.Create(player));

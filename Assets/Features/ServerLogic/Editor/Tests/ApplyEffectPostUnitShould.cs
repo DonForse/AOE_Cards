@@ -33,7 +33,7 @@ namespace Features.ServerLogic.Editor.Tests
 
 
         [Test]
-        public void CallStrategyForEveryUpdate()
+        public void CallStrategyForEveryUpgrade()
         {
             var roundUpgrade = UpgradeCardMother.Create();
             var playerUpgrade = UpgradeCardMother.Create();

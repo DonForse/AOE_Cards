@@ -108,6 +108,15 @@ namespace Features.ServerLogic
             new GetPlayerPlayedUpgradesInMatch(MatchesRepository());
 
         private static IApplyEffectPreCalculus ApplyEffectPreCalculus() =>
-            new ApplyEffectPreCalculus(MatchesRepository(), GetPlayerPlayedUpgradesInMatch());
+            new ApplyEffectPreCalculus(MatchesRepository(), GetPlayerPlayedUpgradesInMatch(), PreCalculusCardStrategies());
+
+        private static IEnumerable<IPreCalculusCardStrategy> PreCalculusCardStrategies()
+        {
+            return new List<IPreCalculusCardStrategy>
+            {
+                new TeutonsFaithPreCalculusCardStrategy(MatchesRepository()),
+                new PersianTcPreCalculusCardStrategy(GetPlayerPlayedUpgradesInMatch(), MatchesRepository())
+            };
+        }
     }
 }

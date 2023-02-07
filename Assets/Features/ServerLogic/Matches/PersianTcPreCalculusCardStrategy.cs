@@ -5,25 +5,31 @@ using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Extensions;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
+using Features.ServerLogic.Matches.Infrastructure;
 
 namespace Features.ServerLogic.Matches
 {
     public class PersianTcPreCalculusCardStrategy : IPreCalculusCardStrategy
     {
         private readonly IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
+        private readonly IMatchesRepository _matchesRepository;
 
-        public PersianTcPreCalculusCardStrategy(IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch)
+        public PersianTcPreCalculusCardStrategy(IGetPlayerPlayedUpgradesInMatch getPlayerPlayedUpgradesInMatch, IMatchesRepository matchesRepository)
         {
             _getPlayerPlayedUpgradesInMatch = getPlayerPlayedUpgradesInMatch;
+            _matchesRepository = matchesRepository;
         }
 
-        public bool IsValid(UpgradeCard card) => card.cardName.ToLowerInvariant() == "persian town center";
-
-        public void Execute(UpgradeCard card, UnitCard unitCardPlayed, UnitCard rivalUnitCard, ServerMatch serverMatch, Round round, string userId)
+        public void Execute(UpgradeCard card, string matchId, string userId)
         {
+            if (!IsValid(card))
+                return;
+            var serverMatch = _matchesRepository.Get(matchId);
+            var round = serverMatch.Board.CurrentRound;
+            var unitCardPlayed = round.PlayerCards[userId].UnitCard;
+            var upgrades = _getPlayerPlayedUpgradesInMatch.Execute(serverMatch.Guid, userId);
             if (!unitCardPlayed.archetypes.ContainsAnyArchetype(Archetype.Villager))
                 return;
-            var upgrades = _getPlayerPlayedUpgradesInMatch.Execute(serverMatch.Guid, userId);
             var power = 0;
             foreach (var upgrade in upgrades) {
                 if (upgrade.cardName == card.cardName)
@@ -33,7 +39,9 @@ namespace Features.ServerLogic.Matches
 
             card.basePower = power + unitCardPlayed.basePower;
         }
-        
+
+        private bool IsValid(UpgradeCard card) => card.cardName.ToLowerInvariant() == "persian town center";
+
         private int CalculateValue(UpgradeCard upgrade, UnitCard unitCard, UnitCard vsCard)
         {
             if (!UpgradeHasArchetype()) 

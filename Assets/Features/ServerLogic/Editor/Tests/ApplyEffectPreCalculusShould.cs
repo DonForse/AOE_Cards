@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Editor.Tests.Mothers;
+using Features.ServerLogic.Matches;
 using Features.ServerLogic.Matches.Action;
-using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Domain;
 using NSubstitute;
@@ -19,60 +19,51 @@ namespace Features.ServerLogic.Editor.Tests
         private IMatchesRepository _matchesRepository;
         private IGetPlayerPlayedUpgradesInMatch _getPlayerPlayedUpgradesInMatch;
 
-
-        static IRoundResultTestCaseSource[] _roundsCases =
-        {
-            new CavalryWinWhenTeutonsFaith(),
-            new WinWithPersianTC()
-        };
+        
+        private IList<IPreCalculusCardStrategy> _strategies;
+        private IPreCalculusCardStrategy _strategy;
 
         [SetUp]
         public void Setup()
         {
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _getPlayerPlayedUpgradesInMatch = Substitute.For<IGetPlayerPlayedUpgradesInMatch>();
-            _applyEffectPreCalculus = new ApplyEffectPreCalculus(_matchesRepository, _getPlayerPlayedUpgradesInMatch);
+            _strategies = new List<IPreCalculusCardStrategy>();
+            _strategy = Substitute.For<IPreCalculusCardStrategy>();
+            _strategies.Add(_strategy);
+            _applyEffectPreCalculus = new ApplyEffectPreCalculus(_matchesRepository, _getPlayerPlayedUpgradesInMatch, _strategies);
         }
 
         [Test]
-        public void JustFail()
+        public void CallStrategyForEveryUpgradeForEveryUser()
         {
-            // var normalUpgrade = UpgradeCardMother.Create();
-            // var teutonsFaith = UpgradeCardMother.CreateFakeTeutonsFaithCard()();
             var persianTc = UpgradeCardMother.CreateFakePersianTC();
             var sm = ServerMatchMother.Create(
-                MatchId,
-                new List<User>{ UserMother.Create(UserId), UserMother.Create(UserIdTwo) },
-                BoardMother.Create(
-                        withCurrentRound:
-                            RoundMother.Create()));
-
-            var upgrades = new List<UpgradeCard> {persianTc};
-            // var upgrades = new List<UpgradeCard>(){};
-            _getPlayerPlayedUpgradesInMatch.Execute(MatchId,UserId).Returns(upgrades);
-            _matchesRepository.Get(MatchId).Returns(sm);
-            
-            _applyEffectPreCalculus.Execute(MatchId);
-/*
- * var match = _matchesRepository.Get(matchId);
-            var currentRound = match.Board.CurrentRound;
-            foreach (var user in match.Users)
-            {
-                var upgrades = _getPlayerPlayedUpgradesInMatch.Execute(matchId, user.Id);
-
-                foreach (var upgradeCardPlayed in upgrades)
+                MatchId, new List<User>
                 {
-                    foreach (var strategy in _upgradeCardPreCalculusStrategies)
-                    {
-                        if (!strategy.IsValid(upgradeCardPlayed)) continue;
-                        var rivalCard = currentRound.PlayerCards.First(x => x.Key != user.Id);
-                        strategy.Execute(upgradeCardPlayed, currentRound.PlayerCards[user.Id].UnitCard,
-                            rivalCard.Value.UnitCard, match, currentRound, user.Id);
-                    }
-                }
-            }
- */
-            Assert.Fail();
+                    UserMother.Create(UserId), UserMother.Create(UserIdTwo)
+                });
+
+            var upgradeRoundCard = UpgradeCardMother.Create();
+            var upgradePlayerRoundCard = UpgradeCardMother.Create();
+            var playerUpgrades = new List<UpgradeCard> {persianTc, upgradeRoundCard, upgradePlayerRoundCard};
+            var secondPlayerUpgrades = new List<UpgradeCard> {persianTc, upgradeRoundCard, upgradePlayerRoundCard};
+            
+            _getPlayerPlayedUpgradesInMatch.Execute(MatchId,UserId).Returns(playerUpgrades);
+            _getPlayerPlayedUpgradesInMatch.Execute(MatchId,UserIdTwo).Returns(secondPlayerUpgrades);
+            _matchesRepository.Get(MatchId).Returns(sm);
+            _applyEffectPreCalculus.Execute(MatchId);
+            
+            Received.InOrder(() =>
+            {
+                _strategy.Received(1).Execute(persianTc, MatchId, UserId);
+                _strategy.Received(1).Execute(upgradeRoundCard, MatchId, UserId);
+                _strategy.Received(1).Execute(upgradePlayerRoundCard, MatchId, UserId);
+                
+                _strategy.Received(1).Execute(persianTc, MatchId, UserIdTwo);
+                _strategy.Received(1).Execute(upgradeRoundCard, MatchId, UserIdTwo);
+                _strategy.Received(1).Execute(upgradePlayerRoundCard, MatchId, UserIdTwo);
+            });
         }
     }
 }

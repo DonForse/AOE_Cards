@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Domain
@@ -13,6 +14,8 @@ namespace Features.ServerLogic.Matches.Domain
         public bool IsFinished;
         public bool IsBot;
         public int BotDifficulty;
+
+        public string GetRival(string userId) => Users.FirstOrDefault(x => x.Id != userId)?.Id;
     }
 }
 
