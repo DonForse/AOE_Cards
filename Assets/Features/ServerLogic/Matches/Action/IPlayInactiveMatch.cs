@@ -1,4 +1,5 @@
-﻿using Features.ServerLogic.Matches.Domain;
+﻿using Features.ServerLogic.Game.Domain.Entities;
+using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {

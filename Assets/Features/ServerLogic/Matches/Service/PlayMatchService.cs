@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Features.ServerLogic.Bot.Domain.Entities;
+using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
-using Features.ServerLogic.Matches.Domain.Bot;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Actions;
 
@@ -24,7 +25,7 @@ namespace Features.ServerLogic.Matches.Service
 
         private static Timer Timer;
         private static HardBot hardBot;
-        private static Bot easyBot;
+        private static Bot.Domain.Entities.Bot easyBot;
         private IPlayUnitCard _playUnitCard;
 
         public void Initialize()

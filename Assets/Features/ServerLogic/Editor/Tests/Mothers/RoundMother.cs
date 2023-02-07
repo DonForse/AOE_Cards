@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Features.ServerLogic.Cards.Domain.Entities;
+using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Users.Domain;
 

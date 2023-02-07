@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Cards.Domain;
 using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Cards.Infrastructure;
 

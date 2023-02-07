@@ -2,11 +2,12 @@
 using System.Linq;
 using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Extensions;
+using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Matches.Action;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
 
-namespace Features.ServerLogic.Matches
+namespace Features.ServerLogic.Game.Domain
 {
     public class PersianTcPreCalculusCardStrategy : IPreCalculusCardStrategy
     {

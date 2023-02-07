@@ -2,9 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Features.ServerLogic.Cards.Domain.Entities;
 
-namespace Features.ServerLogic.Matches.Domain
+namespace Features.ServerLogic.Cards.Domain.Entities
 {
     public class Deck
     {

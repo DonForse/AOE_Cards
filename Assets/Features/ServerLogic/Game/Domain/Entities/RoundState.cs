@@ -1,4 +1,4 @@
-namespace Features.ServerLogic.Matches.Domain
+namespace Features.ServerLogic.Game.Domain.Entities
 {
     public enum RoundState
     {

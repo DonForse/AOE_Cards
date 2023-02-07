@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Features.ServerLogic.Cards.Domain.Entities;
 
-namespace Features.ServerLogic.Cards.Actions
+namespace Features.ServerLogic.Cards.Domain
 {
     public interface IGetUnitCard
     {

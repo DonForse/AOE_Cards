@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Matches.Action;
+using Features.ServerLogic.Matches.Domain;
 
-namespace Features.ServerLogic.Matches.Domain.Bot
+namespace Features.ServerLogic.Bot.Domain.Entities
 {
     public class HardBot : Bot
     {

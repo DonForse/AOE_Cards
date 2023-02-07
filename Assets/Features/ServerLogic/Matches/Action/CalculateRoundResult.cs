@@ -2,6 +2,7 @@
 using System.Linq;
 using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Extensions;
+using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Matches.Domain;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Users.Domain;

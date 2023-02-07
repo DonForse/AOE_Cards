@@ -1,6 +1,6 @@
 ﻿using Features.ServerLogic.Cards.Domain.Entities;
 
-namespace Features.ServerLogic.Matches.Domain
+namespace Features.ServerLogic.Game.Domain.Entities
 {
     public class PlayerCard
     {

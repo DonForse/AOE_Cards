@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Matches.Action;
 
-namespace Features.ServerLogic.Matches.Domain.Bot
+namespace Features.ServerLogic.Bot.Domain.Entities
 {
     public class Bot
     {

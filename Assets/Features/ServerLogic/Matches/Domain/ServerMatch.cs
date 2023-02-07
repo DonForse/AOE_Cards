@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Users.Domain;
 
 namespace Features.ServerLogic.Matches.Domain

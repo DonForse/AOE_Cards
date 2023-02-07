@@ -1,6 +1,6 @@
 ﻿using Features.ServerLogic.Cards.Domain.Entities;
 
-namespace Features.ServerLogic.Matches
+namespace Features.ServerLogic.Game.Domain
 {
     public interface IApplyEffectPostUnitStrategy
     {

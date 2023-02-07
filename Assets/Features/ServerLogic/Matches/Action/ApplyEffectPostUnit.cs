@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Features.ServerLogic.Game.Domain;
 
 namespace Features.ServerLogic.Matches.Action
 {

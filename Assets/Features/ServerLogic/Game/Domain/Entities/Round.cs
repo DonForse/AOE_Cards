@@ -4,7 +4,7 @@ using Features.ServerLogic.Cards.Domain.Entities;
 using Features.ServerLogic.Matches.Service;
 using Features.ServerLogic.Users.Domain;
 
-namespace Features.ServerLogic.Matches.Domain
+namespace Features.ServerLogic.Game.Domain.Entities
 {
     public class Round
     {

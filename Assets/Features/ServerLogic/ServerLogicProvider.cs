@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using Features.ServerLogic.Bot.Domain.Entities;
 using Features.ServerLogic.Cards.Actions;
+using Features.ServerLogic.Cards.Domain;
 using Features.ServerLogic.Cards.Infrastructure;
+using Features.ServerLogic.Game.Domain;
 using Features.ServerLogic.Matches;
 using Features.ServerLogic.Matches.Action;
-using Features.ServerLogic.Matches.Domain.Bot;
 using Features.ServerLogic.Matches.Infrastructure;
 using Features.ServerLogic.Matches.Service;
 using Features.ServerLogic.Users.Actions;
@@ -62,7 +64,7 @@ namespace Features.ServerLogic
         public static HardBot HardBot() => 
             new HardBot(PlayUpgradeCard(), PlayUnitCard(), GetPlayerPlayedUpgradesInMatch());
 
-        public static Bot EasyBot() => new Bot(PlayUpgradeCard(), PlayUnitCard());
+        public static Bot.Domain.Entities.Bot EasyBot() => new Bot.Domain.Entities.Bot(PlayUpgradeCard(), PlayUnitCard());
         public static ICreateNewRound CreateRound() => new CreateNewRound(MatchesRepository());
 
         private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());
