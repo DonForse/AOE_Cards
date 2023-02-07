@@ -239,7 +239,6 @@ namespace Features.ServerLogic.Editor.Tests
 
         public Dictionary<string, PlayerCard> PlayerCards => new()
         {
-            //Heavy Scorpion,Siege,Siege Unit,0,Always wins vs Infantry,Infantry,99
             {"Id",new PlayerCard()
             {
                 UnitCard = UnitCardMother.Create("Villager", 1, new List<Archetype>
