@@ -23,6 +23,8 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public void Execute(Round round)
         {
+            _gameView.UpdateTimer(round);
+
             var matchState = _matchStateRepository.Get();
             if (matchState.IsUpgradePhase())
             {

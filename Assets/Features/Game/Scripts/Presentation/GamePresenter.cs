@@ -79,7 +79,10 @@ namespace Features.Game.Scripts.Presentation
             _matchRepository.Set(gameMatch);
             _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
             _playerPrefs.Save();
-            _getMatchEvery3Seconds.Execute().Subscribe(OnGetMatchInfo)
+            _getMatchEvery3Seconds
+                .Execute()
+                .Do(OnGetMatchInfo)
+                .Subscribe()
                 .AddTo(_disposables);
             // _getRoundEvery3Seconds.Execute()
             //     .Subscribe(OnGetRoundInfo)

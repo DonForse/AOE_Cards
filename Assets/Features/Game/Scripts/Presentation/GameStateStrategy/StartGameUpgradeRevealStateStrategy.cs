@@ -20,6 +20,7 @@ namespace Features.Game.Scripts.Presentation.GameStateStrategy
         {
             _matchStateRepository.Set(GameState.WaitRoundUpgradeReveal);
             _view.ShowRoundUpgrade(round);
+            _view.UpdateTimer(round);
         }
     }
 }

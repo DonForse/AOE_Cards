@@ -22,6 +22,8 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public void Execute(Round round)
         {
+            _gameView.UpdateTimer(round);
+
             _gameView.Log($"HasReroll:{round.HasReroll}");
             if (round.HasReroll)
             {

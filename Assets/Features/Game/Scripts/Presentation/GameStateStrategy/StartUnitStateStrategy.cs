@@ -20,6 +20,7 @@ namespace Features.Game.Scripts.Presentation.GameStateStrategy
 
         public void Execute(Round round)
         {
+            _view.UpdateTimer(round);
             if (round.RoundState == RoundState.Unit)
                 _matchStateRepository.Set(GameState.SelectUnit);
             _view.ShowHand(_matchRepository.Get().Hand);

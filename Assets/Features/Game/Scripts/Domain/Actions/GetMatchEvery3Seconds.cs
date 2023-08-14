@@ -29,8 +29,4 @@ namespace Features.Game.Scripts.Domain.Actions
             });
         }
     }
-    public interface IGetMatchEvery3Seconds
-    {
-        IObservable<GameMatch> Execute();
-    }
 }
