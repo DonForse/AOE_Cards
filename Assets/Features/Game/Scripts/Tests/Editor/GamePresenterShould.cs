@@ -42,6 +42,7 @@ namespace Features.Game.Scripts.Tests.Editor
             _matchService = Substitute.For<IMatchService>();
             _view = Substitute.For<IGameView>();
             _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
+            _getMatchEvery3Seconds = Substitute.For<IGetMatchEvery3Seconds>();
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
             _matchStateRepository = Substitute.For<IMatchStateRepository>();
             _playerPrefs = Substitute.For<IPlayerPrefs>();
