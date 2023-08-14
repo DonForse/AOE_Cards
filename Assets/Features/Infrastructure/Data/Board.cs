@@ -5,5 +5,6 @@ namespace Features.Infrastructure.Data
     public class Board
     {
         public List<Round> Rounds;
+        public Round CurrentRound;
     }
 }

@@ -6,5 +6,6 @@ namespace Features.Infrastructure.DTOs
     public class BoardDto
     {
         public RoundDto[] rounds;
+        public RoundDto currentRound;
     }
 }

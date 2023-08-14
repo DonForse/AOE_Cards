@@ -21,7 +21,7 @@ namespace Features.Game.Scripts.Domain.Actions
         {
             return Observable.Create<Round>(emitter =>
             {
-                Observable.Interval(TimeSpan.FromSeconds(3))
+                Observable.Interval(TimeSpan.FromMilliseconds(3000))
                     .Subscribe(_ =>
                     {
                         _playService.GetRound(_currentMatchRepository.Get().Board.Rounds.Count -1)
@@ -31,5 +31,7 @@ namespace Features.Game.Scripts.Domain.Actions
                 return Disposable.Create(_disposables.Clear);
             });
         }
+        
+        
     }
 }

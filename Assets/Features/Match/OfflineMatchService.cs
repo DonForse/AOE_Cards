@@ -75,7 +75,24 @@ namespace Features.Match
                                 UnitCardData = _cardProvider.GetUnitCard(cp.unitcard),
                                 UpgradeCardData = _cardProvider.GetUpgradeCard(cp.upgradecard)
                             }).ToList()
-                    }).ToList()
+                    }).ToList(),
+                CurrentRound = new Round
+                {
+                    Finished = dto.board.currentRound.finished,
+                    WinnerPlayers = dto.board.currentRound.winnerplayer,
+                    UpgradeCardRound = _cardProvider.GetUpgradeCard(dto.board.currentRound.upgradecardround),
+                    HasReroll = dto.board.currentRound.hasReroll,
+                    Timer = dto.board.currentRound.roundTimer,
+                    RoundState = dto.board.currentRound.roundState,
+                    RoundNumber = dto.board.currentRound.roundnumber,
+                    CardsPlayed = dto.board.currentRound.cardsplayed?.Select(cp =>
+                        new PlayerCard
+                        {
+                            Player = cp.player,
+                            UnitCardData = _cardProvider.GetUnitCard(cp.unitcard),
+                            UpgradeCardData = _cardProvider.GetUpgradeCard(cp.upgradecard)
+                        }).ToList()
+                }
             };
             ms.Hand = new Hand(
                 dto.hand.units.Select(cardName => _cardProvider.GetUnitCard(cardName))

@@ -68,7 +68,8 @@ namespace Features.Game.Scripts.Delivery
             var repo = new InMemoryCurrentMatchRepository();
             _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(),
                 servicesProvider.GetMatchService(),
-                new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo), repo,
+                new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo),
+                new GetMatchEvery3Seconds(servicesProvider.GetMatchService()), repo,
                 new InMemoryMatchStateRepository(),
                 new PlayerPrefsWrapper());
             _presenter.Initialize(gameMatch);

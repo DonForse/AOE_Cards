@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Data;
 using Features.Game.Scripts.Domain;
+using Features.Game.Scripts.Domain.Actions;
 using Features.Game.Scripts.Presentation;
 using Features.Infrastructure;
 using Features.Infrastructure.Data;
@@ -28,6 +29,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private IMatchService _matchService;
         private IMatchStateRepository _matchStateRepository;
         private IPlayerPrefs _playerPrefs;
+        private IGetMatchEvery3Seconds _getMatchEvery3Seconds;
 
         private const int CardsInHand = 5;
 
@@ -43,7 +45,7 @@ namespace Features.Game.Scripts.Tests.Editor
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
             _matchStateRepository = Substitute.For<IMatchStateRepository>();
             _playerPrefs = Substitute.For<IPlayerPrefs>();
-            _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService, _getRoundEvery3Seconds,
+            _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService, _getRoundEvery3Seconds,_getMatchEvery3Seconds,
                 _matchRepository, _matchStateRepository, _playerPrefs);
         }
 

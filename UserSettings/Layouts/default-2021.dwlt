@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Test Runner
+  m_Title: Console
   m_RootView: {fileID: 3}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -39,9 +39,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 219
+    x: 260
     y: 0
-    width: 214
+    width: 262
     height: 633
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 51
+  controlID: 82
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -166,12 +166,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1173
+    width: 1421
     height: 947
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 106
+  controlID: 68
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -192,12 +192,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1173
+    width: 1421
     height: 633
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 107
+  controlID: 69
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -215,10 +215,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 219
+    width: 260
     height: 633
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -239,9 +239,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 433
+    x: 522
     y: 0
-    width: 740
+    width: 899
     height: 633
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
@@ -267,10 +267,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 633
-    width: 1173
+    width: 1421
     height: 314
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 18}
@@ -292,9 +292,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1173
+    x: 1421
     y: 0
-    width: 747
+    width: 499
     height: 947
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 4000, y: 4000}
@@ -391,9 +391,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1173
+    x: 1421
     y: 73
-    width: 746
+    width: 498
     height: 926
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -466,9 +466,9 @@ MonoBehaviour:
       uniqueId: '[AoE Cards][suite]'
       name: AoE Cards
       fullName: AoE Cards
-      resultStatus: 2
-      duration: 1.103777
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 1.5397959
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -482,9 +482,9 @@ MonoBehaviour:
       uniqueId: '[Assembly-CSharp-Editor.dll][suite]'
       name: Assembly-CSharp-Editor.dll
       fullName: D:/Unity/AOE_Cards/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
-      resultStatus: 2
-      duration: 1.0456978
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 1.5163953
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -498,9 +498,9 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/[Features][suite]
       name: Features
       fullName: Features
-      resultStatus: 2
-      duration: 1.045053
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 1.5161427
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -515,7 +515,7 @@ MonoBehaviour:
       name: Game
       fullName: Features.Game
       resultStatus: 1
-      duration: 0.443494
+      duration: 0.9146457
       messages: 
       output: 
       stacktrace: 
@@ -531,7 +531,7 @@ MonoBehaviour:
       name: Scripts
       fullName: Features.Game.Scripts
       resultStatus: 1
-      duration: 0.4400887
+      duration: 0.9113999
       messages: 
       output: 
       stacktrace: 
@@ -547,7 +547,7 @@ MonoBehaviour:
       name: Tests
       fullName: Features.Game.Scripts.Tests
       resultStatus: 1
-      duration: 0.4369931
+      duration: 0.9080016
       messages: 
       output: 
       stacktrace: 
@@ -563,7 +563,7 @@ MonoBehaviour:
       name: Editor
       fullName: Features.Game.Scripts.Tests.Editor
       resultStatus: 1
-      duration: 0.4338417
+      duration: 0.9048525
       messages: 
       output: 
       stacktrace: 
@@ -579,7 +579,7 @@ MonoBehaviour:
       name: GamePresenterShould
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould
       resultStatus: 1
-      duration: 0.4292874
+      duration: 0.9011596
       messages: 
       output: 
       stacktrace: 
@@ -595,7 +595,7 @@ MonoBehaviour:
       name: CallGetRoundsEvery3Seconds
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallGetRoundsEvery3Seconds
       resultStatus: 1
-      duration: 0.1577755
+      duration: 0.6605833
       messages: 
       output: 
       stacktrace: 
@@ -612,7 +612,7 @@ MonoBehaviour:
       name: CallOnRoundOnViewWhenGetRound
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallOnRoundOnViewWhenGetRound
       resultStatus: 1
-      duration: 0.0115602
+      duration: 0.0096929
       messages: 
       output: 
       stacktrace: 
@@ -629,7 +629,7 @@ MonoBehaviour:
       name: CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit
       resultStatus: 1
-      duration: 0.0058248
+      duration: 0.0045779
       messages: 
       output: 
       stacktrace: 
@@ -646,7 +646,7 @@ MonoBehaviour:
       name: CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade
       resultStatus: 1
-      duration: 0.0033371
+      duration: 0.002955
       messages: 
       output: 
       stacktrace: 
@@ -663,7 +663,7 @@ MonoBehaviour:
       name: CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound
       resultStatus: 1
-      duration: 0.0032769
+      duration: 0.0031564
       messages: 
       output: 
       stacktrace: 
@@ -680,7 +680,7 @@ MonoBehaviour:
       name: CallViewOnReRollCompleteWhenPlayServiceReturns
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.CallViewOnReRollCompleteWhenPlayServiceReturns
       resultStatus: 1
-      duration: 0.0107945
+      duration: 0.0081239
       messages: 
       output: 
       stacktrace: 
@@ -697,7 +697,7 @@ MonoBehaviour:
       name: ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit
       resultStatus: 1
-      duration: 0.0035333
+      duration: 0.0031795
       messages: 
       output: 
       stacktrace: 
@@ -714,7 +714,7 @@ MonoBehaviour:
       name: ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade
       resultStatus: 1
-      duration: 0.0032368
+      duration: 0.0031307
       messages: 
       output: 
       stacktrace: 
@@ -731,7 +731,7 @@ MonoBehaviour:
       name: ChangeMatchStateWhenUnitsFinishBeingRevealed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateWhenUnitsFinishBeingRevealed
       resultStatus: 1
-      duration: 0.003705
+      duration: 0.0034886
       messages: 
       output: 
       stacktrace: 
@@ -748,7 +748,7 @@ MonoBehaviour:
       name: ChangeMatchStateWhenUpgradesFinishBeingRevealed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ChangeMatchStateWhenUpgradesFinishBeingRevealed
       resultStatus: 1
-      duration: 0.0026289
+      duration: 0.0023782
       messages: 
       output: 
       stacktrace: 
@@ -765,7 +765,7 @@ MonoBehaviour:
       name: HideRerollWhenRoundStatusIsUpgradeButMatchStateIs
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.HideRerollWhenRoundStatusIsUpgradeButMatchStateIs
       resultStatus: 1
-      duration: 0.0190989
+      duration: 0.0171499
       messages: 
       output: 
       stacktrace: 
@@ -781,7 +781,7 @@ MonoBehaviour:
       name: HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       resultStatus: 1
-      duration: 0.0035867
+      duration: 0.0035538
       messages: 
       output: 
       stacktrace: 
@@ -798,7 +798,7 @@ MonoBehaviour:
       name: HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.HideRerollWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       resultStatus: 1
-      duration: 0.0027879
+      duration: 0.0027495
       messages: 
       output: 
       stacktrace: 
@@ -815,7 +815,7 @@ MonoBehaviour:
       name: NotPlayUnitCardWhenCardIsPlayedAndNotInSelectUnitState
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotPlayUnitCardWhenCardIsPlayedAndNotInSelectUnitState
       resultStatus: 1
-      duration: 0.0066471
+      duration: 0.0067848
       messages: 
       output: 'Features.Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -835,7 +835,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       resultStatus: 1
-      duration: 0.0280976
+      duration: 0.0275437
       messages: 
       output: 
       stacktrace: 
@@ -851,7 +851,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       resultStatus: 1
-      duration: 0.0037804
+      duration: 0.0035916
       messages: 
       output: 
       stacktrace: 
@@ -868,7 +868,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,StartUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,StartUnit)
       resultStatus: 1
-      duration: 0.0026897
+      duration: 0.0025768
       messages: 
       output: 
       stacktrace: 
@@ -885,7 +885,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       resultStatus: 1
-      duration: 0.0026344
+      duration: 0.0025187
       messages: 
       output: 
       stacktrace: 
@@ -902,7 +902,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       resultStatus: 1
-      duration: 0.0029311
+      duration: 0.002654
       messages: 
       output: 
       stacktrace: 
@@ -919,7 +919,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,StartUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,StartUnit)
       resultStatus: 1
-      duration: 0.0027851
+      duration: 0.0026003
       messages: 
       output: 
       stacktrace: 
@@ -936,7 +936,7 @@ MonoBehaviour:
       name: NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.NotShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       resultStatus: 1
-      duration: 0.0026538
+      duration: 0.0025914
       messages: 
       output: 
       stacktrace: 
@@ -953,7 +953,7 @@ MonoBehaviour:
       name: OnRecoverFocusEndWhenGameFinished
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusEndWhenGameFinished
       resultStatus: 1
-      duration: 0.0053149
+      duration: 0.0051473
       messages: 
       output: 
       stacktrace: 
@@ -970,7 +970,7 @@ MonoBehaviour:
       name: OnRecoverFocusResetGameState
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusResetGameState
       resultStatus: 1
-      duration: 0.003104
+      duration: 0.0030033
       messages: 
       output: 
       stacktrace: 
@@ -987,7 +987,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartRerollWhenRoundInReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartRerollWhenRoundInReroll
       resultStatus: 1
-      duration: 0.0030386
+      duration: 0.0027769
       messages: 
       output: 
       stacktrace: 
@@ -1004,7 +1004,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartRoundWhenRoundFinished
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartRoundWhenRoundFinished
       resultStatus: 1
-      duration: 0.0029119
+      duration: 0.0027215
       messages: 
       output: 
       stacktrace: 
@@ -1021,7 +1021,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartUnitWhenRoundInUnitAndCardNotPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartUnitWhenRoundInUnitAndCardNotPlayedFromUser
       resultStatus: 1
-      duration: 0.0033841
+      duration: 0.0031763
       messages: 
       output: 
       stacktrace: 
@@ -1038,7 +1038,7 @@ MonoBehaviour:
       name: OnRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusStartUpgradeWhenRoundInUpgradeAndCardNotPlayedFromUser
       resultStatus: 1
-      duration: 0.0029334
+      duration: 0.0027976
       messages: 
       output: 
       stacktrace: 
@@ -1055,7 +1055,7 @@ MonoBehaviour:
       name: OnRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusWaitRerollWhenRoundInRerollAndNoHasReroll
       resultStatus: 1
-      duration: 0.0028003
+      duration: 0.0027271
       messages: 
       output: 
       stacktrace: 
@@ -1072,7 +1072,7 @@ MonoBehaviour:
       name: OnRecoverFocusWaitUnitWhenRoundInUnitAndCardPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusWaitUnitWhenRoundInUnitAndCardPlayedFromUser
       resultStatus: 1
-      duration: 0.0040218
+      duration: 0.0037472
       messages: 
       output: 'Features.Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1092,7 +1092,7 @@ MonoBehaviour:
       name: OnRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.OnRecoverFocusWaitUpgradeWhenRoundInUpgradeAndCardPlayedFromUser
       resultStatus: 1
-      duration: 0.0039689
+      duration: 0.0038757
       messages: 
       output: 'Features.Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1112,7 +1112,7 @@ MonoBehaviour:
       name: PlayUnitCardWhenCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUnitCardWhenCardIsPlayed
       resultStatus: 1
-      duration: 0.0076196
+      duration: 0.0065765
       messages: 
       output: 'Features.Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1132,7 +1132,7 @@ MonoBehaviour:
       name: PlayUnitCardWhenPlayServiceReturns
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUnitCardWhenPlayServiceReturns
       resultStatus: 1
-      duration: 0.0045357
+      duration: 0.0039732
       messages: 
       output: 'Features.Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1152,7 +1152,7 @@ MonoBehaviour:
       name: PlayUpgradeCardWhenCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUpgradeCardWhenCardIsPlayed
       resultStatus: 1
-      duration: 0.0046308
+      duration: 0.0043226
       messages: 
       output: 'Features.Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1172,7 +1172,7 @@ MonoBehaviour:
       name: PlayUpgradeCardWhenPlayServiceReturns
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.PlayUpgradeCardWhenPlayServiceReturns
       resultStatus: 1
-      duration: 0.0038968
+      duration: 0.0035759
       messages: 
       output: 'Features.Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1192,7 +1192,7 @@ MonoBehaviour:
       name: RemoveUnitCardFromHandWhenUnitCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.RemoveUnitCardFromHandWhenUnitCardIsPlayed
       resultStatus: 1
-      duration: 0.0085021
+      duration: 0.0046114
       messages: 
       output: 'Features.Data.UnitCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UnitCardData.
@@ -1219,7 +1219,7 @@ MonoBehaviour:
       name: RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.RemoveUpgradeCardFromHandWhenUpgradeCardIsPlayed
       resultStatus: 1
-      duration: 0.0047386
+      duration: 0.0041909
       messages: 
       output: 'Features.Data.UpgradeCardData must be instantiated using the ScriptableObject.CreateInstance
         method instead of new UpgradeCardData.
@@ -1246,7 +1246,7 @@ MonoBehaviour:
       name: SendReRollWhenReRoll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.SendReRollWhenReRoll
       resultStatus: 1
-      duration: 0.0027923
+      duration: 0.0026837
       messages: 
       output: 
       stacktrace: 
@@ -1263,7 +1263,7 @@ MonoBehaviour:
       name: ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase
       resultStatus: 1
-      duration: 0.0156781
+      duration: 0.0155263
       messages: 
       output: 
       stacktrace: 
@@ -1279,7 +1279,7 @@ MonoBehaviour:
       name: ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(Finished,RoundResultReveal)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(Finished,RoundResultReveal)
       resultStatus: 1
-      duration: 0.0031478
+      duration: 0.0033517
       messages: 
       output: 
       stacktrace: 
@@ -1296,7 +1296,7 @@ MonoBehaviour:
       name: ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(GameFinished,RoundResultReveal)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(GameFinished,RoundResultReveal)
       resultStatus: 1
-      duration: 0.0026231
+      duration: 0.0026837
       messages: 
       output: 
       stacktrace: 
@@ -1313,7 +1313,7 @@ MonoBehaviour:
       name: ShowRerollWhenGetRoundInfoAndRoundStateIsRerollAndHasReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRerollWhenGetRoundInfoAndRoundStateIsRerollAndHasReroll
       resultStatus: 1
-      duration: 0.0030576
+      duration: 0.0029617
       messages: 
       output: 
       stacktrace: 
@@ -1330,7 +1330,7 @@ MonoBehaviour:
       name: ShowRivalReadyWhenRoundStatusIsUnitAndMatchStateIsUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalReadyWhenRoundStatusIsUnitAndMatchStateIsUpgrade
       resultStatus: 1
-      duration: 0.0033357
+      duration: 0.0029809
       messages: 
       output: 
       stacktrace: 
@@ -1347,7 +1347,7 @@ MonoBehaviour:
       name: ShowRivalReadyWhenRoundStatusIsUnitAndRivalIsReady
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalReadyWhenRoundStatusIsUnitAndRivalIsReady
       resultStatus: 1
-      duration: 0.0030399
+      duration: 0.0028589
       messages: 
       output: 
       stacktrace: 
@@ -1364,7 +1364,7 @@ MonoBehaviour:
       name: ShowRivalReadyWhenRoundStatusIsUpgradeAndRivalIsReady
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalReadyWhenRoundStatusIsUpgradeAndRivalIsReady
       resultStatus: 1
-      duration: 0.0029679
+      duration: 0.002895
       messages: 
       output: 
       stacktrace: 
@@ -1381,7 +1381,7 @@ MonoBehaviour:
       name: ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs
       resultStatus: 1
-      duration: 0.0195465
+      duration: 0.017955
       messages: 
       output: 
       stacktrace: 
@@ -1397,7 +1397,7 @@ MonoBehaviour:
       name: ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(SelectReroll)
       resultStatus: 1
-      duration: 0.0034157
+      duration: 0.0032977
       messages: 
       output: 
       stacktrace: 
@@ -1414,7 +1414,7 @@ MonoBehaviour:
       name: ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRivalWaitUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(WaitReroll)
       resultStatus: 1
-      duration: 0.0028267
+      duration: 0.0026071
       messages: 
       output: 
       stacktrace: 
@@ -1431,7 +1431,7 @@ MonoBehaviour:
       name: ShowRoundUpgradeWhenMatchStateIsStartRoundUpgradeReveal
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowRoundUpgradeWhenMatchStateIsStartRoundUpgradeReveal
       resultStatus: 1
-      duration: 0.0032507
+      duration: 0.0030457
       messages: 
       output: 
       stacktrace: 
@@ -1448,7 +1448,7 @@ MonoBehaviour:
       name: ShowStartRoundWhenMatchStateIsStartRound
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowStartRoundWhenMatchStateIsStartRound
       resultStatus: 1
-      duration: 0.0029678
+      duration: 0.0028583
       messages: 
       output: 
       stacktrace: 
@@ -1465,7 +1465,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase
       resultStatus: 1
-      duration: 0.0204027
+      duration: 0.0201467
       messages: 
       output: 
       stacktrace: 
@@ -1481,7 +1481,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,SelectUnit)
       resultStatus: 1
-      duration: 0.0033235
+      duration: 0.0032177
       messages: 
       output: 
       stacktrace: 
@@ -1498,7 +1498,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(Finished,WaitUnit)
       resultStatus: 1
-      duration: 0.0026729
+      duration: 0.0025765
       messages: 
       output: 
       stacktrace: 
@@ -1515,7 +1515,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,SelectUnit)
       resultStatus: 1
-      duration: 0.0027537
+      duration: 0.0028997
       messages: 
       output: 
       stacktrace: 
@@ -1532,7 +1532,7 @@ MonoBehaviour:
       name: ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.ShowUnitCardsPlayedWhenWhenRoundStateIsFinishedAndMatchStateIsUnitPhase(GameFinished,WaitUnit)
       resultStatus: 1
-      duration: 0.0028489
+      duration: 0.0030408
       messages: 
       output: 
       stacktrace: 
@@ -1549,7 +1549,7 @@ MonoBehaviour:
       name: WhenShowRoundUpgradeCompletedAndRoundIsInRerollThenChangeMatchStateToStartReroll
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.WhenShowRoundUpgradeCompletedAndRoundIsInRerollThenChangeMatchStateToStartReroll
       resultStatus: 1
-      duration: 0.003167
+      duration: 0.0030896
       messages: 
       output: 
       stacktrace: 
@@ -1566,7 +1566,7 @@ MonoBehaviour:
       name: WhenShowRoundUpgradeCompletedAndRoundIsNotInRerollThenChangeMatchStateToStartUpgrade
       fullName: Features.Game.Scripts.Tests.Editor.GamePresenterShould.WhenShowRoundUpgradeCompletedAndRoundIsNotInRerollThenChangeMatchStateToStartUpgrade
       resultStatus: 1
-      duration: 0.0029406
+      duration: 0.0027152
       messages: 
       output: 
       stacktrace: 
@@ -1583,7 +1583,7 @@ MonoBehaviour:
       name: Home
       fullName: Features.Home
       resultStatus: 1
-      duration: 0.0480714
+      duration: 0.0425481
       messages: 
       output: 
       stacktrace: 
@@ -1599,7 +1599,7 @@ MonoBehaviour:
       name: Scripts
       fullName: Features.Home.Scripts
       resultStatus: 1
-      duration: 0.0360481
+      duration: 0.0348481
       messages: 
       output: 
       stacktrace: 
@@ -1615,7 +1615,7 @@ MonoBehaviour:
       name: Tests
       fullName: Features.Home.Scripts.Tests
       resultStatus: 1
-      duration: 0.0356232
+      duration: 0.0334993
       messages: 
       output: 
       stacktrace: 
@@ -1631,7 +1631,7 @@ MonoBehaviour:
       name: Editor
       fullName: Features.Home.Scripts.Tests.Editor
       resultStatus: 1
-      duration: 0.0323803
+      duration: 0.0302655
       messages: 
       output: 
       stacktrace: 
@@ -1647,7 +1647,7 @@ MonoBehaviour:
       name: HomePresenterShould
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould
       resultStatus: 1
-      duration: 0.0286871
+      duration: 0.0270024
       messages: 
       output: 
       stacktrace: 
@@ -1663,7 +1663,7 @@ MonoBehaviour:
       name: CallMatchServiceWhenLeavesQueue
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.CallMatchServiceWhenLeavesQueue
       resultStatus: 1
-      duration: 0.007977
+      duration: 0.0069169
       messages: 
       output: 
       stacktrace: 
@@ -1680,7 +1680,7 @@ MonoBehaviour:
       name: CallOnMatchFoundWhenFindMatchInQueueReturns
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.CallOnMatchFoundWhenFindMatchInQueueReturns
       resultStatus: 1
-      duration: 0.0029679
+      duration: 0.0026605
       messages: 
       output: 
       stacktrace: 
@@ -1697,7 +1697,7 @@ MonoBehaviour:
       name: CallViewWhenLeftQueue
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.CallViewWhenLeftQueue
       resultStatus: 1
-      duration: 0.0021863
+      duration: 0.0019708
       messages: 
       output: 
       stacktrace: 
@@ -1714,7 +1714,7 @@ MonoBehaviour:
       name: CallViewWhenStartMatchReturnsSuccessfully
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.CallViewWhenStartMatchReturnsSuccessfully
       resultStatus: 1
-      duration: 0.0013458
+      duration: 0.0012574
       messages: 
       output: 
       stacktrace: 
@@ -1731,7 +1731,7 @@ MonoBehaviour:
       name: FindMatchInQueueIfEnqueueReturnsNull
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.FindMatchInQueueIfEnqueueReturnsNull
       resultStatus: 1
-      duration: 0.0019259
+      duration: 0.0017998
       messages: 
       output: 
       stacktrace: 
@@ -1748,7 +1748,7 @@ MonoBehaviour:
       name: StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchVersusEasyBotWhenPlayVersusEasyBot
       resultStatus: 1
-      duration: 0.0019732
+      duration: 0.0018912
       messages: 
       output: 
       stacktrace: 
@@ -1765,7 +1765,7 @@ MonoBehaviour:
       name: StartSearchingForMatchVersusHardBotWhenPlayVersusHardBot
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchVersusHardBotWhenPlayVersusHardBot
       resultStatus: 1
-      duration: 0.0016554
+      duration: 0.001586
       messages: 
       output: 
       stacktrace: 
@@ -1782,7 +1782,7 @@ MonoBehaviour:
       name: StartSearchingForMatchWhenPlayMatch
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchWhenPlayMatch
       resultStatus: 1
-      duration: 0.0015214
+      duration: 0.0014983
       messages: 
       output: 
       stacktrace: 
@@ -1799,7 +1799,7 @@ MonoBehaviour:
       name: StartSearchingForMatchWhenPlayMatchVersusFriend
       fullName: Features.Home.Scripts.Tests.Editor.HomePresenterShould.StartSearchingForMatchWhenPlayMatchVersusFriend
       resultStatus: 1
-      duration: 0.0017155
+      duration: 0.0015865
       messages: 
       output: 
       stacktrace: 
@@ -1816,7 +1816,7 @@ MonoBehaviour:
       name: Login
       fullName: Features.Login
       resultStatus: 1
-      duration: 0.0492133
+      duration: 0.044587
       messages: 
       output: 
       stacktrace: 
@@ -1832,7 +1832,7 @@ MonoBehaviour:
       name: Scripts
       fullName: Features.Login.Scripts
       resultStatus: 1
-      duration: 0.0407834
+      duration: 0.0370827
       messages: 
       output: 
       stacktrace: 
@@ -1848,7 +1848,7 @@ MonoBehaviour:
       name: Tests
       fullName: Features.Login.Scripts.Tests
       resultStatus: 1
-      duration: 0.0405154
+      duration: 0.0367987
       messages: 
       output: 
       stacktrace: 
@@ -1864,7 +1864,7 @@ MonoBehaviour:
       name: Editor
       fullName: Features.Login.Scripts.Tests.Editor
       resultStatus: 1
-      duration: 0.0373271
+      duration: 0.0335077
       messages: 
       output: 
       stacktrace: 
@@ -1880,7 +1880,7 @@ MonoBehaviour:
       name: LoginPresenterShould
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould
       resultStatus: 1
-      duration: 0.0339083
+      duration: 0.0301103
       messages: 
       output: 
       stacktrace: 
@@ -1896,7 +1896,7 @@ MonoBehaviour:
       name: CallLoginServiceWhenLogin
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.CallLoginServiceWhenLogin
       resultStatus: 1
-      duration: 0.0133347
+      duration: 0.0123351
       messages: 
       output: 
       stacktrace: 
@@ -1913,7 +1913,7 @@ MonoBehaviour:
       name: CallRegisterWhenGuestLogin
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.CallRegisterWhenGuestLogin
       resultStatus: 1
-      duration: 0.0020655
+      duration: 0.0019586
       messages: 
       output: 
       stacktrace: 
@@ -1930,7 +1930,7 @@ MonoBehaviour:
       name: CallRegisterWhenRegisterIsPressed
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.CallRegisterWhenRegisterIsPressed
       resultStatus: 1
-      duration: 0.0020448
+      duration: 0.0018526
       messages: 
       output: 
       stacktrace: 
@@ -1947,7 +1947,7 @@ MonoBehaviour:
       name: ShowErrorMessageWhenServiceLoginFails
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorMessageWhenServiceLoginFails
       resultStatus: 1
-      duration: 0.0049933
+      duration: 0.0030742
       messages: 
       output: 
       stacktrace: 
@@ -1964,7 +1964,7 @@ MonoBehaviour:
       name: ShowErrorMessageWhenServiceRegisterFailsOnGuest
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorMessageWhenServiceRegisterFailsOnGuest
       resultStatus: 1
-      duration: 0.0014847
+      duration: 0.0013121
       messages: 
       output: 
       stacktrace: 
@@ -1981,7 +1981,7 @@ MonoBehaviour:
       name: ShowErrorMessageWhenServiceRegisterFailsOnRegistration
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorMessageWhenServiceRegisterFailsOnRegistration
       resultStatus: 1
-      duration: 0.0013004
+      duration: 0.0011786
       messages: 
       output: 
       stacktrace: 
@@ -1998,7 +1998,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallLoginWithEmptyPassword
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallLoginWithEmptyPassword
       resultStatus: 1
-      duration: 0.0012688
+      duration: 0.001103
       messages: 
       output: 
       stacktrace: 
@@ -2015,7 +2015,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallLoginWithEmptyUsername
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallLoginWithEmptyUsername
       resultStatus: 1
-      duration: 0.0007525
+      duration: 0.0007193
       messages: 
       output: 
       stacktrace: 
@@ -2032,7 +2032,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallRegisterWithEmptyPassword
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallRegisterWithEmptyPassword
       resultStatus: 1
-      duration: 0.0009121
+      duration: 0.0008744
       messages: 
       output: 
       stacktrace: 
@@ -2049,7 +2049,7 @@ MonoBehaviour:
       name: ShowErrorWhenCallRegisterWithEmptyUsername
       fullName: Features.Login.Scripts.Tests.Editor.LoginPresenterShould.ShowErrorWhenCallRegisterWithEmptyUsername
       resultStatus: 1
-      duration: 0.0008051
+      duration: 0.0008032
       messages: 
       output: 
       stacktrace: 
@@ -2065,9 +2065,9 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/[ServerLogic][suite]
       name: ServerLogic
       fullName: Features.ServerLogic
-      resultStatus: 2
-      duration: 0.5037912
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 0.5138647
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -2081,9 +2081,9 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/[Editor][suite]
       name: Editor
       fullName: Features.ServerLogic.Editor
-      resultStatus: 2
-      duration: 0.4954673
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 0.5064165
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -2097,9 +2097,9 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
       name: Tests
       fullName: Features.ServerLogic.Editor.Tests
-      resultStatus: 2
-      duration: 0.4949282
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 0.5058684
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -2114,7 +2114,7 @@ MonoBehaviour:
       name: ApplyEffectPostUnitShould
       fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould
       resultStatus: 1
-      duration: 0.0221832
+      duration: 0.0092296
       messages: 
       output: 
       stacktrace: 
@@ -2126,130 +2126,11 @@ MonoBehaviour:
       parentId: 1207
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
     - id: 1002
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyFurorCelticaEffect]
-      name: ApplyFurorCelticaEffect
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyFurorCelticaEffect
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.CallStrategyForEveryUpgrade]
+      name: CallStrategyForEveryUpgrade
+      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.CallStrategyForEveryUpgrade
       resultStatus: 1
-      duration: 0.0106207
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1004
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyFurorCelticaEffectWhenRoundUpgrade]
-      name: ApplyFurorCelticaEffectWhenRoundUpgrade
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyFurorCelticaEffectWhenRoundUpgrade
-      resultStatus: 1
-      duration: 0.0009737
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1005
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyFurorCelticaEffectWhenUpgradePlayerPreviousRound]
-      name: ApplyFurorCelticaEffectWhenUpgradePlayerPreviousRound
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyFurorCelticaEffectWhenUpgradePlayerPreviousRound
-      resultStatus: 1
-      duration: 0.0011919
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1006
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyMadrasahEffect]
-      name: ApplyMadrasahEffect
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyMadrasahEffect
-      resultStatus: 1
-      duration: 0.0011642
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1008
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyMadrasahEffectWhenRoundUpgrade]
-      name: ApplyMadrasahEffectWhenRoundUpgrade
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyMadrasahEffectWhenRoundUpgrade
-      resultStatus: 1
-      duration: 0.0007837
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1009
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyMadrasahEffectWhenUpgradePlayerPreviousRound]
-      name: ApplyMadrasahEffectWhenUpgradePlayerPreviousRound
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.ApplyMadrasahEffectWhenUpgradePlayerPreviousRound
-      resultStatus: 1
-      duration: 0.0007727
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1003
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.NotApplyFurorCelticaEffectWhenNotPlayed]
-      name: NotApplyFurorCelticaEffectWhenNotPlayed
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.NotApplyFurorCelticaEffectWhenNotPlayed
-      resultStatus: 1
-      duration: 0.0009903
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1001
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould][suite]
-    - id: 1007
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPostUnitShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.NotApplyMadrasahEffectWhenNotPlayed]
-      name: NotApplyMadrasahEffectWhenNotPlayed
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPostUnitShould.NotApplyMadrasahEffectWhenNotPlayed
-      resultStatus: 1
-      duration: 0.0007179
+      duration: 0.0051678
       messages: 
       output: 
       stacktrace: 
@@ -2265,9 +2146,9 @@ MonoBehaviour:
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould][suite]
       name: ApplyEffectPreCalculusShould
       fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould
-      resultStatus: 2
-      duration: 0.0137141
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 0.0120303
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -2277,32 +2158,29 @@ MonoBehaviour:
       categories: []
       parentId: 1216
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
-    - id: 1011
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPreCalculusShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.JustFail]
-      name: JustFail
-      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.JustFail
-      resultStatus: 2
-      duration: 0.0042373
+    - id: 1004
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/ApplyEffectPreCalculusShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.CallStrategyForEveryUpgradeForEveryUser]
+      name: CallStrategyForEveryUpgradeForEveryUser
+      fullName: Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.CallStrategyForEveryUpgradeForEveryUser
+      resultStatus: 1
+      duration: 0.003628
       messages: 
       output: 
-      stacktrace: 'at Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.JustFail
-        () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\ApplyEffectPreCalculusShould.cs:32
-
-'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
       isSuite: 0
       categories:
       - Uncategorized
-      parentId: 1010
+      parentId: 1003
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould][suite]
     - id: 1001
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateMatchResultShould][suite]
       name: CalculateMatchResultShould
       fullName: Features.ServerLogic.Editor.Tests.CalculateMatchResultShould
       resultStatus: 1
-      duration: 0.0190587
+      duration: 0.0145605
       messages: 
       output: 
       stacktrace: 
@@ -2318,7 +2196,7 @@ MonoBehaviour:
       name: ReturnFalseWhenNotEnoughRoundsWonByAPlayer
       fullName: Features.ServerLogic.Editor.Tests.CalculateMatchResultShould.ReturnFalseWhenNotEnoughRoundsWonByAPlayer
       resultStatus: 1
-      duration: 0.0078063
+      duration: 0.0042139
       messages: 
       output: 
       stacktrace: 
@@ -2335,7 +2213,7 @@ MonoBehaviour:
       name: ReturnTrueWhenEnoughRoundsWonByAPlayer
       fullName: Features.ServerLogic.Editor.Tests.CalculateMatchResultShould.ReturnTrueWhenEnoughRoundsWonByAPlayer
       resultStatus: 1
-      duration: 0.0015299
+      duration: 0.0012229
       messages: 
       output: 
       stacktrace: 
@@ -2352,7 +2230,7 @@ MonoBehaviour:
       name: SetTieToTrueWhenPlayersTie
       fullName: Features.ServerLogic.Editor.Tests.CalculateMatchResultShould.SetTieToTrueWhenPlayersTie
       resultStatus: 1
-      duration: 0.0008701
+      duration: 0.0008343
       messages: 
       output: 
       stacktrace: 
@@ -2369,7 +2247,7 @@ MonoBehaviour:
       name: CalculateRoundResultShould
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould
       resultStatus: 1
-      duration: 0.0316788
+      duration: 0.0409043
       messages: 
       output: 
       stacktrace: 
@@ -2380,12 +2258,181 @@ MonoBehaviour:
       categories: []
       parentId: 1103
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
+    - id: 1019
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+      name: ApplyEffectPreCalculus
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus
+      resultStatus: 1
+      duration: 0.0160181
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1009
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould][suite]
+    - id: 1010
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.EqualCardsTieRoundResult)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.EqualCardsTieRoundResult)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.EqualCardsTieRoundResult)
+      resultStatus: 1
+      duration: 0.0055332
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1011
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResult)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResult)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResult)
+      resultStatus: 1
+      duration: 0.0011495
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1012
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResult)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResult)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResult)
+      resultStatus: 1
+      duration: 0.000966
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1013
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeCard)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeCard)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeCard)
+      resultStatus: 1
+      duration: 0.0008961
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1014
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResultUpgradeCard)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResultUpgradeCard)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResultUpgradeCard)
+      resultStatus: 1
+      duration: 0.0008989
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1015
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.RoundUpgradeChangeResult)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.RoundUpgradeChangeResult)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.RoundUpgradeChangeResult)
+      resultStatus: 1
+      duration: 0.0009066
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1016
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeWithBonusCard)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeWithBonusCard)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeWithBonusCard)
+      resultStatus: 1
+      duration: 0.0011664
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1017
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinWithPreviousUpgrades)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinWithPreviousUpgrades)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinWithPreviousUpgrades)
+      resultStatus: 1
+      duration: 0.0012823
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
+    - id: 1018
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/ApplyEffectPreCalculus/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundWithScorpionCardResult)]
+      name: ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundWithScorpionCardResult)
+      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus(Features.ServerLogic.Editor.Tests.UserOneWinRoundWithScorpionCardResult)
+      resultStatus: 1
+      duration: 0.0009478
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1019
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.ApplyEffectPreCalculus][suite]
     - id: 1024
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner][suite]
       name: GetCorrectWinner
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner
       resultStatus: 1
-      duration: 0.0232636
+      duration: 0.0166091
       messages: 
       output: 
       stacktrace: 
@@ -2401,7 +2448,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.EqualCardsTieRoundResult)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.EqualCardsTieRoundResult)
       resultStatus: 1
-      duration: 0.0065074
+      duration: 0.001468
       messages: 
       output: 
       stacktrace: 
@@ -2418,7 +2465,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundResult)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundResult)
       resultStatus: 1
-      duration: 0.0011671
+      duration: 0.0007362
       messages: 
       output: 
       stacktrace: 
@@ -2435,7 +2482,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResult)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResult)
       resultStatus: 1
-      duration: 0.0011667
+      duration: 0.000725
       messages: 
       output: 
       stacktrace: 
@@ -2452,7 +2499,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeCard)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeCard)
       resultStatus: 1
-      duration: 0.0010932
+      duration: 0.0007328
       messages: 
       output: 
       stacktrace: 
@@ -2469,7 +2516,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResultUpgradeCard)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserTwoWinRoundResultUpgradeCard)
       resultStatus: 1
-      duration: 0.0010902
+      duration: 0.000761
       messages: 
       output: 
       stacktrace: 
@@ -2486,7 +2533,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.RoundUpgradeChangeResult)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.RoundUpgradeChangeResult)
       resultStatus: 1
-      duration: 0.0010813
+      duration: 0.0007384
       messages: 
       output: 
       stacktrace: 
@@ -2503,7 +2550,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeWithBonusCard)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundResultUpgradeWithBonusCard)
       resultStatus: 1
-      duration: 0.0013286
+      duration: 0.0007808
       messages: 
       output: 
       stacktrace: 
@@ -2520,7 +2567,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinWithPreviousUpgrades)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinWithPreviousUpgrades)
       resultStatus: 1
-      duration: 0.0014719
+      duration: 0.0007573
       messages: 
       output: 
       stacktrace: 
@@ -2537,7 +2584,7 @@ MonoBehaviour:
       name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundWithScorpionCardResult)
       fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.UserOneWinRoundWithScorpionCardResult)
       resultStatus: 1
-      duration: 0.0014474
+      duration: 0.0007255
       messages: 
       output: 
       stacktrace: 
@@ -2549,46 +2596,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1011
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner][suite]
-    - id: 1011
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/GetCorrectWinner/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.CavalryWinWhenTeutonsFaith)]
-      name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.CavalryWinWhenTeutonsFaith)
-      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.CavalryWinWhenTeutonsFaith)
-      resultStatus: 1
-      duration: 0.0017124
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1012
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner][suite]
-    - id: 1012
-      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/GetCorrectWinner/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.WinWithPersianTC)]
-      name: GetCorrectWinner(Features.ServerLogic.Editor.Tests.WinWithPersianTC)
-      fullName: Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner(Features.ServerLogic.Editor.Tests.WinWithPersianTC)
-      resultStatus: 1
-      duration: 0.0024676
-      messages: 
-      output: 
-      stacktrace: 
-      notRunnable: 0
-      ignoredOrSkipped: 0
-      description: 
-      isSuite: 0
-      categories:
-      - Uncategorized
-      parentId: 1013
-      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/CalculateRoundResultShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CalculateRoundResultShould.GetCorrectWinner][suite]
     - id: 1022
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateMatchShould][suite]
       name: CreateMatchShould
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould
       resultStatus: 1
-      duration: 0.0477801
+      duration: 0.0457793
       messages: 
       output: 
       stacktrace: 
@@ -2604,7 +2617,7 @@ MonoBehaviour:
       name: AddMatchToMatchRepository
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchToMatchRepository
       resultStatus: 1
-      duration: 0.0202639
+      duration: 0.0193254
       messages: 
       output: 
       stacktrace: 
@@ -2621,7 +2634,7 @@ MonoBehaviour:
       name: AddMatchWithBot
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithBot
       resultStatus: 1
-      duration: 0.0014793
+      duration: 0.001516
       messages: 
       output: 
       stacktrace: 
@@ -2638,7 +2651,7 @@ MonoBehaviour:
       name: AddMatchWithUnitCards
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUnitCards
       resultStatus: 1
-      duration: 0.0060937
+      duration: 0.0059806
       messages: 
       output: 
       stacktrace: 
@@ -2655,7 +2668,7 @@ MonoBehaviour:
       name: AddMatchWithUpgradeCards
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUpgradeCards
       resultStatus: 1
-      duration: 0.0015569
+      duration: 0.0018094
       messages: 
       output: 
       stacktrace: 
@@ -2672,7 +2685,7 @@ MonoBehaviour:
       name: AddMatchWithUsers
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.AddMatchWithUsers
       resultStatus: 1
-      duration: 0.0050559
+      duration: 0.0049342
       messages: 
       output: 
       stacktrace: 
@@ -2689,7 +2702,7 @@ MonoBehaviour:
       name: FailIfCreateBotMatchWithAlreadyTwoUsers
       fullName: Features.ServerLogic.Editor.Tests.CreateMatchShould.FailIfCreateBotMatchWithAlreadyTwoUsers
       resultStatus: 1
-      duration: 0.003877
+      duration: 0.0031473
       messages: 
       output: 
       stacktrace: 
@@ -2706,7 +2719,7 @@ MonoBehaviour:
       name: CreateRoundShould
       fullName: Features.ServerLogic.Editor.Tests.CreateRoundShould
       resultStatus: 1
-      duration: 0.0127198
+      duration: 0.0117839
       messages: 
       output: 
       stacktrace: 
@@ -2722,7 +2735,7 @@ MonoBehaviour:
       name: ReturnANewRoundWithNoReroll
       fullName: Features.ServerLogic.Editor.Tests.CreateRoundShould.ReturnANewRoundWithNoReroll
       resultStatus: 1
-      duration: 0.0017216
+      duration: 0.0015943
       messages: 
       output: 
       stacktrace: 
@@ -2739,7 +2752,7 @@ MonoBehaviour:
       name: ReturnANewRoundWithRerollWhenNewRoundIsTheFirst
       fullName: Features.ServerLogic.Editor.Tests.CreateRoundShould.ReturnANewRoundWithRerollWhenNewRoundIsTheFirst
       resultStatus: 1
-      duration: 0.0005403
+      duration: 0.0004844
       messages: 
       output: 
       stacktrace: 
@@ -2756,7 +2769,7 @@ MonoBehaviour:
       name: ReturnANewRoundWithRerollWhenNewRoundIsTheSixth
       fullName: Features.ServerLogic.Editor.Tests.CreateRoundShould.ReturnANewRoundWithRerollWhenNewRoundIsTheSixth
       resultStatus: 1
-      duration: 0.0008852
+      duration: 0.0005962
       messages: 
       output: 
       stacktrace: 
@@ -2773,7 +2786,7 @@ MonoBehaviour:
       name: ReturnANewRoundWithRerollWhenNewRoundIsTheThird
       fullName: Features.ServerLogic.Editor.Tests.CreateRoundShould.ReturnANewRoundWithRerollWhenNewRoundIsTheThird
       resultStatus: 1
-      duration: 0.0007263
+      duration: 0.0005275
       messages: 
       output: 
       stacktrace: 
@@ -2785,12 +2798,146 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1025
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.CreateRoundShould][suite]
+    - id: 1034
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould][suite]
+      name: FurorCelticaApplyEffectPostUnitStrategyShould
+      fullName: Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould
+      resultStatus: 1
+      duration: 0.0112114
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1211
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
+    - id: 1035
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/FurorCelticaApplyEffectPostUnitStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould.ApplyFurorCelticaEffect]
+      name: ApplyFurorCelticaEffect
+      fullName: Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould.ApplyFurorCelticaEffect
+      resultStatus: 1
+      duration: 0.0016629
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1034
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould][suite]
+    - id: 1036
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/FurorCelticaApplyEffectPostUnitStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould.NotApplyFurorCelticaEffectIfNotFurorCeltica]
+      name: NotApplyFurorCelticaEffectIfNotFurorCeltica
+      fullName: Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould.NotApplyFurorCelticaEffectIfNotFurorCeltica
+      resultStatus: 1
+      duration: 0.0006493
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1034
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould][suite]
+    - id: 1037
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/FurorCelticaApplyEffectPostUnitStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould.NotApplyFurorCelticaEffectIfUnitNotSiege]
+      name: NotApplyFurorCelticaEffectIfUnitNotSiege
+      fullName: Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould.NotApplyFurorCelticaEffectIfUnitNotSiege
+      resultStatus: 1
+      duration: 0.0004895
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1034
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.FurorCelticaApplyEffectPostUnitStrategyShould][suite]
+    - id: 1038
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould][suite]
+      name: MadrasahApplyEffectPostUnitStrategyShould
+      fullName: Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould
+      resultStatus: 1
+      duration: 0.0110212
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1217
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
+    - id: 1039
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/MadrasahApplyEffectPostUnitStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould.ApplyMadrasahEffect]
+      name: ApplyMadrasahEffect
+      fullName: Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould.ApplyMadrasahEffect
+      resultStatus: 1
+      duration: 0.0015766
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1038
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould][suite]
+    - id: 1040
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/MadrasahApplyEffectPostUnitStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould.NotApplyMadrasahEffectIfNotMadrasah]
+      name: NotApplyMadrasahEffectIfNotMadrasah
+      fullName: Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould.NotApplyMadrasahEffectIfNotMadrasah
+      resultStatus: 1
+      duration: 0.0004536
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1038
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould][suite]
+    - id: 1041
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/MadrasahApplyEffectPostUnitStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould.NotApplyMadrasahEffectIfUnitNotSiege]
+      name: NotApplyMadrasahEffectIfUnitNotSiege
+      fullName: Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould.NotApplyMadrasahEffectIfUnitNotSiege
+      resultStatus: 1
+      duration: 0.0004881
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1038
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MadrasahApplyEffectPostUnitStrategyShould][suite]
     - id: 1030
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould][suite]
       name: MatchCreatorServiceShould
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould
       resultStatus: 1
-      duration: 0.0554847
+      duration: 0.054428
       messages: 
       output: 
       stacktrace: 
@@ -2806,7 +2953,7 @@ MonoBehaviour:
       name: CreateFriendMatchesWhenTwoUsersMatch
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould.CreateFriendMatchesWhenTwoUsersMatch
       resultStatus: 1
-      duration: 0.0284374
+      duration: 0.0278542
       messages: 
       output: 
       stacktrace: 
@@ -2823,7 +2970,7 @@ MonoBehaviour:
       name: CreateUserMatchesWhenTwoUsersMatch
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould.CreateUserMatchesWhenTwoUsersMatch
       resultStatus: 1
-      duration: 0.0040875
+      duration: 0.0051959
       messages: 
       output: 
       stacktrace: 
@@ -2840,7 +2987,7 @@ MonoBehaviour:
       name: DontRemoveFromQueueWhenNotPartOfMatch
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould.DontRemoveFromQueueWhenNotPartOfMatch
       resultStatus: 1
-      duration: 0.0044924
+      duration: 0.0043066
       messages: 
       output: 
       stacktrace: 
@@ -2857,7 +3004,7 @@ MonoBehaviour:
       name: NotCreateFriendMatchesWhenNotEnoughUsers
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould.NotCreateFriendMatchesWhenNotEnoughUsers
       resultStatus: 1
-      duration: 0.0022423
+      duration: 0.0020643
       messages: 
       output: 
       stacktrace: 
@@ -2874,7 +3021,7 @@ MonoBehaviour:
       name: NotCreateFriendMatchesWhenTwoUsersDontMatch
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould.NotCreateFriendMatchesWhenTwoUsersDontMatch
       resultStatus: 1
-      duration: 0.0025323
+      duration: 0.0021386
       messages: 
       output: 
       stacktrace: 
@@ -2891,7 +3038,7 @@ MonoBehaviour:
       name: ReAddUserWhenNotEnoughCreateUserMatchesWhenTwoUsersMatch
       fullName: Features.ServerLogic.Editor.Tests.MatchCreatorServiceShould.ReAddUserWhenNotEnoughCreateUserMatchesWhenTwoUsersMatch
       resultStatus: 1
-      duration: 0.0037772
+      duration: 0.0035887
       messages: 
       output: 
       stacktrace: 
@@ -2908,7 +3055,7 @@ MonoBehaviour:
       name: MatchHandlerShould
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould
       resultStatus: 1
-      duration: 0.0987705
+      duration: 0.0963518
       messages: 
       output: 
       stacktrace: 
@@ -2924,7 +3071,7 @@ MonoBehaviour:
       name: CreateMatchesWhenGet
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.CreateMatchesWhenGet
       resultStatus: 1
-      duration: 0.0634661
+      duration: 0.0586818
       messages: 
       output: 
       stacktrace: 
@@ -2941,7 +3088,7 @@ MonoBehaviour:
       name: CreateMatchWhenPostVersusBotAndReturnEmptyResponse
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.CreateMatchWhenPostVersusBotAndReturnEmptyResponse
       resultStatus: 1
-      duration: 0.0034023
+      duration: 0.0057313
       messages: 
       output: 
       stacktrace: 
@@ -2958,7 +3105,7 @@ MonoBehaviour:
       name: CreateRoundForMatchWhenPostVersusBotAndReturnEmptyResponse
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.CreateRoundForMatchWhenPostVersusBotAndReturnEmptyResponse
       resultStatus: 1
-      duration: 0.001536
+      duration: 0.0013856
       messages: 
       output: 
       stacktrace: 
@@ -2975,7 +3122,7 @@ MonoBehaviour:
       name: DequeueFromWaitListAndRemoveMatchDataIfExists
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.DequeueFromWaitListAndRemoveMatchDataIfExists
       resultStatus: 1
-      duration: 0.0026046
+      duration: 0.0024015
       messages: 
       output: 
       stacktrace: 
@@ -2992,7 +3139,7 @@ MonoBehaviour:
       name: EnqueueUserWhenPost
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.EnqueueUserWhenPost
       resultStatus: 1
-      duration: 0.0013095
+      duration: 0.0015874
       messages: 
       output: 
       stacktrace: 
@@ -3009,7 +3156,7 @@ MonoBehaviour:
       name: EnqueueUserWhenPostVsFriend
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.EnqueueUserWhenPostVsFriend
       resultStatus: 1
-      duration: 0.0015927
+      duration: 0.0019505
       messages: 
       output: 
       stacktrace: 
@@ -3026,7 +3173,7 @@ MonoBehaviour:
       name: RespondsEmptyWhenGetAndNoMatch
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.RespondsEmptyWhenGetAndNoMatch
       resultStatus: 1
-      duration: 0.0011409
+      duration: 0.0012154
       messages: 
       output: 
       stacktrace: 
@@ -3043,7 +3190,7 @@ MonoBehaviour:
       name: RespondsErrorWhenDeleteAndNoUser
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.RespondsErrorWhenDeleteAndNoUser
       resultStatus: 1
-      duration: 0.0010766
+      duration: 0.0011472
       messages: 
       output: 
       stacktrace: 
@@ -3060,7 +3207,7 @@ MonoBehaviour:
       name: RespondsErrorWhenGetAndNoUser
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.RespondsErrorWhenGetAndNoUser
       resultStatus: 1
-      duration: 0.0009616
+      duration: 0.0010728
       messages: 
       output: 
       stacktrace: 
@@ -3077,7 +3224,7 @@ MonoBehaviour:
       name: RespondsErrorWhenPostAndNoUser
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.RespondsErrorWhenPostAndNoUser
       resultStatus: 1
-      duration: 0.0009299
+      duration: 0.0009922
       messages: 
       output: 
       stacktrace: 
@@ -3094,7 +3241,7 @@ MonoBehaviour:
       name: ReturnMatchWhenGetAndMatchExists
       fullName: Features.ServerLogic.Editor.Tests.MatchHandlerShould.ReturnMatchWhenGetAndMatchExists
       resultStatus: 1
-      duration: 0.0093293
+      duration: 0.0095457
       messages: 
       output: 
       stacktrace: 
@@ -3106,12 +3253,79 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1019
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.MatchHandlerShould][suite]
+    - id: 1069
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould][suite]
+      name: PersianTcPreCalculusCardStrategyShould
+      fullName: Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould
+      resultStatus: 1
+      duration: 0.0130165
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1229
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
+    - id: 1070
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/PersianTcPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould.ApplyPersianTcEffect]
+      name: ApplyPersianTcEffect
+      fullName: Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould.ApplyPersianTcEffect
+      resultStatus: 1
+      duration: 0.0021696
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1069
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould][suite]
+    - id: 1071
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/PersianTcPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould.NotApplyPersianTcEffectIfNotPersianTc]
+      name: NotApplyPersianTcEffectIfNotPersianTc
+      fullName: Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould.NotApplyPersianTcEffectIfNotPersianTc
+      resultStatus: 1
+      duration: 0.0007129
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1069
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould][suite]
+    - id: 1072
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/PersianTcPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould.NotApplyPersianTcEffectIfUnitNotVillager]
+      name: NotApplyPersianTcEffectIfUnitNotVillager
+      fullName: Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould.NotApplyPersianTcEffectIfUnitNotVillager
+      resultStatus: 1
+      duration: 0.0007419
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1069
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PersianTcPreCalculusCardStrategyShould][suite]
     - id: 1030
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.PlayHandlerShould][suite]
       name: PlayHandlerShould
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould
       resultStatus: 1
-      duration: 0.0293226
+      duration: 0.0268767
       messages: 
       output: 
       stacktrace: 
@@ -3127,7 +3341,7 @@ MonoBehaviour:
       name: PlayUnitCardWhenPostAndSendUnit
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.PlayUnitCardWhenPostAndSendUnit
       resultStatus: 1
-      duration: 0.0043651
+      duration: 0.0038499
       messages: 
       output: 
       stacktrace: 
@@ -3144,7 +3358,7 @@ MonoBehaviour:
       name: PlayUpgradeCardWhenPostAndSendUpgrade
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.PlayUpgradeCardWhenPostAndSendUpgrade
       resultStatus: 1
-      duration: 0.0009592
+      duration: 0.0009006
       messages: 
       output: 
       stacktrace: 
@@ -3161,7 +3375,7 @@ MonoBehaviour:
       name: RemoveUserWhenMatchIsFinished
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.RemoveUserWhenMatchIsFinished
       resultStatus: 1
-      duration: 0.0093348
+      duration: 0.0093907
       messages: 
       output: 
       stacktrace: 
@@ -3178,7 +3392,7 @@ MonoBehaviour:
       name: RespondsErrorWhenGetAndNoMatch
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.RespondsErrorWhenGetAndNoMatch
       resultStatus: 1
-      duration: 0.000672
+      duration: 0.0007221
       messages: 
       output: 
       stacktrace: 
@@ -3195,7 +3409,7 @@ MonoBehaviour:
       name: RespondsErrorWhenUnexistingRound
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.RespondsErrorWhenUnexistingRound
       resultStatus: 1
-      duration: 0.0005637
+      duration: 0.0005423
       messages: 
       output: 
       stacktrace: 
@@ -3212,7 +3426,7 @@ MonoBehaviour:
       name: RespondsGivenRoundInfo
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.RespondsGivenRoundInfo
       resultStatus: 1
-      duration: 0.0007929
+      duration: 0.0005579
       messages: 
       output: 
       stacktrace: 
@@ -3229,7 +3443,7 @@ MonoBehaviour:
       name: ReturnHandWhenPostAndSendUnit
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.ReturnHandWhenPostAndSendUnit
       resultStatus: 1
-      duration: 0.0010853
+      duration: 0.0007294
       messages: 
       output: 
       stacktrace: 
@@ -3246,7 +3460,7 @@ MonoBehaviour:
       name: ReturnHandWhenPostAndSendUpgrade
       fullName: Features.ServerLogic.Editor.Tests.PlayHandlerShould.ReturnHandWhenPostAndSendUpgrade
       resultStatus: 1
-      duration: 0.0007914
+      duration: 0.0006589
       messages: 
       output: 
       stacktrace: 
@@ -3263,7 +3477,7 @@ MonoBehaviour:
       name: PlayInactiveMatchShould
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould
       resultStatus: 1
-      duration: 0.0197626
+      duration: 0.0184976
       messages: 
       output: 
       stacktrace: 
@@ -3279,7 +3493,7 @@ MonoBehaviour:
       name: NotPlayRerollIfRoundIsInRerollPhaseButPlayerAlreadyRerolled
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould.NotPlayRerollIfRoundIsInRerollPhaseButPlayerAlreadyRerolled
       resultStatus: 1
-      duration: 0.003969
+      duration: 0.0040544
       messages: 
       output: 
       stacktrace: 
@@ -3296,7 +3510,7 @@ MonoBehaviour:
       name: NotPlayUnitIfRoundIsInUnitPhaseButPlayerAlreadyPlayedUnit
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould.NotPlayUnitIfRoundIsInUnitPhaseButPlayerAlreadyPlayedUnit
       resultStatus: 1
-      duration: 0.0010757
+      duration: 0.0009727
       messages: 
       output: 
       stacktrace: 
@@ -3313,7 +3527,7 @@ MonoBehaviour:
       name: NotPlayUpgradeIfRoundIsInUpgradePhaseButPlayerAlreadyPlayedUpgrade
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould.NotPlayUpgradeIfRoundIsInUpgradePhaseButPlayerAlreadyPlayedUpgrade
       resultStatus: 1
-      duration: 0.000973
+      duration: 0.0008578
       messages: 
       output: 
       stacktrace: 
@@ -3330,7 +3544,7 @@ MonoBehaviour:
       name: PlayRerollIfRoundIsInRerollPhase
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould.PlayRerollIfRoundIsInRerollPhase
       resultStatus: 1
-      duration: 0.0018116
+      duration: 0.0015709
       messages: 
       output: 
       stacktrace: 
@@ -3347,7 +3561,7 @@ MonoBehaviour:
       name: PlayUnitIfRoundIsInUnitPhase
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould.PlayUnitIfRoundIsInUnitPhase
       resultStatus: 1
-      duration: 0.0009096
+      duration: 0.0009213
       messages: 
       output: 
       stacktrace: 
@@ -3364,7 +3578,7 @@ MonoBehaviour:
       name: PlayUpgradeIfRoundIsInUpgradePhase
       fullName: Features.ServerLogic.Editor.Tests.PlayInactiveMatchShould.PlayUpgradeIfRoundIsInUpgradePhase
       resultStatus: 1
-      duration: 0.0009021
+      duration: 0.0008892
       messages: 
       output: 
       stacktrace: 
@@ -3381,7 +3595,7 @@ MonoBehaviour:
       name: PlayRerollShould
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould
       resultStatus: 1
-      duration: 0.0340582
+      duration: 0.0329882
       messages: 
       output: 
       stacktrace: 
@@ -3397,7 +3611,7 @@ MonoBehaviour:
       name: AddRerolledUnitCardsToDeck
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.AddRerolledUnitCardsToDeck
       resultStatus: 1
-      duration: 0.0076012
+      duration: 0.0076182
       messages: 
       output: 
       stacktrace: 
@@ -3414,7 +3628,7 @@ MonoBehaviour:
       name: AddRerolledUpgradeCardsToDeck
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.AddRerolledUpgradeCardsToDeck
       resultStatus: 1
-      duration: 0.0013999
+      duration: 0.0013878
       messages: 
       output: 
       stacktrace: 
@@ -3431,7 +3645,7 @@ MonoBehaviour:
       name: ChangeMatchStateIfAllPlayersFinishedRerolling
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ChangeMatchStateIfAllPlayersFinishedRerolling
       resultStatus: 1
-      duration: 0.0009828
+      duration: 0.0009343
       messages: 
       output: 
       stacktrace: 
@@ -3448,7 +3662,7 @@ MonoBehaviour:
       name: ChangeRerolledUnitHandCards
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ChangeRerolledUnitHandCards
       resultStatus: 1
-      duration: 0.0008897
+      duration: 0.0008099
       messages: 
       output: 
       stacktrace: 
@@ -3465,7 +3679,7 @@ MonoBehaviour:
       name: ChangeRerolledUpgradeHandCards
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ChangeRerolledUpgradeHandCards
       resultStatus: 1
-      duration: 0.0009135
+      duration: 0.0008414
       messages: 
       output: 
       stacktrace: 
@@ -3482,7 +3696,7 @@ MonoBehaviour:
       name: IgnoreVillagerCardReroll
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.IgnoreVillagerCardReroll
       resultStatus: 1
-      duration: 0.0009439
+      duration: 0.0008906
       messages: 
       output: 
       stacktrace: 
@@ -3499,7 +3713,7 @@ MonoBehaviour:
       name: NotChangeNotRerolledUnitHandCards
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.NotChangeNotRerolledUnitHandCards
       resultStatus: 1
-      duration: 0.0008212
+      duration: 0.0007645
       messages: 
       output: 
       stacktrace: 
@@ -3516,7 +3730,7 @@ MonoBehaviour:
       name: NotChangeNotRerolledUpgradeHandCards
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.NotChangeNotRerolledUpgradeHandCards
       resultStatus: 1
-      duration: 0.0008273
+      duration: 0.0007518
       messages: 
       output: 
       stacktrace: 
@@ -3533,7 +3747,7 @@ MonoBehaviour:
       name: SetPlayerRerollToTrue
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.SetPlayerRerollToTrue
       resultStatus: 1
-      duration: 0.0009688
+      duration: 0.0009082
       messages: 
       output: 
       stacktrace: 
@@ -3550,7 +3764,7 @@ MonoBehaviour:
       name: ThrowsWhenNoMatch
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenNoMatch
       resultStatus: 1
-      duration: 0.0006884
+      duration: 0.0005751
       messages: 
       output: 
       stacktrace: 
@@ -3567,7 +3781,7 @@ MonoBehaviour:
       name: ThrowsWhenNoRounds
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenNoRounds
       resultStatus: 1
-      duration: 0.0005497
+      duration: 0.0004994
       messages: 
       output: 
       stacktrace: 
@@ -3584,7 +3798,7 @@ MonoBehaviour:
       name: ThrowsWhenNotInReroll
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenNotInReroll
       resultStatus: 1
-      duration: 0.0006445
+      duration: 0.0005094
       messages: 
       output: 
       stacktrace: 
@@ -3601,7 +3815,7 @@ MonoBehaviour:
       name: ThrowsWhenPlayerCannotReroll
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenPlayerCannotReroll
       resultStatus: 1
-      duration: 0.0006407
+      duration: 0.0005248
       messages: 
       output: 
       stacktrace: 
@@ -3618,7 +3832,7 @@ MonoBehaviour:
       name: ThrowsWhenUnitCardSelectedForRerollDoesNotExists
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenUnitCardSelectedForRerollDoesNotExists
       resultStatus: 1
-      duration: 0.0008548
+      duration: 0.0007087
       messages: 
       output: 
       stacktrace: 
@@ -3635,7 +3849,7 @@ MonoBehaviour:
       name: ThrowsWhenUnitCardSelectedForRerollIsNotInPlayerHand
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenUnitCardSelectedForRerollIsNotInPlayerHand
       resultStatus: 1
-      duration: 0.0010066
+      duration: 0.0008752
       messages: 
       output: 
       stacktrace: 
@@ -3652,7 +3866,7 @@ MonoBehaviour:
       name: ThrowsWhenUpgradeCardAlreadyPlayedForThatRound
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenUpgradeCardAlreadyPlayedForThatRound
       resultStatus: 1
-      duration: 0.0006677
+      duration: 0.0005772
       messages: 
       output: 
       stacktrace: 
@@ -3669,7 +3883,7 @@ MonoBehaviour:
       name: ThrowsWhenUpgradeCardSelectedForRerollDoesNotExists
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenUpgradeCardSelectedForRerollDoesNotExists
       resultStatus: 1
-      duration: 0.0008258
+      duration: 0.0007518
       messages: 
       output: 
       stacktrace: 
@@ -3686,7 +3900,7 @@ MonoBehaviour:
       name: ThrowsWhenUpgradeCardSelectedForRerollIsNotInPlayerHand
       fullName: Features.ServerLogic.Editor.Tests.PlayRerollShould.ThrowsWhenUpgradeCardSelectedForRerollIsNotInPlayerHand
       resultStatus: 1
-      duration: 0.0009057
+      duration: 0.0008255
       messages: 
       output: 
       stacktrace: 
@@ -3703,7 +3917,7 @@ MonoBehaviour:
       name: PlayUnitCardShould
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould
       resultStatus: 1
-      duration: 0.0328138
+      duration: 0.0302998
       messages: 
       output: 
       stacktrace: 
@@ -3719,7 +3933,7 @@ MonoBehaviour:
       name: ApplyUpgradePostUnitPlayedEffects
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ApplyUpgradePostUnitPlayedEffects
       resultStatus: 1
-      duration: 0.0060047
+      duration: 0.0056895
       messages: 
       output: 
       stacktrace: 
@@ -3736,7 +3950,7 @@ MonoBehaviour:
       name: CreateNewRoundIfMatchIsNotFinished
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.CreateNewRoundIfMatchIsNotFinished
       resultStatus: 1
-      duration: 0.0016314
+      duration: 0.0016191
       messages: 
       output: 
       stacktrace: 
@@ -3753,7 +3967,7 @@ MonoBehaviour:
       name: DetermineMatchWinner
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.DetermineMatchWinner
       resultStatus: 1
-      duration: 0.0011029
+      duration: 0.0010618
       messages: 
       output: 
       stacktrace: 
@@ -3770,7 +3984,7 @@ MonoBehaviour:
       name: DetermineRoundWinner
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.DetermineRoundWinner
       resultStatus: 1
-      duration: 0.001133
+      duration: 0.0010423
       messages: 
       output: 
       stacktrace: 
@@ -3787,7 +4001,7 @@ MonoBehaviour:
       name: DoNotCreateNewRoundIfMatchIsFinished
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.DoNotCreateNewRoundIfMatchIsFinished
       resultStatus: 1
-      duration: 0.0014355
+      duration: 0.0010577
       messages: 
       output: 
       stacktrace: 
@@ -3804,7 +4018,7 @@ MonoBehaviour:
       name: DoNotRemoveUnitCardPlayedFromHandIfUnitIsVillager
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.DoNotRemoveUnitCardPlayedFromHandIfUnitIsVillager
       resultStatus: 1
-      duration: 0.0012223
+      duration: 0.0010616
       messages: 
       output: 
       stacktrace: 
@@ -3821,7 +4035,7 @@ MonoBehaviour:
       name: RemoveUnitCardPlayedFromHand
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.RemoveUnitCardPlayedFromHand
       resultStatus: 1
-      duration: 0.0012554
+      duration: 0.0010867
       messages: 
       output: 
       stacktrace: 
@@ -3838,7 +4052,7 @@ MonoBehaviour:
       name: SetUnitCardPlayed
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.SetUnitCardPlayed
       resultStatus: 1
-      duration: 0.000901
+      duration: 0.0008259
       messages: 
       output: 
       stacktrace: 
@@ -3855,7 +4069,7 @@ MonoBehaviour:
       name: ThrowsErrorWhenCardNotExists
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ThrowsErrorWhenCardNotExists
       resultStatus: 1
-      duration: 0.0009253
+      duration: 0.0010377
       messages: 
       output: 
       stacktrace: 
@@ -3872,7 +4086,7 @@ MonoBehaviour:
       name: ThrowsErrorWhenMatchNotExists
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ThrowsErrorWhenMatchNotExists
       resultStatus: 1
-      duration: 0.0007863
+      duration: 0.000621
       messages: 
       output: 
       stacktrace: 
@@ -3889,7 +4103,7 @@ MonoBehaviour:
       name: ThrowsWhenPlayerNotInMatch
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ThrowsWhenPlayerNotInMatch
       resultStatus: 1
-      duration: 0.001012
+      duration: 0.00082
       messages: 
       output: 
       stacktrace: 
@@ -3906,7 +4120,7 @@ MonoBehaviour:
       name: ThrowsWhenRoundNotInUnitPhase
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ThrowsWhenRoundNotInUnitPhase
       resultStatus: 1
-      duration: 0.0009083
+      duration: 0.000832
       messages: 
       output: 
       stacktrace: 
@@ -3923,7 +4137,7 @@ MonoBehaviour:
       name: ThrowsWhenUnitCardAlreadyPlayed
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ThrowsWhenUnitCardAlreadyPlayed
       resultStatus: 1
-      duration: 0.0009122
+      duration: 0.0008268
       messages: 
       output: 
       stacktrace: 
@@ -3940,7 +4154,7 @@ MonoBehaviour:
       name: ThrowsWhenUnitCardNotInHand
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.ThrowsWhenUnitCardNotInHand
       resultStatus: 1
-      duration: 0.0009383
+      duration: 0.0008313
       messages: 
       output: 
       stacktrace: 
@@ -3957,7 +4171,7 @@ MonoBehaviour:
       name: UpdatesMatchRepository
       fullName: Features.ServerLogic.Editor.Tests.PlayUnitCardShould.UpdatesMatchRepository
       resultStatus: 1
-      duration: 0.0009116
+      duration: 0.0008339
       messages: 
       output: 
       stacktrace: 
@@ -3974,7 +4188,7 @@ MonoBehaviour:
       name: PlayUpgradeCardShould
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould
       resultStatus: 1
-      duration: 0.0172154
+      duration: 0.0162299
       messages: 
       output: 
       stacktrace: 
@@ -3990,7 +4204,7 @@ MonoBehaviour:
       name: AddCardToCardsPlayed
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.AddCardToCardsPlayed
       resultStatus: 1
-      duration: 0.0023639
+      duration: 0.0021871
       messages: 
       output: 
       stacktrace: 
@@ -4007,7 +4221,7 @@ MonoBehaviour:
       name: ChangeRoundStateToUnit
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.ChangeRoundStateToUnit
       resultStatus: 1
-      duration: 0.0008593
+      duration: 0.0007178
       messages: 
       output: 
       stacktrace: 
@@ -4024,7 +4238,7 @@ MonoBehaviour:
       name: RemoveCardFromHand
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.RemoveCardFromHand
       resultStatus: 1
-      duration: 0.0007431
+      duration: 0.0006159
       messages: 
       output: 
       stacktrace: 
@@ -4041,7 +4255,7 @@ MonoBehaviour:
       name: ThrowsRoundIsNotInUpgrade
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.ThrowsRoundIsNotInUpgrade
       resultStatus: 1
-      duration: 0.0007061
+      duration: 0.0006613
       messages: 
       output: 
       stacktrace: 
@@ -4058,7 +4272,7 @@ MonoBehaviour:
       name: ThrowsWhenCantRemoveCardFromHand
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.ThrowsWhenCantRemoveCardFromHand
       resultStatus: 1
-      duration: 0.0006447
+      duration: 0.0006064
       messages: 
       output: 
       stacktrace: 
@@ -4075,7 +4289,7 @@ MonoBehaviour:
       name: ThrowsWhenIsUpgradeCardNull
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.ThrowsWhenIsUpgradeCardNull
       resultStatus: 1
-      duration: 0.000607
+      duration: 0.0005639
       messages: 
       output: 
       stacktrace: 
@@ -4092,7 +4306,7 @@ MonoBehaviour:
       name: ThrowsWhenPlayerDontExist
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.ThrowsWhenPlayerDontExist
       resultStatus: 1
-      duration: 0.0006921
+      duration: 0.0006511
       messages: 
       output: 
       stacktrace: 
@@ -4109,7 +4323,7 @@ MonoBehaviour:
       name: ThrowsWhenPlayerHaveAlreadyPlayedUpgradeCard
       fullName: Features.ServerLogic.Editor.Tests.PlayUpgradeCardShould.ThrowsWhenPlayerHaveAlreadyPlayedUpgradeCard
       resultStatus: 1
-      duration: 0.0007105
+      duration: 0.0007008
       messages: 
       output: 
       stacktrace: 
@@ -4126,7 +4340,7 @@ MonoBehaviour:
       name: RerollHandlerShould
       fullName: Features.ServerLogic.Editor.Tests.RerollHandlerShould
       resultStatus: 1
-      duration: 0.0132727
+      duration: 0.0116262
       messages: 
       output: 
       stacktrace: 
@@ -4142,7 +4356,7 @@ MonoBehaviour:
       name: CallPlayRerollWhenPost
       fullName: Features.ServerLogic.Editor.Tests.RerollHandlerShould.CallPlayRerollWhenPost
       resultStatus: 1
-      duration: 0.0022997
+      duration: 0.0020544
       messages: 
       output: 
       stacktrace: 
@@ -4159,7 +4373,7 @@ MonoBehaviour:
       name: RespondsErrorWhenMatchIsNull
       fullName: Features.ServerLogic.Editor.Tests.RerollHandlerShould.RespondsErrorWhenMatchIsNull
       resultStatus: 1
-      duration: 0.0005702
+      duration: 0.0005228
       messages: 
       output: 
       stacktrace: 
@@ -4176,11 +4390,9 @@ MonoBehaviour:
       name: RespondsHand
       fullName: Features.ServerLogic.Editor.Tests.RerollHandlerShould.RespondsHand
       resultStatus: 1
-      duration: 0.001379
+      duration: 0.0006593
       messages: 
-      output: '{"units":["test-hand-unit"],"upgrades":["test-hand-upgrade"]}
-
-'
+      output: 
       stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
@@ -4195,7 +4407,7 @@ MonoBehaviour:
       name: RoundHandlerShould
       fullName: Features.ServerLogic.Editor.Tests.RoundHandlerShould
       resultStatus: 1
-      duration: 0.0137891
+      duration: 0.0111378
       messages: 
       output: 
       stacktrace: 
@@ -4211,7 +4423,7 @@ MonoBehaviour:
       name: RespondsErrorWhenNoMatch
       fullName: Features.ServerLogic.Editor.Tests.RoundHandlerShould.RespondsErrorWhenNoMatch
       resultStatus: 1
-      duration: 0.0011666
+      duration: 0.0011166
       messages: 
       output: 
       stacktrace: 
@@ -4228,7 +4440,7 @@ MonoBehaviour:
       name: RespondsErrorWhenNonExistingRound
       fullName: Features.ServerLogic.Editor.Tests.RoundHandlerShould.RespondsErrorWhenNonExistingRound
       resultStatus: 1
-      duration: 0.0005788
+      duration: 0.0005198
       messages: 
       output: 
       stacktrace: 
@@ -4245,11 +4457,9 @@ MonoBehaviour:
       name: RespondsRound
       fullName: Features.ServerLogic.Editor.Tests.RoundHandlerShould.RespondsRound
       resultStatus: 1
-      duration: 0.0017835
+      duration: 0.0009278
       messages: 
-      output: '{"finished":false,"cardsplayed":[{"player":null,"upgradecard":"","unitcard":"","unitcardpower":0},{"player":null,"upgradecard":"","unitcard":"","unitcardpower":0}],"winnerplayer":[],"upgradecardround":null,"roundnumber":0,"rivalready":false,"hasReroll":true,"roundState":0,"roundTimer":40}
-
-'
+      output: 
       stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
@@ -4259,12 +4469,96 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1055
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.RoundHandlerShould][suite]
+    - id: 1071
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould][suite]
+      name: TeutonsFaithPreCalculusCardStrategyShould
+      fullName: Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould
+      resultStatus: 1
+      duration: 0.0102236
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1229
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests][suite]
+    - id: 1142
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/TeutonsFaithPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.ApplyTeutonsFaith]
+      name: ApplyTeutonsFaith
+      fullName: Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.ApplyTeutonsFaith
+      resultStatus: 1
+      duration: 0.0005175
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1141
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould][suite]
+    - id: 1143
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/TeutonsFaithPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.NotApplyPersianTcEffectIfNotTeutonsFaith]
+      name: NotApplyPersianTcEffectIfNotTeutonsFaith
+      fullName: Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.NotApplyPersianTcEffectIfNotTeutonsFaith
+      resultStatus: 1
+      duration: 0.0002753
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1141
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould][suite]
+    - id: 1145
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/TeutonsFaithPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.NotApplyTeutonsFaithEffectIfRivalIsNotMonk]
+      name: NotApplyTeutonsFaithEffectIfRivalIsNotMonk
+      fullName: Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.NotApplyTeutonsFaithEffectIfRivalIsNotMonk
+      resultStatus: 1
+      duration: 0.0003169
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1141
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould][suite]
+    - id: 1144
+      uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/TeutonsFaithPreCalculusCardStrategyShould/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.NotApplyTeutonsFaithEffectIfUnitCavalry]
+      name: NotApplyTeutonsFaithEffectIfUnitCavalry
+      fullName: Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould.NotApplyTeutonsFaithEffectIfUnitCavalry
+      resultStatus: 1
+      duration: 0.000314
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1141
+      parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.TeutonsFaithPreCalculusCardStrategyShould][suite]
     - id: 1063
       uniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.UserHandlerShould][suite]
       name: UserHandlerShould
       fullName: Features.ServerLogic.Editor.Tests.UserHandlerShould
       resultStatus: 1
-      duration: 0.0265206
+      duration: 0.0199029
       messages: 
       output: 
       stacktrace: 
@@ -4280,7 +4574,7 @@ MonoBehaviour:
       name: CallCreateUserWhenPut
       fullName: Features.ServerLogic.Editor.Tests.UserHandlerShould.CallCreateUserWhenPut
       resultStatus: 1
-      duration: 0.0044666
+      duration: 0.0043157
       messages: 
       output: 
       stacktrace: 
@@ -4297,7 +4591,7 @@ MonoBehaviour:
       name: RespondsErrorWhenNoUser
       fullName: Features.ServerLogic.Editor.Tests.UserHandlerShould.RespondsErrorWhenNoUser
       resultStatus: 1
-      duration: 0.0079199
+      duration: 0.0039331
       messages: 
       output: 
       stacktrace: 
@@ -4314,7 +4608,7 @@ MonoBehaviour:
       name: RespondsErrorWhenPutFails
       fullName: Features.ServerLogic.Editor.Tests.UserHandlerShould.RespondsErrorWhenPutFails
       resultStatus: 1
-      duration: 0.002291
+      duration: 0.0016357
       messages: 
       output: 
       stacktrace: 
@@ -4331,7 +4625,7 @@ MonoBehaviour:
       name: RespondsUserData
       fullName: Features.ServerLogic.Editor.Tests.UserHandlerShould.RespondsUserData
       resultStatus: 1
-      duration: 0.0007226
+      duration: 0.000713
       messages: 
       output: 
       stacktrace: 
@@ -4348,11 +4642,9 @@ MonoBehaviour:
       name: RespondsWhenPut
       fullName: Features.ServerLogic.Editor.Tests.UserHandlerShould.RespondsWhenPut
       resultStatus: 1
-      duration: 0.001122
+      duration: 0.0005393
       messages: 
-      output: '{"guid":"UserId","username":"UserName","friendCode":"FriendCode","accessToken":"","refreshToken":""}
-
-'
+      output: 
       stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
@@ -4362,21 +4654,13 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1063
       parentUniqueId: Assembly-CSharp-Editor.dll/Features/ServerLogic/Editor/Tests/[Assembly-CSharp-Editor][Features.ServerLogic.Editor.Tests.UserHandlerShould][suite]
-    m_ResultText: 'JustFail (0,004s)
-
-      ---
-
-      at Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.JustFail
-      () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\ApplyEffectPreCalculusShould.cs:32'
-    m_ResultStacktrace: 'at Features.ServerLogic.Editor.Tests.ApplyEffectPreCalculusShould.JustFail
-      () [0x00001] in D:\Unity\AOE_Cards\Assets\Features\ServerLogic\Editor\Tests\ApplyEffectPreCalculusShould.cs:32
-
-'
+    m_ResultText: GamePresenterShould (0,901s)
+    m_ResultStacktrace: 
     m_TestListState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 64003fa8
-      m_LastClickedID: -1472266140
-      m_ExpandedIDs: b96ff4922d07019ae369b6a14ca074abf66d62b2fbb6c7b7b5aa78b96ec2bac2c13e46c8dc3f88d4f8040edfca4fb7e80b7015f2579ffef41d2c48f589de81f679a9bc08239a950be2a67811efe83b13ff1cac1730c03a188cf0ac21b7d97e245223c22c9829462ec44aba32082792331ae2d23bef2f8a3dd7f06f3ef87aab437b02834e4ae2885004c0e7513d31b155a2fc05599863f861b55d28716cc37174881bf27e1c6ef67fffffff7f
+      m_SelectedIDs: 373bbcda
+      m_LastClickedID: -625198281
+      m_ExpandedIDs: 647bc485b96ff4922d07019ae369b6a16229baaa4ca074abf66d62b2fbb6c7b7b5aa78b96ec2bac2c13e46c8dc3f88d4a8882bd9373bbcdaf8040edfca4fb7e823b5a6ed0b7015f2579ffef41d2c48f589de81f679a9bc08239a950be2a67811efe83b13ff1cac1730c03a188cf0ac21b7d97e24c44aba3208279233e02a303b1ae2d23bef2f8a3dd7f06f3ef87aab43e327a54b7b02834e4ae2885004c0e7513d31b155a2fc05599863f861bd366b6db55d28716cc37174881bf27e1c6ef67fffffff7f
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -4395,7 +4679,7 @@ MonoBehaviour:
         m_ClientGUIView: {fileID: 0}
       m_SearchString: 
     m_TestRunnerUIFilter:
-      PassedHidden: 1
+      PassedHidden: 0
       FailedHidden: 0
       NotRunHidden: 0
       m_SearchString: 
@@ -4423,9 +4707,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 433
+    x: 522
     y: 73
-    width: 738
+    width: 897
     height: 612
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -4437,7 +4721,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 738, y: 415}
+  m_TargetSize: {x: 897, y: 505}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -4452,10 +4736,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -369
-    m_HBaseRangeMax: 369
-    m_VBaseRangeMin: -207.5
-    m_VBaseRangeMax: 207.5
+    m_HBaseRangeMin: -448.5
+    m_HBaseRangeMax: 448.5
+    m_VBaseRangeMin: -252.5
+    m_VBaseRangeMax: 252.5
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -4473,23 +4757,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 738
+      width: 897
       height: 591
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 369, y: 295.5}
+    m_Translation: {x: 448.5, y: 295.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -369
+      x: -448.5
       y: -295.5
-      width: 738
+      width: 897
       height: 591
     m_MinimalGUI: 1
   m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 738, y: 612}
+  m_LastWindowPixelSize: {x: 897, y: 612}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -4518,7 +4802,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 73
-    width: 218
+    width: 259
     height: 612
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -4529,7 +4813,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: cef8feffde09ffffa213ffffa41affffd221ffffe229ffff9c31ffff4c3dffffac4cffff8e58ffff5265ffff8270ffff2e7cffff528bffffd299ffff00a1ffff32a9ffffa0b1ffffe2b8fffffcbfffffc0c8ffff28d5ffffc2eaffff02f3ffff
+      m_ExpandedIDs: 92b3ffff9eb3ffffd27a0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -4574,9 +4858,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 219
+    x: 260
     y: 73
-    width: 212
+    width: 260
     height: 612
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -4588,7 +4872,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 1
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: -101, y: -26}
+      snapOffsetDelta: {x: -101, y: -1}
       snapCorner: 3
       id: Tool Settings
       index: 0
@@ -4621,7 +4905,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 1
       id: unity-search-toolbar
       index: 1
@@ -4632,7 +4916,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Open Tile Palette
       index: 2
@@ -4643,7 +4927,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Tilemap Focus
       index: 3
@@ -4654,7 +4938,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 1
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: unity-transform-toolbar
       index: 0
@@ -4676,7 +4960,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Light Settings
       index: 0
@@ -4687,7 +4971,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Camera
       index: 1
@@ -4698,7 +4982,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Cloth Constraints
       index: 2
@@ -4709,7 +4993,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Cloth Collisions
       index: 3
@@ -4720,7 +5004,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Navmesh Display
       index: 4
@@ -4731,7 +5015,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Agent Display
       index: 5
@@ -4742,7 +5026,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Obstacle Display
       index: 6
@@ -4753,7 +5037,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Occlusion Culling
       index: 7
@@ -4764,7 +5048,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Physics Debugger
       index: 8
@@ -4775,7 +5059,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Scene Visibility
       index: 9
@@ -4786,24 +5070,24 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Particles
       index: 10
       layout: 4
   m_WindowGUID: 50d18ea5d5d79774aa3567029d810288
   m_Gizmos: 1
-  m_OverrideSceneCullingMask: 6917529027641081856
-  m_SceneIsLit: 1
+  m_OverrideSceneCullingMask: 0
+  m_SceneIsLit: 0
   m_SceneLighting: 1
   m_2DMode: 1
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 9.408991, y: 0.70567435, z: 10}
+    m_Target: {x: 0, y: 0, z: 0}
     speed: 2
-    m_Value: {x: 9.408991, y: 0.70567435, z: 10}
+    m_Value: {x: 0, y: 0, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -4815,7 +5099,7 @@ MonoBehaviour:
   m_SceneViewState:
     m_AlwaysRefresh: 0
     showFog: 1
-    showSkybox: 1
+    showSkybox: 0
     showFlares: 1
     showImageEffects: 1
     showParticleSystems: 1
@@ -4854,9 +5138,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 10
+    m_Target: 70.71068
     speed: 2
-    m_Value: 10
+    m_Value: 70.71068
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -4903,9 +5187,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 794
-    width: 1341
-    height: 205
+    y: 706
+    width: 1420
+    height: 293
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -4923,36 +5207,36 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Settings
+    - Assets/Features
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Settings
+  - Assets/Features
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Unity\AOE_Cards
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 139}
-    m_SelectedIDs: 7ace0000
-    m_LastClickedID: 52858
-    m_ExpandedIDs: 00000000ec8a0000ee8a0000f08a0000f28a0000f48a0000f68a0000f88a0000fa8a0000fc8a0000fe8a0000008b0000028b0000048b0000068b0000088b00000a8b00000c8b00000e8b0000108b0000
+    scrollPos: {x: 0, y: 60}
+    m_SelectedIDs: 36780000
+    m_LastClickedID: 30774
+    m_ExpandedIDs: 0000000016730000187300001a7300001c7300001e73000020730000227300002473000026730000287300002a7300002c7300002e73000030730000327300003473000036730000387300003a7300003678000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Game
+      m_OriginalName: Game
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 29484
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_SearchString: 
@@ -4966,7 +5250,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000ec8a0000ee8a0000f08a0000f28a0000f48a0000f68a0000f88a0000fa8a0000fc8a0000fe8a0000008b0000028b0000048b0000068b0000088b00000a8b00000c8b00000e8b0000108b0000
+    m_ExpandedIDs: 0000000016730000187300001a7300001c7300001e73000020730000227300002473000026730000287300002a7300002c7300002e73000030730000327300003473000036730000387300003a730000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -4991,9 +5275,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 4ac50000
-    m_LastClickedInstanceID: 50506
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c62300008a600000c0600000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -5045,7 +5329,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 706
-    width: 1172
+    width: 1420
     height: 293
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -5072,9 +5356,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1342
+    x: 1421
     y: 73
-    width: 577
+    width: 498
     height: 926
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.Game.Scripts.Domain;
+using Features.Game.Scripts.Domain.Actions;
 using Features.Game.Scripts.Presentation.GameStateStrategy;
 using Features.Game.Scripts.Presentation.RoundStateStrategy;
 using Features.Infrastructure.Data;
@@ -23,6 +24,8 @@ namespace Features.Game.Scripts.Presentation
         private readonly IPlayerPrefs _playerPrefs;
 
         private readonly IGetRoundEvery3Seconds _getRoundEvery3Seconds;
+        private readonly IGetMatchEvery3Seconds _getMatchEvery3Seconds;
+
         private readonly ICurrentMatchRepository _matchRepository;
         private readonly IMatchStateRepository _matchStateRepository;
         private CompositeDisposable _disposables = new CompositeDisposable();
@@ -37,8 +40,10 @@ namespace Features.Game.Scripts.Presentation
             ITokenService tokenService,
             IMatchService matchService,
             IGetRoundEvery3Seconds getRoundEvery3Seconds,
+            IGetMatchEvery3Seconds getMatchEvery3Seconds,
             ICurrentMatchRepository currentMatchRepository,
-            IMatchStateRepository matchStateRepository, IPlayerPrefs playerPrefs
+            IMatchStateRepository matchStateRepository, 
+            IPlayerPrefs playerPrefs
         )
         {
             _view = view;
@@ -46,6 +51,7 @@ namespace Features.Game.Scripts.Presentation
             _tokenService = tokenService;
             _matchService = matchService;
             _getRoundEvery3Seconds = getRoundEvery3Seconds;
+            _getMatchEvery3Seconds = getMatchEvery3Seconds;
             _matchRepository = currentMatchRepository;
             _matchStateRepository = matchStateRepository;
             _playerPrefs = playerPrefs;
@@ -73,10 +79,12 @@ namespace Features.Game.Scripts.Presentation
             _matchRepository.Set(gameMatch);
             _playerPrefs.SetString(PlayerPrefsHelper.MatchId, gameMatch.Id);
             _playerPrefs.Save();
-            
-            _getRoundEvery3Seconds.Execute()
-                .Subscribe(OnGetRoundInfo)
+            _getMatchEvery3Seconds.Execute().Subscribe(OnGetMatchInfo)
                 .AddTo(_disposables);
+            // _getRoundEvery3Seconds.Execute()
+            //     .Subscribe(OnGetRoundInfo)
+            //     .AddTo(_disposables);
+
 
             _view.ReRoll()
                 .Subscribe(rerollInfo => SendReRoll(rerollInfo.upgrades, rerollInfo.units))
@@ -105,7 +113,6 @@ namespace Features.Game.Scripts.Presentation
             _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
             _view.UpgradeShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartUnit)).AddTo(_disposables);
             ChangeMatchState(GameState.StartRound);
-
         }
 
         private void PlayUpgradeCard(string cardName)
@@ -213,13 +220,25 @@ namespace Features.Game.Scripts.Presentation
 
         private string UserName => _playerPrefs.GetString(PlayerPrefsHelper.UserName);
 
+        private void OnGetMatchInfo(GameMatch match)
+        {
+            var playMatch = _matchRepository.Get();
+            if (playMatch.Board.CurrentRound.RoundNumber != match.Board.CurrentRound.RoundNumber)
+            {
+                //cambio de ronda.
+            }
+            else
+            {
+            }
+
+            OnGetRoundInfo(match.Board.CurrentRound);
+        }
 
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,
         //that way the match could be recreated, and its easier to know where is the user
         //also if random seed can be applied (so the orders of shuffles remains) it could be used to save lots of issues
         private void OnGetRoundInfo(Round round)
         {
-            _view.UpdateTimer(round);
             _matchRepository.SetRounds(round);
             foreach (var strategy in _gameStateStrategies)
             {

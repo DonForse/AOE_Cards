@@ -18,7 +18,12 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
             _gameView = gameView;
         }
 
-        public bool IsValid(Round round) => round.RoundState == RoundState.Finished;
+        public bool IsValid(Round round)
+        {
+            var matchState = _matchStateRepository.Get();
+
+            return round.RoundState == RoundState.Finished && !matchState.IsWaiting();
+        }
 
         public void Execute(Round round)
         {
