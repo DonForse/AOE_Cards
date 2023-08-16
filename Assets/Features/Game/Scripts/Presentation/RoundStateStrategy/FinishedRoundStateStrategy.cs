@@ -20,31 +20,14 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public bool IsValid(Round round)
         {
-            var matchState = _matchStateRepository.Get();
-
-            return round.RoundState == RoundState.Finished && !matchState.IsWaiting();
+            return round.RoundState == RoundState.Finished;
         }
 
         public void Execute(Round round)
         {
             _gameView.UpdateTimer(round);
-
-            var matchState = _matchStateRepository.Get();
-            if (matchState.IsUnitPhase())
-            {
-                _matchStateRepository.Set(GameState.RoundResultReveal);
-                _gameView.ShowUnitCardsPlayedRound(round);
-                return;
-            }
-
-            _gameView.EndRound(round);
-
-            _matchStateRepository.Set(GameState.StartRound);
-            //TODO: need to manually add round, because of how the get round works
-            var match = _currentMatchRepository.Get();
-            var rn = match.Board.Rounds.Last().RoundNumber;
-            match.Board.Rounds.Add(new Round() {RoundNumber = rn + 1});
-            _currentMatchRepository.Set(match);
+            _matchStateRepository.Set(GameState.RoundResultReveal);
+            _gameView.ShowUnitCardsPlayedRound(round);
         }
     }
 }

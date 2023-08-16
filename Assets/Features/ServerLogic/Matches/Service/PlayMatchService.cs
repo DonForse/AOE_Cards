@@ -25,7 +25,7 @@ namespace Features.ServerLogic.Matches.Service
 
         private static Timer Timer;
         private static HardBot hardBot;
-        private static Bot.Domain.Entities.Bot easyBot;
+        private static Bots.Domain.Entities.Bot easyBot;
         private IPlayUnitCard _playUnitCard;
 
         public void Initialize()

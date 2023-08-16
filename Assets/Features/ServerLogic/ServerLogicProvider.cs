@@ -64,7 +64,7 @@ namespace Features.ServerLogic
         public static HardBot HardBot() => 
             new HardBot(PlayUpgradeCard(), PlayUnitCard(), GetPlayerPlayedUpgradesInMatch());
 
-        public static Bot.Domain.Entities.Bot EasyBot() => new Bot.Domain.Entities.Bot(PlayUpgradeCard(), PlayUnitCard());
+        public static Bots.Domain.Entities.Bot EasyBot() => new Bots.Domain.Entities.Bot(PlayUpgradeCard(), PlayUnitCard());
         public static ICreateNewRound CreateRound() => new CreateNewRound(MatchesRepository());
 
         private static IGetUnitCard GetUnitCard() => new GetUnitCard(CardRepository());

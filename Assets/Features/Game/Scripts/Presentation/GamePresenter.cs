@@ -38,7 +38,6 @@ namespace Features.Game.Scripts.Presentation
             IPlayService playService,
             ITokenService tokenService,
             IMatchService matchService,
-            IGetRoundEvery3Seconds getRoundEvery3Seconds,
             IGetMatchEvery3Seconds getMatchEvery3Seconds,
             ICurrentMatchRepository currentMatchRepository,
             IMatchStateRepository matchStateRepository, 
@@ -49,7 +48,6 @@ namespace Features.Game.Scripts.Presentation
             _playService = playService;
             _tokenService = tokenService;
             _matchService = matchService;
-            _getRoundEvery3Seconds = getRoundEvery3Seconds;
             _getMatchEvery3Seconds = getMatchEvery3Seconds;
             _matchRepository = currentMatchRepository;
             _matchStateRepository = matchStateRepository;
@@ -71,7 +69,6 @@ namespace Features.Game.Scripts.Presentation
                 new MatchStateChangeStateStrategy(_view, _matchStateRepository),
                 new FinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
                 new GameFinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
-
             };
         }
 
@@ -110,12 +107,20 @@ namespace Features.Game.Scripts.Presentation
                     : GameState.StartUpgrade);
             }).AddTo(_disposables);
 
-            _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
-            _view.UpgradeShowDownCompleted().Subscribe(_ =>
-            {
-                ChangeMatchState(GameState.StartUnit);
-                _view.EndRound(_matchRepository.Get().Board.Rounds.Last());
-            }).AddTo(_disposables);
+            _view.UnitShowDownCompleted()
+                .Subscribe(_ =>
+                {
+                    var match = _matchRepository.Get();
+                    var round = match.Board.Rounds.Last();
+                    _view.EndRound(round);
+                    ChangeMatchState(GameState.StartRound);
+                })
+                .AddTo(_disposables);
+            
+            _view.UpgradeShowDownCompleted()
+                .Subscribe(_ => ChangeMatchState(GameState.StartUnit))
+                .AddTo(_disposables);
+            
             ChangeMatchState(GameState.StartRound);
         }
 
@@ -233,17 +238,15 @@ namespace Features.Game.Scripts.Presentation
                       $"Round State: {match.Board.CurrentRound.RoundState}." +
                       $"Has Reroll: {match.Board.CurrentRound.HasReroll}." +
                       $"Finished: {match.Board.CurrentRound.Finished}." +
-                      $"Rival Ready:{match.Board.CurrentRound.RivalReady}." +
-                      $"{match.Board.CurrentRound.CardsPlayed.Count}</color>");
-            if (playMatch.Board.CurrentRound.RoundNumber != match.Board.CurrentRound.RoundNumber)
+                      $"Rival Ready:{match.Board.CurrentRound.RivalReady}.");
+            if (_matchRepository.Get().Board.CurrentRound.RoundNumber < match.Board.CurrentRound.RoundNumber)
             {
-                //cambio de ronda.
+                OnGetRoundInfo(match.Board.Rounds.Last());
+                return;
             }
-            else
-            {
-            }
-
+            
             OnGetRoundInfo(match.Board.CurrentRound);
+            _matchRepository.Set(match);
         }
 
         //TODO: Change Match state (not priority) so it receives a list of actions that happened,

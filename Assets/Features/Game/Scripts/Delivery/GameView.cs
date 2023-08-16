@@ -47,6 +47,8 @@ namespace Features.Game.Scripts.Delivery
         private readonly ISubject<Unit> _showRoundUpgradeCompletedSubject = new Subject<Unit>();
         private readonly ISubject<Unit> _unitShowDownCompleteSubject = new Subject<Unit>();
         private readonly ISubject<Unit> _upgradeShowDownCompleteSubject = new Subject<Unit>();
+        private UpgradeCardView _rivalUpgradeCardPlayed;
+        private UnitCardView _rivalUnitCardPlayed;
         public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
         public IObservable<string> UpgradeCardPlayed() => _upgradeCardPlayedSubject;
         public IObservable<Unit> ApplicationRestoreFocus() => _applicationRestoreFocusSubject;
@@ -66,9 +68,10 @@ namespace Features.Game.Scripts.Delivery
         private void InitializePresenter(GameMatch gameMatch)
         {
             var repo = new InMemoryCurrentMatchRepository();
-            _presenter = new GamePresenter(this, servicesProvider.GetPlayService(), servicesProvider.GetTokenService(),
+            _presenter = new GamePresenter(this,
+                servicesProvider.GetPlayService(),
+                servicesProvider.GetTokenService(),
                 servicesProvider.GetMatchService(),
-                new GetRoundEvery3Seconds(servicesProvider.GetPlayService(), repo),
                 new GetMatchEvery3Seconds(servicesProvider.GetMatchService()), repo,
                 new InMemoryMatchStateRepository(),
                 new PlayerPrefsWrapper());
@@ -127,14 +130,14 @@ namespace Features.Game.Scripts.Delivery
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
             
-            _upgradesView.OnShowRoundUpgradeCompletes().Subscribe(_ =>
-            {
-                Debug.Log("ShowRoundUpgrade-Completed");
-                // ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
-                //     ? GameState.StartReroll
-                //     : GameState.StartUpgrade);
-                _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
-            });
+            // _upgradesView.OnShowRoundUpgradeCompletes().Subscribe(_ =>
+            // {
+            //     Debug.Log("ShowRoundUpgrade-Completed");
+            //     // ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
+            //     //     ? GameState.StartReroll
+            //     //     : GameState.StartUpgrade);
+            //     _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
+            // });
         }
 
         private void PutCardsInHand() => _handView.PutCards(_playableCards);
@@ -229,21 +232,24 @@ namespace Features.Game.Scripts.Delivery
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
             var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
             var upgradePlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UpgradeCardData.cardName);
-            if (_upgradeCardPlayed == null && upgradePlayed != null) {
+            
+            //if you didnt play card but round has a card played (timedout)
+            if (_upgradeCardPlayed == null && upgradePlayed != null) 
+            {
                 _playableCards.Remove(upgradePlayed);
-                //TODO: This fixes timeout autoplay
-                // _presenter.RemoveCard(upgradePlayed.CardName, true);
                 _upgradeCardPlayed = (UpgradeCardView)upgradePlayed;
-
                 MoveUpgradeCardToShowdown();
             }
+
             foreach (var card in rivalCards)
             {
                 if (card.UpgradeCardData == null)
                     return;
-                
-                var upgradeCard = CardInstantiator.Instance.CreateUpgradeCardGO(card.UpgradeCardData);
-                _showdownView.PlayUpgradeCard(upgradeCard, PlayerType.Rival);
+                if (_rivalUpgradeCardPlayed == null)
+                {
+                    _rivalUpgradeCardPlayed = CardInstantiator.Instance.CreateUpgradeCardGO(card.UpgradeCardData);
+                    _showdownView.PlayUpgradeCard(_rivalUpgradeCardPlayed, PlayerType.Rival);
+                }
             }
 
             StartCoroutine(_showdownView.RevealCards(() =>
@@ -255,15 +261,15 @@ namespace Features.Game.Scripts.Delivery
 
         public void ShowUnitCardsPlayedRound(Round round)
         {
+            ShowUpgradeCardsPlayedRound(round);
             var rivalCards = round.CardsPlayed.Where(cp => cp.Player != UserName);
 
             var ownPlayedCard = round.CardsPlayed.FirstOrDefault(cp => cp.Player == UserName);
             var unitPlayed = _playableCards.FirstOrDefault(c => c.CardName == ownPlayedCard.UnitCardData.cardName);
+            //if you didnt play card but round has a card played (timedout)
             if (_unitCardPlayed == null & unitPlayed != null)
             {
-                _playableCards.Remove(unitPlayed);
-                //TODO: This fixes timeout autoplay
-                //_presenter.RemoveCard(unitPlayed.CardName, false);
+                _playableCards.Remove(unitPlayed); //remove card from hand
                 _unitCardPlayed = (UnitCardView)unitPlayed;
                 MoveUnitCardToShowdown();
             }
@@ -273,8 +279,8 @@ namespace Features.Game.Scripts.Delivery
                 if (card.UnitCardData == null) //some player didnt play yet
                     return;
                 
-                var unitCard = CardInstantiator.Instance.CreateUnitCardGO(card.UnitCardData);
-                _showdownView.PlayUnitCard(unitCard, PlayerType.Rival);
+                _rivalUnitCardPlayed = CardInstantiator.Instance.CreateUnitCardGO(card.UnitCardData);
+                _showdownView.PlayUnitCard(_rivalUnitCardPlayed, PlayerType.Rival);
             }
 
             StartCoroutine(_showdownView.UnitShowdown(round, () =>
@@ -308,6 +314,8 @@ namespace Features.Game.Scripts.Delivery
         {
             _upgradeCardPlayed = null;
             _unitCardPlayed = null;
+            _rivalUnitCardPlayed = null;
+            _rivalUpgradeCardPlayed = null;
         }
 
         public void Clear()
@@ -337,6 +345,8 @@ namespace Features.Game.Scripts.Delivery
         {
             _unitCardPlayed = null;
             _upgradeCardPlayed = null;
+            _rivalUnitCardPlayed = null;
+            _rivalUpgradeCardPlayed = null;
         }
 
         private void PlayUnitCard(Draggable draggable)

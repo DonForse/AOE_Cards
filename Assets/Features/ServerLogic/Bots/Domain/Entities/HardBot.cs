@@ -7,7 +7,7 @@ using Features.ServerLogic.Matches.Domain;
 
 namespace Features.ServerLogic.Bot.Domain.Entities
 {
-    public class HardBot : Bot
+    public class HardBot : Bots.Domain.Entities.Bot
     {
         private readonly IPlayUpgradeCard _playUpgradeCard;
         private readonly IPlayUnitCard _playUnitCard;

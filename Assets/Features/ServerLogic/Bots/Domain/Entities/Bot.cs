@@ -2,7 +2,7 @@
 using Features.ServerLogic.Game.Domain.Entities;
 using Features.ServerLogic.Matches.Action;
 
-namespace Features.ServerLogic.Bot.Domain.Entities
+namespace Features.ServerLogic.Bots.Domain.Entities
 {
     public class Bot
     {

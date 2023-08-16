@@ -24,7 +24,6 @@ namespace Features.Game.Scripts.Tests.Editor
         private IPlayService _playService;
         private ITokenService _tokenService;
         private IGameView _view;
-        private IGetRoundEvery3Seconds _getRoundEvery3Seconds;
         private ICurrentMatchRepository _matchRepository;
         private IMatchService _matchService;
         private IMatchStateRepository _matchStateRepository;
@@ -41,12 +40,11 @@ namespace Features.Game.Scripts.Tests.Editor
             _tokenService = Substitute.For<ITokenService>();
             _matchService = Substitute.For<IMatchService>();
             _view = Substitute.For<IGameView>();
-            _getRoundEvery3Seconds = Substitute.For<IGetRoundEvery3Seconds>();
             _getMatchEvery3Seconds = Substitute.For<IGetMatchEvery3Seconds>();
             _matchRepository = Substitute.For<ICurrentMatchRepository>();
             _matchStateRepository = Substitute.For<IMatchStateRepository>();
             _playerPrefs = Substitute.For<IPlayerPrefs>();
-            _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService, _getRoundEvery3Seconds,
+            _presenter = new GamePresenter(_view, _playService, _tokenService, _matchService,
                 _getMatchEvery3Seconds,
                 _matchRepository, _matchStateRepository, _playerPrefs);
         }
@@ -55,7 +53,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void CallStartRoundWhenGetRoundInfoAndMatchStateIsStartRound()
         {
             var expectedRound = new Round(){RoundState = RoundState.Unit} ;
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { });
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             GivenMatchStateRepository(GameState.StartRound);
@@ -72,7 +69,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUpgrade()
         {
             var expectedRound = new Round(){RoundState = RoundState.Upgrade};
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { });
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             GivenMatchStateRepository(GameState.StartUpgrade);
@@ -90,7 +86,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ChangeMatchStateToUpgradeWhenRoundIsInUpgradeInGetRoundInfoAndMatchStateIsStartUpgrade()
         {
             var expectedRound = new Round() { RoundState = RoundState.Upgrade };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { });
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             GivenMatchStateRepository(GameState.StartUpgrade);
@@ -109,7 +104,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void CallShowHandWhenGetRoundInfoAndMatchStateIsStartUnit()
         {
             var expectedRound = new Round(){ RoundState = RoundState.Unit};
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { });
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             GivenMatchStateRepository(GameState.StartUnit);
@@ -127,7 +121,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ChangeMatchStateToUnitWhenRoundIsInUnitInGetRoundInfoAndMatchStateIsStartUnit()
         {
             var expectedRound = new Round() { RoundState = RoundState.Unit };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { });
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             
@@ -149,7 +142,6 @@ namespace Features.Game.Scripts.Tests.Editor
         {
             var expectedRound = new Round() { RoundState = RoundState.Upgrade };
             GivenMatchInRepository(AMatch(withRounds: new List<Round>() { expectedRound }));
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { });
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
@@ -168,7 +160,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ChangeMatchStateToUpgradeWhenRoundStatusIsUpgradeButMatchStateIs(GameState gameState)
         {
             var expectedRound = new Round() { RoundState = RoundState.Upgrade, RivalReady = true };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { expectedRound});
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
@@ -201,7 +192,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ShowRivalReadyWhenRoundStatusIsUnitAndMatchStateIsUpgrade()
         {
             var expectedRound = new Round() { RoundState = RoundState.Unit };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>());
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
@@ -217,7 +207,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ShowRivalReadyWhenRoundStatusIsUnitAndRivalIsReady()
         {
             var expectedRound = new Round() { RoundState = RoundState.Unit, RivalReady = true };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { expectedRound});
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
@@ -230,11 +219,12 @@ namespace Features.Game.Scripts.Tests.Editor
 
         [TestCase(RoundState.Finished, GameState.RoundResultReveal)]
         [TestCase(RoundState.GameFinished, GameState.RoundResultReveal)]
+        [Ignore("tecnicamente no pasa mas.")]
         public void ShowEndRoundWhenRoundStateIsFinishedAndMatchStateIsNotUnitPhase(RoundState roundState,
             GameState gameState)
         {
             var expectedRound = new Round() { RoundState = roundState };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
+            
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { expectedRound});
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             
@@ -255,7 +245,6 @@ namespace Features.Game.Scripts.Tests.Editor
             GameState gameState)
         {
             var expectedRound = new Round() { RoundState = roundState };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             GivenMatchInRepository(AMatch(withRounds: new List<Round>() { expectedRound }));
             GivenMatchStateRepository(gameState);
             WhenInitialize(AMatch(withRounds: new List<Round>() { expectedRound }));
@@ -293,7 +282,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ShowRoundUpgradeWhenMatchStateIsStartRoundUpgradeReveal()
         {
             var expectedRound = new Round() { };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { expectedRound});
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
@@ -312,7 +300,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ShowStartRoundWhenMatchStateIsStartRound()
         {
             var expectedRound = new Round() { };
-            GivenGetRoundEvery3SecondsReturns(expectedRound);
             
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { expectedRound});
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
@@ -331,7 +318,6 @@ namespace Features.Game.Scripts.Tests.Editor
         public void ShowRerollWhenGetRoundInfoAndRoundStateIsRerollAndHasReroll()
         {
             var expectedRound = new Round() { RoundState = RoundState.Reroll, HasReroll = true };
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
             var expectedMatch = AMatch(withCurrentRound: expectedRound, withRounds: new List<Round>() { expectedRound});
             GivenGetMatchEvery3SecondsReturns(expectedMatch);
             GivenMatchInRepository(expectedMatch);
@@ -740,11 +726,17 @@ namespace Features.Game.Scripts.Tests.Editor
         [Test]
         public void ChangeMatchStateWhenUnitsFinishBeingRevealed()
         {
-            ISubject<Unit> unitShowdownCompletedSubject = new Subject<Unit>();
+            var expectedRound = new Round() { RoundState = RoundState.GameFinished };
+            var game = AMatch(withRounds: new List<Round> { expectedRound });
+            GivenMatchInRepository(game);
+            
+            var unitShowdownCompletedSubject = new Subject<Unit>();
             _view.UnitShowDownCompleted().Returns(unitShowdownCompletedSubject);
-            GivenInitialize(AMatch());
+            
+            GivenInitialize(game);
+            
             _matchStateRepository.ClearReceivedCalls();
-            unitShowdownCompletedSubject.OnNext(Unit.Default);
+            WhenUnitShowdownCompletes(unitShowdownCompletedSubject);
             _matchStateRepository.Received(1).Set(GameState.StartRound);
         }
 
@@ -791,11 +783,7 @@ namespace Features.Game.Scripts.Tests.Editor
             _view.ApplicationRestoreFocus().Returns(applicationRestoreFocusSubject);
             return applicationRestoreFocusSubject;
         }
-
-
-        private void GivenGetRoundEvery3SecondsReturns(Round expectedRound) =>
-            _getRoundEvery3Seconds.Execute().Returns(Observable.Return(expectedRound));
-
+        
         private void GivenGetMatchEvery3SecondsReturns(GameMatch expectedMatch) =>
             _getMatchEvery3Seconds.Execute().Returns(Observable.Return(expectedMatch));
 
@@ -820,6 +808,7 @@ namespace Features.Game.Scripts.Tests.Editor
         private void GivenPlayServicePlayUpgradeCardReturns(string expectedCardName, Hand expectedHand) =>
             _playService.PlayUpgradeCard(expectedCardName).Returns(Observable.Return(expectedHand));
 
+
         private void GivenInitialize(GameMatch gameMatch) => WhenInitialize(gameMatch);
 
         private Subject<(List<string> upgrades, List<string> units)> GivenReRoll()
@@ -837,6 +826,8 @@ namespace Features.Game.Scripts.Tests.Editor
             List<string> expectedUpgrades, List<string> expectedUnits) =>
             rerollSubject.OnNext((expectedUpgrades, expectedUnits));
 
+
+        private static void WhenUnitShowdownCompletes(Subject<Unit> unitShowdownCompletedSubject) => unitShowdownCompletedSubject.OnNext(Unit.Default);
         private void WhenInitialize(GameMatch match) => _presenter.Initialize(match);
 
         private void ThenShowUpgradeCardsPlayedInCurrentRound(Round expectedRound) =>

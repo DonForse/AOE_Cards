@@ -16,8 +16,7 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
 
         public bool IsValid(Round round)
         {
-            var matchState = _matchStateRepository.Get();
-            return round.RoundState == RoundState.Reroll && matchState.IsRerollPhase();
+            return round.RoundState == RoundState.Reroll;
         }
 
         public void Execute(Round round)
