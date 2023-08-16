@@ -18,7 +18,6 @@ namespace Features.Game.Scripts.Presentation.GameStateStrategy
 
         public void Execute(Round round)
         {
-            _view.UpdateTimer(round);
             _matchStateRepository.Set(GameState.StartRoundUpgradeReveal);
             _view.StartRound(round);
         }

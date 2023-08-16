@@ -91,7 +91,9 @@ namespace Features.ServerLogic.Editor.Tests
             GivenUser();
             GivenMatchExists();
             var response = WhenGet();
-            Assert.AreEqual("{\"matchId\":\""+MatchId+"\",\"board\":{\"rounds\":[]},\"hand\":{\"units\":[],\"upgrades\":[]},\"users\":[]}", response.response);
+            var expectedResponse =
+                "{\"matchId\":\"MatchId\",\"board\":{\"rounds\":[],\"currentRound\":{\"finished\":false,\"cardsplayed\":null,\"winnerplayer\":null,\"upgradecardround\":null,\"roundnumber\":0,\"rivalready\":false,\"hasReroll\":false,\"roundState\":0,\"roundTimer\":0}},\"hand\":{\"units\":[],\"upgrades\":[]},\"users\":[]}";
+            Assert.AreEqual(expectedResponse, response.response);
             Assert.AreEqual("", response.error);
         }
         

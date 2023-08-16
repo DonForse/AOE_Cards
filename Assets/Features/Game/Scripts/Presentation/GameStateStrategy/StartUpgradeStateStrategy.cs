@@ -21,7 +21,6 @@ namespace Features.Game.Scripts.Presentation.GameStateStrategy
         public void Execute(Round round)
         {
             //TODO: this is necessary to change it being valid so it only calls once... change. 
-            _view.UpdateTimer(round);
             if (round.RoundState == RoundState.Upgrade)
                 _matchStateRepository.Set(GameState.SelectUpgrade);
 

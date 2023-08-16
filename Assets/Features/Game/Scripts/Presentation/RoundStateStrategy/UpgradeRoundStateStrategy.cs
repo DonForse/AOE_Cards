@@ -18,25 +18,14 @@ namespace Features.Game.Scripts.Presentation.RoundStateStrategy
         {
             var matchState = _matchStateRepository.Get();
 
-            return round.RoundState == RoundState.Upgrade && !matchState.IsUpgradePhase();
+            return round.RoundState == RoundState.Upgrade && matchState.IsUpgradePhase();
         }
 
         public void Execute(Round round)
         {
             _gameView.UpdateTimer(round);
-            var matchState = _matchStateRepository.Get();
-            
             if (round.RivalReady) 
                 _gameView.ShowRivalWaitUpgrade();
-            
-            if (matchState.IsUpgradePhase())
-                return;
-            
-            if (matchState.IsRerollPhase())
-            {
-                _matchStateRepository.Set(GameState.StartUpgrade);
-                _gameView.HideReroll();
-            }
         }
     }
 }

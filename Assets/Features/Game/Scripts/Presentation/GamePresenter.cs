@@ -66,11 +66,13 @@ namespace Features.Game.Scripts.Presentation
             };
             _roundStateStrategies = new List<IRoundStateStrategy>()
             {
+                new RerollRoundStateStrategy(_view, _matchStateRepository),
                 new UpgradeRoundStateStrategy(_view, _matchStateRepository),
                 new UnitRoundStateStrategy(_view, _matchStateRepository),
+                new MatchStateChangeStateStrategy(_view, _matchStateRepository),
                 new FinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
                 new GameFinishedRoundStateStrategy(_view, _matchStateRepository, _matchRepository),
-                new RerollRoundStateStrategy(_view, _matchStateRepository)
+
             };
         }
 
