@@ -89,7 +89,7 @@ namespace Features.Game.Scripts.Delivery
                     SetUpgrade(upgrade.gameObject, PlayerPrefs.GetString(PlayerPrefsHelper.UserName) == cardPlayed.Player ? PlayerType.Player : PlayerType.Rival);
                 }
             }
-            var lastRound = gameMatch.Board.Rounds.Last();
+            var lastRound = gameMatch.Board.CurrentRound;
             var upgradeRound = CardInstantiator.Instance.CreateUpgradeCardGO(lastRound.UpgradeCardRound);
             SetRoundUpgrade(upgradeRound.gameObject);
         }

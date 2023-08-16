@@ -21,7 +21,7 @@ namespace Features.Game.Scripts.Delivery
         [SerializeField] private Color _loseColorCounter;
         [SerializeField] private Color _tieColorCounter;
 
-        private int currentRound;
+        private int currentRound = 1;
         private IList<PlayerType> roundWinners = new List<PlayerType>();
 
         public void SetGame(GameMatch gameMatch)
@@ -30,7 +30,7 @@ namespace Features.Game.Scripts.Delivery
             SetPlayerName(PlayerPrefs.GetString(PlayerPrefsHelper.UserName), PlayerType.Player);
             SetPlayerName(gameMatch.Users.FirstOrDefault(c => c != PlayerPrefs.GetString(PlayerPrefsHelper.UserName)), PlayerType.Rival);
             SetRoundWinners(gameMatch.Board.Rounds);
-            SetRoundNumber(gameMatch.Board.Rounds.Count());
+            SetRoundNumber(gameMatch.Board.CurrentRound.RoundNumber);
         }
 
         private void SetRoundWinners(List<Round> rounds)

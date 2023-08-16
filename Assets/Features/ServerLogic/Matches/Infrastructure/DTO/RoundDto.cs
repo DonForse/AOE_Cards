@@ -26,7 +26,7 @@ namespace Features.ServerLogic.Matches.Infrastructure.DTO
             finished = winnerplayer.Count > 0;
             upgradecardround = round.RoundUpgradeCard?.cardName;
             roundnumber = round.roundNumber;
-            hasReroll = !round.PlayerHasRerolled[userId];
+            hasReroll = !round.PlayerHasRerolled[userId] && round.RoundState == RoundState.Reroll;
             cardsplayed = new List<PlayerCardDto>();
             roundState = round.RoundState;
             roundTimer = round.Timer;

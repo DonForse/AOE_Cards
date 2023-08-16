@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.Game.Scripts.Domain;
-using Features.Game.Scripts.Domain.Actions;
 using Features.Game.Scripts.Presentation.GameStateStrategy;
 using Features.Game.Scripts.Presentation.RoundStateStrategy;
 using Features.Infrastructure.Data;
@@ -86,10 +85,6 @@ namespace Features.Game.Scripts.Presentation
                 .Do(OnGetMatchInfo)
                 .Subscribe()
                 .AddTo(_disposables);
-            // _getRoundEvery3Seconds.Execute()
-            //     .Subscribe(OnGetRoundInfo)
-            //     .AddTo(_disposables);
-
 
             _view.ReRoll()
                 .Subscribe(rerollInfo => SendReRoll(rerollInfo.upgrades, rerollInfo.units))
@@ -116,7 +111,11 @@ namespace Features.Game.Scripts.Presentation
             }).AddTo(_disposables);
 
             _view.UnitShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartRound)).AddTo(_disposables);
-            _view.UpgradeShowDownCompleted().Subscribe(_ => ChangeMatchState(GameState.StartUnit)).AddTo(_disposables);
+            _view.UpgradeShowDownCompleted().Subscribe(_ =>
+            {
+                ChangeMatchState(GameState.StartUnit);
+                _view.EndRound(_matchRepository.Get().Board.Rounds.Last());
+            }).AddTo(_disposables);
             ChangeMatchState(GameState.StartRound);
         }
 
@@ -228,6 +227,14 @@ namespace Features.Game.Scripts.Presentation
         private void OnGetMatchInfo(GameMatch match)
         {
             var playMatch = _matchRepository.Get();
+            _view.Log($"<color=yellow>" +
+                      $"Play Round Number: {playMatch.Board.CurrentRound.RoundNumber}."+
+                      $"Round Number: {match.Board.CurrentRound.RoundNumber}." +
+                      $"Round State: {match.Board.CurrentRound.RoundState}." +
+                      $"Has Reroll: {match.Board.CurrentRound.HasReroll}." +
+                      $"Finished: {match.Board.CurrentRound.Finished}." +
+                      $"Rival Ready:{match.Board.CurrentRound.RivalReady}." +
+                      $"{match.Board.CurrentRound.CardsPlayed.Count}</color>");
             if (playMatch.Board.CurrentRound.RoundNumber != match.Board.CurrentRound.RoundNumber)
             {
                 //cambio de ronda.

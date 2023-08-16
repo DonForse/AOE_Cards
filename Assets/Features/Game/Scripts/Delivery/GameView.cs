@@ -123,7 +123,7 @@ namespace Features.Game.Scripts.Delivery
             ShowMatchState(GameState.InitializeGame);
             _gameInfoView.SetGame(gameMatch);
             _upgradesView.WithShowDownView(_showdownView).SetGame(gameMatch);
-            _showdownView.SetRound(gameMatch.Board.Rounds.Last());
+            _showdownView.SetRound(gameMatch.Board.CurrentRound);
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
             
