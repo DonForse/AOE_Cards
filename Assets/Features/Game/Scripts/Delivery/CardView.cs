@@ -5,6 +5,7 @@ using Features.Sound;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -30,6 +31,8 @@ namespace Features.Game.Scripts.Delivery
         
         private readonly int Stopglow = Animator.StringToHash("stopglow");
         private readonly int Selected = Animator.StringToHash("selected");
+
+        [HideInInspector] public UnityEvent FlipAnimationCompleted = new();
         
 
         internal virtual void SetBackgroundColor(IList<Archetype> archetypes)
@@ -141,7 +144,11 @@ namespace Features.Game.Scripts.Delivery
                     ObservableTween.Tween(transform.localScale.x, 1, duration/2, ObservableTween.EaseType.Linear)
                     .Subscribe(x => transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z));
                 })
-                .DoOnCompleted(()=> { cardback.SetActive(!activate); })
+                .DoOnCompleted(() =>
+                {
+                    cardback.SetActive(!activate);
+                    FlipAnimationCompleted?.Invoke();
+                })
                 .Subscribe(x => transform.localScale = new Vector3(x, transform.localScale.y, transform.localScale.z));
         }
 

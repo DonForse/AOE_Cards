@@ -98,8 +98,7 @@ namespace Features.Game.Scripts.Presentation
 
             _view.ShowRoundUpgradeCompleted().Subscribe(_ =>
             {
-                var round = _matchRepository.Get().Board.Rounds
-                    .Last(); //revisar si es lo mismo que round.getround info o quedo desactualizado.
+                var round = _matchRepository.Get().Board.CurrentRound;
                 _view.Log($"{round.RoundState} : {round.HasReroll}");
                 //TODO: Why Has Reroll False???
                 ChangeMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
@@ -242,6 +241,7 @@ namespace Features.Game.Scripts.Presentation
             if (_matchRepository.Get().Board.CurrentRound.RoundNumber < match.Board.CurrentRound.RoundNumber)
             {
                 OnGetRoundInfo(match.Board.Rounds.Last());
+                _matchRepository.Set(match);
                 return;
             }
             

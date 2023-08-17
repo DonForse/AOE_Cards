@@ -6,6 +6,7 @@ using Features.Common;
 using Features.Common.Utilities;
 using Features.Game.Scripts.Domain;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Features.Game.Scripts.Delivery
@@ -17,7 +18,8 @@ namespace Features.Game.Scripts.Delivery
 
         private List<CardView> selectedCards = new List<CardView>();
         private Action<List<string>, List<string>> _rerollAction;
-    
+
+        [HideInInspector] public UnityEvent RerollCompleted = new();
     
         private void OnEnable()
         {
@@ -125,6 +127,7 @@ namespace Features.Game.Scripts.Delivery
             }
             yield return new WaitForSeconds(4.5f);
             gridContainer.enabled = false;
+            RerollCompleted?.Invoke();
         }
 
         internal void PutCards(IEnumerable<CardView> cards)

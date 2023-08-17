@@ -47,6 +47,7 @@ namespace Features.Game.Scripts.Delivery
         private readonly ISubject<Unit> _showRoundUpgradeCompletedSubject = new Subject<Unit>();
         private readonly ISubject<Unit> _unitShowDownCompleteSubject = new Subject<Unit>();
         private readonly ISubject<Unit> _upgradeShowDownCompleteSubject = new Subject<Unit>();
+        private readonly ISubject<Unit> _rerollCompleteSubject = new Subject<Unit>();
         private UpgradeCardView _rivalUpgradeCardPlayed;
         private UnitCardView _rivalUnitCardPlayed;
         public IObservable<string> UnitCardPlayed() => _unitCardPlayedSubject;
@@ -55,6 +56,7 @@ namespace Features.Game.Scripts.Delivery
         public IObservable<Unit> ShowRoundUpgradeCompleted() => _showRoundUpgradeCompletedSubject;
         public IObservable<Unit> UnitShowDownCompleted() => _unitShowDownCompleteSubject;
         public IObservable<Unit> UpgradeShowDownCompleted() => _upgradeShowDownCompleteSubject;
+        public IObservable<Unit> RerollCompleted() => _rerollCompleteSubject;
 
         private string UserName => PlayerPrefs.GetString(PlayerPrefsHelper.UserName);
 
@@ -130,14 +132,14 @@ namespace Features.Game.Scripts.Delivery
             _timerView.WithLowTimer(5f);
             _timerView.StartTimer();
             
-            // _upgradesView.OnShowRoundUpgradeCompletes().Subscribe(_ =>
-            // {
-            //     Debug.Log("ShowRoundUpgrade-Completed");
-            //     // ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
-            //     //     ? GameState.StartReroll
-            //     //     : GameState.StartUpgrade);
-            //     _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
-            // });
+            _upgradesView.OnShowRoundUpgradeCompletes().Subscribe(_ =>
+            {
+                Debug.Log("ShowRoundUpgrade-Completed");
+                // ShowMatchState(round.RoundState == RoundState.Reroll && round.HasReroll
+                //     ? GameState.StartReroll
+                //     : GameState.StartUpgrade);
+                _showRoundUpgradeCompletedSubject.OnNext(Unit.Default);
+            });
         }
 
         private void PutCardsInHand() => _handView.PutCards(_playableCards);
