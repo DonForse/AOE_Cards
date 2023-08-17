@@ -19,7 +19,7 @@ namespace Features.Game.Scripts.Delivery
 {
     public class GameView : MonoBehaviour, IView, IGameView
     {
-        public void Log(string m) => Debug.Log($"<color='red'>{m}</color>");
+        public void Log(string m) => Debug.Log($"<color=red>{m}</color>");
         
         [SerializeField] private Navigator _navigator;
         [SerializeField] private ServicesProvider servicesProvider;

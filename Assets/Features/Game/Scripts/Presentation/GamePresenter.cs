@@ -237,7 +237,9 @@ namespace Features.Game.Scripts.Presentation
                       $"Round State: {match.Board.CurrentRound.RoundState}." +
                       $"Has Reroll: {match.Board.CurrentRound.HasReroll}." +
                       $"Finished: {match.Board.CurrentRound.Finished}." +
-                      $"Rival Ready:{match.Board.CurrentRound.RivalReady}.");
+                      $"Rival Ready:{match.Board.CurrentRound.RivalReady}." +
+                      $"$Timer: { match.Board.CurrentRound.Timer}" +
+                      $"</color>");
             if (_matchRepository.Get().Board.CurrentRound.RoundNumber < match.Board.CurrentRound.RoundNumber)
             {
                 OnGetRoundInfo(match.Board.Rounds.Last());
@@ -289,7 +291,7 @@ namespace Features.Game.Scripts.Presentation
         {
             if (gameMatch.Board == null)
                 throw new ApplicationException("Match already finished");
-            var round = gameMatch.Board.Rounds.Last();
+            var round = gameMatch.Board.CurrentRound;
             switch (round.RoundState)
             {
                 case RoundState.Reroll:
